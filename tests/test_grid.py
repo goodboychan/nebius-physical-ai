@@ -56,3 +56,17 @@ def test_grid_hash_is_stable():
 def test_unknown_code_raises():
     with pytest.raises(KeyError):
         by_code("VC-999")
+
+
+def test_grid_path_honours_env_override(tmp_path, monkeypatch):
+    """컨테이너·Jobs 환경에서는 설치 위치가 달라 패키지 상대 경로가 깨진다."""
+    import importlib
+    import edgeqgate.grid as g
+    target = tmp_path / "variant_grid.yaml"
+    g.write_grid(target)
+    monkeypatch.setenv("EDGEQGATE_GRID_PATH", str(target))
+    importlib.reload(g)
+    assert g.GRID_PATH == target
+    assert len(g.load_grid()) == 26
+    monkeypatch.delenv("EDGEQGATE_GRID_PATH")
+    importlib.reload(g)

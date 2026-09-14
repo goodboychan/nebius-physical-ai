@@ -10,6 +10,7 @@
 
 from __future__ import annotations
 
+import os
 from dataclasses import dataclass, asdict
 from itertools import product
 from pathlib import Path
@@ -24,7 +25,23 @@ CALIB_SIZES = (16, 64, 256, 1024)
 CALIB_COMPOSITIONS = ("success-only", "mixed", "late-phase-only")
 GRANULARITIES = ("per-tensor", "per-channel")
 
-GRID_PATH = Path(__file__).resolve().parents[2] / "configs" / "variant_grid.yaml"
+def _default_grid_path() -> Path:
+    """그리드 yaml 위치를 찾는다.
+
+    패키지 상대 경로만 쓰면 컨테이너나 Jobs 환경에서 깨진다 (설치 위치가 다르다).
+    우선순위: 환경변수 -> 패키지 기준 -> 현재 작업 디렉토리 기준.
+    """
+    env = os.environ.get("EDGEQGATE_GRID_PATH")
+    if env:
+        return Path(env)
+    pkg = Path(__file__).resolve().parents[2] / "configs" / "variant_grid.yaml"
+    if pkg.is_file():
+        return pkg
+    cwd = Path.cwd() / "configs" / "variant_grid.yaml"
+    return cwd if cwd.is_file() else pkg
+
+
+GRID_PATH = _default_grid_path()
 
 
 @dataclass(frozen=True)
