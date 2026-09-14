@@ -13,6 +13,9 @@ from concurrent.futures import ThreadPoolExecutor
 
 NEBIUS = os.path.expanduser("~/.nebius/bin/nebius")
 TERMINAL = {"COMPLETED", "FAILED", "CANCELLED", "ERROR", "DELETED"}
+# 관측된 비종료 상태. "RUNNING"은 실제로 나타나지 않는다 (attempt-007 발견) —
+# 잡은 PROVISIONING -> STARTING -> IMAGE_PULLING -> COMPLETED로 전이한다.
+ACTIVE_STATES = {"STARTING", "IMAGE_PULLING", "RUNNING"}
 
 
 def run(args, timeout=180):
@@ -76,10 +79,10 @@ def main():
         with ThreadPoolExecutor(max_workers=10) as ex:
             states = dict(zip(ids, ex.map(state_of, ids)))
         now = time.time()
-        running = sum(1 for v in states.values() if v == "RUNNING")
+        running = sum(1 for v in states.values() if v in ACTIVE_STATES)
         conc_samples.append(running)
         for j, st in states.items():
-            if st == "RUNNING" and j not in first_seen:
+            if st in ACTIVE_STATES and j not in first_seen:
                 first_seen[j] = now - t_submitted
             if st in TERMINAL and j not in done_at:
                 done_at[j] = now - t_submitted

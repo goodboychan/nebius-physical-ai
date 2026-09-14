@@ -1,0 +1,47 @@
+{
+  "n_requested": 20,
+  "n_submitted": 20,
+  "platform": "cpu-d3",
+  "preset": "2vcpu-8gb",
+  "sleep_s": 30,
+  "submit_wall_sec": 17.7,
+  "submit_latency_sec": {
+    "median": 8.11,
+    "min": 6.75,
+    "max": 9.97
+  },
+  "queue_to_running_sec": {
+    "median": null,
+    "min": null,
+    "max": null,
+    "n": 0
+  },
+  "to_terminal_sec": {
+    "median": 291.4,
+    "max": 484.0,
+    "n": 20
+  },
+  "max_observed_concurrency": 0,
+  "job_ids": [
+    "aijob-e01s13byawmhk5t8vt",
+    "aijob-e01qtzke3n3zqzgtmn",
+    "aijob-e01wgpftecjyk0f8ds",
+    "aijob-e01tkc1t75gdqrykz9",
+    "aijob-e01rn6xhhhay2q86vc",
+    "aijob-e01qj09hr4s1z14abz",
+    "aijob-e01r8q8ew48ynj0g9f",
+    "aijob-e01bvdd8tchwfvcmsw",
+    "aijob-e01tyx15jav68ebjvj",
+    "aijob-e01g236aehx5t94427",
+    "aijob-e01c426v390ejznrs3",
+    "aijob-e01jeynbehnsp84xcp",
+    "aijob-e01ytneh8a6r45p5aw",
+    "aijob-e01jv4c3n1wvkz30rt",
+    "aijob-e01zkrtgqge768nncp",
+    "aijob-e01b5135jczf6ncj2p",
+    "aijob-e01pfyxzshe1a9gk3t",
+    "aijob-e01h9ebpy3fbevvxf5",
+    "aijob-e01wzzp1tv4j2xmhya",
+    "aijob-e01fybwz6qjsyrpr55"
+  ]
+}
