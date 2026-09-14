@@ -1,0 +1,56 @@
+name: ci
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: 의존성 설치
+        run: |
+          python -m pip install -q --upgrade pip
+          pip install -q -e ".[dev]"
+
+      - name: 테스트
+        run: pytest -q
+
+      - name: 그리드 무결성 (§4.1)
+        # configs/variant_grid.yaml이 정준 생성기와 어긋나면 여기서 실패한다.
+        run: python -m edgeqgate.grid
+
+      - name: LOCK-2 상태 보고 (§8, §12)
+        # 동결 전에는 실패시키지 않는다. 동결 이후 기록이 변조되면 실패한다.
+        run: |
+          python - <<'PY'
+          from edgeqgate.freeze import lock2_status
+          s = lock2_status()
+          print("LOCK-2:", s)
+          if s["locked"]:
+              print("동결됨 — 실기 trial 실행 가능")
+          else:
+              print("미동결 — 실기 trial 실행 불가 (러너가 거부한다)")
+              # 파일이 있는데 열리지 않는 경우만 실패로 본다
+              import pathlib
+              if pathlib.Path("artifacts/freeze/lock2.json").exists():
+                  raise SystemExit(f"동결 파일이 있으나 유효하지 않다: {s['reason']}")
+          PY
+
+      - name: 자격증명 누출 검사
+        run: |
+          if git grep -nE '(hf_[A-Za-z0-9]{20,}|tvly-[A-Za-z0-9]{20,}|BEGIN [A-Z ]*PRIVATE KEY)' -- . ; then
+            echo "비밀값으로 보이는 문자열이 추적 파일에 있다"; exit 1
+          fi
+          echo "비밀값 패턴 없음"
+
+      - name: 대용량 파일 검사
+        run: |
+          big=$(git ls-files | xargs -r ls -l 2>/dev/null | awk '$5>5000000 {print $5, $9}')
+          if [ -n "$big" ]; then echo "5MB 초과 파일:"; echo "$big"; exit 1; fi
+          echo "대용량 파일 없음"

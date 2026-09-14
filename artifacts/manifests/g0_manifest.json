@@ -1,7 +1,7 @@
 {
   "schema": "edgeqgate/artifact_manifest/v1",
   "stage": "G0",
-  "note": "docs/progress/2026-09-14_attempt-003_g0-trt-int8-path.md",
+  "note": "바이너리는 git에 추적하지 않는다. 해시만 기록한다 (§5.3).",
   "env": {
     "tensorrt": "10.14.1.48",
     "torch": "2.10.0a0",
@@ -9,7 +9,7 @@
     "modelopt": "0.37.0",
     "sm": "121",
     "host": "GB10 aarch64",
-    "container": "nvcr.io/nvidia/pytorch:25.11-py3"
+    "image": "edgeqgate:25.11 (NGC 25.11 + PyAV 18.1.0)"
   },
   "files": {
     "act_fp16.engine": {
@@ -19,6 +19,10 @@
     "act_fp32.onnx": {
       "sha256": "d80ac37744537ee31beda9f0445f24e5aff43c0656ae179ea30bcb9413830bbb",
       "bytes": 130972442
+    },
+    "act_fp32_reference.pt": {
+      "sha256": "ff94f873702c494aa72e3cc29c3815c9201024d1da41699ca47a51fda14c567f",
+      "bytes": 312262423
     },
     "act_int8_per-channel.engine": {
       "sha256": "4fde4d39ba382a36dc33b61add769c3a6efa83145b1cf3e2da3aaea5b84927ef",
@@ -36,6 +40,62 @@
       "sha256": "82c97ea9fcebe2397a0a8ef48e490f5a2ed8b76c5e789958676e712df716dd2a",
       "bytes": 131163656
     },
+    "act_real_int8_per-channel.engine": {
+      "sha256": "22a2f7199b49504b10d2f377b389952d5178628fd00bb13d19399450af58e2cb",
+      "bytes": 139657132
+    },
+    "act_real_int8_per-channel.onnx": {
+      "sha256": "7399e5dc46586600e4008767ee31cf49e822402b09996bb96b887999bc6e8971",
+      "bytes": 312820258
+    },
+    "calib_amax_activation.npz": {
+      "sha256": "99cf95baa232864b1fee3962db0221c4df3e4f8a0b09c19e92c7d176f5d2a4f4",
+      "bytes": 4750
+    },
+    "calib_amax_weight.npz": {
+      "sha256": "642dce0ffc4732708fbf9469ca4088403c7b1c2b8c90e1c50638b4522fbd3509",
+      "bytes": 1854970
+    },
+    "calib_axis_probe.json": {
+      "sha256": "487252d1f1b7fa68a345a22c9c6711481febcbc4592814ffc5eba25c48c60efe",
+      "bytes": 2908
+    },
+    "calib_axis_probe.log": {
+      "sha256": "f5a3d2fca98dffaebee7bbd0045cfeabe880f1c99e977260c0afeee791dc26c1",
+      "bytes": 3149
+    },
+    "calib_axis_probe2.log": {
+      "sha256": "0bc226a1393be9c16af93f9316ed8b0b6c9d0c06d1cda47b01f68dae13eba537",
+      "bytes": 3941
+    },
+    "d4_keepalive.json": {
+      "sha256": "aeabbac111b2bef3f4966eccbb312b61042a50887a4a61329496f1660e26eb4e",
+      "bytes": 391
+    },
+    "d4_keepalive.log": {
+      "sha256": "8c73081cdfe8c098e407780ba387523e45c155ee3250be22af17b54b6bcdb71b",
+      "bytes": 359
+    },
+    "d4_latency.json": {
+      "sha256": "1507304a37a8782b183e20940c20aa101d8ea9f159f8ed3a95b13c26d073b36f",
+      "bytes": 324
+    },
+    "endpoint_coldstart.json": {
+      "sha256": "f5ca564118434d018cacb52dc04dc98268edfa603b57bd511f09db21818eaa63",
+      "bytes": 245
+    },
+    "endpoint_coldstart.log": {
+      "sha256": "550bbe2c5f21f459d14b2f5d43f9d67ae0847268094f6dcd1f8920a0517c9499",
+      "bytes": 1059
+    },
+    "frames_cache.npz": {
+      "sha256": "6a10d8d56abec73c4a8b58933c7cf6154576d996b47011ae579bd62c11cab53b",
+      "bytes": 139184562
+    },
+    "g0_real_result.json": {
+      "sha256": "94786da472fc74176d02a6796605b4a251f58fa31e80c8810a59e7378ba209c5",
+      "bytes": 627
+    },
     "g0_result_per-channel_64.json": {
       "sha256": "4ee27c0faa763b7e77644da8a5e6f6fe1797c34a6b354a6b48e5daa0f1bcc9ca",
       "bytes": 389
@@ -43,6 +103,26 @@
     "g0_result_per-tensor_64.json": {
       "sha256": "6aa095a6dc8a8125a779d87367c61c6909f85ab2e018a4d83da18182b2f2a310",
       "bytes": 388
+    },
+    "jobs_fanout.json": {
+      "sha256": "d9dae4c83ae0229b2ea8667d81d5ab085e04b14427eec1551bf437a178c77c81",
+      "bytes": 1090
+    },
+    "jobs_fanout.log": {
+      "sha256": "a89904ebcf76cbc23601f447b55216b2280846c4910c3bd232611d4ec78f0261",
+      "bytes": 3010
+    },
+    "real_pipeline.log": {
+      "sha256": "cd18183ccd202b4947945ce29941da4db489f078f39fb62ec3ee62b6a8b473ab",
+      "bytes": 6836
+    },
+    "real_pipeline2.log": {
+      "sha256": "979a2580b7075a567e242a09edb64fec325f928127b49571aee65f6376da08de",
+      "bytes": 6167
+    },
+    "real_trt_build.log": {
+      "sha256": "f2faab996c0d6b1aeac3b059c09b7311dc3b50cd216cd8ff1f11c599f6bf9390",
+      "bytes": 31033
     },
     "run2_per-channel_64.log": {
       "sha256": "2b6373e5c4426998057637833168da980e6ef73e39fc17adf59a0a0f79d1947a",
@@ -55,7 +135,15 @@
     "run_per-channel_64.log": {
       "sha256": "a1400a26d170c3d33c85d19374584ea5dcb7ab73d5dd51e3bf8bc9f044a2df59",
       "bytes": 12342
+    },
+    "tavily_probe.json": {
+      "sha256": "fd3ed8e8a8ce3448df8391247ba996c4caeab5ed6f1ba300b0512f27fcdd2522",
+      "bytes": 936
+    },
+    "token_factory_probe.json": {
+      "sha256": "254694672e93d380dc14caedd268db7265dbe1675633091bf33884b06499b69a",
+      "bytes": 866
     }
   },
-  "manifest_hash": "94a6d8346114677a4fe08ec63af533a23fdea5e20b78dde480e66621db0bf9be"
+  "manifest_hash": "4c40c3891b36562e6d4890021701addbfc09ea44722228cc37f1a86c2cca3ae1"
 }
