@@ -1,0 +1,23 @@
+{
+  "reference": "fp32",
+  "n_states": 16,
+  "chunk_x_action": 600,
+  "comparisons": {
+    "int8fp16": {
+      "l2_median": 0.12955611573569567,
+      "l2_max": 0.18778367475369098,
+      "rel_median_pct": 1.0782245047561916,
+      "rel_max_pct": 1.1861115751815683,
+      "elementwise_max_abs": 0.019570999999999894,
+      "score_mag_cvar90": 0.020664504823309948
+    },
+    "fp16": {
+      "l2_median": 0.013084949576469747,
+      "l2_max": 0.02218750145915466,
+      "rel_median_pct": 0.10880390873806642,
+      "rel_max_pct": 0.14012452440033463,
+      "elementwise_max_abs": 0.002354999999999996,
+      "score_mag_cvar90": 0.0024502932421134284
+    }
+  }
+}

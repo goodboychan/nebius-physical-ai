@@ -100,7 +100,10 @@ def free_gpu(*objs):
 def build_engine(onnx_path, engine_path, precision):
     flags = list(TRT_BUILD_FLAGS)
     if precision == "int8":
-        flags.append("--int8")
+        # `--int8`만 켜면 INT8 커널이 없는 레이어가 FP32로 떨어지고 그 사이마다
+        # reformat 노드가 붙는다. 실측(attempt-013): --int8 단독 28.57ms / 274레이어 vs
+        # --int8 --fp16 16.22ms / 236레이어. 반드시 함께 켠다.
+        flags += ["--int8", "--fp16"]
     elif precision == "fp16":
         flags.append("--fp16")
     cmd = [TRTEXEC, f"--onnx={onnx_path}", f"--saveEngine={engine_path}"] + flags
