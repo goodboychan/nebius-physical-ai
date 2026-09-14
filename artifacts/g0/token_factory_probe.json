@@ -1,0 +1,39 @@
+{
+  "base_url": "https://api.studio.nebius.com/v1",
+  "D3": {
+    "model": "nvidia/nemotron-3-super-120b-a12b",
+    "ok": true,
+    "sec": 3.8,
+    "usage": {
+      "completion_tokens": 32,
+      "prompt_tokens": 21,
+      "total_tokens": 53,
+      "completion_tokens_details": null,
+      "prompt_tokens_details": {
+        "audio_tokens": null,
+        "cached_tokens": 0
+      }
+    },
+    "error": null
+  },
+  "D4_candidates": [
+    {
+      "model": "nvidia/NVIDIA-Nemotron-3-Nano-30B-A3B",
+      "vision_ok": false,
+      "sec": 0.9,
+      "error": "HTTP 400: {\"detail\":\"This model does not support image input\"}"
+    },
+    {
+      "model": "openbmb/MiniCPM-V-4_5",
+      "vision_ok": true,
+      "sec": 1.1,
+      "error": null
+    },
+    {
+      "model": "google/gemma-3-27b-it",
+      "vision_ok": true,
+      "sec": 1.4,
+      "error": null
+    }
+  ]
+}

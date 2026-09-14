@@ -1,0 +1,21 @@
+{
+  "budget_ms": 500,
+  "frame": "640x480 PNG",
+  "D4": [
+    {
+      "model": "openbmb/MiniCPM-V-4_5",
+      "median_ms": 1000,
+      "all_ms": [
+        1132,
+        1000,
+        992
+      ],
+      "within_budget": false
+    }
+  ],
+  "D3": {
+    "sec": 1.6,
+    "completion_tokens": 23,
+    "output_nonempty": true
+  }
+}

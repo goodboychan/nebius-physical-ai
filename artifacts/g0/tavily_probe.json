@@ -1,0 +1,21 @@
+{
+  "query": "TensorRT INT8 quantization known issues Jetson Orin transformer attention",
+  "call1": {
+    "sec": 1.7,
+    "n": 5,
+    "urls": [
+      "https://forums.developer.nvidia.com/t/tensorrt-quantization-for-jetson-inference/347929",
+      "https://blog.squeezebits.com/how-to-quantize-transformerbased-model-for-tensorrt-deployment-55802",
+      "https://proventusnova.com/blog/tensorrt-vs-dla-jetson-orin",
+      "https://opensource.microsoft.com/blog/2022/05/02/optimizing-and-deploying-transformer-int8-inference-with-onnx-runtime-tensorrt-on-nvidia-gpus",
+      "https://ohadravid.github.io/posts/2025-01-debugging-vit-and-tensorrt"
+    ]
+  },
+  "reproducibility": {
+    "same_set": true,
+    "same_order": true,
+    "call2_sec": 0.6
+  },
+  "content_hash_call1": "4880cf709cf3c8c55e272455b79625dfa9699540d12f3629b44086021e79747d",
+  "content_hash_call2": "4880cf709cf3c8c55e272455b79625dfa9699540d12f3629b44086021e79747d"
+}
