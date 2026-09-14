@@ -1,0 +1,19 @@
+{
+  "dataset": "lerobot/svla_so101_pickplace",
+  "seed": "PREREG-SEED-2026-09-14",
+  "split_manifest_hash": "5891b37e3eecc30c876d72ee83fbfcbfa05a56ca341a82f993f5b4896e02a702",
+  "sizes": {
+    "train": 34,
+    "val": 8,
+    "audit": 8
+  },
+  "n_frames_decoded": 408,
+  "train_steps": 300,
+  "final_l1": 0.54317,
+  "train_sec": 43.7,
+  "calib_size": 64,
+  "int8_build_ok": false,
+  "int8_build_sec": 0.1,
+  "G0_real_data_criterion_met": false,
+  "norm_stats_hash": "a74364b7ce122e57d8f273c085e8d41bb1fde345c1537ab5013e69788827bc62"
+}
