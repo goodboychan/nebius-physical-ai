@@ -1,0 +1,61 @@
+{
+  "schema": "edgeqgate/artifact_manifest/v1",
+  "stage": "G0",
+  "note": "docs/progress/2026-09-14_attempt-003_g0-trt-int8-path.md",
+  "env": {
+    "tensorrt": "10.14.1.48",
+    "torch": "2.10.0a0",
+    "cuda": "13.0",
+    "modelopt": "0.37.0",
+    "sm": "121",
+    "host": "GB10 aarch64",
+    "container": "nvcr.io/nvidia/pytorch:25.11-py3"
+  },
+  "files": {
+    "act_fp16.engine": {
+      "sha256": "79faee6e2ed2bd26ec7b9f9ba73bfd0cfa0e394184d28f23abf150a97492a45a",
+      "bytes": 75990676
+    },
+    "act_fp32.onnx": {
+      "sha256": "d80ac37744537ee31beda9f0445f24e5aff43c0656ae179ea30bcb9413830bbb",
+      "bytes": 130972442
+    },
+    "act_int8_per-channel.engine": {
+      "sha256": "4fde4d39ba382a36dc33b61add769c3a6efa83145b1cf3e2da3aaea5b84927ef",
+      "bytes": 59534356
+    },
+    "act_int8_per-channel.onnx": {
+      "sha256": "677b01e4b48525035fe7df14f6c7515da876b39ab775a6ad14ebc8a499f4a69c",
+      "bytes": 131425653
+    },
+    "act_int8_per-tensor.engine": {
+      "sha256": "157b42e351724d5742d464073604d545caa7f2a340a9896d486077f319ec707d",
+      "bytes": 59522836
+    },
+    "act_int8_per-tensor.onnx": {
+      "sha256": "82c97ea9fcebe2397a0a8ef48e490f5a2ed8b76c5e789958676e712df716dd2a",
+      "bytes": 131163656
+    },
+    "g0_result_per-channel_64.json": {
+      "sha256": "4ee27c0faa763b7e77644da8a5e6f6fe1797c34a6b354a6b48e5daa0f1bcc9ca",
+      "bytes": 389
+    },
+    "g0_result_per-tensor_64.json": {
+      "sha256": "6aa095a6dc8a8125a779d87367c61c6909f85ab2e018a4d83da18182b2f2a310",
+      "bytes": 388
+    },
+    "run2_per-channel_64.log": {
+      "sha256": "2b6373e5c4426998057637833168da980e6ef73e39fc17adf59a0a0f79d1947a",
+      "bytes": 5532
+    },
+    "run3_per-tensor_64.log": {
+      "sha256": "b0bb63ce48ad9e868b5c8c786e0d23c855d744205db89f64635f74602c2bd517",
+      "bytes": 5529
+    },
+    "run_per-channel_64.log": {
+      "sha256": "a1400a26d170c3d33c85d19374584ea5dcb7ab73d5dd51e3bf8bc9f044a2df59",
+      "bytes": 12342
+    }
+  },
+  "manifest_hash": "94a6d8346114677a4fe08ec63af533a23fdea5e20b78dde480e66621db0bf9be"
+}

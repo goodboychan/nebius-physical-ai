@@ -1,0 +1,202 @@
+# 자동 생성: python -m edgeqgate.grid write
+# 손으로 고치지 말 것. 이 파일은 edgeqgate.grid.canonical_variants()와
+# 일치해야 하며, 불일치 시 load_grid()가 예외를 던진다 (§4.1).
+schema: edgeqgate/variant_grid/v1
+spec_section: §4.1
+axes:
+  calib_size:
+  - 16
+  - 64
+  - 256
+  - 1024
+  calib_composition:
+  - success-only
+  - mixed
+  - late-phase-only
+  granularity:
+  - per-tensor
+  - per-channel
+ordering: calib_size(outer) -> calib_composition(middle) -> granularity(inner)
+variants:
+- code: VC-000
+  precision: fp32
+  target: gx10
+  calib_size: null
+  calib_composition: null
+  granularity: null
+  role: 상한 기준선 / 행동 오차의 레퍼런스
+- code: VC-001
+  precision: int8
+  target: jetson-trt
+  calib_size: 16
+  calib_composition: success-only
+  granularity: per-tensor
+  role: INT8 요인 셀
+- code: VC-002
+  precision: int8
+  target: jetson-trt
+  calib_size: 16
+  calib_composition: success-only
+  granularity: per-channel
+  role: INT8 요인 셀
+- code: VC-003
+  precision: int8
+  target: jetson-trt
+  calib_size: 16
+  calib_composition: mixed
+  granularity: per-tensor
+  role: INT8 요인 셀
+- code: VC-004
+  precision: int8
+  target: jetson-trt
+  calib_size: 16
+  calib_composition: mixed
+  granularity: per-channel
+  role: INT8 요인 셀
+- code: VC-005
+  precision: int8
+  target: jetson-trt
+  calib_size: 16
+  calib_composition: late-phase-only
+  granularity: per-tensor
+  role: INT8 요인 셀
+- code: VC-006
+  precision: int8
+  target: jetson-trt
+  calib_size: 16
+  calib_composition: late-phase-only
+  granularity: per-channel
+  role: INT8 요인 셀
+- code: VC-007
+  precision: int8
+  target: jetson-trt
+  calib_size: 64
+  calib_composition: success-only
+  granularity: per-tensor
+  role: INT8 요인 셀
+- code: VC-008
+  precision: int8
+  target: jetson-trt
+  calib_size: 64
+  calib_composition: success-only
+  granularity: per-channel
+  role: INT8 요인 셀
+- code: VC-009
+  precision: int8
+  target: jetson-trt
+  calib_size: 64
+  calib_composition: mixed
+  granularity: per-tensor
+  role: INT8 요인 셀
+- code: VC-010
+  precision: int8
+  target: jetson-trt
+  calib_size: 64
+  calib_composition: mixed
+  granularity: per-channel
+  role: INT8 요인 셀
+- code: VC-011
+  precision: int8
+  target: jetson-trt
+  calib_size: 64
+  calib_composition: late-phase-only
+  granularity: per-tensor
+  role: INT8 요인 셀
+- code: VC-012
+  precision: int8
+  target: jetson-trt
+  calib_size: 64
+  calib_composition: late-phase-only
+  granularity: per-channel
+  role: INT8 요인 셀
+- code: VC-013
+  precision: int8
+  target: jetson-trt
+  calib_size: 256
+  calib_composition: success-only
+  granularity: per-tensor
+  role: INT8 요인 셀
+- code: VC-014
+  precision: int8
+  target: jetson-trt
+  calib_size: 256
+  calib_composition: success-only
+  granularity: per-channel
+  role: INT8 요인 셀
+- code: VC-015
+  precision: int8
+  target: jetson-trt
+  calib_size: 256
+  calib_composition: mixed
+  granularity: per-tensor
+  role: INT8 요인 셀
+- code: VC-016
+  precision: int8
+  target: jetson-trt
+  calib_size: 256
+  calib_composition: mixed
+  granularity: per-channel
+  role: INT8 요인 셀
+- code: VC-017
+  precision: int8
+  target: jetson-trt
+  calib_size: 256
+  calib_composition: late-phase-only
+  granularity: per-tensor
+  role: INT8 요인 셀
+- code: VC-018
+  precision: int8
+  target: jetson-trt
+  calib_size: 256
+  calib_composition: late-phase-only
+  granularity: per-channel
+  role: INT8 요인 셀
+- code: VC-019
+  precision: int8
+  target: jetson-trt
+  calib_size: 1024
+  calib_composition: success-only
+  granularity: per-tensor
+  role: INT8 요인 셀
+- code: VC-020
+  precision: int8
+  target: jetson-trt
+  calib_size: 1024
+  calib_composition: success-only
+  granularity: per-channel
+  role: INT8 요인 셀
+- code: VC-021
+  precision: int8
+  target: jetson-trt
+  calib_size: 1024
+  calib_composition: mixed
+  granularity: per-tensor
+  role: INT8 요인 셀
+- code: VC-022
+  precision: int8
+  target: jetson-trt
+  calib_size: 1024
+  calib_composition: mixed
+  granularity: per-channel
+  role: INT8 요인 셀
+- code: VC-023
+  precision: int8
+  target: jetson-trt
+  calib_size: 1024
+  calib_composition: late-phase-only
+  granularity: per-tensor
+  role: INT8 요인 셀
+- code: VC-024
+  precision: int8
+  target: jetson-trt
+  calib_size: 1024
+  calib_composition: late-phase-only
+  granularity: per-channel
+  role: INT8 요인 셀
+- code: VC-025
+  precision: fp16
+  target: jetson-trt
+  calib_size: null
+  calib_composition: null
+  granularity: null
+  role: 정밀도 축 대조

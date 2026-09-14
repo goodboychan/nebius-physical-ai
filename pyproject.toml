@@ -1,0 +1,27 @@
+[project]
+name = "edgeqgate"
+version = "0.1.0"
+description = "Offline audit gate for INT8 edge robot policies — pre-registered screening pipeline"
+readme = "README.md"
+license = { text = "Apache-2.0" }
+requires-python = ">=3.10"
+dependencies = [
+    "numpy>=1.26",
+    "scipy>=1.11",
+    "PyYAML>=6.0",
+]
+
+[project.optional-dependencies]
+dev = ["pytest>=8.0"]
+# torch/ONNX/TensorRT 경로는 호스트에 설치하지 않는다. NGC 컨테이너에서 실행한다.
+# scripts/g0_dryrun.sh 참조.
+
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]

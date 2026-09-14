@@ -1,0 +1,26 @@
+{
+  "calib_size": 64,
+  "granularity": "per-tensor",
+  "resolution": [
+    480,
+    640
+  ],
+  "params_M": 78.01,
+  "output_shape": [
+    1,
+    100,
+    6
+  ],
+  "calib_sec": 1.4,
+  "uncalibrated_quantizers": 201,
+  "qdq_nodes": {
+    "QuantizeLinear": 134,
+    "DequantizeLinear": 134
+  },
+  "int8_build": {
+    "ok": true,
+    "sec": 27.3,
+    "rc": 0
+  },
+  "G0_criterion_met": true
+}

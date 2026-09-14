@@ -1,0 +1,7 @@
+.venv/
+__pycache__/
+*.pyc
+# 대용량 바이너리는 커밋하지 않는다. 해시는 artifacts/manifests/에 기록한다 (§5.3).
+artifacts/**/*.engine
+artifacts/**/*.onnx
+artifacts/**/*.log
