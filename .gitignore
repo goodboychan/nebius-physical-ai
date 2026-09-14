@@ -5,3 +5,4 @@ __pycache__/
 artifacts/**/*.engine
 artifacts/**/*.onnx
 artifacts/**/*.log
+src/*.egg-info/

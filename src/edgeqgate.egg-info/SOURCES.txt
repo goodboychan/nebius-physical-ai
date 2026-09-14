@@ -1,7 +1,0 @@
-LICENSE
-pyproject.toml
-src/edgeqgate.egg-info/PKG-INFO
-src/edgeqgate.egg-info/SOURCES.txt
-src/edgeqgate.egg-info/dependency_links.txt
-src/edgeqgate.egg-info/requires.txt
-src/edgeqgate.egg-info/top_level.txt
