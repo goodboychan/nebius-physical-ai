@@ -113,6 +113,15 @@ def main():
         for i in common]).float() / 255.0
     log(f"텐서 구성: images {tuple(imgs.shape)} states {states.shape} actions {actions.shape}")
 
+    # 프레임 캐시: 디코딩은 비싸고 결정적이므로 한 번만 하고 재사용한다.
+    cache = f"{a.outdir}/frames_cache.npz"
+    if not os.path.exists(cache):
+        np.savez_compressed(cache, images=(imgs.numpy() * 255).astype(np.uint8),
+                            states=states, actions=actions,
+                            frame_index=np.array(common),
+                            episodes=np.array(sorted(chosen_eps)))
+        log(f"프레임 캐시 저장: {cache} ({os.path.getsize(cache)/1e6:.0f} MB)")
+
     s_mean, s_std = states.mean(0), states.std(0) + 1e-6
     a_mean, a_std = actions.mean(0), actions.std(0) + 1e-6
     S = torch.from_numpy((states - s_mean) / s_std)
@@ -143,6 +152,16 @@ def main():
 
     model.eval()
     ex = (imgs[:1].cuda(), S[:1].cuda())
+
+    # `IG-3`: 모든 변형 셀은 이 체크포인트 **하나**에서 파생된다. 재학습 금지.
+    ckpt = f"{a.outdir}/act_fp32_reference.pt"
+    torch.save({"state_dict": model.state_dict(),
+                "norm": {"s_mean": s_mean, "s_std": s_std, "a_mean": a_mean, "a_std": a_std},
+                "split_manifest_hash": manifest.manifest_hash,
+                "train_steps": a.train_steps, "seed": SEED}, ckpt)
+    ck_hash = __import__("hashlib").sha256(open(ckpt, "rb").read()).hexdigest()
+    log(f"FP32 레퍼런스 체크포인트 저장 (IG-3): {os.path.getsize(ckpt)/1e6:.0f} MB  sha256={ck_hash[:16]}")
+    res["fp32_checkpoint_sha256"] = ck_hash
 
     # ---- 캘리브레이션: 실데이터, train 분할에서만 (`IG-1`) ----
     import copy, modelopt.torch.quantization as mtq

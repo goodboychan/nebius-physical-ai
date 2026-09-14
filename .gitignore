@@ -2,9 +2,12 @@
 __pycache__/
 *.pyc
 # 대용량 바이너리는 커밋하지 않는다. 해시는 artifacts/manifests/에 기록한다 (§5.3).
-artifacts/**/*.engine
-artifacts/**/*.onnx
-artifacts/**/*.log
+# artifacts 아래는 기본 제외하고 json 결과와 매니페스트만 추적한다.
+artifacts/*
+!artifacts/manifests/
+!artifacts/g0/
+artifacts/g0/*
+!artifacts/g0/*.json
 src/*.egg-info/
 # 자격증명 — 절대 커밋 금지
 .env

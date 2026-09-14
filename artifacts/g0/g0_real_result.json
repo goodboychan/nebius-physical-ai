@@ -9,11 +9,12 @@
   },
   "n_frames_decoded": 408,
   "train_steps": 300,
-  "final_l1": 0.54317,
-  "train_sec": 43.7,
+  "final_l1": 0.66947,
+  "train_sec": 43.0,
+  "fp32_checkpoint_sha256": "ff94f873702c494aa72e3cc29c3815c9201024d1da41699ca47a51fda14c567f",
   "calib_size": 64,
-  "int8_build_ok": false,
-  "int8_build_sec": 0.1,
-  "G0_real_data_criterion_met": false,
+  "int8_build_ok": true,
+  "int8_build_sec": 20.9,
+  "G0_real_data_criterion_met": true,
   "norm_stats_hash": "a74364b7ce122e57d8f273c085e8d41bb1fde345c1537ab5013e69788827bc62"
 }

@@ -1,0 +1,98 @@
+{
+  "reference_checkpoint_sha256_prefix": "ff94f873702c494a",
+  "granularity": "per-channel",
+  "n_quantizers_compared": 132,
+  "baseline": "256/uniform",
+  "summary": {
+    "weight|16/uniform": {
+      "median_rel_diff": 0.0,
+      "max_rel_diff": 0.0,
+      "corr_with_base": 0.9999999999999999
+    },
+    "weight|16/late-phase": {
+      "median_rel_diff": 0.0,
+      "max_rel_diff": 0.0,
+      "corr_with_base": 0.9999999999999999
+    },
+    "weight|16/early-phase": {
+      "median_rel_diff": 0.0,
+      "max_rel_diff": 0.0,
+      "corr_with_base": 0.9999999999999999
+    },
+    "weight|64/uniform": {
+      "median_rel_diff": 0.0,
+      "max_rel_diff": 0.0,
+      "corr_with_base": 0.9999999999999999
+    },
+    "weight|64/late-phase": {
+      "median_rel_diff": 0.0,
+      "max_rel_diff": 0.0,
+      "corr_with_base": 0.9999999999999999
+    },
+    "weight|64/early-phase": {
+      "median_rel_diff": 0.0,
+      "max_rel_diff": 0.0,
+      "corr_with_base": 0.9999999999999999
+    },
+    "weight|256/uniform": {
+      "median_rel_diff": 0.0,
+      "max_rel_diff": 0.0,
+      "corr_with_base": 0.9999999999999999
+    },
+    "weight|256/late-phase": {
+      "median_rel_diff": 0.0,
+      "max_rel_diff": 0.0,
+      "corr_with_base": 0.9999999999999999
+    },
+    "weight|256/early-phase": {
+      "median_rel_diff": 0.0,
+      "max_rel_diff": 0.0,
+      "corr_with_base": 0.9999999999999999
+    },
+    "activation|16/uniform": {
+      "median_rel_diff": 0.07209396362304688,
+      "max_rel_diff": 0.3644125163555145,
+      "corr_with_base": 0.9919259758555763
+    },
+    "activation|16/late-phase": {
+      "median_rel_diff": 0.11224512755870819,
+      "max_rel_diff": 0.340500146150589,
+      "corr_with_base": 0.9946459589496115
+    },
+    "activation|16/early-phase": {
+      "median_rel_diff": 0.038089726120233536,
+      "max_rel_diff": 0.31633883714675903,
+      "corr_with_base": 0.9913366502421113
+    },
+    "activation|64/uniform": {
+      "median_rel_diff": 0.018675753846764565,
+      "max_rel_diff": 0.2689998745918274,
+      "corr_with_base": 0.9961312629429306
+    },
+    "activation|64/late-phase": {
+      "median_rel_diff": 0.030778473243117332,
+      "max_rel_diff": 0.2722795009613037,
+      "corr_with_base": 0.9935872920025063
+    },
+    "activation|64/early-phase": {
+      "median_rel_diff": 0.03355341777205467,
+      "max_rel_diff": 0.25026124715805054,
+      "corr_with_base": 0.9957870035802896
+    },
+    "activation|256/uniform": {
+      "median_rel_diff": 0.0,
+      "max_rel_diff": 0.0,
+      "corr_with_base": 1.0
+    },
+    "activation|256/late-phase": {
+      "median_rel_diff": 0.020711828023195267,
+      "max_rel_diff": 0.2547260820865631,
+      "corr_with_base": 0.9949668381762079
+    },
+    "activation|256/early-phase": {
+      "median_rel_diff": 0.0120970094576478,
+      "max_rel_diff": 0.23977136611938477,
+      "corr_with_base": 0.9960502018421984
+    }
+  }
+}
