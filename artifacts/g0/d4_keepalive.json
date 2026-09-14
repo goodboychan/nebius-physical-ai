@@ -1,0 +1,22 @@
+{
+  "budget_ms": 500,
+  "mode": "keep-alive",
+  "openbmb/MiniCPM-V-4_5": {
+    "connect_ms": 650,
+    "median_ms": 381,
+    "min_ms": 376,
+    "max_ms": 414,
+    "n": 6,
+    "errors": 0,
+    "within_budget": true
+  },
+  "google/gemma-3-27b-it": {
+    "connect_ms": 606,
+    "median_ms": 739,
+    "min_ms": 453,
+    "max_ms": 968,
+    "n": 6,
+    "errors": 0,
+    "within_budget": false
+  }
+}

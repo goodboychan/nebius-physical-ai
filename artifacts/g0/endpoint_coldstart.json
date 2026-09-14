@@ -1,0 +1,14 @@
+{
+  "platform": "cpu-d3",
+  "preset": "2vcpu-8gb",
+  "provision_to_first_response_sec": 119.0,
+  "url_obtained": true,
+  "warm_latency_ms": {
+    "n": 10,
+    "median": 854,
+    "min": 822,
+    "max": 928,
+    "p90": 906
+  },
+  "deleted": true
+}
