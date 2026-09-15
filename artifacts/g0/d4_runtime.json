@@ -1,0 +1,28 @@
+{
+  "model": "openbmb/MiniCPM-V-4_5",
+  "target_rate_hz": 2.0,
+  "achieved_rate_hz": 1.97,
+  "duration_s": 30.0,
+  "reconnects": 0,
+  "control_loop_reads": 878,
+  "stale_read_fraction": 0.0387,
+  "ex3": {
+    "n_verdicts": 59,
+    "decisions": {
+      "CONTINUE": 59
+    },
+    "n_errors": 0,
+    "latency_ms": {
+      "median": 423.97522926330566,
+      "p90": 432.43980407714844,
+      "max": 1067.8377151489258
+    },
+    "singleton_aborts": 0,
+    "config": {
+      "rate_hz": 2.0,
+      "stale_after_ms": 1500.0,
+      "abort_on_stale": false,
+      "consecutive_for_abort": 2
+    }
+  }
+}
