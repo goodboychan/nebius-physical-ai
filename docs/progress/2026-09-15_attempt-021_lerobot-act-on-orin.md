@@ -17,8 +17,15 @@ ACT의 export 경로를 전 구간 검증했지만, **Orin에서 빌드해본 �
 
 - 장비: Jetson AGX Orin, **15W** 모드 (attempt-012/013과 동일 — 비교 가능)
 - TensorRT 10.3.0.30
-- 플래그: `--memPoolSize=workspace:4096 --builderOptimizationLevel=3 --int8 --fp16`
-  (attempt-013에서 확정된 고정 플래그. `--int8` 단독은 미커버 레이어가 FP32로 떨어진다)
+- 플래그: `--memPoolSize=workspace:2048 --skipInference --int8 --fp16 --exportLayerInfo`
+  (`--int8` 단독은 미커버 레이어가 FP32로 떨어진다 — attempt-013)
+
+  > **정정 (attempt-024)**: 최초 기록은 `--memPoolSize=workspace:4096
+  > --builderOptimizationLevel=3`이었다. 실제 빌드 로그를 다시 읽으니 workspace는
+  > **2048**이고 `--builderOptimizationLevel`은 **주지 않았다**(TRT 10.3 기본값이 3이다).
+  > attempt-024의 timing cache·결정성 측정은 4096 + 명시 optLevel 3으로 돌았으므로
+  > **attempt-021과 플래그가 다르다.** 두 측정 사이의 엔진 크기 차이를 비결정성으로
+  > 해석하면 안 된다. 결정성 판정은 attempt-024 안에서 동일 플래그 2회로만 한다.
 - 추론: 100 iteration, `--exportLayerInfo`
 - 모델: `lerobot` ACT, 사전학습 없이 export한 Q/DQ ONNX (6-DoF / 12-DoF)
 
