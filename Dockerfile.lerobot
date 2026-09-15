@@ -1,0 +1,6 @@
+# LeRobot ACT export 검증용. edgeqgate:25.11(NGC 25.11 + TRT 10.14 + modelopt) 위에 얹는다.
+FROM edgeqgate:25.11
+
+# LeRobot 0.6.1은 av를 하드 의존으로 선언하지 않으면서 import한다.
+# PyAV >= 14에서는 av.option이 속성으로 노출되지 않아 import 단계에서 깨진다.
+RUN pip install --no-cache-dir "lerobot==0.6.1" "av==13.1.0"
