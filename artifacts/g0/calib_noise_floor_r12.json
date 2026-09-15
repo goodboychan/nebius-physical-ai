@@ -1,0 +1,129 @@
+{
+  "n_activation_scalars": 67,
+  "effect_placement": [
+    {
+      "size": 16,
+      "effect": 0.005519975442439318,
+      "null_median": 0.02194409817457199,
+      "null_max": 0.056507520377635956,
+      "percentile": 3.0303030303030303,
+      "n_null": 132
+    },
+    {
+      "size": 64,
+      "effect": 0.006260378286242485,
+      "null_median": 0.006540713831782341,
+      "null_max": 0.04374010115861893,
+      "percentile": 49.24242424242424,
+      "n_null": 132
+    }
+  ],
+  "n_activation_quantizers": 67,
+  "granularity": "per-channel",
+  "replicates": 12,
+  "noise_floor_median_rel": 0.016167749650776386,
+  "within_config": {
+    "16/late-phase-only": {
+      "median": 0.019050625152885914,
+      "max": 0.04902731999754906,
+      "n_pairs": 66
+    },
+    "16/mixed": {
+      "median": 0.026500053703784943,
+      "max": 0.056507520377635956,
+      "n_pairs": 66
+    },
+    "64/late-phase-only": {
+      "median": 0.0006721231038682163,
+      "max": 0.015134264715015888,
+      "n_pairs": 66
+    },
+    "64/mixed": {
+      "median": 0.01615871023386717,
+      "max": 0.04374010115861893,
+      "n_pairs": 66
+    }
+  },
+  "composition_effects": [
+    {
+      "size": 16,
+      "a": "late-phase-only",
+      "b": "mixed",
+      "median_rel": 0.005519975442439318,
+      "vs_floor": 0.3414189087331795
+    },
+    {
+      "size": 64,
+      "a": "late-phase-only",
+      "b": "mixed",
+      "median_rel": 0.006260378286242485,
+      "vs_floor": 0.38721395503188394
+    }
+  ],
+  "size_effects": [
+    {
+      "composition": "late-phase-only",
+      "a": 16,
+      "b": 64,
+      "median_rel": 0.02786972187459469,
+      "vs_floor": 1.723784848020353
+    },
+    {
+      "composition": "mixed",
+      "a": 16,
+      "b": 64,
+      "median_rel": 0.05490049347281456,
+      "vs_floor": 3.3956793405802275
+    }
+  ],
+  "calibration_set_hashes": {
+    "16/mixed/rep0": "b6c47d37da7dbb180361b55708763327dae396b1512df804484c7d4fe317b8cd",
+    "16/mixed/rep1": "30c878e74ce299c103bac90f1676b479ac6bc0a7f9572dd6c16584b1685dcb47",
+    "16/mixed/rep2": "e85f1bed9273ce3e486482f8e0c37f6a57c58425a0e21a6e5196e998f1479e71",
+    "16/mixed/rep3": "5bcfca4eeca43ac24c0549d91de6788f7b4924235af82295efed0f07e4c00a46",
+    "16/mixed/rep4": "dcf23e6700b5058ad0376e32b9f2e1b1a0c38185c5cc54e49c0748007b01a006",
+    "16/mixed/rep5": "5a4bf2a75802a232d6617724fb7c400376d23af3b0e7025bd27d5f7688882b0e",
+    "16/mixed/rep6": "750573140a7bd8f776a5357b6322f48f8b504e9bcdaab7c43af7188a73d49ec4",
+    "16/mixed/rep7": "f01bf096e8d78a1bdd0cd261fc18c5b2ce1b2e1518898c14b56c44f278ffe3ba",
+    "16/mixed/rep8": "120356dc420d1454b19b7d835c50a6ee27ad611d763bde241c11d2bd99cb3568",
+    "16/mixed/rep9": "8c8034ae3c07e354979e27bc23a200ef5a5f77f24e02dec63dbb9fffc4d96fa6",
+    "16/mixed/rep10": "e369ad59267d1349576ce56db69e277227c72dae7e191e203df342c1df1af584",
+    "16/mixed/rep11": "2f4c34ade3fd0019406e04303146ebd93f3c53fe2abbecd365369bdb9c5ccc23",
+    "16/late-phase-only/rep0": "18bd1c07d1643d0e76a5c15853ea961d7c1d8646383e58293cccdd4e38714e66",
+    "16/late-phase-only/rep1": "c10b38d0199b8d2e774fa3a6371583e3fc1bdc4fb9d9db9c6352f0a0ef499544",
+    "16/late-phase-only/rep2": "202815c33ba5e3c76987638a89e1f68cc39fedbf97538f3b567a6163b74dca14",
+    "16/late-phase-only/rep3": "b74b8af1c7fae4944ae7ca631898192b622fefbeeb3737b840aa35d26823b207",
+    "16/late-phase-only/rep4": "ed1d77668f61f890f8e6b4b72b59a6ea9fa3f317e05238223112b7a52563914f",
+    "16/late-phase-only/rep5": "4eb53cb33d372b9159067819f165f235d7aec9d26a51a9601aac5cdf1ba2736b",
+    "16/late-phase-only/rep6": "5037b64e416630383e55be743742677b2b1a5886d9662a330cb030b900033217",
+    "16/late-phase-only/rep7": "95eb089f6772107fe9a281ebf59d53b87b689f99c0f46d9d5df8408a530c4a18",
+    "16/late-phase-only/rep8": "67e128f0b5a0b390ba2f9351439cfa0232c4ea8f1bf9240d141250f325844c43",
+    "16/late-phase-only/rep9": "8d079f5b8a060de83db41b475d73826053d956b36a0b53641554de16b66168ff",
+    "16/late-phase-only/rep10": "bc1fc916f42564a4024969a23b9f373b0f751039c5519e68edd0a5f63c547ad5",
+    "16/late-phase-only/rep11": "838db1f7841dc2300c13da800de066660cf1f33c5bf546d924097c2e3d442644",
+    "64/mixed/rep0": "16d37282e078ac8719ea9285902077f470829d5f3249f230a1dc735ee2570224",
+    "64/mixed/rep1": "8889b2c7d8bb26dc86ed886db0a5d683807e6e0d02c42f1e85b629c7de5a32d0",
+    "64/mixed/rep2": "05e22ae7d9c2f292f96b81160fc8aca2c434ccd4565a98af83ff7f7220de30bf",
+    "64/mixed/rep3": "0bb5b7d49f548b991f31860afa4fa1963cace4278f19cd4ea2f16ae0c960a8e8",
+    "64/mixed/rep4": "1620fb2464abf42a890e0cd8074ecadef0af1807b1d0d4380f0958d4f82651ba",
+    "64/mixed/rep5": "8838c44940944f2a6b221a0e338b134afd5dae3776467b4842be3b1746a9c395",
+    "64/mixed/rep6": "c3c6ee6c92bf2c526cb1d67776bc2a34b994186df1f86d61b5225466006a90d5",
+    "64/mixed/rep7": "69af995a76752237abefd675ebb4c2facee5059036c46060739f8a53b3f3d58d",
+    "64/mixed/rep8": "4c433df1e3ad3ed2131665de20075d24f526214e326db32f6ac66da85ce2b8a5",
+    "64/mixed/rep9": "51202af02632f151cc74328d70ac9669488ce35a9ce111b89153a6c46d00ca22",
+    "64/mixed/rep10": "d6684c2d4feea638376cb1a426d7a3a586e870107a72e787e21c81e4ec938cf7",
+    "64/mixed/rep11": "8eeb7d717c86b63ac3871f3aecaf24363685ee2d7a5063a72ef80318f2a12d3b",
+    "64/late-phase-only/rep0": "39ebee9377d6c39553591254077bcbcfdcaccb3c701e09b3c83ffeaafbf27323",
+    "64/late-phase-only/rep1": "bc5061c7985a3812a14a6c56ce25bd00e473f7ea3ad51fe7b6fde15487960ceb",
+    "64/late-phase-only/rep2": "159b5442a3e2cb2e8a9bee9009a98a10ade4491c407d37fa920aef0ce324f72b",
+    "64/late-phase-only/rep3": "b348acb1a571de1407a1408c7934874d65e0abc10d0d2f77d0e66902cdc8f6dd",
+    "64/late-phase-only/rep4": "5e1289bc11f974b3270853db09afbe86ea668b1b6ebb352c5d8ef1906b83f3cc",
+    "64/late-phase-only/rep5": "d1c47730660a2ceefc0bda1faa355ff21b4d7b593d6332c6e7e07d3b2ab55de7",
+    "64/late-phase-only/rep6": "07c21b371c2b5f053cb97cafeaf44d0de156182e4229dbaeaf37640c129e5025",
+    "64/late-phase-only/rep7": "c3c7ae558f93e6055c58ae3e6742a56e9be81bc3f5b3deb0d8be71d85fa6c106",
+    "64/late-phase-only/rep8": "280ba659f5cbe7b7b8e4f08ee858dedb6e34519ca86d0b32b9bd008efa192964",
+    "64/late-phase-only/rep9": "452ff8c936ae3cedc753ca582e82dcb0977fdc9d74b350ca910f14efd51badda",
+    "64/late-phase-only/rep10": "f70d82f0331b74ef6d10cd403385b06693a129a815b83c691dd41e66dd66b880",
+    "64/late-phase-only/rep11": "98409e6313881054679ebe308111f6c5762c92a1ce2b30e47938df89782910d1"
+  }
+}
