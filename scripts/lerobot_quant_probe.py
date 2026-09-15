@@ -9,6 +9,8 @@ torch.backends.mha.set_fastpath_enabled(False)
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 from lerobot_export_probe import build, Wrap  # noqa
 
+DOF = int(os.environ.get("ACT_DOF", "6"))
+
 
 def log(m): print(f"[lq] {m}", flush=True)
 
@@ -30,14 +32,15 @@ def trt(onnx, eng, flags, tag):
 
 
 def main():
-    cfg, policy = build()
+    cfg, policy = build(DOF)
+    log(f"action/state 차원 {DOF}")
     w = Wrap(policy.model).cuda().eval()
-    ex = (torch.randn(1, 6).cuda(), torch.rand(1, 3, 480, 640).cuda(),
+    ex = (torch.randn(1, DOF).cuda(), torch.rand(1, 3, 480, 640).cuda(),
           torch.rand(1, 3, 480, 640).cuda())
     with torch.no_grad():
         log(f"forward {tuple(w(*ex).shape)}")
 
-    ok_fp = trt("/out/lerobot_act.onnx", "/out/lerobot_act_fp16.engine", ["--fp16"], "FP16")
+    ok_fp = trt(f"/out/lerobot_act_{DOF}dof.onnx", f"/out/lerobot_act_{DOF}dof_fp16.engine", ["--fp16"], "FP16")
 
     import copy, modelopt.torch.quantization as mtq
     qcfg = copy.deepcopy(mtq.INT8_DEFAULT_CFG)
@@ -46,7 +49,7 @@ def main():
     def loop(m):
         with torch.no_grad():
             for _ in range(n_cal):
-                m(torch.randn(1, 6).cuda(), torch.rand(1, 3, 480, 640).cuda(),
+                m(torch.randn(1, DOF).cuda(), torch.rand(1, 3, 480, 640).cuda(),
                   torch.rand(1, 3, 480, 640).cuda())
 
     t0 = time.time()
@@ -60,7 +63,7 @@ def main():
 
     wq = wq.cpu()
     exc = tuple(t.cpu() for t in ex)
-    p8 = "/out/lerobot_act_int8.onnx"
+    p8 = f"/out/lerobot_act_{DOF}dof_int8.onnx"
     torch.onnx.export(wq, exc, p8, input_names=["state", "images_up", "images_side"],
                       output_names=["actions"], opset_version=17,
                       do_constant_folding=True, dynamo=False)
@@ -74,7 +77,7 @@ def main():
     del wq, w
     import gc; gc.collect(); torch.cuda.empty_cache()
 
-    ok8 = trt(p8, "/out/lerobot_act_int8.engine", ["--int8", "--fp16"], "INT8")
+    ok8 = trt(p8, f"/out/lerobot_act_{DOF}dof_int8.engine", ["--int8", "--fp16"], "INT8")
     log(f"결과: FP16={ok_fp} INT8={ok8}")
     return 0 if (ok_fp and ok8) else 1
 

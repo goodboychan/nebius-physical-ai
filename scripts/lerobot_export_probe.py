@@ -31,15 +31,15 @@ class Wrap(torch.nn.Module):
         return r[0] if isinstance(r, (tuple, list)) else r
 
 
-def build():
-    """SO-101 드라이런 데이터셋 형상에 맞춘 ACT (카메라 2, state 6, action 6)."""
+def build(dof: int = 6):
+    """SO-101 형상 ACT. dof=6은 단일팔, dof=12는 양팔(ALOHA는 14)."""
     cfg = ACTConfig(
         input_features={
-            "observation.state": PolicyFeature(type=FeatureType.STATE, shape=(6,)),
+            "observation.state": PolicyFeature(type=FeatureType.STATE, shape=(dof,)),
             "observation.images.up": PolicyFeature(type=FeatureType.VISUAL, shape=(3, 480, 640)),
             "observation.images.side": PolicyFeature(type=FeatureType.VISUAL, shape=(3, 480, 640)),
         },
-        output_features={"action": PolicyFeature(type=FeatureType.ACTION, shape=(6,))},
+        output_features={"action": PolicyFeature(type=FeatureType.ACTION, shape=(dof,))},
         chunk_size=100,
         n_action_steps=100,
     )
