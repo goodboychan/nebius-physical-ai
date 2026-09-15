@@ -4,7 +4,9 @@
   - `IG-3`: 모든 셀이 **동일한 FP32 체크포인트 하나**에서 파생된다. 재학습 없음.
     체크포인트 해시를 기록하고, 셀마다 deepcopy로 복원한다
   - §4.2: TRT 빌드 옵션은 셀 간 **고정**한다. `TRT_BUILD_FLAGS` 한 곳에서만 정의한다
-  - `IG-1`: 캘리브레이션은 train 분할에서만 (edgeqgate.calibration이 강제)
+  - `IG-1`: 캘리브레이션은 train 분할에서만. **`edgeqgate.calibration`을 실제로 호출한다.**
+    attempt-022 이전에는 이 파일이 자체 RNG로 프레임을 뽑았고 `calib_composition`이
+    시드 문자열에만 들어갔다 — 즉 구성 축이 **시드 변경과 구별되지 않았다**
   - attempt-009: trtexec 실행 전 GPU 메모리를 반납한다. 안 하면 workspace 할당이 실패한다
 
 산출물(§5.3): 셀별 엔진·ONNX 해시, Q/DQ 노드 수, 스케일 통계, 환경 메타데이터.
@@ -23,6 +25,15 @@ torch.backends.mha.set_fastpath_enabled(False)
 from act_model import ACTInference
 from edgeqgate.grid import load_grid
 from edgeqgate.hashing import hash_obj
+from edgeqgate.calibration import (CalibrationUnavailable, build_calibration_set,
+                                   verify_no_audit_leak)
+from edgeqgate.splits import determine_splits
+
+# §3.2 분할 시드·크기. `g0_real_data_pipeline.py`와 **같은 값이어야** manifest 해시가
+# 일치한다. 두 곳에 흩어져 있으므로 빌드 시작 시 해시를 기록해 대조한다.
+SEED = "PREREG-SEED-2026-09-14"
+SPLIT_SIZES = {"train": 34, "val": 8, "audit": 8}
+DATASET_ROOT = "/data/so101_pickplace"
 
 # §4.2: 셀 간 동일하게 고정되는 빌드 옵션. 여기 말고 다른 데서 바꾸면 통제가 깨진다.
 TRT_BUILD_FLAGS = [
@@ -88,6 +99,34 @@ def scale_stats(onnx_path):
             "per_axis_scales": per_axis, "scalar_scales": scalar}
 
 
+def calibration_index(frame_index):
+    """평탄한 프레임 캐시를 `(에피소드, 에피소드 내 순번)` 좌표로 되돌린다.
+
+    `edgeqgate.calibration`은 프레임을 그 좌표계로 다룬다. `late-phase-only`가
+    "에피소드 후반 1/3"을 뜻하려면 순번이 있어야 하고, `IG-1`의 train 한정과
+    audit 누출 재검사도 에피소드 단위로 돈다. 캐시는 평탄하므로 되돌려야 한다.
+
+    드라이런 주의: 캐시는 에피소드당 12프레임만 담은 **부분표본**이다. 따라서
+    여기서의 "순번"은 캐시된 프레임 사이의 순번이며, 균일 부분표본이므로 실제 위상과
+    단조 관계를 유지한다. 본 실험에서는 캐시가 전 프레임을 담으므로 둘이 일치한다.
+    """
+    import pandas as pd
+    df = pd.read_parquet(f"{DATASET_ROOT}/data/chunk-000/file-000.parquet")
+    ep_col = df.set_index("index")["episode_index"]
+    all_eps = sorted({f"ep{int(x):03d}" for x in ep_col.unique()})
+    manifest = determine_splits(all_eps, seed=SEED, sizes=SPLIT_SIZES)
+
+    # `frame_index`는 전역 프레임 번호의 오름차순이고, 캐시 배열의 위치와 1:1이다.
+    lengths = {ep: 0 for ep in manifest.ids("train")}
+    pos_of = {}
+    for pos, g in enumerate(frame_index):
+        ep = f"ep{int(ep_col.loc[int(g)]):03d}"
+        i = lengths.get(ep, 0)
+        pos_of[(ep, i)] = pos
+        lengths[ep] = i + 1
+    return manifest, lengths, pos_of
+
+
 def free_gpu(*objs):
     """attempt-009: 학습/양자화 텐서를 쥔 채 trtexec를 띄우면 OOM이 난다."""
     for o in objs:
@@ -145,7 +184,14 @@ def main():
     s_mean, s_std = ck["norm"]["s_mean"], ck["norm"]["s_std"]
     S = torch.from_numpy((states - s_mean) / s_std).float()
     n_frames = imgs.shape[0]
-    log(f"캘리브레이션 풀 {n_frames} 프레임 (train 분할에서 추출된 캐시)")
+    manifest, ep_lengths, pos_of = calibration_index(d["frame_index"])
+    n_eps = sum(1 for v in ep_lengths.values() if v)
+    log(f"캘리브레이션 풀 {n_frames} 프레임 / train 에피소드 {n_eps}개 "
+        f"(manifest_hash={manifest.manifest_hash[:16]})")
+    # 공개 데이터셋에는 성공/실패 라벨이 없다. `success=None`이면 `success-only`가
+    # `mixed`와 같아지고 `CalibrationSet.approximated`가 True로 표시된다.
+    # 본 실험에서는 `G1` 라벨을 넘긴다 — 여기서 조용히 넘어가지 않도록 셀마다 기록한다.
+    success_labels = None
 
     import modelopt.torch.quantization as mtq
     env = env_metadata()
@@ -181,24 +227,31 @@ def main():
             size = v.calib_size
             if a.max_calib_size:
                 size = min(size, a.max_calib_size)
-            if size > n_frames:
-                rec.update(ok=False, error=f"캘리브레이션 {v.calib_size} > 풀 {n_frames}",
+            # 프레임 선택은 `edgeqgate.calibration`이 한다. 여기서 직접 뽑으면
+            # `IG-1`(train 한정)·audit 누출 재검사·구성 축 필터가 전부 우회된다.
+            try:
+                cs = build_calibration_set(
+                    cell=v.code, calib_size=size, composition=v.calib_composition,
+                    manifest=manifest, episode_lengths=ep_lengths, seed=SEED,
+                    success=success_labels)
+                verify_no_audit_leak(cs, manifest)
+            except CalibrationUnavailable as e:
+                rec.update(ok=False, error=str(e)[:400],
                            sec=round(time.time() - t_cell, 1))
                 results[v.code] = rec
                 log(f"{v.code}: 실패 — {rec['error']}")
                 free_gpu(net, ex)
                 continue
+            sel = [pos_of[f] for f in cs.frames]
+            rec["calib_set_hash"] = cs.set_hash
+            rec["calib_approximated"] = cs.approximated
+            rec["calib_frames_hash"] = hash_obj(sorted(int(x) for x in sel))
+
             cfg = copy.deepcopy(mtq.INT8_DEFAULT_CFG)
             if v.granularity == "per-tensor":
                 for q in cfg["quant_cfg"].values():
                     if isinstance(q, dict) and "axis" in q:
                         q["axis"] = None
-            # 캘리브레이션 프레임 선택은 셀·구성·크기에서 결정적으로 정해진다.
-            rng = np.random.default_rng(
-                int(hashlib.sha256(f"{v.code}|{v.calib_composition}|{size}".encode()
-                                   ).hexdigest()[:8], 16))
-            sel = rng.choice(n_frames, size=size, replace=False)
-            rec["calib_frames_hash"] = hash_obj(sorted(int(x) for x in sel))
 
             def loop(m, sel=sel):
                 with torch.no_grad():
