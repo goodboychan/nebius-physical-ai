@@ -1,0 +1,22 @@
+{
+  "purpose": "D6 GR00T 콜드스타트 대리 측정 (§12)",
+  "caveat": "전체 Isaac-GR00T 스택이 아니라 지배적 비용(이미지풀+다운로드+GPU로드)만 측정. 실제 콜드스타트의 하한.",
+  "platform": "gpu-l40s-a / 1gpu-8vcpu-32gb / eu-north1",
+  "image": "pytorch/pytorch:2.5.1-cuda12.4-cudnn9-runtime",
+  "model": "nvidia/GR00T-N1.5-3B",
+  "n_params": 2724163520,
+  "gpu": "NVIDIA L40S",
+  "total_cold_start_s": 561,
+  "breakdown_s": {
+    "image_pull_and_provision": 372.7,
+    "deps_install": 2.11,
+    "weights_download": 182.9,
+    "gpu_load": 3.3
+  },
+  "warm_roundtrip_ms": {
+    "median": 948,
+    "min": 892,
+    "max": 973
+  },
+  "note": "웜 왕복은 추론 없는 HTTP GET이다. GR00T 추론 시간은 여기에 더해진다."
+}
