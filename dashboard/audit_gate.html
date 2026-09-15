@@ -1,0 +1,441 @@
+<title>엣지 양자화 배포 게이트</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans+Condensed:wght@500;600&family=IBM+Plex+Sans:wght@400;450;600&display=swap">
+<style>
+:root{
+  --ink:#14181C; --ink-2:#3C464E; --ink-3:#5A646C;
+  --paper:#F1F3F2; --plate:#FAFBFA; --rule:#D3D9D7; --rule-2:#E3E8E6;
+  --signal:#00909B; --ember:#A8430F;
+  --seq-1:#BFE4E8; --seq-2:#6FC3CB; --seq-3:#1E97A3; --seq-4:#0A5C66;
+  --good:#2E6B4F; --warn:#8C6A15; --halt:#99332F; --void:#6E7780;
+  --good-bg:#E3EFE8; --warn-bg:#F4EDDA; --halt-bg:#F5E3E1; --void-bg:#E8EAEA;
+  --sans:"IBM Plex Sans",-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+  --cond:"IBM Plex Sans Condensed","IBM Plex Sans",sans-serif;
+  --mono:"IBM Plex Mono",ui-monospace,"SFMono-Regular",Menlo,monospace;
+}
+@media (prefers-color-scheme:dark){
+  :root:not([data-theme="light"]){
+    --ink:#E6EAE9; --ink-2:#AEB8B7; --ink-3:#8A9492;
+    --paper:#101413; --plate:#171C1B; --rule:#2C3433; --rule-2:#232A29;
+    --signal:#12A0A8; --ember:#D06526;
+    --seq-1:#0A5C66; --seq-2:#12818C; --seq-3:#39ADB6; --seq-4:#7FD0D6;
+    --good:#5FA57E; --warn:#C7A244; --halt:#D4726C; --void:#8A9492;
+    --good-bg:#1A2A22; --warn-bg:#2B2618; --halt-bg:#2D1E1D; --void-bg:#1E2322;
+  }
+}
+:root[data-theme="dark"]{
+  --ink:#E6EAE9; --ink-2:#AEB8B7; --ink-3:#8A9492;
+  --paper:#101413; --plate:#171C1B; --rule:#2C3433; --rule-2:#232A29;
+  --signal:#12A0A8; --ember:#D06526;
+  --seq-1:#0A5C66; --seq-2:#12818C; --seq-3:#39ADB6; --seq-4:#7FD0D6;
+  --good:#5FA57E; --warn:#C7A244; --halt:#D4726C; --void:#8A9492;
+  --good-bg:#1A2A22; --warn-bg:#2B2618; --halt-bg:#2D1E1D; --void-bg:#1E2322;
+}
+*{box-sizing:border-box}
+body{background:var(--paper); color:var(--ink); font-family:var(--sans);
+  font-size:15px; line-height:1.55; margin:0; padding-block:40px 72px; padding-left:20px; padding-right:20px;
+  -webkit-font-smoothing:antialiased}
+.wrap{max-width:1080px; margin:0 auto; display:flex; flex-direction:column; gap:40px}
+h1,h2,h3{text-wrap:balance; margin:0}
+.num{font-family:var(--mono); font-variant-numeric:tabular-nums}
+
+/* ---- masthead ---- */
+.mast{display:flex; flex-direction:column; gap:14px}
+.eyebrow{font-family:var(--cond); font-weight:600; font-size:12px; letter-spacing:.14em;
+  text-transform:uppercase; color:var(--ink-3)}
+h1{font-size:clamp(28px,4.4vw,42px); font-weight:600; letter-spacing:-.02em; line-height:1.12}
+.sub{color:var(--ink-2); max-width:62ch}
+.mast-meta{display:flex; flex-wrap:wrap; gap:8px 22px; font-family:var(--mono);
+  font-size:12px; color:var(--ink-3); padding-top:4px}
+
+/* ---- halt banner: the single most important state ---- */
+.halt{display:grid; grid-template-columns:4px 1fr; gap:0; background:var(--halt-bg);
+  border:1px solid var(--rule)}
+.halt-bar{background:var(--halt)}
+.halt-body{padding:16px 20px; display:flex; flex-direction:column; gap:6px}
+.halt-title{font-weight:600; color:var(--halt); display:flex; align-items:baseline; gap:10px; flex-wrap:wrap}
+.halt-title .code{font-family:var(--mono); font-size:13px; letter-spacing:.02em}
+.halt-body p{margin:0; color:var(--ink-2); font-size:14px; max-width:70ch}
+
+/* ---- panel ---- */
+.panel{display:flex; flex-direction:column; gap:18px}
+.plate{display:flex; align-items:baseline; gap:12px; border-bottom:1px solid var(--rule);
+  padding-bottom:8px}
+.plate h2{font-family:var(--cond); font-weight:600; font-size:13px; letter-spacing:.13em;
+  text-transform:uppercase; color:var(--ink)}
+.plate .ref{font-family:var(--mono); font-size:11px; color:var(--ink-3); margin-left:auto}
+.note{color:var(--ink-2); font-size:14px; max-width:68ch; margin:0}
+
+/* ---- lock chain ---- */
+.locks{display:flex; flex-direction:column; gap:0}
+.lock{display:grid; grid-template-columns:52px 1fr auto; gap:16px; align-items:start;
+  padding:14px 0; border-bottom:1px solid var(--rule-2)}
+.lock:last-child{border-bottom:none}
+.lock-id{font-family:var(--mono); font-size:12px; font-weight:600; color:var(--ink-3);
+  padding-top:2px}
+.lock-txt strong{font-weight:600; display:block; font-size:14px}
+.lock-txt span{color:var(--ink-2); font-size:13.5px}
+.chip{font-family:var(--cond); font-size:11px; font-weight:600; letter-spacing:.08em;
+  text-transform:uppercase; padding:3px 9px; border-radius:2px; white-space:nowrap}
+.chip.ok{background:var(--good-bg); color:var(--good)}
+.chip.block{background:var(--halt-bg); color:var(--halt)}
+.chip.wait{background:var(--void-bg); color:var(--void)}
+.chip.warn{background:var(--warn-bg); color:var(--warn)}
+
+/* ---- factor matrix ---- */
+.matrix-scroll{overflow-x:auto}
+table{border-collapse:collapse; width:100%; font-size:13px; min-width:520px}
+th,td{text-align:left; padding:8px 10px; border-bottom:1px solid var(--rule-2)}
+thead th{font-family:var(--cond); font-size:11px; letter-spacing:.1em; text-transform:uppercase;
+  color:var(--ink-3); font-weight:600; border-bottom:1px solid var(--rule)}
+td.n,th.n{text-align:right; font-family:var(--mono); font-variant-numeric:tabular-nums}
+.cellcode{font-family:var(--mono); font-size:12.5px; color:var(--ink)}
+.axis-mark{display:inline-block; width:7px; height:7px; border-radius:50%; margin-right:7px;
+  vertical-align:middle}
+.legend{display:flex; flex-wrap:wrap; gap:6px 20px; font-size:12.5px; color:var(--ink-2);
+  font-family:var(--mono)}
+.legend span{display:inline-flex; align-items:center; gap:7px}
+.sw{width:11px; height:11px; border-radius:2px; display:inline-block}
+
+/* ---- figures ---- */
+figure{margin:0; display:flex; flex-direction:column; gap:10px}
+figcaption{font-size:13px; color:var(--ink-2); max-width:66ch}
+svg{display:block; width:100%; height:auto; overflow:visible}
+.ax{font-family:var(--mono); font-size:10.5px; fill:var(--ink-3)}
+.lbl{font-family:var(--mono); font-size:11.5px; fill:var(--ink)}
+.lbl-s{font-family:var(--sans); font-size:11.5px; fill:var(--ink-2)}
+
+/* ---- stat rows ---- */
+.rows{display:flex; flex-direction:column}
+.row{display:grid; grid-template-columns:78px 1fr auto; gap:16px; align-items:baseline;
+  padding:13px 0; border-bottom:1px solid var(--rule-2)}
+.row:last-child{border-bottom:none}
+.row .k{font-family:var(--mono); font-size:12.5px; font-weight:600; color:var(--signal)}
+.row .d{color:var(--ink-2); font-size:13.5px}
+.row .d b{color:var(--ink); font-weight:600}
+.row .v{font-family:var(--mono); font-variant-numeric:tabular-nums; font-size:13px;
+  text-align:right; white-space:nowrap}
+
+/* ---- provenance ---- */
+.hashes{display:flex; flex-direction:column; gap:0}
+.hrow{display:grid; grid-template-columns:minmax(150px,auto) 1fr; gap:16px; padding:9px 0;
+  border-bottom:1px solid var(--rule-2); align-items:baseline}
+.hrow:last-child{border-bottom:none}
+.hrow dt{font-size:13px; color:var(--ink-2)}
+.hrow dd{margin:0; font-family:var(--mono); font-size:12px; color:var(--ink);
+  word-break:break-all; letter-spacing:-.01em}
+dl{margin:0}
+
+/* ---- tooltip ---- */
+#tip{position:fixed; pointer-events:none; opacity:0; transition:opacity .12s;
+  background:var(--ink); color:var(--paper); font-family:var(--mono); font-size:11.5px;
+  padding:6px 9px; border-radius:3px; z-index:50; white-space:nowrap;
+  font-variant-numeric:tabular-nums}
+[data-tip]{cursor:default}
+[data-tip]:focus-visible{outline:2px solid var(--signal); outline-offset:2px}
+
+footer{border-top:1px solid var(--rule); padding-top:18px; color:var(--ink-3); font-size:12.5px;
+  display:flex; flex-direction:column; gap:6px}
+@media (prefers-reduced-motion:reduce){*{transition:none!important; animation:none!important}}
+@media (max-width:560px){
+  .lock{grid-template-columns:44px 1fr; }
+  .lock .chip{grid-column:2; justify-self:start}
+  .row{grid-template-columns:64px 1fr; }
+  .row .v{grid-column:2; text-align:left}
+}
+</style>
+
+<div class="wrap">
+
+  <header class="mast">
+    <div class="eyebrow">사전등록 감사 게이트 · Nebius × NVIDIA Physical AI</div>
+    <h1>엣지 양자화 정책 배포 게이트</h1>
+    <p class="sub">INT8 변형을 <strong>실기 실행 없이 오프라인에서만</strong> 심사해 배포 불가 변형을
+      걸러낼 수 있는가. 이 판은 지금까지 실제로 측정된 것만 싣는다.</p>
+    <div class="mast-meta">
+      <span>상태 2026-09-15</span>
+      <span>GB10 sm_121 · TRT 10.14.1.48</span>
+      <span>Jetson Orin sm_87 · TRT 10.3.0.30</span>
+      <span>실기 trial 0 / 225</span>
+    </div>
+  </header>
+
+  <section class="halt" role="status">
+    <div class="halt-bar"></div>
+    <div class="halt-body">
+      <div class="halt-title"><span class="code">LOCK-2</span><span>미동결 — 실기 trial 실행 차단</span></div>
+      <p>감사 점수 5종이 아직 전량 산출되지 않았다. 러너의 <span class="num">require_lock2()</span>가
+        진입을 거부하며, CI도 동결 기록의 무결성을 검사한다. 아래 수치는 전부 드라이런 데이터에서
+        나온 것으로, 본 실험의 예측값이 아니다.</p>
+    </div>
+  </section>
+
+  <section class="panel">
+    <div class="plate"><h2>순서 잠금</h2><span class="ref">§8</span></div>
+    <p class="note">잠금은 장식적 번호가 아니라 실제 의존 순서다. 앞 잠금이 걸리지 않으면
+      뒤 단계를 실행할 수 없고, 그 강제는 코드와 CI 양쪽에 있다.</p>
+    <div class="locks">
+      <div class="lock"><div class="lock-id">LOCK-1</div>
+        <div class="lock-txt"><strong>데이터 분할 확정 → 정책 학습</strong>
+          <span>시드에서 SHA로 결정, manifest 해시 커밋</span></div>
+        <span class="chip wait">데이터 대기</span></div>
+      <div class="lock"><div class="lock-id">LOCK-2</div>
+        <div class="lock-txt"><strong>감사 점수 전량 동결 → 최초 실기 trial</strong>
+          <span>5종 점수 동시 동결(IG-9) · 가장 중요한 잠금</span></div>
+        <span class="chip block">미동결</span></div>
+      <div class="lock"><div class="lock-id">LOCK-3</div>
+        <div class="lock-txt"><strong>실기 225 trial 완료 → 분석 스크립트 최초 실행</strong>
+          <span>봉인 로그 해제도 이 시점</span></div>
+        <span class="chip wait">대기</span></div>
+      <div class="lock"><div class="lock-id">LOCK-4</div>
+        <div class="lock-txt"><strong>분석 완료 → 영상 편집·서사 구성</strong>
+          <span>결과를 본 뒤 서사를 고르는 경로를 차단</span></div>
+        <span class="chip wait">대기</span></div>
+    </div>
+  </section>
+
+  <section class="panel">
+    <div class="plate"><h2>변형 그리드</h2><span class="ref">§4.1 · 26셀</span></div>
+    <p class="note">단일 FP32 체크포인트 하나에서 전부 파생된다(IG-3). 25개 엔진이 빌드되었고
+      실패는 없다. <b>per-axis 스케일 수</b>가 granularity 축이 실제로 작동하는지를 셀마다 증명한다 —
+      per-channel은 예외 없이 66개, per-tensor는 0개다.</p>
+    <div class="legend">
+      <span><i class="sw" style="background:var(--signal)"></i>per-channel · 66 벡터 스케일</span>
+      <span><i class="sw" style="background:var(--ember)"></i>per-tensor · 0</span>
+    </div>
+    <div class="matrix-scroll">
+      <table>
+        <thead><tr>
+          <th>calib_size</th><th>composition</th>
+          <th>per-tensor</th><th>per-channel</th>
+          <th class="n">엔진 MB</th><th class="n">빌드 s</th>
+        </tr></thead>
+        <tbody id="matrix"></tbody>
+      </table>
+    </div>
+    <div class="legend" style="color:var(--ink-3)">
+      <span>VC-000 · FP32 레퍼런스 · TRT 빌드 대상 아님</span>
+      <span>VC-025 · FP16 · 정밀도 축 대조</span>
+    </div>
+  </section>
+
+  <section class="panel">
+    <div class="plate"><h2>배포 대상 실측</h2><span class="ref">EX-2 · Jetson Orin Nano · 15 W</span></div>
+    <figure>
+      <svg viewBox="0 0 700 208" role="img" aria-label="정밀도별 추론 지연 막대 그래프">
+        <g id="lat"></g>
+      </svg>
+      <figcaption><b>INT8은 FP16보다 1.19배 빠르고 엔진이 36% 작다.</b>
+        단 <span class="num">--int8</span> 단독 빌드는 INT8 커널이 없는 레이어를 FP32로 떨어뜨려
+        오히려 느려진다(274 레이어). <span class="num">--int8 --fp16</span>을 함께 켜야 236 레이어가 된다.</figcaption>
+    </figure>
+  </section>
+
+  <section class="panel">
+    <div class="plate"><h2>오프라인 감사 점수</h2><span class="ref">§5 · Nebius Jobs 산출</span></div>
+    <p class="note">실제 Orin 엔진 출력의 행동 오차 위에서 부트스트랩 200회.
+      <b>두 셀의 95% CI가 겹치지 않는다.</b> FP16을 INT8과 한 순위에 놓으면 압도적 1위가 되어
+      ARM-AUDIT을 잠식한다는 뜻이며, 이것이 순위 풀 구성을 사람이 결정해야 하는 이유다.</p>
+    <figure>
+      <svg viewBox="0 0 700 152" role="img" aria-label="셀별 score_mag 점추정과 95% 신뢰구간">
+        <g id="score"></g>
+      </svg>
+      <figcaption>가로축은 <span class="num">score_mag</span>(상위 10% 조건부 평균).
+        낮을수록 FP32 레퍼런스와 가깝다.</figcaption>
+    </figure>
+  </section>
+
+  <section class="panel">
+    <div class="plate"><h2>캘리브레이션 축이 건드리는 면적</h2><span class="ref">§4.1 사전 점검</span></div>
+    <p class="note">IG-3가 단일 체크포인트를 요구하므로 <b>가중치 스케일 51,462개는 완전히 고정</b>된다.
+      캘리브레이션 크기·구성이 바꾸는 것은 활성화 스케일 <b>67개뿐</b>이다.
+      24개 INT8 셀은 전체 양자화 파라미터의 0.13%에서만 갈린다.</p>
+    <figure>
+      <svg viewBox="0 0 700 96" role="img" aria-label="가중치 대 활성화 양자화 파라미터 비율">
+        <g id="surface"></g>
+      </svg>
+      <figcaption>축은 작동한다 — 활성화 스케일이 구성에 따라 중앙 1.2–11.2%, 최대 36% 흔들린다.
+        다만 효과가 작동할 수 있는 표면적이 좁다는 사실은 <span class="num">G4</span> 전에 기록해 둔다.</figcaption>
+    </figure>
+  </section>
+
+  <section class="panel">
+    <div class="plate"><h2>에이전트 레이어</h2><span class="ref">§6 · 제품 구성요소, 가설 검정 대상 아님</span></div>
+    <div class="rows">
+      <div class="row"><span class="k">D3</span>
+        <span class="d"><b>배포 리포트</b> · Nemotron 3 Super. 증거 해시를 헤더에 박고 날조 검증기가
+          리포트의 수치를 증거와 대조한다. 생성본에서 셀 수 오류 1건이 발견되어 사람 검토가 필요함을 확인.</span>
+        <span class="v">1,859 토큰 · 7.2 s</span></div>
+      <div class="row"><span class="k">D4</span>
+        <span class="d"><b>런타임 감독자</b> · MiniCPM-V. 60초 연속 <b>1.98 Hz</b> 달성.
+          판정이 낡으면 개입하지 않는다 — 네트워크 지연이 성공률을 오염시키지 않게 하기 위한 선택.</span>
+        <span class="v">p99 495 ms · 초과 0 / 118</span></div>
+      <div class="row"><span class="k">D5</span>
+        <span class="d"><b>Errata 수집기</b> · Tavily. 질의를 실제 빌드 환경에서 유도하고 결과를
+          해시로 동결한다. replay는 동결본이 없으면 새 검색을 하지 않고 실패한다.</span>
+        <span class="v">22 URL · <span style="color:var(--ink-3)">76f9ba21</span></span></div>
+      <div class="row"><span class="k">D6</span>
+        <span class="d"><b>클라우드 폴백</b> · GR00T 2.72B @ L40S. 콜드스타트가 <b>9.4분</b>이라
+          런타임 발동은 불가능하며 세션 전 사전 기동이 강제된다.</span>
+        <span class="v">웜 왕복 948 ms</span></div>
+    </div>
+    <figure>
+      <svg viewBox="0 0 700 92" role="img" aria-label="D6 콜드스타트 단계별 분해">
+        <g id="cold"></g>
+      </svg>
+      <figcaption>이미지 풀이 전체의 66%다. GPU 적재는 3.3초로 무시할 수준이며,
+        줄일 지점은 모델이 아니라 이미지와 가중치 전달 경로다.</figcaption>
+    </figure>
+  </section>
+
+  <section class="panel">
+    <div class="plate"><h2>출처</h2><span class="ref">모든 수치는 아래 아티팩트에서 나온다</span></div>
+    <dl class="hashes">
+      <div class="hrow"><dt>FP32 레퍼런스 체크포인트</dt><dd>ff94f873702c494a…</dd></div>
+      <div class="hrow"><dt>그리드 빌드 매니페스트</dt><dd>19e62f6c5ce666f1…</dd></div>
+      <div class="hrow"><dt>변형 그리드 정의</dt><dd>9b33287e63c344c6d8f4fb0837b75344e71693f58ac6bce2ede502cb5da1393c</dd></div>
+      <div class="hrow"><dt>Errata 리트리벌 스냅샷</dt><dd>76f9ba2110c86330…</dd></div>
+      <div class="hrow"><dt>LOCK-2 동결 기록</dt><dd style="color:var(--halt)">없음 — 실기 차단 중</dd></div>
+    </dl>
+  </section>
+
+  <footer>
+    <div>이 판의 어떤 수치도 실기 관측이 아니다. 로봇 팔 도착 전이며 데이터 수집은 시작되지 않았다.</div>
+    <div>드라이런 데이터셋 <span class="num">lerobot/svla_so101_pickplace</span> ·
+      체크포인트는 300 step 학습본으로 정책이 아니다.</div>
+  </footer>
+</div>
+<div id="tip" role="tooltip"></div>
+
+<script>
+const SIZES=[16,64,256,1024], COMPS=["success-only","mixed","late-phase-only"];
+const ENG={min:101.7,max:102.9}, BLD={min:25.2,max:38.1};
+const mb=document.getElementById("matrix");
+let idx=0, rows="";
+SIZES.forEach(s=>COMPS.forEach(c=>{
+  const pt=`VC-${String(++idx).padStart(3,"0")}`, pc=`VC-${String(++idx).padStart(3,"0")}`;
+  rows+=`<tr><td class="num">${s}</td><td>${c}</td>
+    <td><span class="axis-mark" style="background:var(--ember)"></span><span class="cellcode">${pt}</span></td>
+    <td><span class="axis-mark" style="background:var(--signal)"></span><span class="cellcode">${pc}</span></td>
+    <td class="n">101.7–102.9</td><td class="n">25–38</td></tr>`;
+}));
+mb.innerHTML=rows;
+
+const tip=document.getElementById("tip");
+function wire(el,text){
+  el.setAttribute("tabindex","0"); el.setAttribute("data-tip","");
+  const show=e=>{tip.textContent=text; tip.style.opacity="1";
+    const r=el.getBoundingClientRect();
+    const x=(e&&e.clientX)||r.left+r.width/2, y=r.top;
+    tip.style.left=Math.min(Math.max(8,x-tip.offsetWidth/2),innerWidth-tip.offsetWidth-8)+"px";
+    tip.style.top=Math.max(8,y-tip.offsetHeight-8)+"px";};
+  const hide=()=>tip.style.opacity="0";
+  el.addEventListener("mouseenter",show); el.addEventListener("mousemove",show);
+  el.addEventListener("mouseleave",hide);
+  el.addEventListener("focus",show); el.addEventListener("blur",hide);
+}
+const NS="http://www.w3.org/2000/svg";
+const mk=(t,a)=>{const e=document.createElementNS(NS,t);for(const k in a)e.setAttribute(k,a[k]);return e;};
+
+/* --- 지연 막대: 단일 측정이므로 한 색. 폐기 구성만 muted --- */
+(()=>{
+  const g=document.getElementById("lat");
+  const D=[{k:"INT8",v:16.22,mb:101,l:236,c:"var(--signal)"},
+           {k:"FP16",v:19.35,mb:157,l:182,c:"var(--signal)"},
+           {k:"INT8 (--int8 단독)",v:28.57,mb:139,l:274,c:"var(--void)",dep:1},
+           {k:"FP32",v:46.55,mb:313,l:null,c:"var(--signal)"}];
+  const X0=150,X1=612,max=50,h=26,gap=12,y0=16;
+  [0,10,20,30,40,50].forEach(t=>{
+    const x=X0+(X1-X0)*t/max;
+    g.appendChild(mk("line",{x1:x,y1:y0-6,x2:x,y2:y0+D.length*(h+gap)-gap+4,
+      stroke:"var(--rule-2)","stroke-width":1}));
+    const tx=mk("text",{x,y:y0+D.length*(h+gap)+12,"text-anchor":"middle",class:"ax"});
+    tx.textContent=t; g.appendChild(tx);
+  });
+  const un=mk("text",{x:X1,y:y0+D.length*(h+gap)+12,"text-anchor":"start",class:"ax"});
+  un.textContent=" ms"; g.appendChild(un);
+  D.forEach((d,i)=>{
+    const y=y0+i*(h+gap), w=(X1-X0)*d.v/max;
+    const lb=mk("text",{x:X0-12,y:y+h/2+4,"text-anchor":"end",class:"lbl-s"});
+    lb.textContent=d.k; g.appendChild(lb);
+    const r=mk("rect",{x:X0,y,width:Math.max(w,3),height:h,rx:4,fill:d.c,
+      opacity:d.dep?.5:1});
+    if(d.dep) r.setAttribute("stroke","var(--void)"),r.setAttribute("stroke-dasharray","3 3");
+    g.appendChild(r);
+    wire(r,`${d.k} · 중앙 ${d.v} ms · 엔진 ${d.mb} MB`+(d.l?` · ${d.l} 레이어`:""));
+    const v=mk("text",{x:X0+w+9,y:y+h/2+4,class:"lbl"});
+    v.textContent=d.v.toFixed(2); g.appendChild(v);
+  });
+})();
+
+/* --- score_mag 점추정 + 95% CI --- */
+(()=>{
+  const g=document.getElementById("score");
+  const D=[{k:"INT8 per-channel",p:0.02058,lo:0.02019,hi:0.02092,c:"var(--ember)"},
+           {k:"FP16 (VC-025)",p:0.00225,lo:0.00219,hi:0.00229,c:"var(--signal)"}];
+  const X0=170,X1=600,max=0.024,y0=30,gap=52;
+  [0,0.005,0.010,0.015,0.020].forEach(t=>{
+    const x=X0+(X1-X0)*t/max;
+    g.appendChild(mk("line",{x1:x,y1:y0-18,x2:x,y2:y0+gap+16,stroke:"var(--rule-2)","stroke-width":1}));
+    const tx=mk("text",{x,y:y0+gap+32,"text-anchor":"middle",class:"ax"});
+    tx.textContent=t.toFixed(3); g.appendChild(tx);
+  });
+  D.forEach((d,i)=>{
+    const y=y0+i*gap;
+    const lb=mk("text",{x:X0-14,y:y+4,"text-anchor":"end",class:"lbl-s"});
+    lb.textContent=d.k; g.appendChild(lb);
+    const xl=X0+(X1-X0)*d.lo/max, xh=X0+(X1-X0)*d.hi/max, xp=X0+(X1-X0)*d.p/max;
+    g.appendChild(mk("line",{x1:xl,y1:y,x2:xh,y2:y,stroke:d.c,"stroke-width":2,"stroke-linecap":"round"}));
+    [xl,xh].forEach(x=>g.appendChild(mk("line",{x1:x,y1:y-6,x2:x,y2:y+6,stroke:d.c,"stroke-width":2})));
+    const dot=mk("circle",{cx:xp,cy:y,r:5.5,fill:d.c,stroke:"var(--paper)","stroke-width":2});
+    g.appendChild(dot);
+    wire(dot,`${d.k} · ${d.p.toFixed(5)} · CI95 [${d.lo.toFixed(5)}, ${d.hi.toFixed(5)}]`);
+    const v=mk("text",{x:xh+12,y:y+4,class:"lbl"});
+    v.textContent=d.p.toFixed(5); g.appendChild(v);
+  });
+  const cap=mk("text",{x:X0,y:12,class:"lbl-s"});
+  cap.textContent="점 = 점추정 · 수염 = 부트스트랩 200회 95% CI"; g.appendChild(cap);
+})();
+
+/* --- 표면적 비율 --- */
+(()=>{
+  const g=document.getElementById("surface");
+  const W=[51462,67], tot=W[0]+W[1], X0=0,X1=700,h=34,y=24;
+  const w0=(X1-X0)*W[0]/tot;
+  const a=mk("rect",{x:X0,y,width:w0-2,height:h,rx:4,fill:"var(--void)"});
+  g.appendChild(a); wire(a,`가중치 스케일 51,462개 · 캘리브레이션과 무관 (0.00% 변화)`);
+  const b=mk("rect",{x:X0+w0,y,width:Math.max((X1-X0)*W[1]/tot,3),height:h,rx:2,fill:"var(--ember)"});
+  g.appendChild(b); wire(b,`활성화 스케일 67개 · 구성에 따라 중앙 1.2–11.2% 변화`);
+  const t1=mk("text",{x:X0+8,y:y+h/2+4,class:"lbl",fill:"var(--paper)"});
+  t1.textContent="가중치 51,462 (99.87%)"; g.appendChild(t1);
+  const t2=mk("text",{x:X1-4,y:y-8,"text-anchor":"end",class:"lbl",fill:"var(--ember)"});
+  t2.textContent="활성화 67 (0.13%)"; g.appendChild(t2);
+  g.appendChild(mk("line",{x1:X1-2,y1:y-4,x2:X1-2,y2:y+h+6,stroke:"var(--ember)","stroke-width":1.5}));
+})();
+
+/* --- 콜드스타트 단계 (순서가 있으므로 시퀀셜 램프) --- */
+(()=>{
+  const g=document.getElementById("cold");
+  const S=[{k:"이미지 풀 + 프로비저닝",v:372.7,c:"var(--seq-4)"},
+           {k:"가중치 5.4 GB 다운로드",v:182.9,c:"var(--seq-3)"},
+           {k:"GPU 적재",v:3.3,c:"var(--seq-2)"},
+           {k:"의존성 설치",v:2.1,c:"var(--seq-1)"}];
+  const tot=561, X0=0,X1=700,h=30,y=30; let x=X0;
+  S.forEach(s=>{
+    const w=(X1-X0)*s.v/tot;
+    const r=mk("rect",{x,y,width:Math.max(w-2,2),height:h,rx:3,fill:s.c});
+    g.appendChild(r); wire(r,`${s.k} · ${s.v} s · ${(100*s.v/tot).toFixed(1)}%`);
+    if(w>130){
+      const t=mk("text",{x:x+9,y:y+h/2+4,class:"lbl",
+        fill:s.c==="var(--seq-4)"||s.c==="var(--seq-3)"?"var(--plate)":"var(--ink)"});
+      t.textContent=`${s.k} ${s.v}s`; g.appendChild(t);
+    }
+    x+=w;
+  });
+  const cap=mk("text",{x:0,y:16,class:"lbl-s"});
+  cap.textContent="총 561초 (9.4분) — 세션 전 사전 기동이 강제된다"; g.appendChild(cap);
+  const tail=mk("text",{x:X1,y:y+h+16,"text-anchor":"end",class:"ax"});
+  tail.textContent="GPU 적재 3.3s · 의존성 2.1s"; g.appendChild(tail);
+})();
+</script>
