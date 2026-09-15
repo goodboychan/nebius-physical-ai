@@ -19,6 +19,9 @@ Nebius x NVIDIA Global AI Hackathon, Physical AI Track 출품작.
 - [`docs/decision_log.md`](docs/decision_log.md) — 모든 결정과 개정. **원 계획을 덮어쓰지 않는다**
 - [`docs/progress/`](docs/progress/) — 시도별 기록. 각 노트에 "주장하지 않는 것" 섹션 필수
 - [`docs/success_criterion.md`](docs/success_criterion.md) — 성공 판정 규칙 (실기 전 잠금)
+- [`docs/manual_actions.md`](docs/manual_actions.md) — **사람이 해야 하는 항목** (결정·자격증명·물리 작업)
+- [`docs/tool_feedback.md`](docs/tool_feedback.md) — 도구 피드백 (`D8`)
+- [`docs/cost_model.md`](docs/cost_model.md) — 공식 단가 기반 비용 모델
 
 핵심 잠금은 `LOCK-2`다: **감사 점수를 전량 산출·동결·해시 커밋한 뒤에야 최초 실기 trial을
 실행한다.** 이 순서가 깨지면 연구 전체의 신뢰성이 사라진다.
