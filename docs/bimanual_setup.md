@@ -1,5 +1,16 @@
 # 양팔 SO-101 설치 체크리스트 (`G1`)
 
+## 팔 연결 호스트: Jetson Orin Nano Super (2026-09-27 결정)
+
+수집(`G1`)과 배포(`G6`)를 같은 머신에서 해서 USB 구조·카메라 드라이버·리사이즈 경로를 일치시킨다.
+프레임 드롭률(#9)이 허용치를 넘으면 수집만 GX10으로 옮기고 경로 차이를 한계로 기록한다.
+
+준비 완료 (2026-09-27):
+- `chanseok` → `dialout`, `docker` 그룹 추가 (**재로그인 필요**)
+- `~/lerobot-env/.venv`: Python 3.12.13, lerobot 0.6.1 + feetech, av 13.1.0(≥14는 `av.option` 없음), opencv 4.13
+- torch는 CPU 빌드(`cuda False`) — 텔레옵·수집에는 무관. 추론은 TRT 엔진으로 따로 한다
+- 사용: `source ~/lerobot-env/.venv/bin/activate`
+
 작성: 2026-09-16. 근거: LeRobot 0.6.1 소스 확인 (`edgeqgate-lerobot:25.11` 이미지).
 하드웨어 없이 확인 가능한 것만 사실로 적었다. 나머지는 **현장 확인**으로 표시했다.
 
