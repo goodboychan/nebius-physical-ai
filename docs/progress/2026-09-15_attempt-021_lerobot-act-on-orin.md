@@ -15,7 +15,7 @@ ACT의 export 경로를 전 구간 검증했지만, **Orin에서 빌드해본 �
 
 ## 측정 조건
 
-- 장비: Jetson AGX Orin, **15W** 모드 (attempt-012/013과 동일 — 비교 가능)
+- 장비: Jetson Orin Nano Super, **15W** 모드 (attempt-012/013과 동일 — 비교 가능)
 - TensorRT 10.3.0.30
 - 플래그: `--memPoolSize=workspace:2048 --skipInference --int8 --fp16 --exportLayerInfo`
   (`--int8` 단독은 미커버 레이어가 FP32로 떨어진다 — attempt-013)
