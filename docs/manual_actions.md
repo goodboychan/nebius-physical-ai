@@ -25,7 +25,14 @@
 > **2026-10-02 진행**: Cloud용 서비스 계정 `edgeqgate-cloud`(`serviceaccount-e00wdr7s8wme8dr7xp`, eu-north1)와
 > CLI 프로필 `edgeqgate-cloud`를 만들었다. 키 쌍은 GX10에서 생성했고 공개키(`publickey-e00t09mgzenq72fnfm`)만
 > 콘솔에 업로드했다. 개인키는 `~/.config/edgeqgate/nebius_sa_private.pem`(600, 리포 밖). 브라우저 로그인 없이
-> Jobs·엔드포인트 조회가 된다. **S3 접근 키는 아직 만들지 않았다.**
+> Jobs·엔드포인트 조회가 된다.
+>
+> **S3 접근 키: 완료 (2026-10-02).** 서비스 계정은 IAM 권한이 없어 CLI 생성이 거부됐다(`PermissionDenied: service iam`).
+> admins 승격 대신 사용자가 콘솔에서 생성(만료 2026-11-30). 값은 `~/.config/edgeqgate/s3_credentials`(600, AWS 형식,
+> 프로필 `edgeqgate`). 엔드포인트 `https://storage.eu-west1.nebius.cloud`, 버킷 `edgeqgate-audit`에서
+> head/put/get/list/delete 전부 성공 — eu-north1 계정으로 eu-west1 버킷 접근이 된다.
+>
+> 사용: `AWS_SHARED_CREDENTIALS_FILE=~/.config/edgeqgate/s3_credentials AWS_PROFILE=edgeqgate`
 >
 > 브라우저(federation) 로그인은 이 GX10의 CLI 0.12.276에서 토큰이 저장되지 않아 쓸 수 없었다 → `docs/tool_feedback.md` 후보.
 
