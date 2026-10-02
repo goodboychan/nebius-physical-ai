@@ -22,6 +22,13 @@
 
 ## 1. S3 서비스 계정 접근 키
 
+> **2026-10-02 진행**: Cloud용 서비스 계정 `edgeqgate-cloud`(`serviceaccount-e00wdr7s8wme8dr7xp`, eu-north1)와
+> CLI 프로필 `edgeqgate-cloud`를 만들었다. 키 쌍은 GX10에서 생성했고 공개키(`publickey-e00t09mgzenq72fnfm`)만
+> 콘솔에 업로드했다. 개인키는 `~/.config/edgeqgate/nebius_sa_private.pem`(600, 리포 밖). 브라우저 로그인 없이
+> Jobs·엔드포인트 조회가 된다. **S3 접근 키는 아직 만들지 않았다.**
+>
+> 브라우저(federation) 로그인은 이 GX10의 CLI 0.12.276에서 토큰이 저장되지 않아 쓸 수 없었다 → `docs/tool_feedback.md` 후보.
+
 **왜 사람이**: 장기 자격증명 생성은 되돌리기 번거롭고 권한 범위 결정이 필요하다.
 
 **왜 필요한가**: `G4`에서 감사 팬아웃이 2,000상태 × 26셀의 오차 벡터를 잡에 넘겨야 한다.
