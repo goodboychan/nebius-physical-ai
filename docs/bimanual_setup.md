@@ -16,6 +16,25 @@
 | 리더 | CH343 `1a86:55d3` | `5A7A016151` | `/dev/so101_leader` | ID 1–6 (STS3215) 설정 완료 |
 | 팔로워 | CH343 `1a86:55d3` | `5AA9017076` | `/dev/so101_follower` | ID 1–6 (STS3215) 설정 완료 |
 
+### 오버헤드 카메라 (2026-10-03 고정)
+
+| 항목 | 값 |
+|---|---|
+| 장비 | Logitech C922 Pro Stream, 시리얼 `876E8BDF` |
+| 고정 경로 | `/dev/so101_cam_top` (udev, 캡처 노드 index 0) |
+| 스트림 | 640×480 MJPEG 30fps |
+| 고정값 | 수동 노출 333, gain 0, WB 5000K, 초점 0(무한대), 전원 60Hz |
+| 자동 적용 | udev `RUN+=/usr/local/bin/so101-cam-lock` — 재연결·재부팅 시 다시 고정. OpenCV로 연 뒤에도 유지됨을 확인 |
+| 기준 화면 | `docs/setup/2026-10-03_overhead_reference.jpg` |
+
+**운영 규칙** (화면에 남은 정적 물체 때문):
+- 화면 위쪽의 **의자를 수집·실기 내내 그 자리에** 둔다. 앉거나 옮기지 않는다
+- 바닥, 책장, 왼쪽 허브·장비를 건드리지 않는다
+- 오른쪽 마우스패드 위에 물건을 올리지 않는다
+- **리더는 아직 화면 밖 위치를 확정하지 않았다** (USB 선 확보 후)
+
+Luxonis OAK(`03e7:2485`)는 UVC가 아니고 LeRobot에 백엔드가 없어 정책 카메라에서 제외. 깊이 계측용 후보.
+
 준비 완료 (2026-09-27):
 - `chanseok` → `dialout`, `docker` 그룹 추가 (**재로그인 필요**)
 - `~/lerobot-env/.venv`: Python 3.12.13, lerobot 0.6.1 + feetech, av 13.1.0(≥14는 `av.option` 없음), opencv 4.13
