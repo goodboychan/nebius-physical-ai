@@ -83,36 +83,79 @@ class OpenMVCamera(Camera):
             whitebal=whitebal,
         )
 
+    def _open_fresh(self):
+        """Open the camera with a clean interpreter state.
+
+        On firmware 5.0.1 the protocol link stalls after ``stop()`` and sometimes after
+        a session that ended abruptly. Rebooting the board (``reset()``) and reconnecting
+        after it re-enumerates is the reliable way to start every session from the same
+        state; it costs a few seconds per connect.
+        """
+        from openmv import Camera as OMVCamera
+
+        def open_once():
+            cam = OMVCamera(self.config.port, timeout=2.0, max_payload=self.config.max_payload)
+            cam.connect()
+            return cam
+
+        try:
+            cam = open_once()
+        except Exception as e:
+            raise RuntimeError(
+                f"{self} could not synchronize with the board ({e}). Unplug and replug the camera."
+            ) from e
+        try:
+            cam.reset()
+        except Exception:
+            pass
+        try:
+            cam.disconnect()
+        except Exception:
+            pass
+        deadline = time.monotonic() + 20
+        while True:
+            time.sleep(1.0)
+            try:
+                cam = open_once()
+                break
+            except Exception:
+                if time.monotonic() > deadline:
+                    raise RuntimeError(f"{self} did not come back after reset")
+        # After the reboot the board runs its stored main.py; exec() does not preempt it.
+        # Stop it, then resynchronize (the link stalls right after stop()).
+        cam.stop()
+        cam.disconnect()
+        time.sleep(0.5)
+        return open_once()
+
     def connect(self, warmup: bool = True) -> None:
         if self.is_connected:
             raise RuntimeError(f"{self} is already connected")
-        from openmv import Camera as OMVCamera
-
-        cam = OMVCamera(self.config.port, timeout=2.0, max_payload=self.config.max_payload)
-        cam.connect()
-        # A script left running from a previous session prints a KeyboardInterrupt
-        # traceback when stopped. Stop it and drain stdout so that only output from
-        # this session is checked for errors.
-        try:
-            cam.stop()
-        except Exception:
-            pass
-        time.sleep(0.5)
+        cam = self._open_fresh()
         cam.read_stdout()
         cam.exec(self._script())
-        time.sleep(self.config.warmup_s + 0.5)
-        out = cam.read_stdout() or ""
+        # Wait for the settings line instead of a fixed sleep: the device warmup plus the
+        # interpreter start after a reset takes a variable amount of time.
+        out = ""
+        deadline = time.monotonic() + self.config.warmup_s + 6
+        while "OMV_SETTINGS" not in out and "Traceback" not in out and time.monotonic() < deadline:
+            time.sleep(0.2)
+            out += cam.read_stdout() or ""
         for line in out.splitlines():
             if line.startswith("OMV_SETTINGS"):
                 self.device_settings = line
                 logger.info("%s %s", self, line)
         if "Traceback" in out or "Error" in out or self.device_settings is None:
-            cam.stop()
-            cam.disconnect()
+            try:
+                cam.disconnect()
+            except Exception:
+                pass
             raise RuntimeError(f"{self} device script failed:\n{out}")
         cam.streaming(True)
         self._cam = cam
+        self._error = None
         self._stop.clear()
+        self._new_frame.clear()
         self._thread = threading.Thread(target=self._reader, name=f"{self}_reader", daemon=True)
         self._thread.start()
         if warmup:
@@ -180,9 +223,10 @@ class OpenMVCamera(Camera):
         if self._thread is not None:
             self._thread.join(timeout=2)
         if self._cam is not None:
+            # Do not call stop(): it stalls the link on firmware 5.0.1. The next connect()
+            # reboots the board anyway.
             try:
                 self._cam.streaming(False)
-                self._cam.stop()
             except Exception:
                 pass
             try:
