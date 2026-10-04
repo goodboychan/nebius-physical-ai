@@ -99,6 +99,15 @@ Luxonis OAK(`03e7:2485`)는 UVC가 아니고 LeRobot에 백엔드가 없어 정�
 UVC 규격 위반으로 USB 대역폭을 최대로 요구해 C922와 동시에는 640×480 불가(320×240만 가능). 노출·WB·초점 제어 없음.
 `/dev/so101_cam_wrist`, 허브 3번 포트 고정.
 
+### 녹화 (2026-10-04)
+
+- `lerobot[feetech,dataset]==0.6.1` 설치. 녹화 기능이 **PyAV 15 이상**을 요구해 13.1.0 고정을 풀고 15.1.0으로 올렸다
+  (9월의 `av.option` 문제는 0.6.1 녹화 경로에서는 해당 없음)
+- `torchcodec`은 Orin에서 라이브러리 로드에 실패한다 — 녹화(인코딩)에는 쓰이지 않는다. 데이터 확인·학습은 GX10/Nebius에서
+- AV1(libsvtav1) 인코딩 속도: 640×480 78fps, 320×200 241fps → 15초 에피소드가 약 8초에 인코딩돼 리셋 시간 안에 끝난다
+- 수집 설정은 `scripts/so101_record.sh` 한 곳에서만 관리 (Orin `~/so101_record.sh`).
+  텔레옵 이동 제한(`max_relative_target`)과 위치 게인은 **기본값**(제한 없음, P=16) — 재캘리브레이션 후 이 설정으로 정상 동작 확인
+
 준비 완료 (2026-09-27):
 - `chanseok` → `dialout`, `docker` 그룹 추가 (**재로그인 필요**)
 - `~/lerobot-env/.venv`: Python 3.12.13, lerobot 0.6.1 + feetech, av 13.1.0(≥14는 `av.option` 없음), opencv 4.13
