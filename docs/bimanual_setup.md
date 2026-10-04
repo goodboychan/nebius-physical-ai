@@ -35,6 +35,38 @@
 
 Luxonis OAK(`03e7:2485`)는 UVC가 아니고 LeRobot에 백엔드가 없어 정책 카메라에서 제외. 깊이 계측용 후보.
 
+### 손목 카메라 후보: OpenMV AE3 (2026-10-04)
+
+| 항목 | 값 |
+|---|---|
+| 장비 | OpenMV AE3, 30×30×9mm, 8g, PAG7936 1MP **글로벌 셔터**. 손목 마운트 이미 제작됨 |
+| 고정 경로 | `/dev/so101_cam_wrist_omv` (udev, 시리얼 `085e070000000000`) |
+| 펌웨어 | v4.x → **v5.0.1** (protocol 1.0.2) — udoo-bolt에서 `scripts/flash_openmv_ae3.sh`로 기록 |
+| 호스트 라이브러리 | `openmv` (Protocol V2), Orin `~/lerobot-env` |
+| 노출 고정 | `auto_exposure(False, exposure_us=15000)`, `auto_gain(False, gain_db=6.0)`, `auto_whitebal(False)` 동작 확인 |
+
+전송 실측 (Orin 수신, 10초):
+
+| 설정 | fps |
+|---|---|
+| VGA 640×400, 펌웨어 기본 JPEG 스트림 | 7.7–8.0 (max_payload 4K–32K 무관) |
+| **QVGA 320×200, 기본 JPEG 스트림** | **25.6** |
+| raw 640×400 / 320×200 | 1.8 / 6.0–6.9 (전송로 ~0.8 MB/s) |
+| 스크립트에서 직접 `compress()` | 2.4–9.1 (더 느림) |
+
+병목은 장치 쪽 JPEG 생성과 프로토콜 왕복이다. 30fps에는 못 미친다.
+
+겪은 문제와 해결:
+- 첫 케이블 불량 → `error -71`, `Cannot enable. Maybe the USB cable is bad?` → 케이블 교체로 해결
+- Windows IDE 업데이트 실패(XMOS 관련) → udoo-bolt Linux에서 `dfu-util`로 기록
+- 부트로더 창(초록불)은 약 1.5초. udoo-bolt의 **fwupd**가 DFU 장치를 먼저 잡아 `LIBUSB_ERROR_BUSY` → fwupd 일시 중지 후 성공, 이후 복원
+- Orin의 ModemManager가 시리얼 장치에 AT 명령을 보낼 수 있어 팔 어댑터(1a86:55d3)와 OpenMV(37c5)를 제외 (`/etc/udev/rules.d/70-so101-mm-ignore.rules`)
+
+### 기존 손목 카메라 (Sonix 0c45:6340) — 예비
+
+UVC 규격 위반으로 USB 대역폭을 최대로 요구해 C922와 동시에는 640×480 불가(320×240만 가능). 노출·WB·초점 제어 없음.
+`/dev/so101_cam_wrist`, 허브 3번 포트 고정.
+
 준비 완료 (2026-09-27):
 - `chanseok` → `dialout`, `docker` 그룹 추가 (**재로그인 필요**)
 - `~/lerobot-env/.venv`: Python 3.12.13, lerobot 0.6.1 + feetech, av 13.1.0(≥14는 `av.option` 없음), opencv 4.13
