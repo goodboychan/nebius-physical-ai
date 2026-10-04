@@ -1,0 +1,13 @@
+[project]
+name = "lerobot_camera_openmv"
+version = "0.1.0"
+description = "LeRobot camera plugin for OpenMV cameras (Protocol V2), used as the SO-101 wrist camera"
+requires-python = ">=3.10"
+dependencies = ["openmv>=1.0.7", "numpy"]
+
+[build-system]
+requires = ["setuptools>=61"]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools]
+packages = ["lerobot_camera_openmv"]
