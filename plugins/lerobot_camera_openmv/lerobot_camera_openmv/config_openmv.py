@@ -29,9 +29,12 @@ class OpenMVCameraConfig(CameraConfig):
 
     port: str = "/dev/so101_cam_wrist_omv"
     framesize: str = "QVGA"
-    exposure_us: int = 15000
-    gain_db: float = 6.0
-    rgb_gain_db: tuple[float, float, float] | None = None
+    # Defaults are the values calibrated for the SO-101 wrist camera on 2026-10-04
+    # (night, room lighting only): exposure/gain from a sweep with a can in view,
+    # white balance from white paper filling the frame (R/G 0.99, B/G 0.98).
+    exposure_us: int = 10000
+    gain_db: float = 18.0
+    rgb_gain_db: tuple[float, float, float] | None = (4.67, 0.0, 4.39)
     color_mode: ColorMode = ColorMode.RGB
     warmup_s: float = 2.0
     max_payload: int = 32768
