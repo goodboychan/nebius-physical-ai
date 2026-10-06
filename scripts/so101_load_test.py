@@ -10,7 +10,7 @@ MA = 6.5  # STS3215 Present_Current 1단위 = 6.5mA
 fol = SO101Follower(SO101FollowerConfig(port="/dev/so101_follower", id="follower"))
 lead = SO101Leader(SO101LeaderConfig(port="/dev/so101_leader", id="leader"))
 fol.connect(); lead.connect()
-peak = {}; tmax = {}; t0 = time.time(); k = 0; log = []
+peak = {}; tmax = {}; overload = {}; t0 = time.time(); k = 0; log = []
 try:
     while time.time() - t0 < secs:
         t = time.time()
@@ -18,14 +18,24 @@ try:
         if k % 5 == 0:
             cur = fol.bus.sync_read("Present_Current", normalize=False)
             tmp = fol.bus.sync_read("Present_Temperature", normalize=False)
+            st = fol.bus.sync_read("Status", normalize=False)
+            for m in st:
+                if st[m] & 0x20 and m not in overload: overload[m] = round(t - t0, 2)
             for m in cur:
                 peak[m] = max(peak.get(m, 0), cur[m] * MA); tmax[m] = max(tmax.get(m, 0), tmp[m])
-            log.append((round(t - t0, 2), {m: int(cur[m] * MA) for m in cur}, dict(tmp)))
+            log.append((round(t - t0, 2), {m: int(cur[m] * MA) for m in cur}, dict(tmp), dict(st)))
             print("\r" + f"남은 {secs-(t-t0):4.1f}s  " + "  ".join(f"{m[:5]} {cur[m]*MA:4.0f}mA/{tmp[m]}°C" for m in cur), end="", flush=True)
         k += 1
         time.sleep(max(0, 1 / 30 - (time.time() - t)))
 finally:
-    fol.disconnect(); lead.disconnect()
-out = "joint           peak_mA  max_temp_C\n" + "\n".join(f"{m:15s} {peak[m]:7.0f}  {tmax[m]:5d}" for m in peak) + "\n"
-open(os.path.expanduser("~/so101_load_result.txt"), "w").write(out + "\n" + "\n".join(map(str, log)))
-print("\n" + out)
+    # 결과를 먼저 저장한다. 집게가 과부하 상태로 끝나면 disconnect의 토크 해제가 에러를 낸다.
+    out = "joint           peak_mA  max_temp_C  overload_at_s\n" + "\n".join(
+        f"{m:15s} {peak[m]:7.0f}  {tmax[m]:5d}  {overload.get(m, '-')}" for m in peak) + "\n"
+    open(os.path.expanduser("~/so101_load_result.txt"), "w").write(out + "\n" + "\n".join(map(str, log)))
+    print("\n" + out)
+    for dev in (fol, lead):
+        for _ in range(5):
+            try:
+                dev.disconnect(); break
+            except Exception as e:
+                print("disconnect 재시도:", e); time.sleep(1)
