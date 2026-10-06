@@ -4,7 +4,7 @@ import cv2, numpy as np, subprocess, time
 from lerobot.utils.import_utils import register_third_party_plugins; register_third_party_plugins()
 from lerobot_camera_openmv import OpenMVCamera, OpenMVCameraConfig
 # top: 2026-10-06 종이 위치(팔 앞, 컵받침 왼쪽 위; 모서리 테이프 표시)에서 다시 잰 값. 같은 조명에서 손목은 10/4 기준과 +1.5%로 일치
-REF = {"top": (191.7, 0.997, 1.003), "wrist": (204.0, 0.991, 0.983)}
+REF = {"top": (194.3, 0.996, 1.000), "wrist": (204.0, 0.991, 0.983)}
 def judge(name, level, rg, bg):
     L, R, B = REF[name]
     ok = abs(level / L - 1) <= 0.10 and abs(rg - R) <= 0.05 and abs(bg - B) <= 0.05
