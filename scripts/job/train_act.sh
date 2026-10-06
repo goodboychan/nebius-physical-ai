@@ -1,11 +1,13 @@
 #!/bin/bash
-# Nebius Job: LeRobot 0.6.1 ACT 학습. 데이터는 S3 볼륨(/s3, ro 아님 — 체크포인트도 같은 볼륨에 쓴다).
+# Nebius Job: LeRobot 0.6.1 ACT 학습 (이미지 python:3.12-slim — lerobot 0.6.1은 Python 3.12 이상). 데이터는 S3 볼륨(/s3, ro 아님 — 체크포인트도 같은 볼륨에 쓴다).
 # 사용 env: CALIB(팔로워 캘리브레이션 json 경로), DS(버킷 안 데이터셋 경로), OUT(버킷 안 출력 경로), STEPS, BATCH, SEED
 # 학습 전에 action을 팔로워 모터 제한으로 자른다(decision_log 2026-10-04): 모터가 실제로 받은 명령과 같게.
 set -euo pipefail
 echo "[job] $(date -u +%FT%TZ) start DS=$DS OUT=$OUT STEPS=$STEPS BATCH=$BATCH"
-nvidia-smi --query-gpu=name,memory.total --format=csv,noheader
-pip install -q --no-cache-dir "lerobot[dataset]==0.6.1" "av>=15,<16" 2>&1 | tail -2
+nvidia-smi --query-gpu=name,memory.total --format=csv,noheader || true
+python --version
+pip install -q --no-cache-dir "lerobot[dataset,training]==0.6.1" "av>=15,<16" 2>&1 | tail -2
+pip uninstall -q -y torchcodec  # 이미지에 FFmpeg 공유 라이브러리가 없어 로드에 실패한다. 디코딩은 pyav로 한다
 python -c "import lerobot, torch; print('[job] lerobot', lerobot.__version__, 'torch', torch.__version__, 'cuda', torch.cuda.is_available())"
 mkdir -p /work && cp -r "/s3/$DS" /work/ds
 python - <<'PY'

@@ -1,0 +1,139 @@
+# 자동 생성 (edgeqgate.splits). 손으로 고치지 말 것.
+# manifest_hash = acf51781c3940f89e94b8573cff618818deeb128940f57aa00de6c654806401c
+schema: edgeqgate/split_manifest/v1
+seed: PREREG-SEED-2026-09-14
+n_episodes: 120
+sizes:
+  train: 80
+  val: 20
+  audit: 20
+assignment:
+  train:
+  - ep001
+  - ep002
+  - ep003
+  - ep004
+  - ep005
+  - ep007
+  - ep009
+  - ep011
+  - ep012
+  - ep017
+  - ep020
+  - ep021
+  - ep023
+  - ep024
+  - ep027
+  - ep029
+  - ep031
+  - ep032
+  - ep033
+  - ep035
+  - ep036
+  - ep037
+  - ep038
+  - ep039
+  - ep040
+  - ep045
+  - ep050
+  - ep051
+  - ep052
+  - ep053
+  - ep054
+  - ep057
+  - ep059
+  - ep061
+  - ep062
+  - ep063
+  - ep065
+  - ep066
+  - ep067
+  - ep068
+  - ep069
+  - ep070
+  - ep071
+  - ep073
+  - ep074
+  - ep075
+  - ep077
+  - ep078
+  - ep079
+  - ep080
+  - ep082
+  - ep083
+  - ep086
+  - ep087
+  - ep088
+  - ep089
+  - ep090
+  - ep091
+  - ep092
+  - ep093
+  - ep094
+  - ep095
+  - ep097
+  - ep099
+  - ep100
+  - ep101
+  - ep102
+  - ep103
+  - ep104
+  - ep105
+  - ep106
+  - ep107
+  - ep108
+  - ep110
+  - ep112
+  - ep114
+  - ep115
+  - ep116
+  - ep117
+  - ep119
+  val:
+  - ep008
+  - ep010
+  - ep013
+  - ep015
+  - ep019
+  - ep022
+  - ep030
+  - ep034
+  - ep041
+  - ep042
+  - ep044
+  - ep048
+  - ep056
+  - ep058
+  - ep064
+  - ep081
+  - ep084
+  - ep085
+  - ep096
+  - ep118
+  audit:
+  - ep000
+  - ep006
+  - ep014
+  - ep016
+  - ep018
+  - ep025
+  - ep026
+  - ep028
+  - ep043
+  - ep046
+  - ep047
+  - ep049
+  - ep055
+  - ep060
+  - ep072
+  - ep076
+  - ep098
+  - ep109
+  - ep111
+  - ep113
+spec_section: §3.2
+notes:
+- audit 분할은 학습·캘리브레이션 경로에서 IG-1로 차단된다
+- 이 manifest의 해시는 LOCK-1 시점에 커밋된다
+- dataset so101_demo (LeRobot v3.0, 2026-10-06~07 수집), files sha256 hash_obj = 9760b52e3d8fa66d36eda81035451b19a66377d64a302ed5f45c50decfa2e5f0
+- '과제: 콜라캔 268g을 시작 표시에서 집어 컵받침 위에 세우기 (사전등록 §2.1 2026-10-06 개정)'
