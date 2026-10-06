@@ -40,9 +40,12 @@ lerobot-train \
   --policy.type=act --policy.device=cuda --policy.push_to_hub=false \
   --dataset.repo_id=local/train --dataset.root=/work/ds --dataset.video_backend=pyav \
   --steps="$STEPS" --batch_size="$BATCH" --seed="$SEED" --num_workers=4 \
-  --save_freq="$STEPS" --log_freq=50 --env_eval_freq=0 --wandb.enable=false \
+  --save_freq="${SAVE_FREQ:-$STEPS}" --log_freq=50 --env_eval_freq=0 --wandb.enable=false \
   --output_dir=/work/out --job_name=act
 echo "[job] train_sec $(( $(date +%s) - t0 ))"
-mkdir -p "/s3/$OUT" && cp -r /work/out/checkpoints/last/pretrained_model "/s3/$OUT/"
-ls -la "/s3/$OUT/pretrained_model"
+# 저장된 체크포인트마다 정책 가중치만 올린다(옵티마이저 상태 제외). val 분할로 고르는 것은 학습 뒤 오프라인에서 한다(§3.2)
+for c in /work/out/checkpoints/[0-9]*; do
+  mkdir -p "/s3/$OUT/$(basename "$c")" && cp -r "$c/pretrained_model" "/s3/$OUT/$(basename "$c")/"
+done
+ls "/s3/$OUT"
 echo "[job] $(date -u +%FT%TZ) done"
