@@ -1,4 +1,7 @@
+import atexit
 import logging
+import os
+import subprocess
 import threading
 import time
 from typing import Any
@@ -26,6 +29,49 @@ def _install_log_filter() -> None:
     for h in root.handlers:
         if not any(isinstance(f, _DropOpenMVChatter) for f in h.filters):
             h.addFilter(_DropOpenMVChatter())
+
+def _patch_serial_write_timeout(seconds: float = 2.0) -> None:
+    """openmv은 pyserial을 읽기 timeout만 주고 연다. 보드 링크가 멈추면 write()가 영원히 막혀
+    녹화 프로세스가 연결 단계에서 멈춘다(2026-10-06). 쓰기에도 timeout을 걸어 예외로 바꾼다."""
+    import openmv.camera as oc
+    import serial
+
+    if getattr(oc.serial, "_so101_patched", False):
+        return
+
+    class _Shim:
+        _so101_patched = True
+
+        def __getattr__(self, name):
+            return getattr(serial, name)
+
+        @staticmethod
+        def Serial(*args, **kwargs):  # noqa: N802
+            kwargs.setdefault("write_timeout", seconds)
+            return serial.Serial(*args, **kwargs)
+
+    oc.serial = _Shim()
+
+
+def _usb_reauthorize(port: str) -> bool:
+    """보드를 USB 단에서 끊었다 다시 붙인다(뽑았다 꽂기와 같음). sudo 비밀번호 없이 될 때만 동작."""
+    try:
+        tty = os.path.basename(os.path.realpath(port))
+        usbdev = os.path.dirname(os.path.realpath(f"/sys/class/tty/{tty}/device"))
+        auth = os.path.join(usbdev, "authorized")
+        for v in ("0", "1"):
+            subprocess.run(["sudo", "-n", "tee", auth], input=v.encode(), stdout=subprocess.DEVNULL,
+                           stderr=subprocess.DEVNULL, check=True, timeout=5)
+            time.sleep(1.0)
+    except Exception as e:  # noqa: BLE001
+        logger.warning("USB re-authorize failed for %s: %s", port, e)
+        return False
+    deadline = time.monotonic() + 10
+    while time.monotonic() < deadline and not os.path.exists(port):
+        time.sleep(0.5)
+    time.sleep(3.0)  # 열거 직후에는 EIO가 난다
+    return True
+
 
 # Runs on the camera. Every image-forming setting is pinned; the stream channel
 # delivers the latest snapshot to the host.
@@ -98,6 +144,11 @@ class OpenMVCamera(Camera):
         )
 
     def _open_fresh(self):
+        # 링크가 막혔을 때 영원히 멈추지 않고 에러로 끝나게 한다. 복구는 scripts/so101_omv_recover.sh.
+        _patch_serial_write_timeout()
+        return self._open_fresh_once()
+
+    def _open_fresh_once(self):
         """Open the camera with a clean interpreter state.
 
         On firmware 5.0.1 the protocol link stalls after ``stop()`` and sometimes after
@@ -146,6 +197,9 @@ class OpenMVCamera(Camera):
         if self.is_connected:
             raise RuntimeError(f"{self} is already connected")
         _install_log_filter()
+        # LeRobot은 모터 버스를 먼저 끊고 카메라를 끊는다. 버스에서 에러가 나면(집게 과부하 등) 카메라
+        # disconnect가 불리지 않아 보드가 스트리밍 중인 채로 남고, 다음 연결이 막힌다. 종료 시 항상 정리한다.
+        atexit.register(self.disconnect)
         cam = self._open_fresh()
         cam.read_stdout()
         cam.exec(self._script())
@@ -234,6 +288,8 @@ class OpenMVCamera(Camera):
         return frame
 
     def disconnect(self) -> None:
+        if self._cam is None and self._thread is None:
+            return
         self._stop.set()
         if self._thread is not None:
             self._thread.join(timeout=2)

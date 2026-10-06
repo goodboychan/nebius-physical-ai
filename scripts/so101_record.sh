@@ -9,6 +9,8 @@ NAME=${1:?이름}; N=${2:?에피소드 수}; T=${3:?에피소드 길이}; R=${4:
 source ~/lerobot-env/.venv/bin/activate
 CAMS='{"top": {"type": "opencv", "index_or_path": "/dev/so101_cam_top", "width": 640, "height": 480, "fps": 30, "fourcc": "MJPG"}, "wrist": {"type": "openmv", "fps": 30}}'
 /usr/local/bin/so101-cam-lock /dev/so101_cam_top >/dev/null      # 오버헤드 수동 설정 재적용
+~/so101_omv_check.sh | tee /dev/stderr | grep -q "^OK" \
+  || { echo "손목 카메라가 응답하지 않습니다. AE3 USB 케이블을 뽑았다 10초 뒤 다시 꽂고 다시 실행하세요"; exit 1; }
 DS="$HOME/so101_data/${NAME}"
 if [ -f "$DS/meta/info.json" ] && [ ! -d "$DS/meta/episodes" ]; then   # 에피소드 0개로 끝난 빈 데이터셋은 옆으로 치운다
   mv "$DS" "$DS.empty-$(date +%m%d_%H%M%S)"; echo "빈 데이터셋을 옮겼습니다: $DS.empty-*"
