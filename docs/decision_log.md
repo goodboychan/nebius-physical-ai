@@ -332,3 +332,21 @@ warm이며, 각 셀이 캐시에 쓰므로 **셀 N의 빌드 조건이 셀 1..N�
 - 실행 설정: `n_action_steps` = 체크포인트 설정값 100(새로 고르지 않음), 시간 앙상블 없음, 30Hz, 최대 60초.
   홈 자세 = train 에피소드(≥ 25, 새 쉬는 자세) 시작 상태의 중앙값 `configs/so101_home.json`. 매 trial 전에 3초 동안 이 자세로 이동
 - 추론 지연: Orin FP32 엔진 67ms(chunk마다 한 번), FP16 12ms
+
+---
+
+## 2026-10-07 — `D4` Cosmos-Reason2를 Nebius AI Cloud 엔드포인트로 (GX10 로컬 철회)
+
+| 필드 | 내용 |
+|---|---|
+| 대상 | §6 `D4`, attempt-027 결정(GX10 로컬) |
+| 결정 | `nvidia/Cosmos-Reason2-2B`를 **Nebius AI Cloud 엔드포인트**(eu-north1, L40S, vLLM 0.29.0)에서 실행한다 (사용자 동의) |
+| 사유 | 해커톤 FAQ(2026-10-07 확인): NVIDIA 오픈 모델은 **Nebius Token Factory 호출 또는 Nebius AI Cloud 배포**로 실행해야 하며, 다른 곳(HuggingFace 등)에서 돌리는 것은 인정되지 않는다. 로컬 GX10도 Nebius가 아니다 |
+| 결과 열람 여부 | 해당 없음 — §1.3상 에이전트 레이어는 과학적 claim이 아니다 |
+
+- 지연(keep-alive, 20회): GX10에서 중앙값 **328ms**, Orin에서 **327ms**, p95 330ms. 500ms 예산 안이다.
+  attempt-008/017의 854–948ms는 연결마다 TLS를 새로 맺은 값이었다. 연결을 재사용하면 RTT(약 315ms)가 대부분이다
+- 그래도 감독은 **비동기**로 돈다: 정책 루프(30Hz)를 기다리게 하지 않고, 감독자가 최신 프레임을 약 2Hz로 보고 판정한다
+- 가중치는 우리 S3(`models/Cosmos-Reason2-2B`)에서 읽는다. 엔드포인트에 HF 토큰을 넣지 않는다
+- 비용: L40S $1.55/h. 평소 `stop`, 실기 세션 때만 `start`. 엔드포인트 `aiendpoint-e00yx3wqzmspsw81gj`
+- D3(Nemotron 3 Super, Token Factory)는 2026-10-07 호출 확인(1초, 정상 응답). NVIDIA 모델 2종이 Nebius 위에서 돈다
