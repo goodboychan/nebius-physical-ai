@@ -1,5 +1,6 @@
 """손목 카메라 장착 위치 점검. 집게 끝이 화면의 같은 자리에 보이는지를 세션마다 확인한다.
-준비: 팔로워 집게를 손으로 끝까지 닫고, 손목 카메라가 검은 책상 매트를 내려다보게 한다(캔·종이 등 밝은 물체는 치운다).
+준비: 팔로워 집게를 손으로 끝까지 닫고, 손목 카메라가 검은 책상 매트를 15cm 이상 위에서 내려다보게 한다
+(캔·종이 등 밝은 물체는 치운다). 판정은 화면 아래쪽 가운데(집게 끝 영역)만 본다.
 사용: so101_wrist_check.py --save-ref   (기준 저장, 장착을 바꿨을 때만)
       so101_wrist_check.py              (세션 점검)
 밝은(흰) 집게 영역을 마스크로 뽑아 기준과 겹침(IoU)과 중심 이동(px)을 본다. IoU ≥ 0.80, 이동 ≤ 6px이면 PASS."""
@@ -16,6 +17,9 @@ cam.disconnect()
 gray = cv2.cvtColor(img, cv2.COLOR_RGB2GRAY)
 _, mask = cv2.threshold(cv2.GaussianBlur(gray, (5, 5), 0), 0, 255, cv2.THRESH_BINARY + cv2.THRESH_OTSU)
 mask = cv2.morphologyEx(mask, cv2.MORPH_OPEN, np.ones((5, 5), np.uint8)) > 0
+H, W = mask.shape; roi = np.zeros_like(mask); roi[int(H * 0.55):, int(W * 0.30):int(W * 0.80)] = True
+mask &= roi  # 집게 끝이 보이는 아래쪽 가운데만 본다(바닥 반사광 제외)
+assert mask.sum() > 50, "집게 영역이 안 보입니다. 집게를 끝까지 닫고 다시 실행하세요"
 cy, cx = [float(v.mean()) for v in np.nonzero(mask)]
 if "--save-ref" in sys.argv:
     np.savez(f"{D}/wrist_ref.npz", mask=mask, grip=grip, img=img)
