@@ -13,6 +13,20 @@ from .config_openmv import OpenMVCameraConfig
 
 logger = logging.getLogger(__name__)
 
+
+class _DropOpenMVChatter(logging.Filter):
+    """openmv 패키지는 루트 로거에 프레임마다 INFO("Frame Ready")를 찍는다. 녹화 터미널을 덮으므로 INFO 이하만 버린다."""
+
+    def filter(self, record: logging.LogRecord) -> bool:
+        return not (record.levelno <= logging.INFO and "/openmv/" in record.pathname.replace("\\", "/"))
+
+
+def _install_log_filter() -> None:
+    root = logging.getLogger()
+    for h in root.handlers:
+        if not any(isinstance(f, _DropOpenMVChatter) for f in h.filters):
+            h.addFilter(_DropOpenMVChatter())
+
 # Runs on the camera. Every image-forming setting is pinned; the stream channel
 # delivers the latest snapshot to the host.
 DEVICE_SCRIPT = """
@@ -131,6 +145,7 @@ class OpenMVCamera(Camera):
     def connect(self, warmup: bool = True) -> None:
         if self.is_connected:
             raise RuntimeError(f"{self} is already connected")
+        _install_log_filter()
         cam = self._open_fresh()
         cam.read_stdout()
         cam.exec(self._script())
