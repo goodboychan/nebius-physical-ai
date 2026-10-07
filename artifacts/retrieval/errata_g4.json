@@ -1,0 +1,215 @@
+{
+  "schema": "edgeqgate/retrieval_snapshot/v1",
+  "frozen_at": "2026-10-07T08:14:40+00:00",
+  "queries": [
+    "TensorRT 10.3.0 known issues release notes",
+    "TensorRT INT8 explicit quantization Q/DQ transformer attention fusion issue",
+    "Jetson Orin Nano Super TensorRT INT8 performance regression",
+    "TensorRT ModelOpt quantized ONNX build failure Jetson",
+    "TensorRT 10.3.0 JetPack compatibility engine version"
+  ],
+  "results": {
+    "TensorRT 10.3.0 known issues release notes": [
+      {
+        "url": "https://docs.nvidia.com/deeplearning/tensorrt/10.x.x/getting-started/release-notes-10/10.3.0.html",
+        "title": "TensorRT 10.3.0 Release Notes — NVIDIA TensorRT",
+        "content": "There was a known issue that engine building might fail for Diffusion networks. The workaround was to enable the `-stronglyTyped` option.\n\n`-stronglyTyped`\n\nThere was an up to 10% performance regression for ConvNext on NVIDIA Orin compared to TensorRT 9.3.\n\nThere was an up to 4x performance regression for networks containing `GridSample` ops compared to TensorRT 9.2.\n\n`GridSample`\n\nThe size of the `libnvinfer_lean.so` library had increased by 10 MB. This issue has been fixed.\n\n`libnvinfer_lean.so` [...] `nvinfer1::ISliceLayer` with modes `nvinfer1::SampleMode::kCLAMP` or `nvinfer1::SampleMode::kFILL` (ONNX equivalent being a `Pad` op with either `constant` or `edge` mode) could break during engine compilation if the slice input was a constant tensor. This issue has been fixed so slice can handle constant inputs.\n\n`nvinfer1::ISliceLayer`\n`nvinfer1::SampleMode::kCLAMP`\n`nvinfer1::SampleMode::kFILL`\n`Pad`\n`constant`\n`edge`\n\n## Known Issues#\n\nFunctional\n\nThere is a known engine build failure if FP8-Q/DQ ops are added before a convolution op whose input/output channels are not multiples of 16. Remove the FP8-Q/DQ ops for these convolutions to work around this issue. [...] ## Deprecated ",
+        "score": 0.89302075
+      },
+      {
+        "url": "https://nvidia.github.io/TensorRT-LLM/release-notes.html",
+        "title": "Release Notes — TensorRT LLM",
+        "content": "+ Fixed OOM issues in fused MoE kernels by optimizing workspace pre-allocation.\n  + Corrected Cutlass MoE integration to fix accuracy issues on Blackwell hardware.\n  + Fixed W4A8 MoE kernel issues on Hopper architecture.\n + Fixed a potential hang caused by Python multiprocessing when prefetching weights.\n  + Resolved an issue where `torch.onnx.export` would fail with newer PyTorch versions by correctly falling back to non-dynamo modes.\n  + Fixed numerical stability issues for XQA kernels when using speculative decoding.\n  + Fixed a memory leak in the `cacheTransceiver` that could lead to hangs in disaggregated serving.\n\n### Known Issues# [...] ### API Changes#\n\n [BREAKING CHANGE] Enable scheduling overlap by default\n Remove deprecated GptSession/V1 from TRT workflow\n Set \\_AutoDeployLlmArgs as primary config object\n Allow overriding CLI arguments with YAML file in trtllm-serve\n Introduced multimodal embedding field in LlmRequest\n\n### Fixed Issues#\n\n Fix hang bug when context server doesn’t have enough capacity for KV Cache (#3095)\n Fix C++ decoder synchronization in PyTorch (#3106)\n Fix bug related to creating CUDA stream as default parameter, which will be initialized during impor",
+        "score": 0.86441374
+      },
+      {
+        "url": "https://nvidia.github.io/TensorRT-LLM/0.19.0/release-notes.html",
+        "title": "Release Notes — TensorRT-LLM",
+        "content": "### Infrastructure Changes#\n\n Base Docker image for TensorRT-LLM is updated to `nvcr.io/nvidia/pytorch:24.07-py3`.\n Base Docker image for TensorRT-LLM Backend is updated to `nvcr.io/nvidia/tritonserver:24.07-py3`.\n The dependent TensorRT version is updated to 10.3.0.\n The dependent CUDA version is updated to 12.5.1.\n The dependent PyTorch version is updated to 2.4.0.\n The dependent ModelOpt version is updated to v0.15.0.\n\n### Known Issues#\n\n On Windows, installation of TensorRT-LLM may succeed, but you might hit `OSError:exception: access violation reading 0x0000000000000000` when importing the library in Python. See Installing on Windows for workarounds.\n\n## TensorRT-LLM Release 0.11.0#\n\n### Key Features and Enhancements# [...] ### Fixed Issues#\n\n Fixed tokenizer usage in `quantize.py` #288\n Fixed LLaMa with LoRA error\n Fixed LLaMA GPTQ failure\n Fixed Python binding for InferenceRequest issue\n Fixed CodeLlama SQ accuracy issue\n\n### Known Issues#\n\n The hang reported in issue #149 has not been reproduced by the TensorRT-LLM team. If it is caused by a bug in TensorRT-LLM, that bug may be present in that release.\n\nOn this page [...] ### Fixed Issues#\n\n Fixed a slice error in forward f",
+        "score": 0.853046
+      },
+      {
+        "url": "https://www.collegesidekick.com/study-docs/14518341",
+        "title": "TensorRT-Release-Notes.pdf",
+        "content": "‣ There is a known issue with DLA clocks that requires users to reboot the system after changing the nvpmodel power mode or otherwise experience",
+        "score": 0.8173562
+      },
+      {
+        "url": "https://github.com/NVIDIA/TensorRT/releases",
+        "title": "Releases · NVIDIA/TensorRT · GitHub",
+        "content": "# Plugin changes\n\n Deprecated bertQKVToContextPlugin and will be removed in a future release. No alternatives are planned to be provided.\n\n# Parser changes\n\n Added support for RotaryEmbedding, RMSNormalization and TensorScatter for improved LLM model support\n Added more specialized quantization ops for models quantized through TensorRT ModelOptimizer.\n Added kREPORT\\_CAPABILITY\\_DLA flag to enable per-node validation when building DLA engines through TensorRT.\n Added kENABLE\\_PLUGIN\\_OVERRIDE flag to enable TensorRT plugin override for nodes that share names with user plugins.\n Improved error reporting for models with multiple subgraphs, such as Loop or Scan nodes.\n\n# Demo changes\n\n demoDiffusion: Stable Diffusion 1.5, 2.0 and 2.1 pipelines have been deprecated and removed.\n\nAssets 3 [...] Plugin changes\n  + Fixed a division-by-zero error in geluPlugin that occured when the bias is omitted.\n  + Completed transition away from using static plugin field/attribute member variables in standard plugins. There's no such need since presently, TRT does not access field information after plugin creators are destructed (deregistered from the plugin registry), nor does access such information ",
+        "score": 0.8029425
+      }
+    ],
+    "TensorRT INT8 explicit quantization Q/DQ transformer attention fusion issue": [
+      {
+        "url": "https://github.com/NVIDIA/TensorRT/issues/4401",
+        "title": "Explicit INT8 Quantization Fails to Fuse Concat-Conv Block ...",
+        "content": "I've tried all suggested Q/DQ placements from various issues (and more), but TensorRT never fully fuses the operators in that section. Since",
+        "score": 0.8033131
+      },
+      {
+        "url": "https://docs.nvidia.com/deeplearning/tensorrt/latest/inference-library/quantized-types-explicit-quantization.html",
+        "title": "Explicit Quantization — NVIDIA TensorRT",
+        "content": "In contrast, when \\(x\\_{f^{}}^{2}\\) is quantized to INT8, as depicted in the following diagram, the output of the fused convolution is also INT8, and the trailing Q-layer is fused with the convolution.\n\nWhen :math:`x_{f^{}}^{2}` is quantized to INT8, the output of the fused convolution is also INT8, and the trailing Quantize layer is fused with the convolution.\n\nFor extra performance, try quantizing layers that do not commute with Q/DQ. Currently, non-weighted layers with INT8 inputs also require INT8 outputs, so quantize both inputs and outputs.\n\nAn example of quantizing a quantizable operation. An element-wise addition is fused with the input Dequantize layers and the output Quantize layer. [...] Consider a simple case of a sequential graph consisting of a single INT8 plugin (aptly named `MyInt8Plugin`) sandwiched between two convolution layers (ignoring weights quantization):\n\n`MyInt8Plugin`\nSequential Q/DQ graph with MyInt8Plugin between two convolutions: Input through Q, DQ, Conv, Q, DQᵢ, MyInt8Plugin, Qₒ, DQ, Conv, to Output\n\nFigure 1 Blue arrows indicate FP32 activation tensors; green arrows indicate INT8 precision.#\n\nWhen TensorRT optimizes this graph, it fuses the layers t",
+        "score": 0.79542017
+      },
+      {
+        "url": "https://github.com/NVIDIA/TensorRT/issues/3243",
+        "title": "[question] Myelin: attention fusion and FlashAttention · Issue #3243 · NVIDIA/TensorRT · GitHub",
+        "content": "Copy link\n\nAssignees\n\nnvpohanh\n\nLabels\n\ntriagedIssue has been triaged by maintainersIssue has been triaged by maintainers\n\n## Description\n\n@vadimkantorov\n\nvadimkantorov\n\nopened on Aug 21, 2023\n\nIssue body actions\n\nHi! When attention op gets fused in a single op with Myelin, it's not written in trex-tooltip if it's using FlashAttention / proper fusion or not (and if it's using quantization under the hood, especially for the implicit quantization mode). How can we know if it's using fused attention impl like FlashAttention? Thanks :)\n\nReactions are currently unavailable\n\n## Activity\n\nSign up for free to join this conversation on GitHub. Already have an account? Sign in to comment\n\n## Metadata\n\n## Metadata\n\n### Assignees\n\n @nvpohanh\n\n  nvpohanh\n\n### Labels [...] ### Assignees\n\n @nvpohanh\n\n  nvpohanh\n\n### Labels\n\ntriagedIssue has been triaged by maintainersIssue has been triaged by maintainers\n\nNo type\n\nNo projects\n\nNo milestone\n\nNone yet\n\nNo branches or pull requests\n\n## Issue actions\n\nYou can’t perform that action at this time. [...] Skip to content   \n \n \n\n## Navigation Menu\n\nSign in\n\nAppearance settings\n\nSign in\n\nSign up\n\nAppearance settings\n\nYou signed in with another tab or windo",
+        "score": 0.6641271
+      },
+      {
+        "url": "https://blog.squeezebits.com/how-to-quantize-transformerbased-model-for-tensorrt-deployment-55802",
+        "title": "How to Quantize Transformer-based model for TensorRT Deployment - The official SqueezeBits Tech blog",
+        "content": "However, high computational costs and architectural complexity of Transformer-based architecture limits their practicality for real-time applications or deployment on resource-constrained devices. Especially, complex architectural components—such as multi-head attention and RoPE, often introduced to boost model performance—make it difficult for frameworks like TensorRT to automatically identify operations for quantization or to apply fused INT8-optimized kernels. As a result, these models suffers from achieving effective accuracy-latency trade-offs through standard quantization workflows. [...] Although TensorRT failed to quantize ViT effectively, OwLite’s recommendation system identified an optimal configuration (Figure 2a), reducing model size by nearly 50% and latency by ~30%. In contrast, brute-force quantization—applying INT8 to all nodes indiscriminately (Figure 2b)—even increased latency by 1.3× compared to the recommended setup, due to loss of kernel fusion opportunities.\n\nOwLite’s Recommendation feature automatically searches for the optimal configuration, allowing users to achieve the best compression-performance trade-off with minimal manual tuning.\n\n## Quantization of V",
+        "score": 0.6455898
+      },
+      {
+        "url": "https://forums.developer.nvidia.com/t/practical-aspects-about-neural-networks-quantization-with-tensorrt/248336",
+        "title": "Practical aspects about neural networks quantization with TensorRT - TensorRT - NVIDIA Developer Forums",
+        "content": "| Topic |  | Replies | Views | Activity |\n ---  --- \n| Explicit quantization vs implicit quantization  TensorRT | 3 | 2195 | April 26, 2022 |\n| TRT8 - PTQ using integrated Q\\DQ nodes inside the PyTorch model (Explicit) Vs. PTQ using calibration based IInt8EntropyCalibrator2 (Implicit))  TensorRT | 3 | 1100 | December 13, 2021 |\n| How exactly are you supposed to do explicit quantization?  TensorRT | 1 | 466 | March 4, 2025 |\n| TensorRT explicit quantization layer fusion  TensorRT tensorrt | 4 | 1296 | May 3, 2022 |\n| Confused about the design concept of Explicit quantization Q/DQ node in pytorh\\_quantizaiton toolkit  TensorRT | 5 | 1205 | April 27, 2022 |\n| TensorRT  TensorRT tensorrt | 5 | 814 | January 19, 2022 | [...] ### Explicit Quantization\n\nWhen performing explicit quantization, I provide an ONNX graph with Q/DQ nodes to be converted to a ‘.trt’ file. Can I assume that all fake quantization nodes (as seen by Netron, for example) will be replaced by real INT8 operations of the associated layers?\n\n### Implicit Quantization\n\nMoreover, the following statement from the above documentation doesn’t provide too much detail about which operations are quantized or not in implicit quant",
+        "score": 0.63939893
+      }
+    ],
+    "Jetson Orin Nano Super TensorRT INT8 performance regression": [
+      {
+        "url": "https://forums.developer.nvidia.com/t/tensorrt-model-optimizer-int8-quantization-causes-2-7x-performance-regression-on-jetson-orin-nano-4gb-vit-s-dpt-architecture/357835",
+        "title": "TensorRT Model Optimizer INT8 quantization causes 2.7x performance regression on Jetson Orin Nano 4GB (ViT-S + DPT architecture) - Jetson Orin Nano - NVIDIA Developer Forums",
+        "content": "`$ python3 -m modelopt.onnx.quantization --onnx_path vits.onnx --quantize_mode int8 --output_path int8_model.onnx\n$ /usr/src/tensorrt/bin/trtexec --onnx=int8_model.onnx --int8 --fp16\n...\n[01/19/2026-05:19:40] [I] === Performance summary ===\n[01/19/2026-05:19:40] [I] Throughput: 41.3892 qps\n[01/19/2026-05:19:40] [I] Latency: min = 24.355 ms, max = 24.4976 ms, mean = 24.4676 ms, median = 24.4681 ms, percentile(90%) = 24.4811 ms, percentile(95%) = 24.4847 ms, percentile(99%) = 24.4958 ms\n[01/19/2026-05:19:40] [I] Enqueue Time: min = 0.801758 ms, max = 1.14743 ms, mean = 0.850748 ms, median = 0.835938 ms, percentile(90%) = 0.894531 ms, percentile(95%) = 0.93103 ms, percentile(99%) = 1.09009 ms [...] [01/19/2026-05:19:40] [I] H2D Latency: min = 0.0443115 ms, max = 0.0612793 ms, mean = 0.0482149 ms, median = 0.0476074 ms, percentile(90%) = 0.0505981 ms, percentile(95%) = 0.0562744 ms, percentile(99%) = 0.06073 ms\n[01/19/2026-05:19:40] [I] GPU Compute Time: min = 23.949 ms, max = 23.9971 ms, mean = 23.969 ms, median = 23.9688 ms, percentile(90%) = 23.9817 ms, percentile(95%) = 23.9851 ms, percentile(99%) = 23.9954 ms\n[01/19/2026-05:19:40] [I] D2H Latency: min = 0.343262 ms, max = 0.456421",
+        "score": 0.9163571
+      },
+      {
+        "url": "https://forums.developer.nvidia.com/t/tensorrt-quantization-for-jetson-inference/347929",
+        "title": "TensorRT Quantization for Jetson Inference - Jetson Orin Nano - NVIDIA Developer Forums",
+        "content": "| Topic |  | Replies | Views | Activity |\n ---  --- \n| TensorRT Model Optimizer INT8 quantization causes 2.7x performance regression on Jetson Orin Nano 4GB (ViT-S + DPT architecture)  Jetson Orin Nano tensorrt ,  nvbugs | 8 | 602 | February 13, 2026 |\n| Issues with Using TensorRT on Jetson Orin Nano  TensorRT tensorrt ,  jetson | 3 | 498 | April 30, 2026 |\n| Internal Error while Creating TensorRT Engine from Quantized ONNX Model  Jetson AGX Orin tensorrt ,  nvbugs ,  cudnn | 6 | 337 | October 9, 2025 |\n| How to install torch\\_tensorrt  Jetson Orin Nano tensorrt | 2 | 373 | August 20, 2025 |\n| Run inference with model exported by Jetson Orin Nano 8GB on Jetson Orin Nano 4GB  Jetson Orin Nano tensorrt ,  yolo | 4 | 1168 | August 3, 2023 |",
+        "score": 0.8655088
+      },
+      {
+        "url": "https://forums.developer.nvidia.com/t/worse-performance-after-quantization-on-tensorrt/355549",
+        "title": "Worse performance after quantization on TensorRT - TensorRT - NVIDIA Developer Forums",
+        "content": "| Topic |  | Replies | Views | Activity |\n ---  --- \n| TensorRT Model Optimizer INT8 quantization causes 2.7x performance regression on Jetson Orin Nano 4GB (ViT-S + DPT architecture)  Jetson Orin Nano tensorrt ,  nvbugs | 8 | 625 | February 13, 2026 |\n| Quantize model with pytorch-quantization  Jetson Orin NX pytorch ,  generative\\_ai | 3 | 1657 | April 3, 2024 |\n| Post-Training Quantization (PTQ) for semantic segmentation model running on Jetson Orin NX  Jetson Orin NX tensorrt | 23 | 974 | March 12, 2025 |\n| Post quantization aware training is slower than fp16 and post quantization  TensorRT | 12 | 3016 | September 25, 2024 | [...] # Worse performance after quantization on TensorRT\n\n## Description\n\nContext: I am deploying the DEIMv2 model on a Jetson Orin NX (JetPack 6.2) and attempting to optimize performance using INT8 quantization via NVIDIA ModelOpt.\n\nThe Issue: While my FP16/BF16 baseline achieves 580 QPS, the quantized INT8 version drops to 380 QPS. I expected a significant speedup, but I am seeing a performance regression instead.\n\nCurrent Workflow:\n\nPTQ: Applied Post-Training Quantization using `modelopt.torch.quantization`.\n\n`modelopt.torch.quantization`\n\nExport: Export",
+        "score": 0.86441374
+      },
+      {
+        "url": "https://hokwangchoi.com/blog/vision-benchmarks",
+        "title": "YOLOv8 on Jetson Orin Nano: From PyTorch to TensorRT INT8 -- Hokwang Choi",
+        "content": "## Appendix: Power Mode Comparison\n\nThe Orin Nano supports multiple power modes. Here's how 15W mode compares to MAXN\\_SUPER:\n\n| Precision | 15W Mode | MAXN\\_SUPER | Speedup |\n ---  --- |\n| TensorRT FP32 | 11.04 ms | 8.36 ms | 1.32x |\n| TensorRT FP16 | 6.13 ms | 4.43 ms | 1.38x |\n| TensorRT INT8 | 4.90 ms | 3.49 ms | 1.40x |\n\nMAXN\\_SUPER draws ~3-4W more power but delivers 30-40% better performance. For battery-powered or thermally-constrained deployments, 15W mode offers a reasonable tradeoff -- still achieving 204 FPS with INT8.\n\n## Conclusion [...] Edge AI TensorRT Jetson CUDA\n\n# YOLOv8 on Jetson Orin Nano: From PyTorch to TensorRT INT8\n\nHokwang Choi · April 2026 · 18 min read\n\nTL;DR  \n  \n Hardware: Jetson Orin Nano 8GB (MAXN\\_SUPER) + Samsung PRO Plus 256GB microSD  \n Model: YOLOv8n, 640x640 input, batch size 1  \n Measurement: GPU-only latency via CUDA events and trtexec  \n Results: TensorRT INT8 achieves 3.49ms / 286 FPS (6x faster than PyTorch)  \n Code: github.com/hokwangchoi/jetson-orin-nano-benchmarks\n\n## Hardware Setup\n\nJetson Orin Nano Developer Kit  \n\nJetson Orin Nano 8GB Developer Kit\n\nThe Jetson Orin Nano is NVIDIA's entry-level edge AI platform. I'm using the 8GB deve",
+        "score": 0.84707206
+      },
+      {
+        "url": "https://industrialmonitordirect.com/es/blogs/knowledgebase/resolving-yolo-model-performance-on-jetson-orin-nano-with-tensorrt-export",
+        "title": "Fix YOLO Performance on Jetson Orin Nano: TensorRT ...",
+        "content": "With TensorRT FP16 optimization, expect 60-120 FPS depending on model size (n/s/m/l). INT8 quantization can push this to 80-150 FPS on Jetson",
+        "score": 0.8080827
+      }
+    ],
+    "TensorRT ModelOpt quantized ONNX build failure Jetson": [
+      {
+        "url": "https://github.com/NVIDIA/TensorRT/issues/4494",
+        "title": "ONNX model conversion failure of TensorRT 10.3 when running trtexec on GPU Jetson Orin · Issue #4494 · NVIDIA/TensorRT · GitHub",
+        "content": "&&&& RUNNING TensorRT.trtexec [TensorRT v100300] # /usr/src/tensorrt/bin/trtexec --int8 --onnx=model_quantized_int8_512x512_iter4.onnx --saveEngine=model_quantized_int8_512x512_iter4.engine [06/20/2025-12:02:56] [I] === Model Options === [06/20/2025-12:02:56] [I] Format: ONNX [06/20/2025-12:02:56] [I] Model: model_quantized_int8_512x512_iter4.onnx [06/20/2025-12:02:56] [I] Output: [06/20/2025-12:02:56] [I] === Build Options === [06/20/2025-12:02:56] [I] Memory Pools: workspace: default, dlaSRAM: default, dlaLocalDRAM: default, dlaGlobalDRAM: default, tacticSharedMem: default [06/20/2025-12:02:56] [I] avgTiming: 8 [06/20/2025-12:02:56] [I] Precision: FP32+INT8 [06/20/2025-12:02:56] [I] LayerPrecisions: [06/20/2025-12:02:56] [I] Layer Device Types: [06/20/2025-12:02:56] [I] Calibration: [...] [I] DirectIO mode: Disabled [06/20/2025-12:02:56] [I] Restricted mode: Disabled [06/20/2025-12:02:56] [I] Skip inference: Disabled [06/20/2025-12:02:56] [I] Save engine: model_quantized_int8_512x512_iter4.engine [06/20/2025-12:02:56] [I] Load engine: [06/20/2025-12:02:56] [I] Profiling verbosity: 0 [06/20/2025-12:02:56] [I] Tactic sources: Using default tactic sources [06/20/2025-12:02:56] [I] t",
+        "score": 0.85186684
+      },
+      {
+        "url": "https://forums.developer.nvidia.com/t/tensorrt-quantization-for-jetson-inference/347929",
+        "title": "TensorRT Quantization for Jetson Inference - Jetson Orin Nano - NVIDIA Developer Forums",
+        "content": "# TensorRT Quantization for Jetson Inference\n\nHi Everyone, I’m currently working with a Jetson Orin Nano and I’m trying to optimize the model by using TensorRT. Right now the system has Jetpack 6.2 which means TensorRT is version 10.3. I managed to get the model engine to build properly on the device, however, it was too slow.\n\nI then tried to quantize the model for inference using a Cloud VM, however, that broke everything and caused issues. I managed to quantize the model and get an ONNX model out, but when trying to build the engine I would get a variety of errors depending on how I tried to fix it. I installed the ModelOptimizer following the documentation from here. The system I used was:\n\nMy attempts to fix the model build issues are described below: [...] One of the main issues you’re facing is that you’re getting a variety of errors when trying to build the engine for a quantized model. You’ve tried a few things to fix this, including allowing Int8 and FP16 datatypes in the model, and manually ensuring the network is strongly typed.\n\nHowever, it seems like these attempts haven’t been successful. You mentioned that you’ve installed the ModelOptimizer, but you didn’t specify ",
+        "score": 0.8235701
+      },
+      {
+        "url": "https://forums.developer.nvidia.com/t/tensorrt-model-optimizer-int8-quantization-causes-2-7x-performance-regression-on-jetson-orin-nano-4gb-vit-s-dpt-architecture/357835",
+        "title": "TensorRT Model Optimizer INT8 quantization causes 2.7x performance regression on Jetson Orin Nano 4GB (ViT-S + DPT architecture) - Jetson Orin Nano - NVIDIA Developer Forums",
+        "content": "Error:\n\n`[01/16/2026-16:22:07] [E] Error: [weightsPtr.h::values::182] Error Code 2: Internal Error (Assertion type() == expectedDataType<T>() failed. )\n[01/16/2026-16:22:07] [E] Engine could not be created from network\n[01/16/2026-16:22:07] [E] Building engine failed\n[01/16/2026-16:22:07] [E] Failed to create engine from model or file.\n[01/16/2026-16:22:07] [E] Engine set up failed\n&&&& FAILED TensorRT.trtexec [TensorRT v100300]`\n\n## Steps to Reproduce\n\n### FP16 Baseline\n\n`trtexec \\\n--onnx=model_backbone.onnx \\\n--fp16 \\\n--noDataTransfers \\\n--useCudaGraph \\\n--useSpinWait`\n\n### ModelOpt INT8 [...] ### Full Encoder (ViT-S + DPT)\n\n| Precision Mode | ModelOpt 0.31 | ModelOpt 0.35 | ModelOpt 0.40 |\n ---  --- |\n| FP16 only | 41.8 ms | 41.9 ms | 42.7 ms |\n| FP16+INT8 (trtexec flags) | 39.7 ms | 39.7 ms | 40.4 ms |\n| ModelOpt INT8 (`--stronglyTyped`) | 114.5 ms ❌ | 114.1 ms ❌ | FAILS ❌ |\n\n`--stronglyTyped`\n\n### ViT-S Only (ModelOpt 0.40)\n\n| Precision Mode | Latency | Throughput |\n --- \n| FP16 only | 30.75 ms | 32.1 qps |\n| FP16+INT8 (trtexec flags) | 30.80 ms | 32.5 qps |\n| ModelOpt INT8 (`--stronglyTyped`) | 30.34 ms | 32.9 qps |\n\n`--stronglyTyped`\n\nEven the isolated ViT-S shows only ~1.3%",
+        "score": 0.82117355
+      },
+      {
+        "url": "https://forums.developer.nvidia.com/t/unable-to-build-model-engine-for-int8-yolov8m-quantized-using-tensorrt-model-optimizer/304710",
+        "title": "Unable to build model engine for INT8 yolov8m quantized using tensorrt model optimizer - TensorRT - NVIDIA Developer Forums",
+        "content": "| Topic |  | Replies | Views | Activity |\n ---  --- \n| Build yolov8 QAT model int8 engine failed  TensorRT cudnn | 2 | 176 | July 31, 2025 |\n| Post-Training Quantization (PTQ) for semantic segmentation model running on Jetson Orin NX  Jetson Orin NX tensorrt | 23 | 974 | March 12, 2025 |\n| Convert int8-onnx model to trt engine?  TensorRT onnx | 6 | 1296 | April 29, 2023 |\n| TensorRT generated QAT engine, why the engine is bigger than pretrained fp16 engine?  TensorRT | 3 | 1460 | January 4, 2022 |\n| TensorRT run ONNX model with Int8 issue  TensorRT | 8 | 4556 | March 17, 2020 |\n| Tenssorrt INT8 precision engine build failed for the models having custom layer (BatchedNMSDynamic\\_TRT)  TensorRT | 11 | 2244 | June 29, 2021 | [...] # Unable to build model engine for INT8 yolov8m quantized using tensorrt model optimizer\n\n## Description\n\n• Hardware Platform (Jetson / GPU) - Jetson Orin AGX 64 GB Developer Kit  \n• DeepStream Version - Docker Container - deepstream:7.0-triton-multiarch  \n• JetPack Version (valid for Jetson only) - 6.0  \n• TensorRT Version - 10.1+  \n• NVIDIA GPU Driver Version (valid for GPU only) -  \n• Issue Type( questions, new requirements, bugs) - Question\n\nHi,\n\nSince t",
+        "score": 0.79041743
+      },
+      {
+        "url": "https://docs.ultralytics.com/reference/utils/export/engine",
+        "title": "utils.export.engine API Reference | Ultralytics",
+        "content": "calibration uses an ``IInt8Calibrator`` over ``dataset`` and writes a calibration cache, while FP16/INT8 are enabled with builder flags. On TensorRT 11 these were removed in favor of strongly-typed networks, so reduced precision is baked into the ONNX with NVIDIA ModelOpt before building (FP16 AutoCast, INT8 explicit Q/DQ) by `modelopt_quantize_onnx`. The TensorRT 7-10 path keeps the head Sigmoid layers in FP32 to preserve confidence-score calibration (see #24668) and the head's output convolutions in FP16 for accuracy. Metadata is serialized and written to the engine file if provided. \"\"\" import onnx # Force re-install TensorRT on CUDA 13 ARM devices to 10.15.x versions for RT-DETR exports #  if is_jetson(jetpack=7) or is_dgx(): check_tensorrt(\"10.15\") try: import tensorrt as trt except [...] def modelopt_quantize_onnx( onnx_file: str, quantize: int | str | None = None, dataset=None, shape: tuple[int, int, int, int] = (1, 3, 640, 640), dynamic: bool = False, prefix: str = \"\", ) -> str: \"\"\"Bake reduced precision into an ONNX model for TensorRT 11 strongly-typed builds using NVIDIA ModelOpt. TensorRT 11 is strongly-typed only: it removed the FP16/INT8 builder flags and the ``IInt8Ca",
+        "score": 0.68344116
+      }
+    ],
+    "TensorRT 10.3.0 JetPack compatibility engine version": [
+      {
+        "url": "https://forums.developer.nvidia.com/t/does-tensorrt-10-3-0-30-1-cuda12-5-support-cuda-12-6-jetpack-6-1/344194",
+        "title": "Does TensorRT 10.3.0.30-1+cuda12.5 support cuda 12.6 jetpack 6.1 - TensorRT - NVIDIA Developer Forums",
+        "content": "@maheshreddy.t I would recommend using TensorRT 10.6 or 10.7. These are the latest TensorRT versions for JetPack 6.x. There is a decent change TensorRT 10.3 for CUDA 12.5 works with CUDA 12.6 due to good minor version compatibility, however upgrading may give a better experience.\n\n### Related topics [...] | Is it possible to install TensorRT 8.6 and cuda12.x on orin NX with JetPack5.1.2  Jetson Nano cuda | 1 | 151 | February 25, 2025 |\n| Unmet dependencies while installing TensorRT with CUDA 12.2  TensorRT tensorrt | 1 | 1699 | September 27, 2023 |\n| Different version support for TensorRT GA and CUDA between x86\\_64 and Jetpack  Jetson Nano tensorrt | 2 | 545 | July 22, 2025 | [...] `zebu@ubuntu:~$ sudo dpkg -l | grep TensorRT  \n[sudo] password for zebu:  \nii libnvinfer-bin 10.3.0.30-1+cuda12.5 arm64 TensorRT binaries  \nii libnvinfer-dev 10.3.0.30-1+cuda12.5 arm64 TensorRT development libraries  \nii libnvinfer-dispatch-dev 10.3.0.30-1+cuda12.5 arm64 TensorRT development dispatch runtime libraries  \nii libnvinfer-dispatch10 10.3.0.30-1+cuda12.5 arm64 TensorRT dispatch runtime library  \nii libnvinfer-headers-dev 10.3.0.30-1+cuda12.5 arm64 TensorRT development headers  \nii libnvinfer-",
+        "score": 0.82994765
+      },
+      {
+        "url": "https://forums.developer.nvidia.com/t/erroneous-mismatch-in-tensorrt-serializations-on-jetpack-6-l4t-36-4-0/353515",
+        "title": "Erroneous mismatch in TensorRT serializations on JetPack 6 (L4T 36.4.0) - Jetson Orin NX - NVIDIA Developer Forums",
+        "content": "Here are the version on which the model is inferred:  \nJetpack: 6  \nBase Image: dustynv/l4t-pytorch:r36.4.0  \nRelevant Python libraries: Python 3.12.8 , TensorRT == 10.3.0\n\nAny reference of this error online tells us there is a TensorRT version mismatch. But we are using the same package in both the machines as seen above.  \nOur thoughts:  \nThe serialized engine version shows 239 which means it is the correct GPU (Orin) but the current shows 0 so maybe some libraries are not picked up properly.\n\nWe would really appreciate if you had any ideas on why this would be showing up as it does. If you do need any further information we are happy to provide those too.\n\n\\\\\\ Please note that this reply is generated by LLM automatically \\\\\\ [...] `[12/03/2025-14:16:36] [TRT] [E] IRuntime::deserializeCudaEngine: Error Code 1: Serialization (Serialization assertion safeVersionRead == kSAFE_SERIALIZATION_VERSION failed.Version tag does not match. Note: Current Version: 0, Serialized Engine Version: 239)\nERROR ❌ TensorRT model exported with a different version than 10.3.0`\n\nHere are the versions of libraries on the Builder:  \nJetpack : 6  \nBase Image: nvcr.io/nvidia/l4t-cuda:12.6.11-runtime  \nAddit",
+        "score": 0.7872945
+      },
+      {
+        "url": "https://forums.developer.nvidia.com/t/different-version-support-for-tensorrt-ga-and-cuda-between-x86-64-and-jetpack/339821",
+        "title": "Different version support for TensorRT GA and CUDA between x86_64 and Jetpack - Jetson Nano - NVIDIA Developer Forums",
+        "content": "The support for Jetpack includes:\n\nAs seen from the downloads provided by NVIDIA, the default TensorRT 10.3 for Jetpack 6 which uses CUDA 12.6 only support up to CUDA 12.5 for the x86\\_64 equivalent. I have to use TensorRT 10.4 on the x86\\_64 for CUDA 12.6 but that would conflict with the versions in Jetpack. While I can upgrade the Jetson to use TensorRT 10.4, i would prefer to keep the default and minimize changing anything on the Jetson.\n\nMy question is, which version (not restricted to 10.4 or 10.4) should I choose on the x86\\_64 if i want to do any development that would have the least issue if i eventually build and perform inference on a Jetson? Thank you.\n\nHi,\n\nTo minimize the version difference, you can download the package from the website. [...] But it’s also recommended to check the release notes to see if any changes are related to your use case.  \nIf not, the same app should behave similarly on TensorRT 10.4 and 10.3.  \n(but you will still need to recompile the engine on the target)\n\nThanks.\n\nAlright, i will go with TensorRT 10.4. Will share some updates if possible. Thanks.\n\n### Related topics [...] # Different version support for TensorRT GA and CUDA between x86\\_64",
+        "score": 0.76279575
+      },
+      {
+        "url": "https://docs.pytorch.org/TensorRT/getting_started/jetpack.html",
+        "title": "Torch-TensorRT in JetPack — Torch-TensorRT",
+        "content": "GitHub\n\n# Torch-TensorRT in JetPack#\n\n## Overview#\n\n### JetPack 6.2#\n\nNVIDIA JetPack 6.2 is the latest production release for Jetson platforms, featuring: - CUDA 12.6 - TensorRT 10.3 - cuDNN 9.3\n\nFor detailed information about JetPack 6.2, refer to: \\ JetPack 6.2 Release Notes \\ PyTorch for Jetson Platform\n\n## Prerequisites#\n\n### System Preparation#\n\n1. Flash your Jetson device\n\n   with JetPack 6.2 using SDK Manager: - SDK Manager Guide\n2. Verify JetPack installation:\n\n   ```\n      \n   ```\n3. Install development components: .. code-block:: sh\n\n   > sudo apt-get update sudo apt-get install nvidia-jetpack\n4. Confirm CUDA 12.6 installation:\n\n   ```\n     # If missing or incorrect version:    \n   ```\n5. Validate cuSPARSELt library:",
+        "score": 0.709684
+      },
+      {
+        "url": "https://turingpi.com/nvidia-jetson-software-stack",
+        "title": "NVIDIA Jetson Software Stack: JetPack, CUDA & TensorRT",
+        "content": "|  |  |\n --- |\n| Component | JetPack 7.2.1 |\n| Jetson Linux | 39.2.1 |\n| Linux kernel | 6.8 |\n| Base distribution | Ubuntu 24.04 |\n| CUDA | 13.2.1 |\n| cuDNN | 9.20.0 |\n| TensorRT | 10.16.2 |\n| VPI | 4.1.3 |\n| DeepStream | 9.1 |\n| NVIDIA Container Toolkit | 1.19 with the ISO image |\n\nSource: NVIDIA JetPack SDK Downloads and Notes.\n\nThose version relationships are part of the value of JetPack. It should be treated as a tested platform, not merely a convenient meta-package. Installing unrelated versions of CUDA, TensorRT, cuDNN, the NVIDIA drivers, and Jetson Linux independently can create compatibility problems that are difficult to diagnose. [...] #### TensorRT optimizes trained models for inference\n\nTensorRT is NVIDIA’s high-performance deep-learning inference SDK. Its focus is not training a model but preparing and executing a supported trained model efficiently on NVIDIA hardware.\n\nDuring the build phase, TensorRT can optimize the graph, fuse layers, select and tune kernels, choose supported reduced-precision paths, and plan memory and execution. It then produces an engine that the TensorRT runtime loads during deployment.\n\nTensorRT workflow from a trained model through import, o",
+        "score": 0.7036111
+      }
+    ]
+  },
+  "result_digests": {
+    "TensorRT 10.3.0 known issues release notes": [
+      "b1ebe7b5b27731393e9626b854d00870deb51dc01cab6b00f207c571cd02735f",
+      "09ff4ae309bbf1ecd85aacb4579e2c767bdc4f3ba75bd661267e0d6e421cdced",
+      "1f7c3a887a22c3ee47897e7bc6a7e10e33d133d0be6d1b4b56c2f86286204513",
+      "ba8776b87dc0a306467544a90007f80f47f5a2d8f74e267957a8d0d63cddd481",
+      "b855159fde9c8f5c9b60a40ce94d6b7d95a8b5bfc7c64d1511975711b25a2626"
+    ],
+    "TensorRT INT8 explicit quantization Q/DQ transformer attention fusion issue": [
+      "0455d5ef7ac72be08eda29334a1908cf8aa83926a778f3be355302e95eff70fc",
+      "6539b606cdf60c9adfd0cd74a2b9601993f5bee3bc19865814ba9c48dd2f6e0b",
+      "6a85f395905e039abf82788218da47b4154cfd9c9ae912ff95393bfce7f013ab",
+      "48b37b91bb5d5d6e0330c1ac4de4ffce440dfe18a882d2effd2589979fa52582",
+      "9a9e84e1cf4279d9a12c84b37009d68a5e1220099db8a190e755b1aa76297a2d"
+    ],
+    "Jetson Orin Nano Super TensorRT INT8 performance regression": [
+      "8f61c7af4c09b275d0c523b1a0719bda675d0d0df7dced5b32a4fc3310cf8f6d",
+      "a2a2692ed05fd0ea6b933abd11b56c94eb569bf36966278563a798e5511a516e",
+      "faf4106fa76c4b231d1be3202de51a4950974a9975355f9a5b598cc097311ba4",
+      "5e3d61d9fa416a1ce4593a015a600787191fc25aa78dd5082cd711836b87a899",
+      "e29ef32ed4aefac553c8062b640ce256e6b8d4419d430c66ec09961a17835c9e"
+    ],
+    "TensorRT ModelOpt quantized ONNX build failure Jetson": [
+      "2a4a98052309c9c5ca5523eb132ca0e645688c4c8af66b3bfc95bbfeb8cd8c4d",
+      "f3b3b886724f3ef36c7e56ad4cf32c542bfceac078e7bf0f574311bfbedb1b7d",
+      "1c7e5e587d0c78f005215d217009d95a5cbc7b036935b7c76bd41054a2fc926a",
+      "e849663fd995c3a612b874705c86e5917fa154216ba85831630a0a4cfa8f211d",
+      "d8cb47b0392033119d01b39c325f783d9b1de335937d99649a7f585c8260ae71"
+    ],
+    "TensorRT 10.3.0 JetPack compatibility engine version": [
+      "fe786f60c6016e5f9e57c9a02e728578d2c8e6621ca4f89ac75b57016c3018a5",
+      "45183de708873485541ab0fda9d755bdf156d80848a3b5e6df5140614cc01fd6",
+      "440893507bd1c9ec560e85ace6e76b17d2ee681cbefc28a990cdb77c47127e5c",
+      "944904ff991817b60da54456fb262b18aa68bc84bfe487ceb00d7a3aad442176",
+      "44db1825e5639ccbb9894d8a352d1317ecd69946a334b79fa8ad75449bedd59d"
+    ]
+  },
+  "provider": "tavily",
+  "notes": [
+    "대상 환경 TRT 10.3.0 / Jetson Orin Nano Super"
+  ],
+  "snapshot_hash": "ed199938844cf01fac9343221877cf4f5cf509a36113eff926de083e996abc77"
+}

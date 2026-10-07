@@ -78,11 +78,17 @@ def main():
     ap.add_argument("--mode", choices=["freeze", "replay", "drift"], default="freeze")
     ap.add_argument("--name", default="errata")
     ap.add_argument("--against", help="drift 모드: 비교 대상 스냅샷 파일")
+    ap.add_argument("--build-log", default="artifacts/manifests/g3_engine_build.jsonl",
+                    help="G3 엔진 빌드 기록. 있으면 거기 적힌 실제 TensorRT 버전으로 질의를 만든다")
     a = ap.parse_args()
 
-    lat = json.load(open("artifacts/g0/orin_latency.json"))
-    env = {"tensorrt": lat["tensorrt"], "device": lat["device"],
-           "cuda": lat["cuda"], "sm": "87"}
+    if os.path.exists(a.build_log):
+        rec = json.loads(open(a.build_log).readline())
+        env = {"tensorrt": rec["env"]["tensorrt"], "device": "Jetson Orin Nano Super", "cuda": "12.6", "sm": "87"}
+    else:
+        lat = json.load(open("artifacts/g0/orin_latency.json"))
+        env = {"tensorrt": lat["tensorrt"], "device": lat["device"],
+               "cuda": lat["cuda"], "sm": "87"}
     queries = build_queries(env)
     path = SNAP / f"{a.name}.json"
 
