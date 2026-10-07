@@ -17,10 +17,13 @@ cam.disconnect()
 gray = cv2.cvtColor(img, cv2.COLOR_RGB2GRAY)
 _, mask = cv2.threshold(cv2.GaussianBlur(gray, (5, 5), 0), 0, 255, cv2.THRESH_BINARY + cv2.THRESH_OTSU)
 mask = cv2.morphologyEx(mask, cv2.MORPH_OPEN, np.ones((5, 5), np.uint8)) > 0
-H, W = mask.shape; roi = np.zeros_like(mask); roi[int(H * 0.55):, int(W * 0.30):int(W * 0.80)] = True
-mask &= roi  # 집게 끝이 보이는 아래쪽 가운데만 본다(바닥 반사광 제외)
+H, W = mask.shape; roi = np.zeros_like(mask); roi[int(H * 0.70):, int(W * 0.60):] = True
+mask &= roi  # 닫힌 집게의 흰 몸체가 보이는 오른쪽 아래만 본다. 가운데는 매트의 조명 반사가 들어온다(2026-10-07)
 assert mask.sum() > 50, "집게 영역이 안 보입니다. 집게를 끝까지 닫고 다시 실행하세요"
 cy, cx = [float(v.mean()) for v in np.nonzero(mask)]
+GRIP_CLOSED_MAX = 2080  # 팔로워 집게 캘리브레이션 range_min 2030 근처 = 끝까지 닫힘 (데모 시작 자세의 집게 1.3–1.6%)
+if grip > GRIP_CLOSED_MAX:
+    print(f"집게 원시값 {grip}: 닫혀 있지 않습니다(닫힘 ≤ {GRIP_CLOSED_MAX}). 집게를 끝까지 닫고 다시 실행하세요"); sys.exit(1)
 if "--save-ref" in sys.argv:
     np.savez(f"{D}/wrist_ref.npz", mask=mask, grip=grip, img=img)
     cv2.imwrite(f"{D}/wrist_ref.jpg", cv2.cvtColor(img, cv2.COLOR_RGB2BGR))
@@ -31,7 +34,7 @@ ry, rx = [float(v.mean()) for v in np.nonzero(rm)]
 iou = (mask & rm).sum() / max((mask | rm).sum(), 1); shift = float(np.hypot(cx - rx, cy - ry))
 over = img.copy(); over[rm & ~mask] = (255, 0, 0); over[mask & ~rm] = (0, 255, 0)
 cv2.imwrite(f"{D}/wrist_check_{time.strftime('%m%d_%H%M')}.jpg", cv2.cvtColor(np.hstack([R["img"], img, over]), cv2.COLOR_RGB2BGR))
-grip_ok = abs(int(grip) - int(R["grip"])) <= 40
+grip_ok = int(grip) <= GRIP_CLOSED_MAX
 ok = iou >= 0.80 and shift <= 6 and grip_ok
 print(f"집게 원시값 {grip} (기준 {int(R['grip'])}{'' if grip_ok else ' — 집게를 끝까지 닫으세요'})  IoU {iou:.2f}  중심 이동 {shift:.1f}px  "
       f"(dx {cx-rx:+.1f}, dy {cy-ry:+.1f})")
