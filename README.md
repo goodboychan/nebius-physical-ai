@@ -37,6 +37,47 @@ Nebius x NVIDIA Global AI Hackathon, Physical AI Track 출품작.
 핵심 잠금은 `LOCK-2`다: **감사 점수를 전량 산출·동결·해시 커밋한 뒤에야 최초 실기 trial을
 실행한다.** 이 순서가 깨지면 연구 전체의 신뢰성이 사라진다.
 
+## How QuantGate uses NVIDIA models and Nebius
+
+| Component | What runs | Where |
+|---|---|---|
+| Deployment target | LeRobot ACT policy (51.6M) as **TensorRT** FP32 / FP16 / INT8 engines | **Jetson Orin Nano Super** next to a real SO-101 arm |
+| `D4` runtime supervisor | **`nvidia/Cosmos-Reason2-2B`** — watches the overhead camera, answers CONTINUE / FALLBACK / ABORT | **Nebius AI Cloud endpoint** (L40S, vLLM 0.29). 328 ms median round trip from the robot |
+| `D3` deployment report agent | **`nvidia/nemotron-3-super-120b-a12b`** — writes per-cell go / no-go reports from audit artifacts; every number is checked against the evidence | **Nebius Token Factory** |
+| `D5` errata collector | **Tavily** search for TensorRT / Jetson / INT8 known issues, queries derived from the real build environment, snapshot-hashed | Tavily API at report time |
+| Policy training | LeRobot 0.6.1 ACT, 100k steps | **Nebius Jobs** (L40S, 1h57m) |
+| Audit fan-out | 25 cells × bootstrap scoring | **Nebius Jobs** |
+| Data and weights | demos, checkpoints, Cosmos weights | **Nebius Object Storage** (S3) |
+| Quantization | NVIDIA **TensorRT Model Optimizer** (modelopt) INT8 Q/DQ, 24 calibration variants | GX10 (local) |
+
+Where Token Factory helped: the report agent needs a large reasoning model only for a minute per report. Token Factory gave us
+Nemotron 3 Super (and Nano / Ultra for comparison) behind one OpenAI-compatible API, so there was no GPU server to keep warm for it.
+
+## Pipeline
+
+```
+SO-101 teleop demos (120)  ──►  LOCK-1 split 80/20/20  ──►  Nebius Jobs: ACT training
+        │                                                        │
+        │                                       FP32 checkpoint (single source, IG-3)
+        ▼                                                        ▼
+  audit buffer (2,000 audit states)          modelopt INT8 × 24 calibration variants + FP16
+        │                                                        │
+        │                                Jetson Orin TensorRT engines (frozen timing cache)
+        ▼                                                        ▼
+  offline audit scores (5 predictors, Nebius Jobs) ──► LOCK-2 freeze ──► real-arm trials (blinded)
+                                                                         + Cosmos-Reason2 supervisor
+                                                                         + Nemotron deployment report
+```
+
+## Hardware
+
+- SO-101 leader + follower arm, Feetech STS3215 servos
+- Jetson Orin Nano Super (robot host, TensorRT 10.3, JetPack R36)
+- Logitech C922 overhead camera (640×480, locked exposure / white balance), OpenMV AE3 wrist camera (320×200)
+- Task: pick an unopened 268 g cola can from a marked start spot and stand it on a fixed coaster
+
+Setup notes for the arm, cameras and lighting: [`docs/bimanual_setup.md`](docs/bimanual_setup.md) (single-arm configuration).
+
 ## 구조
 
 ```
@@ -84,8 +125,11 @@ docker run --rm --gpus all --ipc=host \
 
 | 게이트 | 상태 |
 |---|---|
-| `G0` 드라이런 | TRT INT8 빌드 통과. Jobs/Endpoint 측정 진행 중 |
-| `G1` 데이터 수집 | 미착수 — 로봇 팔 대기 |
-| 이후 | 미착수 |
+| `G0` 드라이런 | 완료 |
+| `G1` 데모 120, `LOCK-1` | 완료 (2026-10-07) |
+| `G2` 학습, FP32 기준선 | 학습 완료(Nebius Jobs). 실기 20 trial 대기 |
+| `G3` 26셀 빌드 | 진행 중 (Orin, 동결 timing cache) |
+| `G4` 감사 점수, `LOCK-2` | 입력 준비 완료 |
+| `G6` 실기 | 미착수 |
 
 자세한 내용은 [`docs/progress/`](docs/progress/)의 최신 노트 참조.
