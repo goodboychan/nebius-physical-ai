@@ -1,0 +1,1 @@
+{"video": "VC-000_1008_000013_top.mp4", "session": "g2_fp32", "status": "invalid", "reason": "operator setup error: can was not reset to the start mark before the trial (left on the coaster from the previous trial); stopped with Ctrl+C", "recorded_at": "2026-10-08T00:01:50"}
