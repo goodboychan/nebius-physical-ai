@@ -4,17 +4,18 @@
 - 정책 호출: action 대기열이 비면 현재 관측으로 100스텝 chunk를 받아 n_action_steps(체크포인트 설정 100)만큼 실행
 - action은 팔로워 모터 제한으로 잘린다(모터가 하는 일과 같다)
 - 오버헤드·손목 영상은 데모와 같은 코덱(AV1 libsvtav1, crf 30, g 2)으로 저장한다 — 판정기는 이 조건에서 검증됐다
-- 키: q = 중단(안전 개입, unsafe로 기록). 그 외에는 60초를 다 채운다
+- 중단: Ctrl+C (안전 개입, unsafe로 기록). 그 외에는 60초를 다 채운다
+  (LeRobot 키보드 감지기는 쓰지 않는다 — 백그라운드에서 터미널 입력을 가로채 y/n 질문이 막혔다, 2026-10-07)
+- 영상 압축은 별도 스레드에서 한다. 제어 루프가 늦어지면 몰아서 따라잡지 않고 시간 기준을 다시 잡는다(덜덜거림 방지)
 - 판정: scripts/judge_success.py의 judge()(목표 영역 안·서 있음·정지) + 조작자 입력(놓음, 사람 개입) — 셋 다 만족해야 성공
 사용: so101_trial.py <session 이름> <cell 코드> <엔진> [trial 수]"""
-import json, os, socket, struct, subprocess, sys, time
+import json, os, queue, socket, struct, subprocess, sys, threading, time
 import numpy as np, av, cv2
 from lerobot.utils.import_utils import register_third_party_plugins; register_third_party_plugins()
 from lerobot.robots.so_follower import SO101Follower
 from lerobot.robots.so_follower.config_so_follower import SO101FollowerConfig
 from lerobot.cameras.opencv.configuration_opencv import OpenCVCameraConfig
 from lerobot_camera_openmv import OpenMVCameraConfig
-from lerobot.utils.keyboard_input import init_keyboard_listener
 HERE = os.path.dirname(os.path.abspath(__file__)); sys.path.insert(0, HERE)
 from judge_success import judge
 
@@ -41,7 +42,6 @@ robot.connect()
 cal = robot.calibration
 lo = np.array([0.0 if n == "gripper" else (cal[n].range_min - (cal[n].range_min + cal[n].range_max) / 2) * 360 / 4095 for n in NAMES])
 hi = np.array([100.0 if n == "gripper" else (cal[n].range_max - (cal[n].range_min + cal[n].range_max) / 2) * 360 / 4095 for n in NAMES])
-listener, events = init_keyboard_listener()
 
 def state_of(obs): return np.array([obs[f"{n}.pos"] for n in NAMES], np.float32)
 def send(a): robot.send_action({f"{n}.pos": float(v) for n, v in zip(NAMES, np.clip(a, lo, hi))})
@@ -51,37 +51,48 @@ def go_home(sec=3.0):
     for k in range(int(sec * FPS)):
         send(s0 + (HOME - s0) * (k + 1) / (sec * FPS)); time.sleep(1 / FPS)
 
-def writer(path, w, h):
-    c = av.open(path, "w"); st = c.add_stream("libsvtav1", rate=FPS); st.width, st.height, st.pix_fmt = w, h, "yuv420p"
-    st.options = {"crf": "30", "preset": "12", "g": "2"}; return c, st
+class Writer:
+    """AV1 압축을 제어 루프 밖(스레드)에서 한다."""
+    def __init__(self, path, w, h):
+        self.c = av.open(path, "w"); self.st = self.c.add_stream("libsvtav1", rate=FPS)
+        self.st.width, self.st.height, self.st.pix_fmt = w, h, "yuv420p"; self.st.options = {"crf": "30", "preset": "12", "g": "2"}
+        self.q = queue.Queue(); self.t = threading.Thread(target=self._run, daemon=True); self.t.start()
+    def _run(self):
+        while True:
+            img = self.q.get()
+            if img is None: break
+            for p in self.st.encode(av.VideoFrame.from_ndarray(img, format="rgb24")): self.c.mux(p)
+        for p in self.st.encode(): self.c.mux(p)
+        self.c.close()
+    def put(self, img): self.q.put(img)
+    def close(self): self.q.put(None); self.t.join()
 
 seq = 0
 for t_i in range(N):
     tid = f"{cell}_{time.strftime('%m%d_%H%M%S')}"
     go_home()
     input(f"\n[{t_i+1}/{N}] {tid}: 캔을 시작 표시에 세우고 손을 화면 밖으로 뺀 뒤 엔터 > ")
-    events["stop_recording"] = False; events["exit_early"] = False
-    ctop, stop_ = writer(f"{OUT}/{tid}_top.mp4", 640, 480); cwr, swr = writer(f"{OUT}/{tid}_wrist.mp4", 320, 200)
-    queue, states, actions, inf_ms, last_top = [], [], [], [], []
-    t0 = time.perf_counter(); aborted = False; k = 0
-    while True:
-        t = time.perf_counter() - t0
-        if t >= T_MAX: break
-        if events["stop_recording"]: aborted = True; break
-        obs = robot.get_observation(); s = state_of(obs)
-        if not queue:
-            sk.sendall(struct.pack("<I", seq) + s.tobytes() + np.ascontiguousarray(obs["top"]).tobytes() + np.ascontiguousarray(obs["wrist"]).tobytes())
-            r = json.loads(rf.readline()); seq += 1; inf_ms.append(r["infer_ms"]); queue = list(np.array(r["actions"])[:N_ACT])
-        a = queue.pop(0); send(a)
-        states.append(s); actions.append(a)
-        for img, (c, st) in ((obs["top"], (ctop, stop_)), (obs["wrist"], (cwr, swr))):
-            for p in st.encode(av.VideoFrame.from_ndarray(img, format="rgb24")): c.mux(p)
-        last_top.append(cv2.cvtColor(obs["top"], cv2.COLOR_RGB2GRAY)); last_top = last_top[-15:]
-        k += 1
-        time.sleep(max(0.0, t0 + k / FPS - time.perf_counter()))
-    for c, st in ((ctop, stop_), (cwr, swr)):
-        for p in st.encode(): c.mux(p)
-        c.close()
+    wtop, wwr = Writer(f"{OUT}/{tid}_top.mp4", 640, 480), Writer(f"{OUT}/{tid}_wrist.mp4", 320, 200)
+    aq, states, actions, inf_ms, last_top, tick = [], [], [], [], [], []
+    t0 = time.perf_counter(); aborted = False; k = 0; nxt = t0
+    try:
+        while time.perf_counter() - t0 < T_MAX:
+            tick.append(time.perf_counter() - t0)
+            obs = robot.get_observation(); s = state_of(obs)
+            if not aq:
+                sk.sendall(struct.pack("<I", seq) + s.tobytes() + np.ascontiguousarray(obs["top"]).tobytes() + np.ascontiguousarray(obs["wrist"]).tobytes())
+                r = json.loads(rf.readline()); seq += 1; inf_ms.append(r["infer_ms"]); aq = list(np.array(r["actions"])[:N_ACT])
+            a = aq.pop(0); send(a)
+            states.append(s); actions.append(a)
+            wtop.put(obs["top"]); wwr.put(obs["wrist"])
+            last_top.append(cv2.cvtColor(obs["top"], cv2.COLOR_RGB2GRAY)); last_top = last_top[-15:]
+            k += 1; nxt += 1 / FPS
+            now = time.perf_counter()
+            if now < nxt: time.sleep(nxt - now)
+            elif now - nxt > 1 / FPS: nxt = now   # 한 스텝 넘게 늦으면 몰아서 따라잡지 않는다
+    except KeyboardInterrupt:
+        aborted = True; print("\n  Ctrl+C: 중단 (unsafe)")
+    wtop.close(); wwr.close()
     S = np.stack(states); A = np.stack(actions)
     j = judge(last_top, float(S[-1, 5])) if not aborted else {"success": False, "reason": "unsafe(operator abort)"}
     # '놓음'은 자동 판정하지 않는다(success_criterion §3). 조작자가 마지막 상태를 보고 답한다
@@ -96,9 +107,10 @@ for t_i in range(N):
            "duration_s": round(time.perf_counter() - t0, 2), "steps": len(S), "judge_auto": j,
            "released": rel == "y", "human_contact": touch == "y", "success": final,
            "infer_ms_mean": round(float(np.mean(inf_ms)), 1), "n_infer": len(inf_ms)}
-    np.savez(f"{OUT}/{tid}_traj.npz", state=S, action=A, infer_ms=np.array(inf_ms))
+    np.savez(f"{OUT}/{tid}_traj.npz", state=S, action=A, infer_ms=np.array(inf_ms), tick_s=np.array(tick))
+    dt = np.diff(np.array(tick)) * 1000
+    rec["step_ms_p50_p99_max"] = [round(float(np.percentile(dt, 50)), 1), round(float(np.percentile(dt, 99)), 1), round(float(dt.max()), 1)]
     with open(f"{OUT}/trials.jsonl", "a") as f: f.write(json.dumps(rec) + "\n")
-    print(f"  -> {'성공' if final else '실패'} (자동 {j['reason']}, 놓음 {rel}, 개입 {touch})  {rec['duration_s']}s, 추론 {rec['n_infer']}회 평균 {rec['infer_ms_mean']}ms")
+    print(f"  -> {'성공' if final else '실패'} (자동 {j['reason']}, 놓음 {rel}, 개입 {touch})  {rec['duration_s']}s, 추론 {rec['n_infer']}회 평균 {rec['infer_ms_mean']}ms, 스텝 간격 p50/p99/max {rec['step_ms_p50_p99_max']} ms")
 go_home()
 robot.disconnect(); sk.close(); srv.terminate()
-if listener: listener.stop()
