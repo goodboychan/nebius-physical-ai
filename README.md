@@ -1,14 +1,25 @@
-# 엣지 양자화 정책 배포 게이트
+<p align="center"><img src="docs/assets/quantgate_logo.png" alt="QuantGate" width="420"></p>
+
+# QuantGate
+
+**Audit quantized robot policies before they touch the robot.**
+
+> QuantGate screens INT8 robot policies offline on Nebius, gating which ones reach a Jetson-powered arm. Cosmos-Reason2 watches every real run.
 
 **License: [Apache 2.0](LICENSE)**
+
+(내부 코드명 `edgeqgate` — 엣지 양자화 정책 배포 게이트)
+
+로고: Q 모양은 QuantGate와 양자화(Quantization)를 함께 나타낸다. 오른쪽 아래의 열린 통로는 선별된 정책이 실제 로봇으로
+넘어가는 게이트이고, 통로 밖의 작은 사각형은 검증을 통과해 배포되는 INT8 정책 하나다.
 
 엣지 NPU로 내려보낼 로봇 조작 정책의 INT8 변형들을, **실기 실행 없이 오프라인에서만**
 심사하여 배포 불가 변형을 사전에 걸러낼 수 있는가.
 
 Nebius x NVIDIA Global AI Hackathon, Physical AI Track 출품작.
 
-> **문서 상태**: 진행 중. 데이터 수집 전, 실기 시행 전.
-> 이 저장소의 어떤 수치도 아직 실기 관측이 아니다.
+> **문서 상태**: 진행 중 (2026-10-07). 데모 120개 수집과 분할 확정(`LOCK-1`), FP32 정책 학습 완료. 실기 trial 전.
+> 이 저장소의 어떤 수치도 아직 정책의 실기 성공률이 아니다.
 
 ## 이 프로젝트의 차별점 — 사전등록
 
