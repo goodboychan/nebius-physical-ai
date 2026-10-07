@@ -84,8 +84,8 @@ class Wrap(torch.nn.Module):
         r = self.m({OBS_STATE: state, OBS_IMAGES: [top, wrist]})
         return r[0] if isinstance(r, (tuple, list)) else r
 
-f0 = need[0]
-ex_cpu = (state[f0][None], img["top"][f0][None], img["wrist"][f0][None])
+# export용 예시 입력: 값은 그래프에 영향이 없다(같은 체크포인트의 ONNX 해시가 입력과 무관함을 G2에서 확인)
+ex_cpu = (torch.zeros(1, 6), torch.zeros(1, 3, 480, 640), torch.zeros(1, 3, 200, 320))
 res_path = f"{out}/{'warmup' if WARM else 'onnx'}_results.json"; results = json.load(open(res_path)) if os.path.exists(res_path) else {}
 for v in variants:
     if results.get(v.code, {}).get("ok"): print(f"[grid] {v.code}: 이미 있음"); continue
@@ -106,7 +106,7 @@ for v in variants:
                     B = frames[k:k + 16]
                     mod(torch.stack([state[f] for f in B]).cuda(), torch.stack([img["top"][f] for f in B]).cuda(), torch.stack([img["wrist"][f] for f in B]).cuda())
         w = mtq.quantize(w, cfg, loop)
-        w = w.cpu()
+    w = w.cpu()   # from_pretrained는 설정의 device(cuda)로 올린다. export는 CPU에서(attempt-018)
     p = f"{out}/{v.code}.onnx"
     with torch.no_grad():
         torch.onnx.export(w, ex_cpu, p, input_names=["state", "top", "wrist"], output_names=["actions"],

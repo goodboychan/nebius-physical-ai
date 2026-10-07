@@ -32,6 +32,9 @@ PURPOSE_ALLOWED: dict[str, frozenset[str]] = {
     "progress_regressor": frozenset({"train"}),
     # 감사 점수 산출: audit만. 반대 방향 오염(학습 데이터가 감사 버퍼에 섞임)도 막는다
     "audit_scoring": frozenset({"audit"}),
+    # `score_cheap_B`: §5.1b가 "홀드아웃이 아닌 train 상태에서의 오픈루프 MSE"로 정의한다.
+    # 사전등록에 이미 있는 용도를 등록하는 것이며 새 용도가 아니다 (2026-10-07)
+    "cheap_B_train_states": frozenset({"train"}),
 }
 
 

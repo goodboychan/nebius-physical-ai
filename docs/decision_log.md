@@ -378,3 +378,27 @@ warm이며, 각 셀이 캐시에 쓰므로 **셀 N의 빌드 조건이 셀 1..N�
    후보가 `success-only`와 같았다. 그대로 두면 두 수준의 차이는 추첨 잡음뿐이다. 전반 1/3 구간만 쓰는 `early-phase-only`로 바꿔
    세 수준(전체 / 전반 / 후반)이 실제로 다른 데이터를 쓰게 했다. 셀 번호 순서는 그대로(중간 축 위치) — `VC-003`, `VC-004` 등이
    이제 `early-phase-only`다. `grid_hash` `fad53fca…`
+
+---
+
+## 2026-10-07 — 감사 점수의 행동 오차 = 실행되는 100스텝 chunk 전체 (§5.1 구체화)
+
+| 필드 | 내용 |
+|---|---|
+| 대상 | §5.1 `score_mag`·`score_align`, §5.1b `score_cheap_B` |
+| 결정 | 행동 오차는 **실행되는 chunk 100스텝 전체**로 잰다 (사용자 결정, 추천안) |
+| 결과 열람 여부 | **없음** — INT8 엔진 출력 0개, 점수 0개, 실기 0건 |
+
+ACT는 상태마다 100스텝을 내고 실기에서 100스텝을 모두 실행한다(`n_action_steps` 100). §5.1은 "행동 차이"라고만 적었다.
+
+정의(정규화 단위 = 학습 action 통계로 나눈 값. 관절 °와 집게 0–100을 같은 척도로 맞춘다):
+- 오차 `e[n,k] = a_cell[n,k] − a_ref[n,k]`, k = 0..99, `a_ref` = GX10 FP32 torch(`VC-000`)
+- `score_mag` 상태값 = `sqrt(mean_k ‖e[n,k]‖²)` → 상태 2,000개의 CVaR@90
+- `score_align` 상태값 = `sqrt(mean_k (u[n,k]·e[n,k])²)`, `u[n,k]` = `(s_n, a_ref[n,k])`에서 `∂g/∂a`의 단위 벡터 → CVaR@90
+- `score_cheap_B` = train 2,000상태의 `mean_n mean_k ‖e[n,k]‖²`
+- `g(s, a)`는 train 에피소드의 (상태, 그 시점 action) → 위상 진행도로 학습(`edgeqgate.progress`, `IG-2`). 스텝 k>0에서도
+  상태는 s_n으로 둔다(정책이 k스텝 뒤 도달할 상태는 알 수 없다). 이 근사를 리포트에 명시한다
+
+입력 고정(2026-10-07): 감사 버퍼 `audit_buffer_hash d9a52977…`(audit 20 에피소드 × 100, 균등 격자),
+`score_cheap_B`용 train 2,000상태(80 × 25, 같은 격자). 용도 `cheap_B_train_states`(train만)를 가드에 등록했다 —
+§5.1b에 이미 있는 용도다.
