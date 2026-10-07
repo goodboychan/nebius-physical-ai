@@ -85,6 +85,7 @@ class Writer:
     def close(self): self.q.put(None); self.t.join()
 
 seq = 0
+closers = []
 for t_i in range(N):
     tid = f"{cell}_{time.strftime('%m%d_%H%M%S')}"
     go_home()
@@ -122,7 +123,9 @@ for t_i in range(N):
             elif now - nxt > 1 / FPS: nxt = now   # 한 스텝 넘게 늦으면 몰아서 따라잡지 않는다
     except KeyboardInterrupt:
         aborted = True; print("\n  Ctrl+C: 중단 (unsafe)")
-    wtop.close(); wwr.close()
+    t_loop = time.perf_counter() - t0
+    # 영상 마무리(남은 압축·파일 닫기)는 판정과 무관하므로 백그라운드에서 한다. 프로그램 끝에서 모두 기다린다
+    closers.append(threading.Thread(target=lambda w=(wtop, wwr): [x.close() for x in w])); closers[-1].start()
     S = np.stack(states); A = np.stack(actions)
     j = judge(last_top, float(S[-1, 5])) if not aborted else {"success": False, "reason": "unsafe(operator abort)"}
     # '놓음'은 자동 판정하지 않는다(success_criterion §3). 조작자가 마지막 상태를 보고 답한다
@@ -134,7 +137,7 @@ for t_i in range(N):
         touch = input("  trial 중 사람이 캔이나 팔을 건드렸습니까? [y/n] > ").strip().lower()
     final = bool(j["success"]) and rel == "y" and touch == "n"
     rec = {"trial_id": tid, "session": session, "cell": cell, "engine": os.path.basename(engine), "aborted": aborted,
-           "duration_s": round(time.perf_counter() - t0, 2), "steps": len(S), "judge_auto": j,
+           "duration_s": round(t_loop, 2), "steps": len(S), "judge_auto": j,
            "released": rel == "y", "human_contact": touch == "y", "success": final,
            "infer_ms_mean": round(float(np.mean(inf_ms)), 1), "n_infer": len(inf_ms)}
     np.savez(f"{OUT}/{tid}_traj.npz", state=S, action=A, infer_ms=np.array(inf_ms), tick_s=np.array(tick), rtt_ms=np.array(rtt))
@@ -144,4 +147,5 @@ for t_i in range(N):
     with open(f"{OUT}/trials.jsonl", "a") as f: f.write(json.dumps(rec) + "\n")
     print(f"  -> {'성공' if final else '실패'} (자동 {j['reason']}, 놓음 {rel}, 개입 {touch})  {rec['duration_s']}s, 추론 {rec['n_infer']}회 평균 {rec['infer_ms_mean']}ms, 스텝 간격 p50/p99/max {rec['step_ms_p50_p99_max']} ms, 왕복 최대 {rec['rtt_ms_max']}ms, 늦은 chunk {rec['late_chunks']}")
 go_home()
+for c in closers: c.join()   # 영상 파일이 모두 닫힐 때까지
 robot.disconnect(); sk.close(); srv.terminate()
