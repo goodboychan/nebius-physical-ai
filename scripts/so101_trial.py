@@ -1,9 +1,9 @@
 """SO-101 실기 trial 실행기 (Orin, lerobot-env). TensorRT 정책 서버(trt_policy_server.py, python3.10)를 띄우고
 30Hz로 팔을 움직인다. 매 trial: 홈 자세로 천천히 이동 → 엔터로 시작 → 최대 60초 → 자동 판정 → 로그.
 
-- 정책 호출: 100스텝 chunk. 대기열이 LEAD(6)스텝 남으면 그 순간의 관측으로 다음 chunk를 **미리** 요청하고(백그라운드),
-  대기열이 비면 받아 둔 chunk에서 관측 이후 지난 스텝 수만큼 건너뛴 지점부터 잇는다. 추론 지연이 200ms 미만이면 모든 셀의
-  실행 타이밍이 같고 chunk 경계에서 팔이 멈추지 않는다(FP32 77ms vs INT8 약 30ms의 멈춤 차이가 셀 비교를 교란하지 않게)
+- 정책 호출: 100스텝 chunk. 대기열이 비면 **지금 관측**으로 요청하고, 결과가 와도 요청 후 HOLD_MS(150ms)가 지날 때까지
+  기다린 뒤 chunk를 처음부터 실행한다. 경계 멈춤이 모든 셀에서 150ms로 같다(FP32 약 78ms vs INT8 약 30ms 차이 제거).
+  150ms를 넘은 요청은 '늦은 chunk'로 센다. (미리 요청 + 6스텝 건너뛰기는 시험해 보니 경계에서 더 크게 튀어 철회, 2026-10-07)
 - action은 팔로워 모터 제한으로 잘린다(모터가 하는 일과 같다)
 - 오버헤드·손목 영상은 데모와 같은 코덱(AV1 libsvtav1, crf 30, g 2)으로 저장한다 — 판정기는 이 조건에서 검증됐다
 - 중단: Ctrl+C (안전 개입, unsafe로 기록). 그 외에는 60초를 다 채운다
@@ -23,7 +23,7 @@ from judge_success import judge
 
 session, cell, engine = sys.argv[1:4]; N = int(sys.argv[4]) if len(sys.argv) > 4 else 1
 FPS, T_MAX, N_ACT = 30, 60.0, 100
-LEAD = 6  # 묶음이 6스텝(200ms) 남으면 다음 묶음을 미리 요청한다. 새 묶음은 관측 뒤 지난 스텝만큼 건너뛰고 잇는다(2026-10-07)
+HOLD_MS = 150  # chunk 경계에서 지금 관측으로 요청하고, 추론이 빨라도 150ms까지 기다린다 — 모든 셀의 경계 멈춤을 같게(2026-10-07)
 NAMES = ["shoulder_pan", "shoulder_lift", "elbow_flex", "wrist_flex", "wrist_roll", "gripper"]
 HOME = np.array(json.load(open(os.path.join(HERE, "so101_home.json")))["home_deg"])
 OUT = os.path.expanduser(f"~/so101_trials/{session}"); os.makedirs(OUT, exist_ok=True)
@@ -97,13 +97,12 @@ for t_i in range(N):
             tick.append(time.perf_counter() - t0)
             obs = robot.get_observation(); s = state_of(obs)
             if not aq:
-                if pf.t is None:            # 첫 chunk(또는 미리 요청이 없었던 경우): 지금 관측으로 요청하고 기다린다
-                    pf.start(s, obs["top"], obs["wrist"], k)
-                acts, ims, step0, ms = pf.take(); inf_ms.append(ims); rtt.append(ms)
-                skip = k - step0; late += int(skip > LEAD)
-                aq = list(acts[skip:N_ACT])
-            elif len(aq) == LEAD and pf.t is None:
-                pf.start(s, obs["top"], obs["wrist"], k)
+                tq = time.perf_counter(); pf.start(s, obs["top"], obs["wrist"], k)
+                acts, ims, _, ms = pf.take(); inf_ms.append(ims); rtt.append(ms); late += int(ms > HOLD_MS)
+                rest = HOLD_MS / 1000 - (time.perf_counter() - tq)
+                if rest > 0: time.sleep(rest)
+                nxt = time.perf_counter()   # 멈춘 시간만큼 시간 기준을 다시 잡는다
+                aq = list(acts[:N_ACT])
             a = aq.pop(0); send(a)
             states.append(s); actions.append(a)
             wtop.put(obs["top"]); wwr.put(obs["wrist"])
@@ -130,7 +129,7 @@ for t_i in range(N):
            "released": rel == "y", "human_contact": touch == "y", "success": final,
            "infer_ms_mean": round(float(np.mean(inf_ms)), 1), "n_infer": len(inf_ms)}
     np.savez(f"{OUT}/{tid}_traj.npz", state=S, action=A, infer_ms=np.array(inf_ms), tick_s=np.array(tick), rtt_ms=np.array(rtt))
-    rec["rtt_ms_max"] = round(float(max(rtt)), 1); rec["late_chunks"] = late   # late > 0: 지연이 LEAD를 넘은 chunk 수
+    rec["rtt_ms_max"] = round(float(max(rtt)), 1); rec["late_chunks"] = late   # late > 0: 왕복이 HOLD_MS를 넘은 chunk 수
     dt = np.diff(np.array(tick)) * 1000
     rec["step_ms_p50_p99_max"] = [round(float(np.percentile(dt, 50)), 1), round(float(np.percentile(dt, 99)), 1), round(float(dt.max()), 1)]
     with open(f"{OUT}/trials.jsonl", "a") as f: f.write(json.dumps(rec) + "\n")
