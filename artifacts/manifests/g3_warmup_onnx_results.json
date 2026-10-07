@@ -1,0 +1,34 @@
+{
+ "WARMUP-per-tensor": {
+  "code": "WARMUP-per-tensor",
+  "precision": "int8",
+  "calib_size": 16,
+  "calib_composition": "success-only",
+  "granularity": "per-tensor",
+  "checkpoint_sha256": "bb5e1850de712215792c67b4c30d52b013e594ce0b6949749236cf3137917e3b",
+  "calib_set_hash": "4d59b2f6f946192c11702110debf437d999d11ad00dc9caa4e46c20812fc5153",
+  "calib_frames_hash": "c4a7f6f4235f8f212aeef9b9b95a28fd541872059a7e1dfae99531bbbf5da616",
+  "calib_actual": 16,
+  "ok": true,
+  "onnx_sha256": "f4323f0ac33b1f2f6e17a35f90284ebaf97cc1424455fee12886d7b68add1197",
+  "onnx_bytes": 137915255,
+  "sec": 13.4,
+  "n_quantize": 112
+ },
+ "WARMUP-per-channel": {
+  "code": "WARMUP-per-channel",
+  "precision": "int8",
+  "calib_size": 16,
+  "calib_composition": "success-only",
+  "granularity": "per-channel",
+  "checkpoint_sha256": "bb5e1850de712215792c67b4c30d52b013e594ce0b6949749236cf3137917e3b",
+  "calib_set_hash": "f75ba38e7326356ef5340ab210819e3163bfce27c39560d0209afcd99dd40960",
+  "calib_frames_hash": "c4a7f6f4235f8f212aeef9b9b95a28fd541872059a7e1dfae99531bbbf5da616",
+  "calib_actual": 16,
+  "ok": true,
+  "onnx_sha256": "185903c35caf7a29b335dca8d994ffc48fd4433b426b63e02713dd09f1f0e624",
+  "onnx_bytes": 138068083,
+  "sec": 6.0,
+  "n_quantize": 112
+ }
+}
