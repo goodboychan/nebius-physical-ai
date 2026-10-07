@@ -1,0 +1,269 @@
+{
+  "schema": "edgeqgate/lock2/v1",
+  "frozen_at": "2026-10-07T08:23:18+00:00",
+  "git_commit": "adb2f99899f577ce08c322b5c1fea2a834a138a2",
+  "git_dirty": false,
+  "grid_hash": "fad53fca3ba96a635f5b4359cd17efb8b1a41a4351728b9e484795ce5cbdd3ca",
+  "split_manifest_hash": "acf51781c3940f89e94b8573cff618818deeb128940f57aa00de6c654806401c",
+  "audit_buffer_hash": "d9a5297775dd27cc4a9beac095db8f07823275b43a33dc3dace0defae398255d",
+  "rankings": {
+    "score_align": [
+      "VC-002",
+      "VC-020",
+      "VC-010",
+      "VC-014",
+      "VC-016",
+      "VC-004",
+      "VC-024",
+      "VC-022",
+      "VC-018",
+      "VC-012",
+      "VC-008",
+      "VC-015",
+      "VC-019",
+      "VC-021",
+      "VC-009",
+      "VC-001",
+      "VC-017",
+      "VC-011",
+      "VC-003",
+      "VC-023",
+      "VC-013",
+      "VC-006",
+      "VC-007",
+      "VC-005"
+    ],
+    "score_mag": [
+      "VC-002",
+      "VC-020",
+      "VC-010",
+      "VC-024",
+      "VC-016",
+      "VC-014",
+      "VC-004",
+      "VC-012",
+      "VC-022",
+      "VC-018",
+      "VC-008",
+      "VC-015",
+      "VC-009",
+      "VC-021",
+      "VC-019",
+      "VC-001",
+      "VC-017",
+      "VC-013",
+      "VC-011",
+      "VC-003",
+      "VC-006",
+      "VC-023",
+      "VC-007",
+      "VC-005"
+    ],
+    "score_cheap_A": [
+      "VC-020",
+      "VC-022",
+      "VC-024",
+      "VC-019",
+      "VC-021",
+      "VC-023",
+      "VC-014",
+      "VC-016",
+      "VC-018",
+      "VC-013",
+      "VC-015",
+      "VC-017",
+      "VC-008",
+      "VC-010",
+      "VC-012",
+      "VC-007",
+      "VC-009",
+      "VC-011",
+      "VC-002",
+      "VC-004",
+      "VC-006",
+      "VC-001",
+      "VC-003",
+      "VC-005"
+    ],
+    "score_cheap_B": [
+      "VC-002",
+      "VC-010",
+      "VC-004",
+      "VC-008",
+      "VC-022",
+      "VC-024",
+      "VC-016",
+      "VC-020",
+      "VC-018",
+      "VC-014",
+      "VC-012",
+      "VC-001",
+      "VC-009",
+      "VC-003",
+      "VC-006",
+      "VC-007",
+      "VC-021",
+      "VC-015",
+      "VC-013",
+      "VC-011",
+      "VC-019",
+      "VC-023",
+      "VC-017",
+      "VC-005"
+    ],
+    "score_cheap_C": [
+      "VC-022",
+      "VC-012",
+      "VC-020",
+      "VC-016",
+      "VC-008",
+      "VC-014",
+      "VC-019",
+      "VC-023",
+      "VC-021",
+      "VC-005",
+      "VC-013",
+      "VC-015",
+      "VC-007",
+      "VC-017",
+      "VC-011",
+      "VC-024",
+      "VC-018",
+      "VC-010",
+      "VC-004",
+      "VC-006",
+      "VC-009",
+      "VC-003",
+      "VC-001",
+      "VC-002"
+    ]
+  },
+  "ranking_hash": "4644a0b7df3d3991344a109ae1952654ebb74faf502e6b33e01db4baf1c248ea",
+  "arm_plan": {
+    "schema": "edgeqgate/arm_plan/v1",
+    "seed": "PREREG-SEED-2026-09-14",
+    "ranking_hash": "4644a0b7df3d3991344a109ae1952654ebb74faf502e6b33e01db4baf1c248ea",
+    "arms": {
+      "ARM-AUDIT": [
+        "VC-002",
+        "VC-020",
+        "VC-010"
+      ],
+      "ARM-RANDOM": [
+        "VC-011",
+        "VC-012",
+        "VC-015"
+      ],
+      "ARM-LOW": [
+        "VC-005",
+        "VC-007"
+      ],
+      "ARM-FP32": [
+        "VC-000"
+      ],
+      "ARM-RETEST": [
+        "VC-002"
+      ],
+      "ARM-CHEAP": [
+        "VC-022",
+        "VC-024"
+      ]
+    },
+    "trials_per_cell": {
+      "ARM-AUDIT": 25,
+      "ARM-RANDOM": 25,
+      "ARM-LOW": 15,
+      "ARM-FP32": 25,
+      "ARM-RETEST": 20,
+      "ARM-CHEAP": 10
+    },
+    "retest_cell": "VC-002",
+    "spec_section": "§7.1",
+    "notes": [
+      "ARM-RETEST는 ARM-AUDIT의 셀을 별도 세션에서 재측정한다(§7.4 ES-5).",
+      "ARM-RETEST의 20 trial은 EP-1의 ARM-AUDIT 75 trial에 합산하지 않는다.",
+      "ARM-FP32는 테스트 arm과 동일 인터리브 블록에서 실행한다(IG-8).",
+      "ARM-RANDOM 추출은 IG-7에 따라 1회만. 재추출 금지.",
+      "ARM-CHEAP은 ES-2 계산용이다(score_cheap_A 상위 3셀 보장). EP-1 집계에 넣지 않는다.",
+      "순위·arm 풀은 INT8 24셀. VC-025(FP16)는 정밀도 축 대조로 따로 보고한다."
+    ]
+  },
+  "arm_plan_hash": "4d169deb0fb7b27f03a891ad18c1fb9ab81d443f2b7c45af0444becf04a4e89c",
+  "coverage": {
+    "ES-1": {
+      "score": "score_mag",
+      "top_k": [
+        "VC-002",
+        "VC-020",
+        "VC-010"
+      ],
+      "covered": [
+        "VC-002",
+        "VC-020",
+        "VC-010"
+      ],
+      "missing": [],
+      "computable": true,
+      "partial": false
+    },
+    "ES-2": {
+      "score": "score_cheap_A",
+      "top_k": [
+        "VC-020",
+        "VC-022",
+        "VC-024"
+      ],
+      "covered": [
+        "VC-020",
+        "VC-022",
+        "VC-024"
+      ],
+      "missing": [],
+      "computable": true,
+      "partial": false
+    },
+    "ES-3": {
+      "score": "score_cheap_B",
+      "top_k": [
+        "VC-002",
+        "VC-010",
+        "VC-004"
+      ],
+      "covered": [
+        "VC-002",
+        "VC-010"
+      ],
+      "missing": [
+        "VC-004"
+      ],
+      "computable": false,
+      "partial": true
+    },
+    "_summary": {
+      "cells_with_trials": [
+        "VC-000",
+        "VC-002",
+        "VC-005",
+        "VC-007",
+        "VC-010",
+        "VC-011",
+        "VC-012",
+        "VC-015",
+        "VC-020",
+        "VC-022",
+        "VC-024"
+      ],
+      "n_cells_with_trials": 11,
+      "all_computable": false
+    }
+  },
+  "spec_section": "§8 LOCK-2",
+  "notes": [
+    "점수: 100스텝 chunk 정의(decision_log 2026-10-07), Nebius Jobs 셀별 부트스트랩 200, 차등 검증 통과",
+    "순위·arm은 INT8 24셀. VC-025(FP16)는 정밀도 축 대조로 따로: {\"score_mag\": 0.0062726872474404794, \"score_align\": 0.002347943360368979, \"cheap_B\": 5.894303150871676e-06, \"cheap_C_ms\": 25.393024444580078}",
+    "g model_hash 577927b0dc85fc9fe6d348b3a0386e6ae24af4d7f9435ad0a3441bf75603b155",
+    "동결 timing cache 67fca693…, 엔진 출력 결정성 확인(attempt-029)",
+    "CI는 빌드 분산을 포함하지 않는다 — 동결 캐시로 그 분산을 제거했다(manual_actions #14 a)"
+  ],
+  "record_hash": "5fb513a435b3b7b90dcb6e25e61a48d61ffc43fc2f8f14338903544a173540ec"
+}

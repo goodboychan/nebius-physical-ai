@@ -402,3 +402,27 @@ ACT는 상태마다 100스텝을 내고 실기에서 100스텝을 모두 실행�
 입력 고정(2026-10-07): 감사 버퍼 `audit_buffer_hash d9a52977…`(audit 20 에피소드 × 100, 균등 격자),
 `score_cheap_B`용 train 2,000상태(80 × 25, 같은 격자). 용도 `cheap_B_train_states`(train만)를 가드에 등록했다 —
 §5.1b에 이미 있는 용도다.
+
+---
+
+## 2026-10-07 — `LOCK-2` 동결 (G4 완료)
+
+| 필드 | 내용 |
+|---|---|
+| 기록 | `artifacts/freeze/lock2.json`, record_hash `5fb513a4…`, ranking_hash `4644a0b7…`, git `adb2f998` (clean) |
+| 결과 열람 여부 | **실기 trial 0건.** 오프라인 감사 점수만 보았다 — 이것이 동결 대상 자체다 |
+
+- 점수: 25셀 × (감사 2,000 + train 2,000) Orin 추론 → 상태별 벡터 → **Nebius Jobs**(eu-west1 cpu-d3, 셀당 1잡, 부트스트랩 200)
+- 차등 검증: Jobs 점추정 50개(25셀 × mag·align)를 같은 벡터에서 로컬 재계산 → 1e-9 안에서 일치
+- 순위 5종은 INT8 24셀로만. `VC-025`(FP16) 점수는 노트에 따로: score_mag 0.0063, score_align 0.0023 (INT8 최저 셀의 약 1/20)
+- arm(시드 고정, `IG-7`): AUDIT VC-002·VC-020·VC-010 / RANDOM VC-011·VC-012·VC-015 / LOW VC-005·VC-007 / FP32 VC-000 /
+  RETEST VC-002(별도 세션) / CHEAP VC-022·VC-024 → **245 trial**
+- 커버리지: ES-1 OK, ES-2 OK(ARM-CHEAP), **ES-3 부분**(cheap_B 상위 3 중 VC-004 없음 — ES-3은 보장 대상으로 정하지 않았다)
+
+**공개해야 할 경위**: 동결 전 드라이런 1회에서 순위에 VC-025가 포함돼 있었다(결정 #5를 `build_arms`의 arm 선정에만
+반영하고 순위 생성에는 빠뜨린 버그). 그 드라이런의 ranking_hash가 달라 `ARM-RANDOM` 추첨이 VC-004·VC-006·VC-012로 나왔다.
+순위를 INT8 24셀로 고친 뒤 다시 낸 것이 위의 동결본이다. 드라이런 결과는 기록하지 않았고 실기 결과와 무관하다(실기 0건).
+이 경위 자체를 리포트에 적는다.
+
+관찰(해석 아님): `score_align`과 `score_mag`의 상위 3셀이 같다(VC-002, VC-020, VC-010 — 모두 per-channel).
+두 점수가 실기에서 갈라지는지가 `H2`다.
