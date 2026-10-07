@@ -13,7 +13,7 @@ from dataclasses import dataclass, asdict, field
 
 import numpy as np
 
-from .grid import audited_variants, by_code
+from .grid import audited_variants, by_code, ranked_variants
 from .hashing import hash_obj, seed_from
 from .scores import SCORE_NAMES, ranking_hash
 
@@ -24,8 +24,11 @@ ARM_SPEC = {
     "ARM-LOW":    {"n_cells": 2, "trials_per_cell": 15, "source": "score_align 하위 2셀"},
     "ARM-FP32":   {"n_cells": 1, "trials_per_cell": 25, "source": "VC-000"},
     "ARM-RETEST": {"n_cells": 1, "trials_per_cell": 20, "source": "ARM-AUDIT 중 1셀, 별도 세션"},
+    # 2026-10-07 결정(manual_actions #2 선택지 1): `ES-2`가 계산 가능하도록 score_cheap_A 상위 3셀을 보장한다.
+    # 다른 arm에 이미 든 셀은 그 arm의 trial을 쓰고, 빠진 셀만 10 trial씩 더한다(최대 +30).
+    "ARM-CHEAP":  {"n_cells": 3, "trials_per_cell": 10, "source": "score_cheap_A 상위 3셀 중 다른 arm에 없는 셀"},
 }
-TOTAL_TRIALS = 225
+TOTAL_TRIALS = 225   # ARM-CHEAP 제외 기본 예산. ARM-CHEAP까지 최대 255
 
 # §12 리스크 레지스터가 **사전 고정**한 축소 순서. 결과를 본 뒤 고르지 않기 위해 코드에 박는다.
 REDUCTION_ORDER = [
@@ -72,13 +75,15 @@ def build_arms(rankings: dict[str, list[str]], seed: str) -> ArmPlan:
     rankings: 점수명 -> 오름차순 셀 순위 (1위 = 가장 안전). 5개 점수 전부 필요(`IG-9`).
     """
     rhash = ranking_hash(rankings)   # 5개 점수가 다 있는지 IG-9가 먼저 검사한다
-    align = list(rankings["score_align"])
+    ranked = {v.code for v in ranked_variants()}
+    # VC-025(FP16)는 순위 풀에서 뺀다(2026-10-07). 입력 순위에 있어도 여기서 걸러 상대 순서만 쓴다
+    align = [str(c) for c in rankings["score_align"] if str(c) in ranked]
+    cheap_a = [str(c) for c in rankings["score_cheap_A"] if str(c) in ranked]
 
-    known = {v.code for v in audited_variants()}
-    align = [str(c) for c in align]
+    known = ranked
     if set(align) != known:
         raise ValueError(
-            f"score_align 순위가 감사 대상 25셀과 다르다. "
+            f"score_align 순위가 순위 대상 INT8 24셀과 다르다. "
             f"누락 {sorted(known - set(align))}, 초과 {sorted(set(align) - known)}"
         )
 
@@ -96,6 +101,9 @@ def build_arms(rankings: dict[str, list[str]], seed: str) -> ArmPlan:
     rng_rt = np.random.default_rng(seed_from(seed, "arm-retest-pick", rhash))
     retest_cell = str(rng_rt.choice(sorted(audit_cells)))
 
+    covered = set(audit_cells) | set(random_cells) | set(low_cells)
+    cheap_cells = [c for c in cheap_a[:3] if c not in covered]
+
     return ArmPlan(
         schema="edgeqgate/arm_plan/v1",
         seed=seed,
@@ -106,6 +114,7 @@ def build_arms(rankings: dict[str, list[str]], seed: str) -> ArmPlan:
             "ARM-LOW": low_cells,
             "ARM-FP32": ["VC-000"],
             "ARM-RETEST": [retest_cell],
+            "ARM-CHEAP": cheap_cells,
         },
         trials_per_cell={a: s["trials_per_cell"] for a, s in ARM_SPEC.items()},
         retest_cell=retest_cell,
@@ -114,6 +123,8 @@ def build_arms(rankings: dict[str, list[str]], seed: str) -> ArmPlan:
             "ARM-RETEST의 20 trial은 EP-1의 ARM-AUDIT 75 trial에 합산하지 않는다.",
             "ARM-FP32는 테스트 arm과 동일 인터리브 블록에서 실행한다(IG-8).",
             "ARM-RANDOM 추출은 IG-7에 따라 1회만. 재추출 금지.",
+            "ARM-CHEAP은 ES-2 계산용이다(score_cheap_A 상위 3셀 보장). EP-1 집계에 넣지 않는다.",
+            "순위·arm 풀은 INT8 24셀. VC-025(FP16)는 정밀도 축 대조로 따로 보고한다.",
         ],
     )
 

@@ -33,7 +33,7 @@ def test_ordering_is_size_outer_granularity_inner():
     v = by_code("VC-001")
     assert (v.calib_size, v.calib_composition, v.granularity) == (16, "success-only", "per-tensor")
     assert by_code("VC-002").granularity == "per-channel"     # 가장 안쪽 축
-    assert by_code("VC-003").calib_composition == "mixed"     # 중간 축
+    assert by_code("VC-003").calib_composition == "early-phase-only"     # 중간 축
     assert by_code("VC-007").calib_size == 64                 # 바깥 축
 
 

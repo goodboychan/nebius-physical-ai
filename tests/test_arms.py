@@ -13,21 +13,37 @@ def plan(rankings):
 
 
 def test_total_trials_matches_spec(plan):
-    assert plan.total_trials() == TOTAL_TRIALS == 225
+    """기본 225 + ARM-CHEAP(다른 arm에 없는 cheap_A 상위 셀당 10, 최대 +30) (2026-10-07)."""
+    assert TOTAL_TRIALS == 225
+    assert plan.total_trials() == 225 + 10 * len(plan.arms["ARM-CHEAP"]) <= 255
 
 
 def test_arm_sizes_match_spec(plan):
     for arm, spec in ARM_SPEC.items():
-        assert len(plan.arms[arm]) == spec["n_cells"]
+        if arm == "ARM-CHEAP":
+            assert len(plan.arms[arm]) <= spec["n_cells"]
+        else:
+            assert len(plan.arms[arm]) == spec["n_cells"]
         assert plan.trials_per_cell[arm] == spec["trials_per_cell"]
 
 
+def test_es2_cells_always_have_trials(plan, rankings):
+    """ES-2 커버리지 보장: score_cheap_A 상위 3셀(INT8)은 반드시 어느 arm엔가 있다."""
+    top3 = [c for c in rankings["score_cheap_A"] if c != "VC-025"][:3]
+    assert set(top3) <= plan.cells_with_trials()
+
+
+def test_fp16_cell_excluded_from_arms(plan):
+    """VC-025(FP16)는 순위·arm 풀에서 빠진다 (2026-10-07, manual_actions #3)."""
+    assert "VC-025" not in plan.cells_with_trials()
+
+
 def test_audit_arm_is_score_align_top3(plan, rankings):
-    assert plan.arms["ARM-AUDIT"] == rankings["score_align"][:3]
+    assert plan.arms["ARM-AUDIT"] == [c for c in rankings["score_align"] if c != "VC-025"][:3]
 
 
 def test_low_arm_is_score_align_bottom2_worst_first(plan, rankings):
-    assert plan.arms["ARM-LOW"] == rankings["score_align"][-2:][::-1]
+    assert plan.arms["ARM-LOW"] == [c for c in rankings["score_align"] if c != "VC-025"][-2:][::-1]
 
 
 def test_random_arm_excludes_audit_and_low(plan):
@@ -71,7 +87,7 @@ def test_cells_are_plain_strings(plan):
 def test_rejects_incomplete_ranking(rankings):
     bad = dict(rankings)
     bad["score_align"] = bad["score_align"][:10]
-    with pytest.raises(ValueError, match="감사 대상"):
+    with pytest.raises(ValueError, match="순위 대상"):
         build_arms(bad, seed=SEED)
 
 

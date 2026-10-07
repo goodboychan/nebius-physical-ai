@@ -11,7 +11,7 @@ axes:
   - 1024
   calib_composition:
   - success-only
-  - mixed
+  - early-phase-only
   - late-phase-only
   granularity:
   - per-tensor
@@ -43,14 +43,14 @@ variants:
   precision: int8
   target: jetson-trt
   calib_size: 16
-  calib_composition: mixed
+  calib_composition: early-phase-only
   granularity: per-tensor
   role: INT8 요인 셀
 - code: VC-004
   precision: int8
   target: jetson-trt
   calib_size: 16
-  calib_composition: mixed
+  calib_composition: early-phase-only
   granularity: per-channel
   role: INT8 요인 셀
 - code: VC-005
@@ -85,14 +85,14 @@ variants:
   precision: int8
   target: jetson-trt
   calib_size: 64
-  calib_composition: mixed
+  calib_composition: early-phase-only
   granularity: per-tensor
   role: INT8 요인 셀
 - code: VC-010
   precision: int8
   target: jetson-trt
   calib_size: 64
-  calib_composition: mixed
+  calib_composition: early-phase-only
   granularity: per-channel
   role: INT8 요인 셀
 - code: VC-011
@@ -127,14 +127,14 @@ variants:
   precision: int8
   target: jetson-trt
   calib_size: 256
-  calib_composition: mixed
+  calib_composition: early-phase-only
   granularity: per-tensor
   role: INT8 요인 셀
 - code: VC-016
   precision: int8
   target: jetson-trt
   calib_size: 256
-  calib_composition: mixed
+  calib_composition: early-phase-only
   granularity: per-channel
   role: INT8 요인 셀
 - code: VC-017
@@ -169,14 +169,14 @@ variants:
   precision: int8
   target: jetson-trt
   calib_size: 1024
-  calib_composition: mixed
+  calib_composition: early-phase-only
   granularity: per-tensor
   role: INT8 요인 셀
 - code: VC-022
   precision: int8
   target: jetson-trt
   calib_size: 1024
-  calib_composition: mixed
+  calib_composition: early-phase-only
   granularity: per-channel
   role: INT8 요인 셀
 - code: VC-023

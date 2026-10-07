@@ -20,7 +20,7 @@ def success(manifest):
     return {e: (i % 2 == 0) for i, e in enumerate(tr)}
 
 
-def make(manifest, lengths, size=64, comp="mixed", success=None, cell="VC-001"):
+def make(manifest, lengths, size=64, comp="early-phase-only", success=None, cell="VC-001"):
     return build_calibration_set(cell, size, comp, manifest, lengths, SEED, success)
 
 
@@ -67,16 +67,17 @@ def test_success_only_excludes_failures(manifest, lengths, success):
     assert all(success[ep] for ep, _ in cs.frames)
 
 
-def test_mixed_includes_failures(manifest, lengths, success):
-    cs = make(manifest, lengths, comp="mixed", success=success, size=2000)
-    assert any(not success[ep] for ep, _ in cs.frames)
+def test_early_phase_only_is_early(manifest, lengths):
+    cs = make(manifest, lengths, comp="early-phase-only", size=64)
+    cutoff = int(300 * (1 / 3))
+    assert all(fi < cutoff for _, fi in cs.frames)
 
 
 def test_success_only_without_labels_is_flagged(manifest, lengths):
-    """라벨이 없으면 success-only가 mixed와 같아진다 — 조용히 넘어가면 안 된다."""
+    """라벨이 없으면 success-only가 전체 프레임과 같아진다 — 조용히 넘어가면 안 된다."""
     cs = make(manifest, lengths, comp="success-only", success=None)
     assert cs.approximated is True
-    assert make(manifest, lengths, comp="mixed").approximated is False
+    assert make(manifest, lengths, comp="early-phase-only").approximated is False
 
 
 def test_selection_is_deterministic(manifest, lengths):
@@ -85,26 +86,32 @@ def test_selection_is_deterministic(manifest, lengths):
     assert a.set_hash == b.set_hash and a.frames == b.frames
 
 
-def test_different_cells_get_different_sets(manifest, lengths):
-    a = make(manifest, lengths, cell="VC-001")
-    b = make(manifest, lengths, cell="VC-003")
+def test_different_compositions_get_different_sets(manifest, lengths):
+    a = make(manifest, lengths, comp="early-phase-only")
+    b = make(manifest, lengths, comp="late-phase-only")
     assert a.frames != b.frames
 
 
 def test_same_factors_same_frames_regardless_of_cell_code(manifest, lengths):
-    """시드가 (셀, 구성, 크기)에 걸리므로 셀이 다르면 세트도 다르다 —
-    이것은 의도된 동작이며, 셀 간 차이가 요인 조합에서만 오도록 하려면
-    오히려 같아야 한다는 주장도 가능하다. 현재 설계를 테스트로 고정해둔다."""
-    a = make(manifest, lengths, cell="VC-001", comp="mixed", size=64)
-    b = make(manifest, lengths, cell="VC-002", comp="mixed", size=64)
-    assert a.frames != b.frames
+    """2026-10-07 결정: 시드에 셀 코드를 넣지 않는다. 셀 간 차이는 요인 조합에서만 온다
+    (granularity만 다른 두 셀은 같은 캘리브레이션 프레임을 쓴다)."""
+    a = make(manifest, lengths, cell="VC-001", comp="early-phase-only", size=64)
+    b = make(manifest, lengths, cell="VC-002", comp="early-phase-only", size=64)
+    assert a.frames == b.frames
+
+
+def test_sizes_are_nested(manifest, lengths):
+    """크기 축은 중첩 표본: 작은 세트는 큰 세트의 부분집합이다."""
+    small = make(manifest, lengths, size=16)
+    big = make(manifest, lengths, size=64)
+    assert set(small.frames) <= set(big.frames)
 
 
 def test_oversized_request_fails_loudly(manifest, lengths):
     """중복 표본으로 채우면 셀 간 비교가 깨진다."""
     small = {e: 2 for e in lengths}
     with pytest.raises(CalibrationUnavailable, match="적다"):
-        build_calibration_set("VC-001", 1024, "mixed", manifest, small, SEED)
+        build_calibration_set("VC-001", 1024, "early-phase-only", manifest, small, SEED)
 
 
 def test_unknown_composition_rejected(manifest, lengths):

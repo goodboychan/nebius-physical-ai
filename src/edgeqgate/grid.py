@@ -22,7 +22,7 @@ from .hashing import hash_obj
 
 # 축 수준. 순서가 곧 셀 번호 순서이므로 **절대 재정렬 금지**.
 CALIB_SIZES = (16, 64, 256, 1024)
-CALIB_COMPOSITIONS = ("success-only", "mixed", "late-phase-only")
+CALIB_COMPOSITIONS = ("success-only", "early-phase-only", "late-phase-only")  # 2026-10-07: mixed → early-phase-only
 GRANULARITIES = ("per-tensor", "per-channel")
 
 def _default_grid_path() -> Path:
@@ -156,6 +156,13 @@ def grid_hash() -> str:
 
 def audited_variants() -> list[Variant]:
     return [v for v in canonical_variants() if v.is_audited]
+
+
+def ranked_variants() -> list[Variant]:
+    """순위·arm 선정 풀: INT8 셀만 (2026-10-07 결정, manual_actions #3).
+    FP16 `VC-025`는 감사 점수는 내되 '정밀도 축 대조'로 따로 보고하고, 순위와 arm 선정에는 넣지 않는다.
+    INT8보다 오차가 8–9배 작아 같은 순위에 두면 혼자 1위가 되어 `ARM-AUDIT` 선정을 왜곡한다."""
+    return [v for v in audited_variants() if v.precision == "int8"]
 
 
 def by_code(code: str) -> Variant:

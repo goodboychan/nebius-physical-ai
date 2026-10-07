@@ -110,7 +110,7 @@ INT8 셀 = 캘리브레이션 크기 4 × 캘리브레이션 구성 3 × 양자�
 | 축 | 수준 |
 |---|---|
 | `calib_size` | 16 / 64 / 256 / 1024 |
-| `calib_composition` | success-only / mixed(복구 궤적 포함) / late-phase-only |
+| `calib_composition` | success-only / early-phase-only / late-phase-only (2026-10-07 개정: 원래 mixed(복구 궤적 포함). 데모 120개가 모두 성공이라 success-only와 같아져 교체) |
 | `granularity` | per-tensor / per-channel |
 
 여기에 비-INT8 기준 arm 추가:
