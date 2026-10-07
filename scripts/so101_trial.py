@@ -11,7 +11,10 @@
   (LeRobot 키보드 감지기는 쓰지 않는다 — 백그라운드에서 터미널 입력을 가로채 y/n 질문이 막혔다, 2026-10-07)
 - 영상 압축은 별도 스레드에서 한다. 제어 루프가 늦어지면 몰아서 따라잡지 않고 시간 기준을 다시 잡는다(덜덜거림 방지)
 - 판정: scripts/judge_success.py의 judge()(목표 영역 안·서 있음·정지) + 조작자 입력(놓음, 사람 개입) — 셋 다 만족해야 성공
-사용: so101_trial.py <session 이름> <cell 코드> <엔진> [trial 수]"""
+사용: so101_trial.py <session 이름> <cell 코드> <엔진> [trial 수]
+      so101_trial.py --blind <main|retest>   (G6: 봉인 순서표를 따른다, IG-4·IG-5)
+블라인드 모드: 셀↔토큰 대응과 순서는 ~/.edgeqgate_sealed/에만 있다. 화면과 공개 로그에는 trial 번호만 남고, 셀·arm은 봉인 로그에만
+쓴다. 중간에 끝내도 다음 실행이 다음 trial부터 잇는다. 무효(시작 조건 실수 등)로 표시한 trial은 같은 번호로 다시 한다."""
 import json, os, queue, socket, struct, subprocess, sys, threading, time
 import numpy as np, av, cv2
 from lerobot.utils.import_utils import register_third_party_plugins; register_third_party_plugins()
@@ -22,7 +25,17 @@ from lerobot_camera_openmv import OpenMVCameraConfig
 HERE = os.path.dirname(os.path.abspath(__file__)); sys.path.insert(0, HERE)
 from judge_success import judge
 
-session, cell, engine = sys.argv[1:4]; N = int(sys.argv[4]) if len(sys.argv) > 4 else 1
+BLIND = sys.argv[1] == "--blind"
+SEALED = os.path.expanduser("~/.edgeqgate_sealed")
+if BLIND:
+    bsession = sys.argv[2]; assert bsession in ("main", "retest")
+    sealed = json.load(open(f"{SEALED}/g6_sealed.json")); plan = sealed[bsession]
+    session, cell = f"g6_{bsession}", "BLIND"
+    engine_of = lambda tok: f"{SEALED}/engines/{tok}.engine"
+    pub = json.load(open(f"{SEALED}/g6_schedule_public.json"))[bsession]
+    engine = engine_of(pub[0]["engine_token"])
+else:
+    session, cell, engine = sys.argv[1:4]; N = int(sys.argv[4]) if len(sys.argv) > 4 else 1
 FPS, T_MAX, N_ACT = 30, 60.0, 100
 PREF, BLEND = 10, 4  # chunk가 10스텝 남으면 다음 chunk를 요청, 마지막 4스텝 동안 이전·새 chunk를 섞어 넘어간다(2026-10-07)
 NAMES = ["shoulder_pan", "shoulder_lift", "elbow_flex", "wrist_flex", "wrist_roll", "gripper"]
@@ -30,13 +43,20 @@ HOME = np.array(json.load(open(os.path.join(HERE, "so101_home.json")))["home_deg
 OUT = os.path.expanduser(f"~/so101_trials/{session}"); os.makedirs(OUT, exist_ok=True)
 SOCK = "/tmp/so101_policy.sock"
 
-srv = subprocess.Popen(["/usr/bin/python3", os.path.join(HERE, "trt_policy_server.py"), engine,
-                        os.path.join(os.path.dirname(engine), "norm_stats.npz"), SOCK],
-                       stdout=subprocess.PIPE, stderr=subprocess.STDOUT, text=True)
-for line in srv.stdout:
-    if line.startswith("ready"): break
-    if "Error" in line: print(line); sys.exit(1)
-sk = socket.socket(socket.AF_UNIX); sk.connect(SOCK); rf = sk.makefile()
+srv = sk = rf = None; cur_engine = None
+def start_server(eng):
+    """엔진이 바뀔 때만 서버를 다시 띄운다. 출력에 엔진 이름이 나오지 않게 한다(블라인드)."""
+    global srv, sk, rf, cur_engine
+    if eng == cur_engine: return
+    if srv is not None: sk.close(); srv.terminate(); srv.wait()
+    srv = subprocess.Popen(["/usr/bin/python3", os.path.join(HERE, "trt_policy_server.py"), eng,
+                            os.path.join(os.path.dirname(eng), "norm_stats.npz"), SOCK],
+                           stdout=subprocess.PIPE, stderr=subprocess.STDOUT, text=True)
+    for line in srv.stdout:
+        if line.startswith("ready"): break
+        if "Error" in line or "Traceback" in line: print("정책 서버 시작 실패"); sys.exit(1)
+    sk = socket.socket(socket.AF_UNIX); sk.connect(SOCK); rf = sk.makefile(); cur_engine = eng
+start_server(engine)
 
 cams = {"top": OpenCVCameraConfig(index_or_path="/dev/so101_cam_top", width=640, height=480, fps=30, fourcc="MJPG"),
         "wrist": OpenMVCameraConfig(fps=30)}
@@ -86,10 +106,9 @@ class Writer:
 
 seq = 0
 closers = []
-for t_i in range(N):
-    tid = f"{cell}_{time.strftime('%m%d_%H%M%S')}"
+def run_one(tid, label, cellname, engname):
     go_home()
-    input(f"\n[{t_i+1}/{N}] {tid}: 캔을 시작 표시에 세우고 손을 화면 밖으로 뺀 뒤 엔터 > ")
+    input(f"\n{label}: 캔을 시작 표시에 세우고 손을 화면 밖으로 뺀 뒤 엔터 > ")
     wtop, wwr = Writer(f"{OUT}/{tid}_top.mp4", 640, 480), Writer(f"{OUT}/{tid}_wrist.mp4", 320, 200)
     aq, states, actions, inf_ms, last_top, tick, rtt, late = [], [], [], [], [], [], [], 0
     pf = Prefetch(); newc = None; k0 = 0
@@ -136,16 +155,47 @@ for t_i in range(N):
     while touch not in ("y", "n"):
         touch = input("  trial 중 사람이 캔이나 팔을 건드렸습니까? [y/n] > ").strip().lower()
     final = bool(j["success"]) and rel == "y" and touch == "n"
-    rec = {"trial_id": tid, "session": session, "cell": cell, "engine": os.path.basename(engine), "aborted": aborted,
+    inv = None
+    while inv not in ("", "x"):
+        inv = input("  시작 조건 실수 등으로 이 trial을 무효로 할까요? [엔터=아니오 / x=무효] > ").strip().lower()
+    rec = {"trial_id": tid, "session": session, "cell": cellname, "engine": engname, "aborted": aborted, "invalid": inv == "x",
            "duration_s": round(t_loop, 2), "steps": len(S), "judge_auto": j,
            "released": rel == "y", "human_contact": touch == "y", "success": final,
            "infer_ms_mean": round(float(np.mean(inf_ms)), 1), "n_infer": len(inf_ms)}
-    np.savez(f"{OUT}/{tid}_traj.npz", state=S, action=A, infer_ms=np.array(inf_ms), tick_s=np.array(tick), rtt_ms=np.array(rtt))
+    np.savez(f"{SEALED if BLIND else OUT}/{tid}_traj.npz", state=S, action=A, infer_ms=np.array(inf_ms), tick_s=np.array(tick), rtt_ms=np.array(rtt))
     rec["rtt_ms_max"] = round(float(max(rtt)), 1); rec["late_chunks"] = late   # late > 0: 섞기 시작까지 결과가 오지 않은 chunk 수
     dt = np.diff(np.array(tick)) * 1000
     rec["step_ms_p50_p99_max"] = [round(float(np.percentile(dt, 50)), 1), round(float(np.percentile(dt, 99)), 1), round(float(dt.max()), 1)]
-    with open(f"{OUT}/trials.jsonl", "a") as f: f.write(json.dumps(rec) + "\n")
-    print(f"  -> {'성공' if final else '실패'} (자동 {j['reason']}, 놓음 {rel}, 개입 {touch})  {rec['duration_s']}s, 추론 {rec['n_infer']}회 평균 {rec['infer_ms_mean']}ms, 스텝 간격 p50/p99/max {rec['step_ms_p50_p99_max']} ms, 왕복 최대 {rec['rtt_ms_max']}ms, 늦은 chunk {rec['late_chunks']}")
+    return rec, final, j, rel, touch
+def report(rec, final, j, rel, touch):
+    head = f"  -> {'무효' if rec['invalid'] else ('성공' if final else '실패')} (자동 {j['reason']}, 놓음 {rel}, 개입 {touch})  {rec['duration_s']}s, 스텝 간격 p50/p99 {rec['step_ms_p50_p99_max'][:2]} ms, 늦은 chunk {rec['late_chunks']}"
+    # 블라인드에서는 추론 지연을 보이지 않는다 — FP32(약 78ms)와 INT8(약 30ms)이 지연으로 구별되기 때문이다
+    print(head if BLIND else head + f", 추론 {rec['n_infer']}회 평균 {rec['infer_ms_mean']}ms, 왕복 최대 {rec['rtt_ms_max']}ms")
+
+if not BLIND:
+    for t_i in range(N):
+        tid = f"{cell}_{time.strftime('%m%d_%H%M%S')}"
+        out = run_one(tid, f"[{t_i+1}/{N}] {tid}", cell, os.path.basename(engine)); rec = out[0]
+        with open(f"{OUT}/{'invalid_trials' if rec['invalid'] else 'trials'}.jsonl", "a") as f: f.write(json.dumps(rec) + "\n")
+        report(*out)
+else:
+    pub_log = f"{OUT}/trials.jsonl"
+    done = {json.loads(l)["trial"] for l in open(pub_log)} if os.path.exists(pub_log) else set()
+    todo = [r for r in pub if r["trial"] not in done]
+    print(f"\nG6 {bsession}: 남은 trial {len(todo)} / {len(pub)}")
+    for r in todo:
+        tok = r["engine_token"]; start_server(engine_of(tok))
+        cs = next(x for x in plan if x["trial"] == r["trial"])
+        tid = f"{bsession}{r['trial']:03d}_{time.strftime('%m%d_%H%M%S')}"
+        out = run_one(tid, f"[G6 {bsession} trial {r['trial']}/{len(pub)}]", "SEALED", tok); rec = out[0]
+        sealed_rec = dict(rec, cell=cs["cell"], arm=cs["arm"], trial=r["trial"])
+        rec = {k: v for k, v in rec.items() if k not in ("infer_ms_mean", "rtt_ms_max", "n_infer")}   # 공개 로그에서 지연 제외
+        rec["trial"] = r["trial"]
+        with open(f"{SEALED}/{session}_sealed.jsonl", "a") as f: f.write(json.dumps(sealed_rec) + "\n")
+        with open(f"{OUT}/{'invalid_trials' if rec['invalid'] else 'trials'}.jsonl", "a") as f: f.write(json.dumps(rec) + "\n")
+        report(*out)
+        if rec["invalid"]: print("  (무효 — 같은 번호를 다음에 다시 합니다)"); 
+        if input("  엔터 = 다음 trial / q = 오늘은 여기까지 > ").strip().lower() == "q": break
 go_home()
 for c in closers: c.join()   # 영상 파일이 모두 닫힐 때까지
 robot.disconnect(); sk.close(); srv.terminate()
