@@ -37,6 +37,22 @@ Nebius x NVIDIA Global AI Hackathon, Physical AI Track 출품작.
 핵심 잠금은 `LOCK-2`다: **감사 점수를 전량 산출·동결·해시 커밋한 뒤에야 최초 실기 trial을
 실행한다.** 이 순서가 깨지면 연구 전체의 신뢰성이 사라진다.
 
+## Why this matters
+
+Quantizing a robot policy for an edge device usually leaves open-loop metrics looking fine, yet the closed-loop
+behaviour can change. Checking every quantized variant on the real robot is slow, costly and sometimes unsafe, so
+QuantGate tries to screen variants **offline, before** they reach the robot, and tests that screen against
+pre-registered real-arm trials.
+
+The motivation is strongest in **precision-critical settings such as medical, lab-automation or pharmacy robotics**,
+where a policy that only *barely* places an object inside the target is already a failure. That is why the audit scores
+use tail statistics (CVaR@90) instead of averages, and why placement accuracy is recorded on every trial alongside
+binary success.
+
+Scope note: the experiment here is a cola can on a coaster. It makes **no claim** about medical or clinical use.
+The runtime supervisor is also deliberately non-intervening when its verdict is stale, so that network delay cannot
+contaminate the measured success rate. A safety-critical deployment would need the opposite default (stop when unsure).
+
 ## How QuantGate uses NVIDIA models and Nebius
 
 | Component | What runs | Where |
