@@ -35,7 +35,11 @@ iou = (mask & rm).sum() / max((mask | rm).sum(), 1); shift = float(np.hypot(cx -
 over = img.copy(); over[rm & ~mask] = (255, 0, 0); over[mask & ~rm] = (0, 255, 0)
 cv2.imwrite(f"{D}/wrist_check_{time.strftime('%m%d_%H%M')}.jpg", cv2.cvtColor(np.hstack([R["img"], img, over]), cv2.COLOR_RGB2BGR))
 grip_ok = int(grip) <= GRIP_CLOSED_MAX
-ok = iou >= 0.80 and shift <= 6 and grip_ok
+# 2026-10-08: 기준 한 장과의 IoU·6px 조건은 데모끼리의 변동(집게 중심 x 254±15px, 192–264)보다 빡빡해 오판했다.
+# 데모 시작 장면 20개(ep 0,6,…,114)의 집게 중심 범위 ±5px 안이면 녹화 때와 같은 장착으로 본다
+DEMO_X, DEMO_Y = (192.0 - 5, 264.0 + 5), (181.4 - 3 * 2.3, 181.4 + 3 * 2.3)
+in_demo = DEMO_X[0] <= cx <= DEMO_X[1] and DEMO_Y[0] <= cy <= DEMO_Y[1]
+ok = in_demo and grip_ok
 print(f"집게 원시값 {grip} (기준 {int(R['grip'])}{'' if grip_ok else ' — 집게를 끝까지 닫으세요'})  IoU {iou:.2f}  중심 이동 {shift:.1f}px  "
-      f"(dx {cx-rx:+.1f}, dy {cy-ry:+.1f})")
+      f"(dx {cx-rx:+.1f}, dy {cy-ry:+.1f})  집게 중심 ({cx:.1f}, {cy:.1f}) — 데모 범위 x {DEMO_X[0]:.0f}–{DEMO_X[1]:.0f}, y {DEMO_Y[0]:.0f}–{DEMO_Y[1]:.0f}")
 print("WRIST CHECK:", "PASS" if ok else "FAIL — 카메라 장착이 틀어졌거나 준비 자세가 다릅니다 (빨강=기준에만, 초록=지금만)")
