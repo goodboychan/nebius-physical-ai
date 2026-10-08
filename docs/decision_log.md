@@ -520,3 +520,12 @@ ACT는 상태마다 100스텝을 내고 실기에서 100스텝을 모두 실행�
 - 감독자는 별도 스레드다. 제어 루프는 최신 프레임 참조만 넘긴다(스텝 간격으로 영향이 없는지 확인한다)
 - trial 기록에 `d4`(판정 분포, 지연, 오류 수, 판정 로그)를 남긴다 — `EX-3` 기술 통계. 개입 모드는 스트레스 시험·데모에서만 쓴다
 - 엔드포인트는 실기 세션 동안만 켠다(L40S $1.55/h)
+
+---
+
+## 2026-10-08 — AEP용 분석 등록 (봉인 해제 전)
+
+- `docs/aep_physical_registration_v1.md` sha256 `779112e1327e4e25061dfb26c914f5985bb0800507694201d09d3a3b3d1b0609`. AEP 저장소 `docs/mlsys27/physical_so101_closed_loop_v1/`에 같은 문서와 seal
+- 주 엔드포인트·arm·순서표·판정 규칙은 바꾸지 않는다. ES-4(AUDIT vs LOW)와 EX-4를 AEP의 판정 의미(허용 오차 E1 10%p, E2 5px,
+  tolerance_compatible / materially_degraded / indeterminate)로 다시 읽는 분석과 falsified_if를 고정했다
+- 열람한 것: G2 20/20, G6 1–30 집계 30/30만. 셀별 결과 미열람
