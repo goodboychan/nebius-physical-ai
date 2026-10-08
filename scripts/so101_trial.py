@@ -24,6 +24,35 @@ from lerobot.cameras.opencv.configuration_opencv import OpenCVCameraConfig
 from lerobot_camera_openmv import OpenMVCameraConfig
 HERE = os.path.dirname(os.path.abspath(__file__)); sys.path.insert(0, HERE)
 from judge_success import judge
+sys.path.insert(0, os.path.expanduser("~/edgeqgate/repo/src"))
+from edgeqgate.supervisor import Supervisor, SupervisorConfig
+
+# D4 Cosmos-Reason2 감독자 — **관찰 모드**(판정을 기록만 하고 팔에 개입하지 않는다, decision_log 2026-10-08).
+# 엔드포인트 설정이 없거나 응답이 없으면 감독 없이 진행하고 그 사실을 기록한다.
+D4_CFG = os.path.expanduser("~/.config/edgeqgate/cosmos_endpoint.json")
+D4_PROMPT = ("Overhead camera view of a robot arm that picks up a cola can and stands it upright on a round coaster. "
+             "Answer with exactly one word: CONTINUE if the task is proceeding normally, FALLBACK if the arm looks stuck or "
+             "confused, ABORT if something is unsafe (the can falling off the table, the arm hitting something, a human hand "
+             "in the workspace).")
+latest_top = {"img": None}
+def make_d4():
+    if not os.path.exists(D4_CFG): return None
+    import base64, http.client, urllib.parse
+    cfg = json.load(open(D4_CFG)); u = urllib.parse.urlparse(cfg["url"])
+    hdr = {"Authorization": "Bearer " + open(os.path.expanduser(cfg["token_file"])).read().strip(), "Content-Type": "application/json"}
+    conn = {"c": http.client.HTTPSConnection(u.netloc, timeout=10)}
+    def infer(img):
+        if img is None: return ""
+        ok, jpg = cv2.imencode(".jpg", cv2.cvtColor(img, cv2.COLOR_RGB2BGR), [cv2.IMWRITE_JPEG_QUALITY, 85])
+        body = json.dumps({"model": "nvidia/Cosmos-Reason2-2B", "max_tokens": 8, "temperature": 0, "messages": [{"role": "user", "content": [
+            {"type": "image_url", "image_url": {"url": "data:image/jpeg;base64," + base64.b64encode(jpg.tobytes()).decode()}},
+            {"type": "text", "text": D4_PROMPT}]}]})
+        try:
+            conn["c"].request("POST", "/v1/chat/completions", body=body, headers=hdr); r = conn["c"].getresponse(); d = json.loads(r.read())
+        except Exception:
+            conn["c"] = http.client.HTTPSConnection(u.netloc, timeout=10); raise
+        return d["choices"][0]["message"]["content"]
+    return lambda: Supervisor(infer, lambda: latest_top["img"], SupervisorConfig(rate_hz=2.0))
 
 BLIND = sys.argv[1] == "--blind"
 SEALED = os.path.expanduser("~/.edgeqgate_sealed")
@@ -57,6 +86,8 @@ def start_server(eng):
         if "Error" in line or "Traceback" in line: print("정책 서버 시작 실패"); sys.exit(1)
     sk = socket.socket(socket.AF_UNIX); sk.connect(SOCK); rf = sk.makefile(); cur_engine = eng
 start_server(engine)
+d4_factory = make_d4()
+print("D4 감독자(관찰 모드):", "켜짐" if d4_factory else "꺼짐(엔드포인트 설정 없음)")
 
 cams = {"top": OpenCVCameraConfig(index_or_path="/dev/so101_cam_top", width=640, height=480, fps=30, fourcc="MJPG"),
         "wrist": OpenMVCameraConfig(fps=30)}
@@ -112,6 +143,9 @@ def run_one(tid, label, cellname, engname):
     wtop, wwr = Writer(f"{OUT}/{tid}_top.mp4", 640, 480), Writer(f"{OUT}/{tid}_wrist.mp4", 320, 200)
     aq, states, actions, inf_ms, last_top, tick, rtt, late = [], [], [], [], [], [], [], 0
     pf = Prefetch(); newc = None; k0 = 0
+    sup = d4_factory() if d4_factory else None
+    latest_top["img"] = None
+    if sup: sup.start()
     t0 = time.perf_counter(); aborted = False; k = 0; nxt = t0
     try:
         while time.perf_counter() - t0 < T_MAX:
@@ -134,7 +168,7 @@ def run_one(tid, label, cellname, engname):
             if not aq and newc is not None:
                 aq = list(newc[k + 1 - k0:N_ACT]); newc = None
             states.append(s); actions.append(a)
-            wtop.put(obs["top"]); wwr.put(obs["wrist"])
+            wtop.put(obs["top"]); wwr.put(obs["wrist"]); latest_top["img"] = obs["top"]
             last_top.append(cv2.cvtColor(obs["top"], cv2.COLOR_RGB2GRAY)); last_top = last_top[-15:]
             k += 1; nxt += 1 / FPS
             now = time.perf_counter()
@@ -143,6 +177,9 @@ def run_one(tid, label, cellname, engname):
     except KeyboardInterrupt:
         aborted = True; print("\n  Ctrl+C: 중단 (unsafe)")
     t_loop = time.perf_counter() - t0
+    d4 = None
+    if sup:
+        sup.stop(); d4 = sup.ex3_summary(); d4["mode"] = "shadow"; d4["log"] = [{k2: e[k2] for k2 in ("decision", "latency_ms", "error")} for e in sup.log]
     # 영상 마무리(남은 압축·파일 닫기)는 판정과 무관하므로 백그라운드에서 한다. 프로그램 끝에서 모두 기다린다
     closers.append(threading.Thread(target=lambda w=(wtop, wwr): [x.close() for x in w])); closers[-1].start()
     S = np.stack(states); A = np.stack(actions)
@@ -161,7 +198,7 @@ def run_one(tid, label, cellname, engname):
     rec = {"trial_id": tid, "session": session, "cell": cellname, "engine": engname, "aborted": aborted, "invalid": inv == "x",
            "duration_s": round(t_loop, 2), "steps": len(S), "judge_auto": j,
            "released": rel == "y", "human_contact": touch == "y", "success": final,
-           "infer_ms_mean": round(float(np.mean(inf_ms)), 1), "n_infer": len(inf_ms)}
+           "infer_ms_mean": round(float(np.mean(inf_ms)), 1), "n_infer": len(inf_ms), "d4": d4}
     np.savez(f"{SEALED if BLIND else OUT}/{tid}_traj.npz", state=S, action=A, infer_ms=np.array(inf_ms), tick_s=np.array(tick), rtt_ms=np.array(rtt))
     rec["rtt_ms_max"] = round(float(max(rtt)), 1); rec["late_chunks"] = late   # late > 0: 섞기 시작까지 결과가 오지 않은 chunk 수
     dt = np.diff(np.array(tick)) * 1000
@@ -169,6 +206,7 @@ def run_one(tid, label, cellname, engname):
     return rec, final, j, rel, touch
 def report(rec, final, j, rel, touch):
     head = f"  -> {'무효' if rec['invalid'] else ('성공' if final else '실패')} (자동 {j['reason']}, 놓음 {rel}, 개입 {touch})  {rec['duration_s']}s, 스텝 간격 p50/p99 {rec['step_ms_p50_p99_max'][:2]} ms, 늦은 chunk {rec['late_chunks']}"
+    if rec.get("d4"): head += f", Cosmos 판정 {rec['d4'].get('decisions')}"
     # 블라인드에서는 추론 지연을 보이지 않는다 — FP32(약 78ms)와 INT8(약 30ms)이 지연으로 구별되기 때문이다
     print(head if BLIND else head + f", 추론 {rec['n_infer']}회 평균 {rec['infer_ms_mean']}ms, 왕복 최대 {rec['rtt_ms_max']}ms")
 
