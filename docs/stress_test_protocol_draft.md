@@ -30,8 +30,10 @@ training distribution. The stress test asks:
 | S3 | Room lighting changed (blinds open in daytime, or one lamp off), camera settings stay locked | none | image brightness and white balance out of distribution |
 | S4 | Different can (beer can, 66 mm, filled with rice to about 268 g) | can prep | object appearance and size out of distribution |
 
-Recommendation: **S1 + S3**. They cost almost nothing, they vary different inputs (geometry vs. appearance), and both
-are reproducible from a written description.
+**Chosen (user, 2026-10-10): S1 + S4.** S3 dropped — opening the window does not change the light enough in this room.
+S4 needs a judge recalibration for the new can before any stress trial: the top-to-base perspective offset (0, +32) px
+and the top-circle radius range (17–28 px) were measured for the cola can's height and lid. Measure both with the new can
+standing centered on the empty coaster, then lock them in this protocol. This is a measurement made before any policy outcome.
 
 ## Size and order
 
@@ -59,7 +61,7 @@ agreement, the first step toward RLAIF). It is descriptive only.
 
 ## Decisions needed
 
-1. Conditions: S1 + S3 (recommended), or another combination.
+1. Conditions: **S1 + S4 (decided)**. S4 can: unopened, ≤ 66 mm diameter, ≤ 400 g, clearly different appearance — to be chosen
 2. Include the optional 4th artifact `VC-020`? (+24 trials)
 3. 12 trials per artifact per condition (recommended) or 10 / 15.
 4. Add the end-of-trial AI-judge question? (recommended: yes, descriptive)
