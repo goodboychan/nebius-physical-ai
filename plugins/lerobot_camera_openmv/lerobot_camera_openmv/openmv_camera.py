@@ -194,13 +194,38 @@ class OpenMVCamera(Camera):
         return open_once()
 
     def connect(self, warmup: bool = True) -> None:
+        """연결 전체에 시간 제한(45초)을 걸고 한 번 다시 시도한다. 2026-10-10: 설정 응답을 기다리는 read_stdout가
+        openmv 내부 재동기화를 반복하며 3분 넘게 멈췄다(읽기에는 쓰기 timeout이 걸리지 않는다). 메인 스레드에서만 alarm을 쓴다."""
+        import signal
         if self.is_connected:
             raise RuntimeError(f"{self} is already connected")
+        main = threading.current_thread() is threading.main_thread()
+        def on_alarm(signum, frame):
+            raise TimeoutError(f"{self} connect timed out")
+        for attempt in range(2):
+            old = signal.signal(signal.SIGALRM, on_alarm) if main else None
+            if main: signal.alarm(45)
+            try:
+                return self._connect_once(warmup)
+            except (TimeoutError, RuntimeError) as e:
+                logger.warning("%s: connect attempt %d failed (%s)", self, attempt + 1, e)
+                pc = getattr(self, "_pending_cam", None)
+                if pc is not None:
+                    try: pc.disconnect()
+                    except Exception: pass
+                self._pending_cam = None
+                if attempt == 1: raise
+                time.sleep(2.0)
+            finally:
+                if main:
+                    signal.alarm(0); signal.signal(signal.SIGALRM, old)
+
+    def _connect_once(self, warmup: bool = True) -> None:
         _install_log_filter()
         # LeRobot은 모터 버스를 먼저 끊고 카메라를 끊는다. 버스에서 에러가 나면(집게 과부하 등) 카메라
         # disconnect가 불리지 않아 보드가 스트리밍 중인 채로 남고, 다음 연결이 막힌다. 종료 시 항상 정리한다.
         atexit.register(self.disconnect)
-        cam = self._open_fresh()
+        cam = self._open_fresh(); self._pending_cam = cam
         cam.read_stdout()
         cam.exec(self._script())
         # Wait for the settings line instead of a fixed sleep: the device warmup plus the
@@ -221,7 +246,7 @@ class OpenMVCamera(Camera):
                 pass
             raise RuntimeError(f"{self} device script failed:\n{out}")
         cam.streaming(True)
-        self._cam = cam
+        self._cam = cam; self._pending_cam = None
         self._error = None
         self._stop.clear()
         self._new_frame.clear()
