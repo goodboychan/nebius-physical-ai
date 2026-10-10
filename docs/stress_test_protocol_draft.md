@@ -62,7 +62,7 @@ agreement, the first step toward RLAIF). It is descriptive only.
 ## Decisions needed
 
 1. Conditions: **S1 + S4 (decided)**. S4 can (user, 2026-10-10): **yellow 175 ml can, 190 g, diameter 50 mm** (training can: cola,
-   268 g). Height to be measured at judge recalibration. Unopened status to be confirmed
+   268 g). **Height 10 cm.** Unopened status to be confirmed. The perspective offset will be measured, not scaled from the cola can
 2. Include the optional 4th artifact `VC-020`? (+24 trials)
 3. 12 trials per artifact per condition (recommended) or 10 / 15.
 4. Add the end-of-trial AI-judge question? (recommended: yes, descriptive)
