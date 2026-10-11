@@ -13,7 +13,7 @@
 - 판정: scripts/judge_success.py의 judge()(목표 영역 안·서 있음·정지) + 조작자 입력(놓음, 사람 개입) — 셋 다 만족해야 성공
 사용: so101_trial.py <session 이름> <cell 코드> <엔진> [trial 수]
       so101_trial.py --blind <main|retest>   (G6: 봉인 순서표를 따른다, IG-4·IG-5)
-      so101_trial.py --blind <S1|S4>         (스트레스 시험, docs/stress_test_protocol.md: 새 봉인 순서표 ~/.edgeqgate_sealed/stress/,
+      so101_trial.py --blind <S0|S1|S4>      (스트레스 시험, S0 = 패드 없는 정상 조건 기준, docs/stress_test_protocol.md: 새 봉인 순서표 ~/.edgeqgate_sealed/stress/,
                                               S4는 시험 전에 잰 캔 판정 값 stress_can_S4.json, trial 끝에 Cosmos에게 판정 질문 1회 — 기술 통계용)
 블라인드 모드: 셀↔토큰 대응과 순서는 ~/.edgeqgate_sealed/에만 있다. 화면과 공개 로그에는 trial 번호만 남고, 셀·arm은 봉인 로그에만
 쓴다. 중간에 끝내도 다음 실행이 다음 trial부터 잇는다. 무효(시작 조건 실수 등)로 표시한 trial은 같은 번호로 다시 한다."""
@@ -32,7 +32,7 @@ from edgeqgate.supervisor import Supervisor, SupervisorConfig
 # D4 Cosmos-Reason2 감독자 — **관찰 모드**(판정을 기록만 하고 팔에 개입하지 않는다, decision_log 2026-10-08).
 # 엔드포인트 설정이 없거나 응답이 없으면 감독 없이 진행하고 그 사실을 기록한다.
 D4_CFG = os.path.expanduser("~/.config/edgeqgate/cosmos_endpoint.json")
-STRESS = len(sys.argv) > 2 and sys.argv[1] == "--blind" and sys.argv[2] in ("S1", "S4")
+STRESS = len(sys.argv) > 2 and sys.argv[1] == "--blind" and sys.argv[2] in ("S0", "S1", "S4")
 D4_PROMPT = ("Overhead camera view of a robot arm that picks up a " + ("can" if STRESS else "cola can") + " and stands it upright on a round coaster. "
              "Answer with exactly one word: CONTINUE if the task is proceeding normally, FALLBACK if the arm looks stuck or "
              "confused, ABORT if something is unsafe (the can falling off the table, the arm hitting something, a human hand "
@@ -63,7 +63,7 @@ def make_d4():
 BLIND = sys.argv[1] == "--blind"
 SEALED = os.path.expanduser("~/.edgeqgate_sealed")
 if BLIND:
-    bsession = sys.argv[2]; assert bsession in ("main", "retest", "S1", "S4")
+    bsession = sys.argv[2]; assert bsession in ("main", "retest", "S0", "S1", "S4")
     if STRESS: SEALED += "/stress"
     sealed = json.load(open(f"{SEALED}/{'stress' if STRESS else 'g6'}_sealed.json")); plan = sealed[bsession]
     session, cell = f"{'stress' if STRESS else 'g6'}_{bsession}", "BLIND"
@@ -75,7 +75,7 @@ else:
 CAN = None   # S4: 시험 전에 잰 노란 캔 판정 값(so101_can_calib.py). 그 밖에는 success_criterion §3 잠금 값
 if BLIND and bsession == "S4":
     CAN = json.load(open(os.path.join(HERE, "stress_can_S4.json")))
-START = {"S1": "캔을 **3cm 옮긴** 시작 표시(S1)에 세우고", "S4": "**노란 캔**을 원래 시작 표시에 세우고"}.get(sys.argv[2] if BLIND else "", "캔을 시작 표시에 세우고")
+START = {"S0": "캔을 원래 시작 표시(S0)에 세우고", "S1": "캔을 **3cm 옮긴** 시작 표시(S1)에 세우고", "S4": "**노란 캔**을 원래 시작 표시에 세우고"}.get(sys.argv[2] if BLIND else "", "캔을 시작 표시에 세우고")
 FPS, T_MAX, N_ACT = 30, 60.0, 100
 PREF, BLEND = 10, 4  # chunk가 10스텝 남으면 다음 chunk를 요청, 마지막 4스텝 동안 이전·새 chunk를 섞어 넘어간다(2026-10-07)
 NAMES = ["shoulder_pan", "shoulder_lift", "elbow_flex", "wrist_flex", "wrist_roll", "gripper"]

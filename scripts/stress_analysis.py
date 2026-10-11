@@ -11,6 +11,9 @@ Inputs: the sealed stress log (`stress_S1_sealed.jsonl`, `stress_S4_sealed.jsonl
     falsified_if: materially_degraded on any primary endpoint.
   Secondary (per condition): each INT8 cell (VC-002, VC-005, VC-020) vs VC-000 (FP32); family of 12, 99.58% CI.
     VC-020 vs VC-002 (calibration size 1024 vs 16, same composition and granularity), same family size as primary.
+  Amendment 1 (before any stress trial): block S0 = nominal scene with the gripper pads removed (4 cells x 6), the
+    same-hardware baseline. Descriptive per cell: S0 rate, and S1/S4 vs S0 (Newcombe 95%). G6 main is kept as a second,
+    different-hardware reference.
   Descriptive: per-cell stress vs nominal (G6 main) success rate; D4 shadow verdicts; D4 end-of-trial judge vs the
     criterion outcome (agreement, confusion matrix).
 Usage:
@@ -58,13 +61,18 @@ def compare(a, b, key, conf, n_boot):
 
 
 def analyse(stress, nominal, n_boot=10000):
-    rep = {"n_trials": {c: len(stress[c]) for c in CONDS}}
-    nom = cells_of(nominal)
+    rep = {"n_trials": {c: len(stress[c]) for c in CONDS}, "n_trials_S0": len(stress.get("S0", []))}
+    nom = cells_of(nominal); s0 = cells_of(stress.get("S0", []))
+    rep["S0"] = {c: {"k": int(sum(v["s"])), "n": len(v["s"]), "place_mean": float(np.mean(v["place"])) if v["place"] else None}
+                 for c, v in sorted(s0.items())}
     for cond in CONDS:
         cs = cells_of(stress[cond]); R = {}
         R["cells"] = {c: {"k": int(sum(v["s"])), "n": len(v["s"]), "wilson95": wilson(int(sum(v["s"])), len(v["s"])),
                           "place_mean": float(np.mean(v["place"])) if v["place"] else None, "aborted": v["n_aborted"],
-                          "nominal_k_n": [int(sum(nom[c]["s"])), len(nom[c]["s"])] if c in nom else None}
+                          "nominal_k_n": [int(sum(nom[c]["s"])), len(nom[c]["s"])] if c in nom else None,
+                          "S0_k_n": [int(sum(s0[c]["s"])), len(s0[c]["s"])] if c in s0 else None,
+                          "vs_S0_newcombe95_pp": [x * 100 for x in newcombe(int(sum(s0[c]["s"])), len(s0[c]["s"]), int(sum(v["s"])), len(v["s"]))]
+                                                 if c in s0 else None}
                       for c, v in sorted(cs.items())}
         if BEST in cs and WORST in cs:
             R["primary_worst_vs_best"] = compare(cs[BEST], cs[WORST], f"STRESS-v1/{cond}/primary", CONF_PRIMARY, n_boot)
@@ -104,6 +112,7 @@ def synthetic():
                              "judge_auto": {"success": ok, "base_dist_px": float(rng.normal(9 if c != "VC-005" else 14, 3)) if ok else None},
                              "d4": {"decisions": {"CONTINUE": 100}}, "d4_judge": {"answer": "YES" if rng.random() < 0.8 else "NO"}})
         st[cond] = rows
+    st["S0"] = [{"cell": c, "trial": i, "success": True, "aborted": False, "judge_auto": {"success": True, "base_dist_px": 7.0}} for i, c in enumerate(list(p) * 6)]
     nominal = [{"cell": c, "success": True, "aborted": False, "judge_auto": {"success": True, "base_dist_px": 7.0}} for c in p for _ in range(25)]
     return st, nominal
 
@@ -117,7 +126,7 @@ if __name__ == "__main__":
     else:
         if not os.path.exists("artifacts/freeze/stress_lock_post.json"):
             sys.exit("stress_lock_post.json이 없다. 스트레스 trial을 모두 마치고 봉인 로그 해시를 고정한 뒤 실행한다")
-        st = {c: load(os.path.join(a.sealed_dir, f"stress_{c}_sealed.jsonl")) for c in CONDS}
+        st = {c: load(os.path.join(a.sealed_dir, f"stress_{c}_sealed.jsonl")) for c in CONDS + ("S0",)}
         rep = analyse(st, load("artifacts/trials/g6_unsealed/g6_main_sealed.jsonl"), a.n_boot)
     json.dump(rep, open(a.out, "w"), indent=1, default=lambda o: list(o) if isinstance(o, (set, tuple)) else str(o))
     print("written", a.out)

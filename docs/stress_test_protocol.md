@@ -109,3 +109,20 @@ the §7.2 wording ("not detected", never "no effect").
    `artifacts/freeze/stress_lock_post.json`. Only then are they opened and `stress_analysis.py` run.
 4. If the session fails (hardware, a K1-type collapse in every cell), the trials run so far are reported as they are.
    No condition, cell or tolerance is changed after a stress outcome has been seen.
+
+## 7. Amendment 1 (2026-10-11, before any stress trial; no stress outcome seen)
+
+- **Change**: the anti-slip pads on the gripper are removed from this session on. User's reason: the pads kept
+  shifting during trials, re-adjusting them was unreliable, and they damaged the can surface.
+- **Consequence**: hardware now differs from G6. S1 and S4 would mix the scene change with the gripper change.
+- **Added block S0**, run before S1: nominal scene (cola can, training start mark), pads removed, 4 cells × 6 = 24
+  trials. It uses the same tokens, runner and blinding, and is interleaved with seed key
+  `STRESS/schedule/v1/amend1/S0`. The S1 and S4 blocks are unchanged. Sealed schedule v2 sha256
+  `f3fd12e9023daee673a17279f441c0d19e6259482cc06dd04dc9883023b5db70`; v1 `9549b96b…` is kept on Orin as
+  `stress_sealed.json.v1`. Runner: `so101_trial.py --blind S0`. Block order: **S0 → S1 → S4**. Total 120 trials.
+- **Analysis**:
+  - The primary and secondary comparisons (§5) are unchanged. They are within-condition comparisons between cells, and
+    every cell uses the same gripper.
+  - The stress-vs-nominal description now uses S0 as the same-hardware baseline (per cell, Newcombe 95%). G6 main is
+    reported as a second reference, labeled as different hardware.
+  - The S0 results are descriptive only. With n = 6 per cell they cannot support a decision.

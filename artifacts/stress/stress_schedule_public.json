@@ -1,7 +1,8 @@
 {
  "lock2_record_hash": "5fb513a435b3b7b90dcb6e25e61a48d61ffc43fc2f8f14338903544a173540ec",
- "sealed_sha256": "9549b96be27644dce90b0358888114e152c98d5a10b3628bdc4cc08407b190aa",
+ "sealed_sha256": "f3fd12e9023daee673a17279f441c0d19e6259482cc06dd04dc9883023b5db70",
  "block_order": [
+  "S0",
   "S1",
   "S4"
  ],
@@ -392,5 +393,104 @@
    "trial": 48,
    "engine_token": "0f922638"
   }
- ]
+ ],
+ "S0": [
+  {
+   "trial": 1,
+   "engine_token": "b6da017f"
+  },
+  {
+   "trial": 2,
+   "engine_token": "0f922638"
+  },
+  {
+   "trial": 3,
+   "engine_token": "369919c8"
+  },
+  {
+   "trial": 4,
+   "engine_token": "71cc6ece"
+  },
+  {
+   "trial": 5,
+   "engine_token": "369919c8"
+  },
+  {
+   "trial": 6,
+   "engine_token": "71cc6ece"
+  },
+  {
+   "trial": 7,
+   "engine_token": "0f922638"
+  },
+  {
+   "trial": 8,
+   "engine_token": "b6da017f"
+  },
+  {
+   "trial": 9,
+   "engine_token": "369919c8"
+  },
+  {
+   "trial": 10,
+   "engine_token": "0f922638"
+  },
+  {
+   "trial": 11,
+   "engine_token": "b6da017f"
+  },
+  {
+   "trial": 12,
+   "engine_token": "71cc6ece"
+  },
+  {
+   "trial": 13,
+   "engine_token": "b6da017f"
+  },
+  {
+   "trial": 14,
+   "engine_token": "0f922638"
+  },
+  {
+   "trial": 15,
+   "engine_token": "369919c8"
+  },
+  {
+   "trial": 16,
+   "engine_token": "71cc6ece"
+  },
+  {
+   "trial": 17,
+   "engine_token": "71cc6ece"
+  },
+  {
+   "trial": 18,
+   "engine_token": "b6da017f"
+  },
+  {
+   "trial": 19,
+   "engine_token": "0f922638"
+  },
+  {
+   "trial": 20,
+   "engine_token": "369919c8"
+  },
+  {
+   "trial": 21,
+   "engine_token": "0f922638"
+  },
+  {
+   "trial": 22,
+   "engine_token": "b6da017f"
+  },
+  {
+   "trial": 23,
+   "engine_token": "369919c8"
+  },
+  {
+   "trial": 24,
+   "engine_token": "71cc6ece"
+  }
+ ],
+ "sealed_sha256_v1": "9549b96be27644dce90b0358888114e152c98d5a10b3628bdc4cc08407b190aa"
 }
