@@ -22,3 +22,8 @@ Gripper anti-slip pads are removed for the whole stress session (protocol §7).
   6. This was a judge artifact (protocol §9); the offline re-judge gives 6/6
 - S0 trial 7: success. S0 trial 8: live "moving" (judge artifact type, operator did not report a failure)
 - S0 trial 9: **real failure** (operator): dropped the can while carrying it. Live judge: can top not found (fallen). Cosmos answered "No"
+- S0 v2 complete (24). Operator: every trial except 9 succeeded
+- Re-judge (§9): 22/24. Failures: 9 (real, dropped while carrying) and **19**. In 19 the operator saw a success, but the
+  detector jumped to the same spurious circle near (399, 365) in 6 of the 15 frames, above the ≤ 3 limit. Under the
+  fixed rule 19 is a failure. This is reported as a known judge false negative, and the rule is not changed again.
+  Live screen: 16 trials showed "moving"
