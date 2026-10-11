@@ -33,3 +33,6 @@ Gripper anti-slip pads are removed for the whole stress session (protocol §7).
 - S1 v2 trial 1 detail: the first grasp closed on empty air at the training position. On the re-grasp attempt the
   gripper hit the can and knocked it over
 - S1 v2 stopped by the user after trial 2 (decision_log 2026-10-12). Next: S4 can measurement, then S4
+- S1 v2 trial 3 (in progress when S1 was stopped) is recorded and included
+- S4 v2 trials 1–11 (2026-10-12): operator saw **no failures**. The live screen showed "moving" on 1, 4, 9 and 11
+  (judge-artifact type, to be re-judged). Session paused here; S4 resumes at trial 12 on another day
