@@ -1,0 +1,237 @@
+{
+ "source_report": "artifacts/reports/g6_analysis.json",
+ "holm_H1_H2": {
+  "raw_p": {
+   "EP-1": 1.0,
+   "ES-2": 0.5994262792958635,
+   "ES-3": 0.8114292282584676
+  },
+  "holm_p": {
+   "ES-2": 1.0,
+   "ES-3": 1.0,
+   "EP-1": 1.0
+  },
+  "excluded": {
+   "ES-1": "identical cell sets, no contrast"
+  },
+  "not_in_family": [
+   "ES-4",
+   "ES-5"
+  ]
+ },
+ "ES-3_coverage": {
+  "score": "score_cheap_B",
+  "top_k": [
+   "VC-002",
+   "VC-010",
+   "VC-004"
+  ],
+  "covered": [
+   "VC-002",
+   "VC-010"
+  ],
+  "missing": [
+   "VC-004"
+  ],
+  "computable": false,
+  "partial": true
+ },
+ "EX-1_EX-2": {
+  "VC-000": {
+   "arm": "ARM-FP32",
+   "n": 25,
+   "failures": {
+    "drop_lift": 1
+   },
+   "near_miss_trials": [],
+   "infer_ms_mean": 78.984,
+   "infer_ms_range": [
+    77.0,
+    81.4
+   ],
+   "step_max_ms_median": 228.4,
+   "late_chunks": 0
+  },
+  "VC-002": {
+   "arm": "ARM-AUDIT",
+   "n": 25,
+   "failures": {
+    "drop_lift": 1
+   },
+   "near_miss_trials": [],
+   "infer_ms_mean": 34.328,
+   "infer_ms_range": [
+    33.2,
+    34.9
+   ],
+   "step_max_ms_median": 199.7,
+   "late_chunks": 0
+  },
+  "VC-005": {
+   "arm": "ARM-LOW",
+   "n": 15,
+   "failures": {
+    "drop_place": 1
+   },
+   "near_miss_trials": [
+    192
+   ],
+   "infer_ms_mean": 34.513333333333335,
+   "infer_ms_range": [
+    34.3,
+    34.8
+   ],
+   "step_max_ms_median": 189.5,
+   "late_chunks": 0
+  },
+  "VC-007": {
+   "arm": "ARM-LOW",
+   "n": 15,
+   "failures": {},
+   "near_miss_trials": [
+    224
+   ],
+   "infer_ms_mean": 34.56666666666667,
+   "infer_ms_range": [
+    34.2,
+    35.2
+   ],
+   "step_max_ms_median": 189.8,
+   "late_chunks": 0
+  },
+  "VC-010": {
+   "arm": "ARM-AUDIT",
+   "n": 25,
+   "failures": {},
+   "near_miss_trials": [],
+   "infer_ms_mean": 34.34,
+   "infer_ms_range": [
+    34.0,
+    35.0
+   ],
+   "step_max_ms_median": 180.2,
+   "late_chunks": 0
+  },
+  "VC-011": {
+   "arm": "ARM-RANDOM",
+   "n": 25,
+   "failures": {
+    "miss": 1
+   },
+   "near_miss_trials": [],
+   "infer_ms_mean": 34.587999999999994,
+   "infer_ms_range": [
+    34.2,
+    35.8
+   ],
+   "step_max_ms_median": 197.8,
+   "late_chunks": 0
+  },
+  "VC-012": {
+   "arm": "ARM-RANDOM",
+   "n": 25,
+   "failures": {
+    "knock_over_withdraw": 1
+   },
+   "near_miss_trials": [
+    205,
+    209
+   ],
+   "infer_ms_mean": 34.31999999999999,
+   "infer_ms_range": [
+    33.7,
+    34.8
+   ],
+   "step_max_ms_median": 182.6,
+   "late_chunks": 0
+  },
+  "VC-015": {
+   "arm": "ARM-RANDOM",
+   "n": 25,
+   "failures": {},
+   "near_miss_trials": [
+    182
+   ],
+   "infer_ms_mean": 34.592000000000006,
+   "infer_ms_range": [
+    34.1,
+    35.1
+   ],
+   "step_max_ms_median": 190.3,
+   "late_chunks": 0
+  },
+  "VC-020": {
+   "arm": "ARM-AUDIT",
+   "n": 25,
+   "failures": {
+    "knock_over_withdraw": 1
+   },
+   "near_miss_trials": [],
+   "infer_ms_mean": 34.256,
+   "infer_ms_range": [
+    33.6,
+    34.8
+   ],
+   "step_max_ms_median": 188.9,
+   "late_chunks": 0
+  },
+  "VC-022": {
+   "arm": "ARM-CHEAP",
+   "n": 10,
+   "failures": {},
+   "near_miss_trials": [
+    153
+   ],
+   "infer_ms_mean": 34.32,
+   "infer_ms_range": [
+    33.8,
+    35.0
+   ],
+   "step_max_ms_median": 183.6,
+   "late_chunks": 0
+  },
+  "VC-024": {
+   "arm": "ARM-CHEAP",
+   "n": 10,
+   "failures": {
+    "drop_place": 1
+   },
+   "near_miss_trials": [],
+   "infer_ms_mean": 34.14,
+   "infer_ms_range": [
+    33.9,
+    34.6
+   ],
+   "step_max_ms_median": 172.5,
+   "late_chunks": 0
+  }
+ },
+ "EX-3": {
+  "main": {
+   "trials_with_d4": 195,
+   "trials_with_any_non_continue": 0,
+   "failures": [
+    49,
+    163,
+    178,
+    179,
+    180,
+    186,
+    188
+   ],
+   "failures_flagged": [],
+   "verdicts_total": 21186,
+   "errors_total": 501,
+   "latency_median_of_trial_medians_ms": 351.5908718109131
+  },
+  "retest": {
+   "trials_with_d4": 20,
+   "trials_with_any_non_continue": 0,
+   "failures": [],
+   "failures_flagged": [],
+   "verdicts_total": 2279,
+   "errors_total": 4,
+   "latency_median_of_trial_medians_ms": 356.78720474243164
+  }
+ }
+}

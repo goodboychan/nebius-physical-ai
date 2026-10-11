@@ -580,3 +580,31 @@ ACT는 상태마다 100스텝을 내고 실기에서 100스텝을 모두 실행�
   데모 120 → 학습 → 25셀 → 감사 → 실기를 새로 하는 별도 연구이며, 시작 전에 따로 사전등록한다
 - 서비스 계정 키 교체: 제출 직후(10/30) — 사용자 결정. 그전까지 저장소에 키가 없는지 제출 전 점검에서 확인
 - 도시 행사 날짜: 미정
+
+---
+
+## 2026-10-11 — RETEST 완료, LOCK-3, 봉인 해제와 G6 분석
+
+- **RETEST** (`ARM-RETEST`, 다른 날): 20/20 성공, 무효 0, 중단 0. D4 shadow 응답 중앙값 약 356 ms
+- **LOCK-3** `artifacts/freeze/lock3.json` (커밋 `4f6626c`, 분석 전 push). 봉인 로그 해시: main `f2d9c9fa…`(10/10 고정값과 일치),
+  retest `f4079b1a…`. 분석 스크립트 `g6_analysis.py` sha `eff9f7c7…`
+- 봉인 해제: `artifacts/trials/g6_unsealed/`(main·retest 봉인 로그, 순서표 `g6_sealed.json` sha `3a1c6fed…` 일치)
+- 결과: `artifacts/reports/g6_analysis.json`(사전등록 스크립트), `artifacts/reports/g6_supplement.json`(아래 보충)
+- **보충 분석 공개**: `g6_analysis.py`에 사전등록 항목 넷이 빠져 있었다 — §7.5 Holm 보정, ES-3 부분 커버리지 표시, EX-1 실패 유형,
+  EX-2 셀별 지연, EX-3 D4 판정. 봉인 해제 **후** `scripts/g6_supplement.py`로 따로 계산했다. `g6_analysis.py`의 숫자는 하나도 바꾸지 않는다.
+  보충 항목은 모두 기술 통계이거나 보정(결론 방향을 바꿀 수 없는 p값 상향)이다
+- 주요 수치(보고서에서 그대로):
+  - EP-1 AUDIT 73/75 vs RANDOM 73/75, 차이 0.0, Newcombe 95% [−6.8, +6.8] pp → 격차를 검출하지 못했다
+  - ES-1 대조 불성립(score_align과 score_mag 상위 3셀 동일) — §7.3에 따른 유효한 음성 결과
+  - ES-2 +1.8 pp [−5.5, +12.3]; ES-3 −0.7 pp [−7.4, +8.0] (**부분**: VC-004 미실행, LOCK-2에 고지); Holm 보정 p 모두 1.0
+  - ES-4 AUDIT 73/75 vs LOW 29/30, +0.7 pp [−6.4, +14.1]
+  - ES-5 VC-002 main 24/25 vs retest 20/20, −4.0 pp [−19.5, +12.4] — 노이즈 바닥의 CI가 EP-1 CI보다 넓다
+  - FP32(VC-000) 24/25. K2 규칙: 발동(최종 데이터에서도 동일)
+  - AEP Q1: E1 천장 규칙 적용 → indeterminate; E2 열화 −0.84 px, 97.5% CI [−2.53, +0.88] → tolerance_compatible; **반증되지 않음**
+  - AEP Q2: INT8 10셀 vs FP32 — E1 tolerance_compatible 4 / indeterminate 6, E2 tolerance_compatible 8 / indeterminate 2,
+    materially_degraded 0
+  - AEP Q3 / EX-4 Spearman(순위 vs 셀 평균 배치 오차): score_mag 0.08 (perm p 0.83), score_align 0.02 (0.97)
+  - EX-2 INT8 셀 추론 평균 34.1–34.6 ms, FP32 79.0 ms; 늦은 chunk 0
+  - EX-3 D4: main 195 trial(앞 30회는 D4 배치 전)·retest 20 trial에서 CONTINUE 외 판정 0, 실패 7건 중 감지 0
+- 결론 문장(§7.2 약정): "이 체제(단일 과제·체크포인트·Orin TensorRT INT8)에서 캘리브레이션 선택만 다른 INT8 변형들 사이,
+  그리고 INT8과 FP32 사이에 성공률 격차를 검출하지 못했다. 오프라인 점수의 순위는 실기 배치 오차와 상관이 없었다."
