@@ -13,6 +13,8 @@
 - 판정: scripts/judge_success.py의 judge()(목표 영역 안·서 있음·정지) + 조작자 입력(놓음, 사람 개입) — 셋 다 만족해야 성공
 사용: so101_trial.py <session 이름> <cell 코드> <엔진> [trial 수]
       so101_trial.py --blind <main|retest>   (G6: 봉인 순서표를 따른다, IG-4·IG-5)
+      so101_trial.py --blind <S1|S4>         (스트레스 시험, docs/stress_test_protocol.md: 새 봉인 순서표 ~/.edgeqgate_sealed/stress/,
+                                              S4는 시험 전에 잰 캔 판정 값 stress_can_S4.json, trial 끝에 Cosmos에게 판정 질문 1회 — 기술 통계용)
 블라인드 모드: 셀↔토큰 대응과 순서는 ~/.edgeqgate_sealed/에만 있다. 화면과 공개 로그에는 trial 번호만 남고, 셀·arm은 봉인 로그에만
 쓴다. 중간에 끝내도 다음 실행이 다음 trial부터 잇는다. 무효(시작 조건 실수 등)로 표시한 trial은 같은 번호로 다시 한다."""
 import json, os, queue, socket, struct, subprocess, sys, threading, time
@@ -30,41 +32,50 @@ from edgeqgate.supervisor import Supervisor, SupervisorConfig
 # D4 Cosmos-Reason2 감독자 — **관찰 모드**(판정을 기록만 하고 팔에 개입하지 않는다, decision_log 2026-10-08).
 # 엔드포인트 설정이 없거나 응답이 없으면 감독 없이 진행하고 그 사실을 기록한다.
 D4_CFG = os.path.expanduser("~/.config/edgeqgate/cosmos_endpoint.json")
-D4_PROMPT = ("Overhead camera view of a robot arm that picks up a cola can and stands it upright on a round coaster. "
+STRESS = len(sys.argv) > 2 and sys.argv[1] == "--blind" and sys.argv[2] in ("S1", "S4")
+D4_PROMPT = ("Overhead camera view of a robot arm that picks up a " + ("can" if STRESS else "cola can") + " and stands it upright on a round coaster. "
              "Answer with exactly one word: CONTINUE if the task is proceeding normally, FALLBACK if the arm looks stuck or "
              "confused, ABORT if something is unsafe (the can falling off the table, the arm hitting something, a human hand "
              "in the workspace).")
-latest_top = {"img": None}
+D4_JUDGE_PROMPT = ("Overhead camera view after a robot arm tried to stand a can upright on a round coaster. "
+                   "Is the can standing upright on the coaster now? Answer with exactly one word: YES or NO.")
+latest_top = {"img": None}; d4_ask = {"f": None}
 def make_d4():
     if not os.path.exists(D4_CFG): return None
     import base64, http.client, urllib.parse
     cfg = json.load(open(D4_CFG)); u = urllib.parse.urlparse(cfg["url"])
     hdr = {"Authorization": "Bearer " + open(os.path.expanduser(cfg["token_file"])).read().strip(), "Content-Type": "application/json"}
     conn = {"c": http.client.HTTPSConnection(u.netloc, timeout=10)}
-    def infer(img):
+    def infer(img, prompt=D4_PROMPT):
         if img is None: return ""
         ok, jpg = cv2.imencode(".jpg", cv2.cvtColor(img, cv2.COLOR_RGB2BGR), [cv2.IMWRITE_JPEG_QUALITY, 85])
         body = json.dumps({"model": "nvidia/Cosmos-Reason2-2B", "max_tokens": 8, "temperature": 0, "messages": [{"role": "user", "content": [
             {"type": "image_url", "image_url": {"url": "data:image/jpeg;base64," + base64.b64encode(jpg.tobytes()).decode()}},
-            {"type": "text", "text": D4_PROMPT}]}]})
+            {"type": "text", "text": prompt}]}]})
         try:
             conn["c"].request("POST", "/v1/chat/completions", body=body, headers=hdr); r = conn["c"].getresponse(); d = json.loads(r.read())
         except Exception:
             conn["c"] = http.client.HTTPSConnection(u.netloc, timeout=10); raise
         return d["choices"][0]["message"]["content"]
+    d4_ask["f"] = infer
     return lambda: Supervisor(infer, lambda: latest_top["img"], SupervisorConfig(rate_hz=2.0))
 
 BLIND = sys.argv[1] == "--blind"
 SEALED = os.path.expanduser("~/.edgeqgate_sealed")
 if BLIND:
-    bsession = sys.argv[2]; assert bsession in ("main", "retest")
-    sealed = json.load(open(f"{SEALED}/g6_sealed.json")); plan = sealed[bsession]
-    session, cell = f"g6_{bsession}", "BLIND"
+    bsession = sys.argv[2]; assert bsession in ("main", "retest", "S1", "S4")
+    if STRESS: SEALED += "/stress"
+    sealed = json.load(open(f"{SEALED}/{'stress' if STRESS else 'g6'}_sealed.json")); plan = sealed[bsession]
+    session, cell = f"{'stress' if STRESS else 'g6'}_{bsession}", "BLIND"
     engine_of = lambda tok: f"{SEALED}/engines/{tok}.engine"
-    pub = json.load(open(f"{SEALED}/g6_schedule_public.json"))[bsession]
+    pub = json.load(open(f"{SEALED}/{'stress' if STRESS else 'g6'}_schedule_public.json"))[bsession]
     engine = engine_of(pub[0]["engine_token"])
 else:
     session, cell, engine = sys.argv[1:4]; N = int(sys.argv[4]) if len(sys.argv) > 4 else 1
+CAN = None   # S4: 시험 전에 잰 노란 캔 판정 값(so101_can_calib.py). 그 밖에는 success_criterion §3 잠금 값
+if BLIND and bsession == "S4":
+    CAN = json.load(open(os.path.join(HERE, "stress_can_S4.json")))
+START = {"S1": "캔을 **3cm 옮긴** 시작 표시(S1)에 세우고", "S4": "**노란 캔**을 원래 시작 표시에 세우고"}.get(sys.argv[2] if BLIND else "", "캔을 시작 표시에 세우고")
 FPS, T_MAX, N_ACT = 30, 60.0, 100
 PREF, BLEND = 10, 4  # chunk가 10스텝 남으면 다음 chunk를 요청, 마지막 4스텝 동안 이전·새 chunk를 섞어 넘어간다(2026-10-07)
 NAMES = ["shoulder_pan", "shoulder_lift", "elbow_flex", "wrist_flex", "wrist_roll", "gripper"]
@@ -139,7 +150,7 @@ seq = 0
 closers = []
 def run_one(tid, label, cellname, engname):
     go_home()
-    input(f"\n{label}: 캔을 시작 표시에 세우고 손을 화면 밖으로 뺀 뒤 엔터 > ")
+    input(f"\n{label}: {START} 손을 화면 밖으로 뺀 뒤 엔터 > ")
     wtop, wwr = Writer(f"{OUT}/{tid}_top.mp4", 640, 480), Writer(f"{OUT}/{tid}_wrist.mp4", 320, 200)
     aq, states, actions, inf_ms, last_top, tick, rtt, late = [], [], [], [], [], [], [], 0
     pf = Prefetch(); newc = None; k0 = 0
@@ -183,7 +194,13 @@ def run_one(tid, label, cellname, engname):
     # 영상 마무리(남은 압축·파일 닫기)는 판정과 무관하므로 백그라운드에서 한다. 프로그램 끝에서 모두 기다린다
     closers.append(threading.Thread(target=lambda w=(wtop, wwr): [x.close() for x in w])); closers[-1].start()
     S = np.stack(states); A = np.stack(actions)
-    j = judge(last_top, float(S[-1, 5])) if not aborted else {"success": False, "reason": "unsafe(operator abort)"}
+    j = judge(last_top, float(S[-1, 5]), CAN) if not aborted else {"success": False, "reason": "unsafe(operator abort)"}
+    ai = None   # 스트레스: trial 끝 프레임으로 Cosmos에게 한 번 묻는다(기술 통계, 판정에 쓰지 않는다)
+    if STRESS and d4_ask["f"] and not aborted:
+        t_a = time.perf_counter()
+        try: ai = {"answer": d4_ask["f"](latest_top["img"], D4_JUDGE_PROMPT).strip(), "error": None}
+        except Exception as e: ai = {"answer": None, "error": type(e).__name__}
+        ai["latency_ms"] = round((time.perf_counter() - t_a) * 1000, 1)
     # '놓음'은 자동 판정하지 않는다(success_criterion §3). 조작자가 마지막 상태를 보고 답한다
     rel = None
     while rel not in ("y", "n"):
@@ -199,6 +216,7 @@ def run_one(tid, label, cellname, engname):
            "duration_s": round(t_loop, 2), "steps": len(S), "judge_auto": j,
            "released": rel == "y", "human_contact": touch == "y", "success": final,
            "infer_ms_mean": round(float(np.mean(inf_ms)), 1), "n_infer": len(inf_ms), "d4": d4}
+    if STRESS: rec["condition"] = bsession; rec["d4_judge"] = ai
     np.savez(f"{SEALED if BLIND else OUT}/{tid}_traj.npz", state=S, action=A, infer_ms=np.array(inf_ms), tick_s=np.array(tick), rtt_ms=np.array(rtt))
     rec["rtt_ms_max"] = round(float(max(rtt)), 1); rec["late_chunks"] = late   # late > 0: 섞기 시작까지 결과가 오지 않은 chunk 수
     dt = np.diff(np.array(tick)) * 1000
@@ -220,13 +238,14 @@ else:
     pub_log = f"{OUT}/trials.jsonl"
     done = {json.loads(l)["trial"] for l in open(pub_log)} if os.path.exists(pub_log) else set()
     todo = [r for r in pub if r["trial"] not in done]
-    print(f"\nG6 {bsession}: 남은 trial {len(todo)} / {len(pub)}")
+    tag = "스트레스" if STRESS else "G6"
+    print(f"\n{tag} {bsession}: 남은 trial {len(todo)} / {len(pub)}")
     for r in todo:
         tok = r["engine_token"]; start_server(engine_of(tok))
         cs = next(x for x in plan if x["trial"] == r["trial"])
         tid = f"{bsession}{r['trial']:03d}_{time.strftime('%m%d_%H%M%S')}"
-        out = run_one(tid, f"[G6 {bsession} trial {r['trial']}/{len(pub)}]", "SEALED", tok); rec = out[0]
-        sealed_rec = dict(rec, cell=cs["cell"], arm=cs["arm"], trial=r["trial"])
+        out = run_one(tid, f"[{tag} {bsession} trial {r['trial']}/{len(pub)}]", "SEALED", tok); rec = out[0]
+        sealed_rec = dict(rec, cell=cs["cell"], arm=cs.get("arm", "STRESS"), trial=r["trial"])
         rec = {k: v for k, v in rec.items() if k not in ("infer_ms_mean", "rtt_ms_max", "n_infer")}   # 공개 로그에서 지연 제외
         rec["trial"] = r["trial"]
         with open(f"{SEALED}/{session}_sealed.jsonl", "a") as f: f.write(json.dumps(sealed_rec) + "\n")

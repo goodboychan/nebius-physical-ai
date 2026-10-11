@@ -16,13 +16,14 @@ COASTER_XY = (395.0, 377.0); COASTER_R = 35.0
 CAN_R_RANGE = (17, 28); CAN_TOP_TO_BASE = (0.0, 32.0)
 STILL_PX = 8.0; LAST_N = 15
 
-def can_top(gray):
+def can_top(gray, r_range=None, off=None):
+    r_range = r_range or CAN_R_RANGE; off = off or CAN_TOP_TO_BASE
     g = cv2.medianBlur(gray, 5)
     cs = cv2.HoughCircles(g, cv2.HOUGH_GRADIENT, dp=1.2, minDist=20, param1=100, param2=22,
-                          minRadius=CAN_R_RANGE[0], maxRadius=CAN_R_RANGE[1])
+                          minRadius=r_range[0], maxRadius=r_range[1])
     if cs is None: return None
     # 밝은(알루미늄) 원 중 '컵받침 가운데에 선 캔의 윗면 위치'에 가장 가까운 것. 가장 밝은 원을 고르면 흰 집게를 잡는다
-    ex, ey = COASTER_XY[0] - CAN_TOP_TO_BASE[0], COASTER_XY[1] - CAN_TOP_TO_BASE[1]
+    ex, ey = COASTER_XY[0] - off[0], COASTER_XY[1] - off[1]
     best = None
     for x, y, r in cs[0]:
         m = np.zeros_like(gray); cv2.circle(m, (int(x), int(y)), int(r * 0.7), 255, -1)
@@ -30,12 +31,14 @@ def can_top(gray):
         if b > 90 and dist <= 150 and (best is None or dist < best[3]): best = (float(x), float(y), float(r), dist)
     return best
 
-def judge(frames_gray, grip_last):
-    tops = [can_top(g) for g in frames_gray]
+def judge(frames_gray, grip_last, can=None):
+    """can: 다른 캔의 판정 값 {"r_range": [lo, hi], "top_to_base": [dx, dy]} (스트레스 S4, 시험 전에 잰 값). 없으면 §3 잠금 값"""
+    r_range = tuple(can["r_range"]) if can else CAN_R_RANGE; off = tuple(can["top_to_base"]) if can else CAN_TOP_TO_BASE
+    tops = [can_top(g, r_range, off) for g in frames_gray]
     if any(t is None for t in tops):
         return {"success": False, "reason": "can_top_not_found(fallen_or_occluded)"}
     xy = np.array([(t[0], t[1]) for t in tops]); med = np.median(xy, axis=0); move = float(np.linalg.norm(xy - med, axis=1).max())  # 원 검출 흔들림(3–6px)을 감안해 중앙값 기준
-    bx, by = med[0] + CAN_TOP_TO_BASE[0], med[1] + CAN_TOP_TO_BASE[1]
+    bx, by = med[0] + off[0], med[1] + off[1]
     dist = float(np.hypot(bx - COASTER_XY[0], by - COASTER_XY[1]))
     inside, still = dist <= COASTER_R, move <= STILL_PX
     ok = inside and still

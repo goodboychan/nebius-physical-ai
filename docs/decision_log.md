@@ -608,3 +608,15 @@ ACT는 상태마다 100스텝을 내고 실기에서 100스텝을 모두 실행�
   - EX-3 D4: main 195 trial(앞 30회는 D4 배치 전)·retest 20 trial에서 CONTINUE 외 판정 0, 실패 7건 중 감지 0
 - 결론 문장(§7.2 약정): "이 체제(단일 과제·체크포인트·Orin TensorRT INT8)에서 캘리브레이션 선택만 다른 INT8 변형들 사이,
   그리고 INT8과 FP32 사이에 성공률 격차를 검출하지 못했다. 오프라인 점수의 순위는 실기 배치 오차와 상관이 없었다."
+
+---
+
+## 2026-10-11 — 스트레스 시험 프로토콜 v1 잠금 (첫 스트레스 trial 전)
+
+- 사용자 결정: VC-020 추가(4셀), 조건당 셀마다 12 trial(총 96), trial 끝 Cosmos 판정 질문 포함(기술 통계, 판정에 안 씀)
+- `docs/stress_test_protocol.md` sha256 `93d55538114ff6dd41d2e21df4a7d2809bc9a5de6284b0012e871232a3b1e0c6` (초안 `stress_test_protocol_draft.md`에서 이름 변경)
+- 분석 `scripts/stress_analysis.py` `9b3d1084…`, 순서표 `scripts/stress_schedule.py` `a361bd21…`, 봉인 순서표 `9549b96b…`
+  (블록 순서 S1 → S4), 공개 순서표 `artifacts/stress/stress_schedule_public.json` `e98721cb…`
+- 실행기 `so101_trial.py` `6731a3f6…`(`--blind S1|S4` 추가, G6 경로 동작 불변), 판정기 `judge_success.py` `10dc5edf…`
+  (캔 값 인자 추가, 기본값 = §3 잠금 값; G6 RETEST 영상에서 기본값·명시값 결과 동일 확인), S4 캔 측정 `so101_can_calib.py` `d5fbc351…`
+- 새 익명 토큰을 만들었다(G6 토큰↔셀 대응은 봉인 해제로 공개됨). 엔진은 G6 파일을 하드링크했다
