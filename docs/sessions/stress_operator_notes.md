@@ -30,3 +30,5 @@ Gripper anti-slip pads are removed for the whole stress session (protocol §7).
 - S1 v2 trials 1–2: failures. Operator: the gripper first reaches for the **training start position** (as in S0),
   misses, then re-positions toward the shifted can and tries to grasp again. Both trials ended with the can not
   standing (live judge: can top not found)
+- S1 v2 trial 1 detail: the first grasp closed on empty air at the training position. On the re-grasp attempt the
+  gripper hit the can and knocked it over
