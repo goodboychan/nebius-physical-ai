@@ -1,0 +1,33 @@
+{
+  "schema": "edgeqgate.lock3.v1",
+  "frozen_at": "2026-10-11T02:39:29+00:00",
+  "git_commit": "c1856ef530b3dfbdc73d7ec31c2ba4e984226a41",
+  "spec_section": "preregistration §8 LOCK-3: all G6 trials complete, before the first statistical analysis run",
+  "lock2_file_sha256": "70bf7e9b2cdaf9b580a17ca934a99f471be1948daa6c9beeb66d732ef26955c9",
+  "schedule_seal_sha256": "3a1c6fed8e4f37e4d5ac0417ac60b3fc753fc7bb8df378200de62614f915b438",
+  "schedule_public_sha256": "244b2d310e53bf350042ee4ecaa90b284cf4be3a27b4a3f506cd331f35f72823",
+  "sealed_logs": {
+    "g6_main_sealed.jsonl": {
+      "sha256": "f2d9c9fa850c1495d3390ce9984f08818493422501aa8533e6b44005e8c2b9a1",
+      "trials": 225,
+      "date": "2026-10-08..10"
+    },
+    "g6_retest_sealed.jsonl": {
+      "sha256": "f4079b1aa3e4270497d2db3281f17aba0779fbae2082d06dba21705030e409b7",
+      "trials": 20,
+      "date": "2026-10-11"
+    }
+  },
+  "analysis_script": {
+    "path": "scripts/g6_analysis.py",
+    "sha256": "eff9f7c70d8681ff5d4f19185019800d320f5d05770c9798b4125ac52c0fea1c",
+    "last_commit": "0c4170cd54d6f7e493b597fbe5abdfc499d1cede"
+  },
+  "aep_registration": {
+    "path": "docs/aep_physical_registration_v1.md",
+    "sha256_prefix": "779112e1"
+  },
+  "results_seen_before_lock": "operator-side public outcomes only (success/judge per trial number, no cell or latency); K2 interim fired/not-fired only (decision_log 2026-10-10)",
+  "notes": "RETEST 20/20 success, 0 invalid, 0 aborted (public log). Sealed logs not opened before this record.",
+  "record_hash": "0928e8606fa61b4a33a55f61540094edc7854b5ebf48964d8eaa4875f8575228"
+}
