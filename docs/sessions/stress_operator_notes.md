@@ -15,3 +15,8 @@ Gripper anti-slip pads are removed for the whole stress session (protocol §7).
 - Cosmos end-of-trial answer: "Yes" on every trial up to 15, first "NO" on trial 16 (a failure)
 - S0 trials 17–24 done. Final public tally S0 **8/24**. The stop rule fired, so stress v1 ends here
 - Next (v2): rubber bands on the gripper fingers to raise friction
+
+## 2026-10-11/12 — v2 (rubber bands on the gripper)
+
+- S0 trials 1–6: the can was standing on the coaster in every trial, but the live screen showed failures for 3, 5 and
+  6. This was a judge artifact (protocol §9); the offline re-judge gives 6/6

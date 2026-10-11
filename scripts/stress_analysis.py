@@ -30,9 +30,18 @@ TOL = {"E1": 10.0, "E2": 5.0}
 CONF_PRIMARY = 1 - 0.05 / 4; CONF_SECONDARY = 1 - 0.05 / 12
 
 
+REJ = {}   # v2 (protocol §9): {trial_id: offline re-judge}, replaces the live geometric judge for every v2 trial
+
+
 def load(path):
     if not os.path.exists(path): return []
-    return [r for r in (json.loads(l) for l in open(path)) if not r.get("invalid")]
+    rows = [r for r in (json.loads(l) for l in open(path)) if not r.get("invalid")]
+    for r in rows:
+        if REJ and r["trial_id"] in REJ:
+            j = REJ[r["trial_id"]]; r["judge_live"] = r["judge_auto"]
+            r["judge_auto"] = {"success": j["success_geom"], "reason": j["reason"], "base_dist_px": j.get("base_dist_px")}
+            r["success"] = bool(j["success_geom"]) and r["released"] and not r["human_contact"] and not r["aborted"]
+    return rows
 
 
 def cells_of(rows):
@@ -121,12 +130,16 @@ if __name__ == "__main__":
     ap = argparse.ArgumentParser(); ap.add_argument("--sealed-dir"); ap.add_argument("--out")
     ap.add_argument("--synthetic", action="store_true"); ap.add_argument("--n-boot", type=int, default=10000)
     ap.add_argument("--version", default="v1", choices=["v1", "v2"])   # v2: rubber-band gripper (protocol §8), same analysis
+    ap.add_argument("--rejudge", nargs="*", default=[])   # v2: stress_rejudge.py outputs (protocol §9); required for v2
     a = ap.parse_args()
     if a.synthetic:
         st, nom = synthetic(); rep = analyse(st, nom, a.n_boot); rep["SYNTHETIC"] = True
     else:
         post = "artifacts/freeze/" + ("stress_v2_post.json" if a.version == "v2" else "stress_lock_post.json")
         pre = "stress_v2_" if a.version == "v2" else "stress_"
+        if a.version == "v2":
+            if not a.rejudge: sys.exit("v2는 --rejudge(오프라인 재판정 결과)가 필요하다 (프로토콜 §9)")
+            for f in a.rejudge: REJ.update(json.load(open(f)))
         if not os.path.exists(post):
             sys.exit("stress_lock_post.json이 없다. 스트레스 trial을 모두 마치고 봉인 로그 해시를 고정한 뒤 실행한다")
         st = {c: load(os.path.join(a.sealed_dir, f"{pre}{c}_sealed.jsonl")) for c in CONDS + ("S0",)}

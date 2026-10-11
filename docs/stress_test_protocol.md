@@ -160,3 +160,23 @@ changes: cells, engines, runtime, success criterion, S1 mark, S4 can, and the Co
 - After the last v2 trial, the v2 sealed logs are hashed into `artifacts/freeze/stress_v2_post.json`. Only then are
   both v1 and v2 opened.
 - v1 is reported as a separate descriptive result: no pads, S0 only, plus 1 S1 trial.
+
+## 9. Amendment v2-1 (2026-10-12, during v2 S0 after trial 6, blind to cells)
+
+- **Finding**: the operator reported that every v2 trial judged a failure so far (S0 3, 5, 6) had the can standing on
+  the coaster. The last overhead frames confirm it. The live judge's stillness test failed these trials because the
+  circle detector jumped to a wrong circle in 1–2 of the last 15 frames. With the rubber bands, the can sits about
+  20 px off center (inside the 35 px target; about 6 px in G6). A bright circle on the coaster rim or logo then
+  competes with the can top. The jump is sensitive to tiny frame differences: it can be reproduced from the video with
+  the runner's RGB → gray path but not with direct luma decoding.
+- **Rule for v2**: every v2 trial is judged offline from its saved overhead video by `scripts/stress_rejudge.py`.
+  - The locked geometry is unchanged.
+  - Stillness allows ≤ 3 of 15 frames more than 8 px from the median.
+  - Success = this geometric judge ∧ released ∧ no human contact ∧ not aborted.
+  - The live judge is kept in the log and reported as a sensitivity analysis.
+  - The S0 stop rule uses the re-judged outcome.
+  - `stress_analysis.py --version v2 --rejudge …` applies the rule.
+- **Checked before adoption** (offline, every G6 video): the rule changes no G6 outcome. The strict rule re-run offline
+  fails G6 main 52, a live success; the new rule passes it. The rule was chosen from the operator's report and the
+  frames, without any cell information. It is applied identically to every v2 trial. The live screen will keep showing
+  the strict live verdict.
