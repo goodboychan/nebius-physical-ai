@@ -32,3 +32,4 @@ Gripper anti-slip pads are removed for the whole stress session (protocol §7).
   standing (live judge: can top not found)
 - S1 v2 trial 1 detail: the first grasp closed on empty air at the training position. On the re-grasp attempt the
   gripper hit the can and knocked it over
+- S1 v2 stopped by the user after trial 2 (decision_log 2026-10-12). Next: S4 can measurement, then S4
