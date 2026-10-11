@@ -13,7 +13,7 @@
 - 판정: scripts/judge_success.py의 judge()(목표 영역 안·서 있음·정지) + 조작자 입력(놓음, 사람 개입) — 셋 다 만족해야 성공
 사용: so101_trial.py <session 이름> <cell 코드> <엔진> [trial 수]
       so101_trial.py --blind <main|retest>   (G6: 봉인 순서표를 따른다, IG-4·IG-5)
-      so101_trial.py --blind <S0|S1|S4>      (스트레스 시험, S0 = 패드 없는 정상 조건 기준, docs/stress_test_protocol.md: 새 봉인 순서표 ~/.edgeqgate_sealed/stress/,
+      so101_trial.py --blind <S0|S1|S4> [v2] (스트레스 시험, v2 = 고무줄 그리퍼 §8, S0 = 패드 없는 정상 조건 기준, docs/stress_test_protocol.md: 새 봉인 순서표 ~/.edgeqgate_sealed/stress/,
                                               S4는 시험 전에 잰 캔 판정 값 stress_can_S4.json, trial 끝에 Cosmos에게 판정 질문 1회 — 기술 통계용)
 블라인드 모드: 셀↔토큰 대응과 순서는 ~/.edgeqgate_sealed/에만 있다. 화면과 공개 로그에는 trial 번호만 남고, 셀·arm은 봉인 로그에만
 쓴다. 중간에 끝내도 다음 실행이 다음 trial부터 잇는다. 무효(시작 조건 실수 등)로 표시한 trial은 같은 번호로 다시 한다."""
@@ -64,9 +64,10 @@ BLIND = sys.argv[1] == "--blind"
 SEALED = os.path.expanduser("~/.edgeqgate_sealed")
 if BLIND:
     bsession = sys.argv[2]; assert bsession in ("main", "retest", "S0", "S1", "S4")
-    if STRESS: SEALED += "/stress"
+    SV = sys.argv[3] if STRESS and len(sys.argv) > 3 else "v1"; assert SV in ("v1", "v2")   # v2: 고무줄 그리퍼(프로토콜 §8)
+    if STRESS: SEALED += "/stress" + ("_v2" if SV == "v2" else "")
     sealed = json.load(open(f"{SEALED}/{'stress' if STRESS else 'g6'}_sealed.json")); plan = sealed[bsession]
-    session, cell = f"{'stress' if STRESS else 'g6'}_{bsession}", "BLIND"
+    session, cell = f"{'stress' + ('_v2' if SV == 'v2' else '') if STRESS else 'g6'}_{bsession}", "BLIND"
     engine_of = lambda tok: f"{SEALED}/engines/{tok}.engine"
     pub = json.load(open(f"{SEALED}/{'stress' if STRESS else 'g6'}_schedule_public.json"))[bsession]
     engine = engine_of(pub[0]["engine_token"])

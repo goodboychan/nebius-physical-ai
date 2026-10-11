@@ -120,13 +120,16 @@ def synthetic():
 if __name__ == "__main__":
     ap = argparse.ArgumentParser(); ap.add_argument("--sealed-dir"); ap.add_argument("--out")
     ap.add_argument("--synthetic", action="store_true"); ap.add_argument("--n-boot", type=int, default=10000)
+    ap.add_argument("--version", default="v1", choices=["v1", "v2"])   # v2: rubber-band gripper (protocol §8), same analysis
     a = ap.parse_args()
     if a.synthetic:
         st, nom = synthetic(); rep = analyse(st, nom, a.n_boot); rep["SYNTHETIC"] = True
     else:
-        if not os.path.exists("artifacts/freeze/stress_lock_post.json"):
+        post = "artifacts/freeze/" + ("stress_v2_post.json" if a.version == "v2" else "stress_lock_post.json")
+        pre = "stress_v2_" if a.version == "v2" else "stress_"
+        if not os.path.exists(post):
             sys.exit("stress_lock_post.json이 없다. 스트레스 trial을 모두 마치고 봉인 로그 해시를 고정한 뒤 실행한다")
-        st = {c: load(os.path.join(a.sealed_dir, f"stress_{c}_sealed.jsonl")) for c in CONDS + ("S0",)}
+        st = {c: load(os.path.join(a.sealed_dir, f"{pre}{c}_sealed.jsonl")) for c in CONDS + ("S0",)}
         rep = analyse(st, load("artifacts/trials/g6_unsealed/g6_main_sealed.jsonl"), a.n_boot)
     json.dump(rep, open(a.out, "w"), indent=1, default=lambda o: list(o) if isinstance(o, (set, tuple)) else str(o))
     print("written", a.out)

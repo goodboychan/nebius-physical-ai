@@ -1,0 +1,23 @@
+{
+  "schema": "edgeqgate.stress_v1_post.v1",
+  "frozen_at": "2026-10-11T14:31:28+00:00",
+  "git_commit": "928717241bc993ccb169337bb8d4792b56c05c87",
+  "status": "stress v1 terminated by the S0 stop rule (S0 8/24 < 12); S1 1 trial (run before S0), S4 not run",
+  "sealed_logs": {
+    "stress_S0_sealed.jsonl": {
+      "sha256": "5691a2da252814ceea858387c7257c663a36c41ea1520089747ab740778b5a5c",
+      "trials": 24
+    },
+    "stress_S1_sealed.jsonl": {
+      "sha256": "bfb422d6e67a8bce85cea885e999861efde3dbf005c5516424b8c6689009c223",
+      "trials": 1
+    }
+  },
+  "sealed_schedule_v2_sha256": "f3fd12e9023daee673a17279f441c0d19e6259482cc06dd04dc9883023b5db70",
+  "unseal_rule": "kept sealed until stress v2 is complete, so that per-cell v1 results cannot influence the v2 design or run",
+  "public_tally": {
+    "S0": "8/24",
+    "S1": "1/1"
+  },
+  "record_hash": "146d41da0dbd2b31da80adeccd825b2db6d9723b6525da2a4e233c977d421cb8"
+}

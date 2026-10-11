@@ -13,3 +13,5 @@ Gripper anti-slip pads are removed for the whole stress session (protocol §7).
 - S0 trials 6–16 (public tally after 16: 6 successes, 10 failures). Operator: **most failures are the can slipping out
   of the gripper**. Not every trial fails; successes still occur
 - Cosmos end-of-trial answer: "Yes" on every trial up to 15, first "NO" on trial 16 (a failure)
+- S0 trials 17–24 done. Final public tally S0 **8/24**. The stop rule fired, so stress v1 ends here
+- Next (v2): rubber bands on the gripper fingers to raise friction

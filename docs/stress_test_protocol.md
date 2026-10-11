@@ -126,3 +126,37 @@ the §7.2 wording ("not detected", never "no effect").
   - The stress-vs-nominal description now uses S0 as the same-hardware baseline (per cell, Newcombe 95%). G6 main is
     reported as a second reference, labeled as different hardware.
   - The S0 results are descriptive only. With n = 6 per cell they cannot support a decision.
+
+## 8. Stress test v2 — rubber-band gripper (2026-10-11, before any v2 trial)
+
+**Why v2.** v1 was stopped by the S0 rule. S0 (pads removed) gave 8/24 successes, below 12, so S1 and S4 were not run
+(S1 had 1 trial, run before S0). The operator saw that most failures were the can slipping out of the gripper.
+- The v1 sealed logs are hashed in `artifacts/freeze/stress_v1_post.json`: S0 `5691a2da…`, S1 `bfb422d6…`.
+- They **stay sealed until v2 is complete**, so that per-cell v1 results cannot shape v2. Only the public totals were
+  seen.
+- v2 is a new test designed after seeing those totals. That is stated here, not hidden.
+
+**Change.** The user puts rubber bands on the gripper fingers to raise friction. The pads stay off. Nothing else
+changes: cells, engines, runtime, success criterion, S1 mark, S4 can, and the Cosmos question.
+
+**Design.**
+- Blocks are fixed in the order **S0 → S1 → S4**, at 4 cells × 6, 12 and 12 trials = 120 trials.
+- New anonymous tokens and seed key `STRESS/schedule/v2` (`scripts/stress_schedule_v2.py`).
+- Sealed schedule `~/.edgeqgate_sealed/stress_v2/stress_sealed.json` sha256
+  `ddfa696e61f15953ad2b07e16df33f6ab1fc24ad6f1b4d783d94879e3d9328f4`; public copy
+  `artifacts/stress_v2/stress_schedule_public.json`.
+- Runner: `so101_trial.py --blind S0|S1|S4 v2`.
+
+**Rules.**
+- **S0 stop rule** (same as v1): if S0 has fewer than 12/24 successes in total, S1 and S4 are not run.
+- **Session checks**: the light and coaster checks are as before. The rubber bands can change how the gripper looks in
+  the wrist camera. If the wrist check then fails, the wrist reference may be re-saved **once**, after the bands are on
+  and before the first v2 trial. That reference is used for the whole of v2.
+- S4 can measurement: `so101_can_calib.py`, as in §4. This is done before the first S4 trial.
+
+**Analysis.**
+- `stress_analysis.py --version v2` runs the same primary and secondary comparisons and the same descriptive analysis as
+  §5 and §7. The v2 S0 is the same-hardware baseline.
+- After the last v2 trial, the v2 sealed logs are hashed into `artifacts/freeze/stress_v2_post.json`. Only then are
+  both v1 and v2 opened.
+- v1 is reported as a separate descriptive result: no pads, S0 only, plus 1 S1 trial.
