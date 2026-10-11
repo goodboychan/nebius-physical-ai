@@ -657,3 +657,11 @@ ACT는 상태마다 100스텝을 내고 실기에서 100스텝을 모두 실행�
 - v1 봉인 로그 해시 고정 `artifacts/freeze/stress_v1_post.json`, **v2가 끝날 때까지 봉인 유지**
 - 사용자 결정: v2는 그리퍼에 고무줄을 달아 마찰을 높인다. 프로토콜 §8(`803c1040…`), 봉인 순서표 `ddfa696e…`, 실행기 `6f0123e4…`(`v2` 인자),
   분석 `486912cc…`(`--version v2`), 순서표 스크립트 `stress_schedule_v2.py` `8cffbbac…`
+
+---
+
+## 2026-10-11 — Orin 엔진 전력·지연 측정 (탐색적, 로봇 정지 중)
+
+- `scripts/orin_power_bench.sh`, 결과 `artifacts/reports/power_bench/SUMMARY.md`(원시 로그 포함). nvpmodel 15W
+- GPU 연산 시간 중앙값: FP32 53.4 ms, **FP16 11.6 ms**, INT8 3셀 16.8–17.1 ms. 추론당 추가 에너지: FP32 403 mJ, **FP16 82 mJ**, INT8 101 mJ
+- 이 Orin·TRT 10.3에서 FP16이 지연·에너지 모두 최선. INT8 셀 간 비용 차이 없음
