@@ -21,4 +21,4 @@ Gripper anti-slip pads are removed for the whole stress session (protocol §7).
 - S0 trials 1–6: the can was standing on the coaster in every trial, but the live screen showed failures for 3, 5 and
   6. This was a judge artifact (protocol §9); the offline re-judge gives 6/6
 - S0 trial 7: success. S0 trial 8: live "moving" (judge artifact type, operator did not report a failure)
-- S0 trial 9: **real failure** (operator). Live judge: can top not found (fallen). Cosmos answered "No"
+- S0 trial 9: **real failure** (operator): dropped the can while carrying it. Live judge: can top not found (fallen). Cosmos answered "No"
