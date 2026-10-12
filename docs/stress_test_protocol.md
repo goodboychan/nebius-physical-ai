@@ -180,3 +180,21 @@ changes: cells, engines, runtime, success criterion, S1 mark, S4 can, and the Co
   fails G6 main 52, a live success; the new rule passes it. The rule was chosen from the operator's report and the
   frames, without any cell information. It is applied identically to every v2 trial. The live screen will keep showing
   the strict live verdict.
+
+## 10. Amendment v2-2 (2026-10-12, before any stress v2 outcome was unsealed; S4 paused at trial 11)
+
+- **Problem (external review, confirmed)**: the E1 (success) interval came from an unpaired percentile bootstrap. When
+  a group has 0 failures (for example 12/12), every resample is 100%, so the interval collapses and
+  "tolerance_compatible" is reached far too easily. G6 Q2 shows the effect: VC-007 15/15 against FP32 24/25 gave a
+  bootstrap interval of about [−20, 0] pp. The Newcombe interval at the same 99.75% level is [−32.3, +34.0] pp.
+- **Change** (`scripts/stress_analysis.py` `7d99864d…`, shared by `fp16_analysis.py`):
+  - The E1 decision uses the **Newcombe hybrid-score interval at the same confidence level**. The bootstrap E1
+    interval stays as a secondary field.
+  - E2 needs at least 5 placements per arm; otherwise it is indeterminate.
+  - Each comparison gets a verdict: **GO** (both endpoints tolerance_compatible), **NO-GO** (any materially_degraded)
+    or **INSUFFICIENT_EVIDENCE**.
+- **Consequence, stated now**: the change makes the decisions more conservative. With 12 against 12 trials,
+  `materially_degraded` on E1 now needs a drop of roughly 55–60 pp or more. Smaller drops read as indeterminate.
+  The S0 stop rule and the outcome rules are unchanged.
+- The stress v2 and FP16 sealed logs have not been opened. The public S4 tally seen so far is 11 trials with no
+  operator-reported failure.

@@ -59,3 +59,10 @@ informative endpoint. Results are reported as effect sizes and CIs.
 2. After the last trial, the sealed log `stress_fp16_F0_sealed.jsonl` is hashed into `artifacts/freeze/fp16_post.json`.
    Only then is it opened.
 3. If the session fails, the trials so far are reported as they are. Nothing is changed after outcomes have been seen.
+
+## 7. Amendment 1 (2026-10-12, before the first F0 trial)
+
+The E1 decision uses the Newcombe hybrid-score interval at 97.5%, the bootstrap is secondary, E2 needs at least 5
+placements per arm, and each comparison gets a verdict: GO, NO-GO or INSUFFICIENT_EVIDENCE. The analysis function is
+the same as in stress protocol §10 (`stress_analysis.py` `7d99864d…`). The reason is the bootstrap's collapse at 0
+failures.

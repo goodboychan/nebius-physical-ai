@@ -54,19 +54,36 @@ def cells_of(rows):
     return out
 
 
+MIN_PLACE = 5   # amendment 2 (§10): E2 needs at least this many placements per arm, else indeterminate
+
+
+def verdict(e1, e2):
+    """amendment 2 (§10): deployment verdict from the two endpoint decisions."""
+    if "materially_degraded" in (e1, e2): return "NO-GO"
+    if e1 == "tolerance_compatible" and e2 == "tolerance_compatible": return "GO"
+    return "INSUFFICIENT_EVIDENCE"
+
+
 def compare(a, b, key, conf, n_boot):
-    """Degradation of b relative to a (a is the reference): E1 = rate(a) - rate(b), E2 = place(b) - place(a)."""
-    e1 = boot_ci(a["s"], b["s"], np.mean, n_boot, key + "/E1", conf)
+    """Degradation of b relative to a (a is the reference): E1 = rate(a) - rate(b), E2 = place(b) - place(a).
+    Amendment 2 (§10), fixed before any stress v2 / FP16 outcome was unsealed: the E1 decision uses the Newcombe
+    hybrid-score interval at the same confidence (it stays wide at 0 or n failures, where the percentile bootstrap
+    collapses to a point). The bootstrap E1 interval is kept as a secondary field."""
+    from scipy.stats import norm
+    z = float(norm.ppf(1 - (1 - conf) / 2))
+    ka, na, kb, nb = int(sum(a["s"])), len(a["s"]), int(sum(b["s"])), len(b["s"])
+    nl, nh = newcombe(ka, na, kb, nb, z)
+    e1b = boot_ci(a["s"], b["s"], np.mean, n_boot, key + "/E1", conf)
     e2 = boot_ci(b["place"], a["place"], np.mean, n_boot, key + "/E2", conf)
-    ra, rb = np.mean(a["s"]), np.mean(b["s"]); ceiling = ra >= 0.95 and rb >= 0.95
-    res = {"ref_k_n": [int(sum(a["s"])), len(a["s"])], "test_k_n": [int(sum(b["s"])), len(b["s"])],
-           "E1": {"degradation_pp": e1[0] * 100, "ci_pp": [e1[1] * 100, e1[2] * 100],
-                  "decision": "indeterminate (ceiling)" if ceiling else aep_decision(e1[1] * 100, e1[2] * 100, TOL["E1"])},
-           "E2": {"degradation_px": e2[0], "ci_px": [e2[1], e2[2]], "n_place": [len(a["place"]), len(b["place"])],
-                  "decision": aep_decision(e2[1], e2[2], TOL["E2"]) if a["place"] and b["place"] else "indeterminate (no placements)"},
-           "newcombe95_pp": [x * 100 for x in newcombe(int(sum(a["s"])), len(a["s"]), int(sum(b["s"])), len(b["s"]))],
-           "ceiling_rule_applied": bool(ceiling), "conf": conf}
-    return res
+    ceiling = ka / na >= 0.95 and kb / nb >= 0.95
+    d1 = "indeterminate (ceiling)" if ceiling else aep_decision(nl * 100, nh * 100, TOL["E1"])
+    enough = len(a["place"]) >= MIN_PLACE and len(b["place"]) >= MIN_PLACE
+    d2 = aep_decision(e2[1], e2[2], TOL["E2"]) if enough else f"indeterminate (< {MIN_PLACE} placements)"
+    return {"ref_k_n": [ka, na], "test_k_n": [kb, nb],
+            "E1": {"degradation_pp": (ka / na - kb / nb) * 100, "ci_pp": [nl * 100, nh * 100], "method": "Newcombe hybrid score",
+                   "decision": d1, "bootstrap_ci_pp_secondary": [e1b[1] * 100, e1b[2] * 100]},
+            "E2": {"degradation_px": e2[0], "ci_px": [e2[1], e2[2]], "n_place": [len(a["place"]), len(b["place"])], "decision": d2},
+            "verdict": verdict(d1, d2), "ceiling_rule_applied": bool(ceiling), "conf": conf}
 
 
 def analyse(stress, nominal, n_boot=10000):

@@ -722,3 +722,18 @@ ACT는 상태마다 100스텝을 내고 실기에서 100스텝을 모두 실행�
 - W&B는 쓰지 않는다. 마감 직전 여유가 있으면 Nebius Managed MLflow(`nebius msp mlflow`)를 잠깐 켜서 커밋된 산출물에서 자동으로 채우는
   스크립트로 셀 25개·trial 표를 올리고, 캡처 후 끈다(손으로 옮기지 않는다)
 - 순서: S4 v2 남은 37 → FP16 40 → 봉인 해제·분석·그림/대시보드/제출 글 갱신 → 영상 → (여유 시) MLflow → LOCK-4 → 공개
+
+---
+
+## 2026-10-12 — 외부 검토 반영: 성공률 판정 보강 (스트레스·FP16 봉인 전), G6 Q2 민감도 분석
+
+- 외부 검토 지적(확인함): 실패 0회 표본에서 퍼센타일 부트스트랩 구간이 한 점으로 무너져 E1 `tolerance_compatible`이 과하게 나온다.
+  예: VC-007 15/15 vs FP32 24/25 — 부트스트랩 약 [−20, 0] pp, 같은 99.75% Newcombe [−32.3, +34.0] pp
+- **봉인 전 개정**: 스트레스 프로토콜 §10, FP16 사전등록 §7 — E1은 Newcombe(같은 신뢰수준), E2는 배치 5개 이상, 판정 GO/NO-GO/INSUFFICIENT_EVIDENCE.
+  분석 `7d99864d…`. 더 보수적이 된다는 점을 미리 적었다
+- **G6 민감도 분석**(`scripts/g6_q2_sensitivity.py`, `artifacts/reports/g6_q2_sensitivity.json`): 잠근 `g6_analysis.json`은 그대로 둔다.
+  Newcombe로 다시 보면 INT8 10셀 모두 **INSUFFICIENT_EVIDENCE**(GO 0, NO-GO 0). D3 보고서의 GO 2개(VC-007, VC-010)는 근거 부족으로 정정한다.
+  AEP Q1은 변하지 않는다(E1 천장 규칙, E2 tolerance_compatible, 반증 안 됨)
+- 공개할 단서: ES-2 두 그룹이 VC-020 trial을 공유해 Newcombe 독립 가정이 성립하지 않는다(근사). ES-3는 VC-004 미실행으로 부분 비교다
+- 같이 확인한 사실(실험 결과에는 영향 없음): 실행기가 `require_lock2()`를 부르지 않는다(대시보드 문구 정정), 감독자 신선도가 판정 도착 시각 기준이고
+  `abort_on_stale=True`가 낡은 CONTINUE를 막지 않는다(모든 실험은 관찰 모드·False). 수정은 실험이 끝난 뒤 한다(S4 도중 실행 코드 불변)

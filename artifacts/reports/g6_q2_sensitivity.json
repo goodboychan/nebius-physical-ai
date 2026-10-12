@@ -1,0 +1,223 @@
+{
+ "source": "artifacts/reports/g6_analysis.json",
+ "method_E1": "Newcombe hybrid score, same confidence as locked analysis",
+ "Q2": {
+  "VC-002": {
+   "fp32": [
+    24,
+    25
+   ],
+   "cell": [
+    24,
+    25
+   ],
+   "E1_ci_pp_newcombe99.75": [
+    -28.5,
+    28.5
+   ],
+   "E1_decision": "indeterminate (ceiling)",
+   "E1_decision_locked_bootstrap": "indeterminate",
+   "E2_decision_locked": "tolerance_compatible",
+   "verdict": "INSUFFICIENT_EVIDENCE"
+  },
+  "VC-020": {
+   "fp32": [
+    24,
+    25
+   ],
+   "cell": [
+    24,
+    25
+   ],
+   "E1_ci_pp_newcombe99.75": [
+    -28.5,
+    28.5
+   ],
+   "E1_decision": "indeterminate (ceiling)",
+   "E1_decision_locked_bootstrap": "indeterminate",
+   "E2_decision_locked": "tolerance_compatible",
+   "verdict": "INSUFFICIENT_EVIDENCE"
+  },
+  "VC-010": {
+   "fp32": [
+    24,
+    25
+   ],
+   "cell": [
+    25,
+    25
+   ],
+   "E1_ci_pp_newcombe99.75": [
+    -32.3,
+    23.0
+   ],
+   "E1_decision": "indeterminate (ceiling)",
+   "E1_decision_locked_bootstrap": "tolerance_compatible",
+   "E2_decision_locked": "tolerance_compatible",
+   "verdict": "INSUFFICIENT_EVIDENCE"
+  },
+  "VC-011": {
+   "fp32": [
+    24,
+    25
+   ],
+   "cell": [
+    24,
+    25
+   ],
+   "E1_ci_pp_newcombe99.75": [
+    -28.5,
+    28.5
+   ],
+   "E1_decision": "indeterminate (ceiling)",
+   "E1_decision_locked_bootstrap": "indeterminate",
+   "E2_decision_locked": "tolerance_compatible",
+   "verdict": "INSUFFICIENT_EVIDENCE"
+  },
+  "VC-012": {
+   "fp32": [
+    24,
+    25
+   ],
+   "cell": [
+    24,
+    25
+   ],
+   "E1_ci_pp_newcombe99.75": [
+    -28.5,
+    28.5
+   ],
+   "E1_decision": "indeterminate (ceiling)",
+   "E1_decision_locked_bootstrap": "indeterminate",
+   "E2_decision_locked": "tolerance_compatible",
+   "verdict": "INSUFFICIENT_EVIDENCE"
+  },
+  "VC-015": {
+   "fp32": [
+    24,
+    25
+   ],
+   "cell": [
+    25,
+    25
+   ],
+   "E1_ci_pp_newcombe99.75": [
+    -32.3,
+    23.0
+   ],
+   "E1_decision": "indeterminate (ceiling)",
+   "E1_decision_locked_bootstrap": "tolerance_compatible",
+   "E2_decision_locked": "indeterminate",
+   "verdict": "INSUFFICIENT_EVIDENCE"
+  },
+  "VC-005": {
+   "fp32": [
+    24,
+    25
+   ],
+   "cell": [
+    14,
+    15
+   ],
+   "E1_ci_pp_newcombe99.75": [
+    -26.2,
+    41.7
+   ],
+   "E1_decision": "indeterminate",
+   "E1_decision_locked_bootstrap": "indeterminate",
+   "E2_decision_locked": "tolerance_compatible",
+   "verdict": "INSUFFICIENT_EVIDENCE"
+  },
+  "VC-007": {
+   "fp32": [
+    24,
+    25
+   ],
+   "cell": [
+    15,
+    15
+   ],
+   "E1_ci_pp_newcombe99.75": [
+    -32.3,
+    34.0
+   ],
+   "E1_decision": "indeterminate (ceiling)",
+   "E1_decision_locked_bootstrap": "tolerance_compatible",
+   "E2_decision_locked": "tolerance_compatible",
+   "verdict": "INSUFFICIENT_EVIDENCE"
+  },
+  "VC-022": {
+   "fp32": [
+    24,
+    25
+   ],
+   "cell": [
+    10,
+    10
+   ],
+   "E1_ci_pp_newcombe99.75": [
+    -32.3,
+    43.9
+   ],
+   "E1_decision": "indeterminate (ceiling)",
+   "E1_decision_locked_bootstrap": "tolerance_compatible",
+   "E2_decision_locked": "indeterminate",
+   "verdict": "INSUFFICIENT_EVIDENCE"
+  },
+  "VC-024": {
+   "fp32": [
+    24,
+    25
+   ],
+   "cell": [
+    9,
+    10
+   ],
+   "E1_ci_pp_newcombe99.75": [
+    -23.7,
+    53.4
+   ],
+   "E1_decision": "indeterminate",
+   "E1_decision_locked_bootstrap": "indeterminate",
+   "E2_decision_locked": "tolerance_compatible",
+   "verdict": "INSUFFICIENT_EVIDENCE"
+  }
+ },
+ "Q1": {
+  "best": [
+   73,
+   75
+  ],
+  "worst": [
+   29,
+   30
+  ],
+  "E1_ci_pp_newcombe97.5": [
+   -7.8,
+   17.0
+  ],
+  "E1_decision": "indeterminate (ceiling)",
+  "E2_decision_locked": "tolerance_compatible",
+  "falsified": false
+ },
+ "flags": {
+  "ES-2": "groups share VC-020 trials; Newcombe assumes independent samples, interval is approximate",
+  "ES-3": "partial coverage: VC-004 (score_cheap_B top 3) has no trials; contrast is on 2 of 3 cells"
+ },
+ "summary": {
+  "GO": [],
+  "NO-GO": [],
+  "INSUFFICIENT_EVIDENCE": [
+   "VC-002",
+   "VC-005",
+   "VC-007",
+   "VC-010",
+   "VC-011",
+   "VC-012",
+   "VC-015",
+   "VC-020",
+   "VC-022",
+   "VC-024"
+  ]
+ }
+}

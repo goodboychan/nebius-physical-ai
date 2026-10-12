@@ -92,3 +92,10 @@ Thus the supervisor did not flag any failures and the end judge did not catch an
   evidence, FP16 is cheaper (11.6 ms against 16.8 ms, and 82 mJ against 101 mJ) but pending its pre-registered
   real-arm run. Both readings are consistent with the evidence.
 - The other run (`d3_final_runs.json`, repeat 1) had 6 flags: the same three, plus `95` from "95%" twice and `194`. `194` is a correct sum of the INT8 successes (194/200), computed by the agent against rule 1.
+
+## Correction (2026-10-12, after an external review)
+
+The two **GO** verdicts above (VC-007, VC-010) rest on the locked Q2 bootstrap. That interval collapses when a cell
+has no failures. With the Newcombe interval at the same 99.75% level
+(`artifacts/reports/g6_q2_sensitivity.json`), every INT8 cell is **INSUFFICIENT_EVIDENCE**: none GO, none NO-GO.
+Read section 2 with that correction. The locked analysis itself is unchanged.
