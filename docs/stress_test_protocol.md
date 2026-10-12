@@ -194,7 +194,7 @@ changes: cells, engines, runtime, success criterion, S1 mark, S4 can, and the Co
   - Each comparison gets a verdict: **GO** (both endpoints tolerance_compatible), **NO-GO** (any materially_degraded)
     or **INSUFFICIENT_EVIDENCE**.
 - **Consequence, stated now**: the change makes the decisions more conservative. With 12 against 12 trials,
-  `materially_degraded` on E1 now needs a drop of roughly 55–60 pp or more. Smaller drops read as indeterminate.
+  `materially_degraded` on E1 now needs a drop of at least 58 pp from a 12/12 reference (5/12 or fewer) or 67 pp from 11/12. Smaller drops read as indeterminate.
   The S0 stop rule and the outcome rules are unchanged.
 - The stress v2 and FP16 sealed logs have not been opened. The public S4 tally seen so far is 11 trials with no
   operator-reported failure.
