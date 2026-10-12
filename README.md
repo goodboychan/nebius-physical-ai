@@ -37,14 +37,16 @@ Numbers come from committed artifacts. The figure's script lists its sources.
    - FP16's real-arm run is pre-registered and still pending.
    - Source: [`power_bench/SUMMARY.md`](artifacts/reports/power_bench/SUMMARY.md).
 3. **Deployment margins mattered more than precision** (observational).
-   - Without the gripper pads: 8/24. With rubber bands: 22/24.
+   - Without the gripper pads: 8/24. With rubber bands: 23/24.
    - With the start spot moved 3 cm: 0/3. The policy reaches for its memorized position first.
+   - An unseen yellow can: 48/48, all four engines 12/12. Placement was within the 5 px tolerance of FP32 for every
+     INT8 cell ([`stress_v2_analysis.json`](artifacts/reports/stress_v2_analysis.json)).
    - Source: [`stress_operator_notes.md`](docs/sessions/stress_operator_notes.md).
 4. **The AI judge needs validation before use.**
    - Shown the final frame of all 245 trials, Cosmos-Reason2 answered "Yes" every time and caught 0 of 7 failures.
    - Source: [`d4_retro_judge_g6.json`](artifacts/reports/d4_retro_judge_g6.json).
 
-Stress-test per-cell results are still sealed. The stress protocol is
+Stress tests were unsealed on 2026-10-13. The stress protocol is
 [`docs/stress_test_protocol.md`](docs/stress_test_protocol.md).
 
 ## How QuantGate uses NVIDIA models and Nebius

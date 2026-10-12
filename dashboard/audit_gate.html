@@ -128,8 +128,8 @@ footer{border-top:1px solid var(--rule); padding-top:18px; color:var(--ink-3); f
     <div class="bar"></div>
     <div class="body">
       <div class="t"><span class="code">LOCK-3</span><span>passed. G6 is unsealed and analyzed.</span></div>
-      <p>The cell-to-engine map was opened only after all 245 trials were logged and hashed. The stress test v2 and the
-        FP16 run are still in progress, so their per-cell results stay sealed and are not shown here.</p>
+      <p>The cell-to-engine map was opened only after all 245 trials were logged and hashed. The stress tests were unsealed
+        on 10-13. The FP16 run is still pending and stays sealed.</p>
     </div>
   </section>
 
@@ -140,8 +140,8 @@ footer{border-top:1px solid var(--rule); padding-top:18px; color:var(--ink-3); f
       <div class="row"><span class="k">Cost</span><span class="d"><b>FP16 (VC-025) is the cheapest engine on this device</b>: 11.6 ms and 82 mJ per inference, against 16.8–17.1 ms and 101 mJ for INT8 and 53.4 ms and 403 mJ for FP32 (trtexec, back-to-back). At the deployed rate, one chunk about every 3 s, inference energy is a small part of system power.</span><span class="v"><span class="chip ok">measured</span></span></div>
       <div class="row"><span class="k">Real arm</span><span class="d"><b>FP16 has no real-arm evidence yet.</b> A pre-registered run (FP16 20, FP32 10, INT8 10, interleaved) is pending. INT8: 10 cells with 194/200 successes against FP32 24/25. Against FP32 with a 10 pp tolerance, every cell is <b>insufficient evidence</b>: the Newcombe 99.75% intervals span about ±23–53 pp at these sample sizes.</span><span class="v"><span class="chip seal">insufficient</span></span></div>
       <div class="row"><span class="k">Placement</span><span class="d">Mean placement error stays within the 5 px tolerance of FP32 for 8 of 10 INT8 cells. The other 2 are indeterminate. Best vs worst audit fidelity: −0.84 px, CI [−2.53, +0.88].</span><span class="v"><span class="chip ok">8 / 10 ok</span></span></div>
-      <div class="row"><span class="k">Verified for</span><span class="d">The 268 g cola can at the trained start mark, the fixed coaster, locked camera exposure, indoor desk light, and anti-slip gripper pads (G6). The current rubber-band gripper has been validated only on the nominal scene (22/24).</span><span class="v">scope</span></div>
-      <div class="row"><span class="k">Weak spots</span><span class="d">Grip friction: 8/24 with no pads. Start position: 0/3 when moved 3 cm; the policy reaches for its memorized position first. The unseen yellow can is still being tested.</span><span class="v"><span class="chip halt">observed</span></span></div>
+      <div class="row"><span class="k">Verified for</span><span class="d">The 268 g cola can at the trained start mark, the fixed coaster, locked camera exposure and indoor desk light, with anti-slip pads (G6) and with rubber bands (stress v2: nominal 23/24, unseen 190 g yellow can 48/48 with every engine 12/12).</span><span class="v">scope</span></div>
+      <div class="row"><span class="k">Weak spots</span><span class="d">Grip friction: 8/24 with no pads. Start position: 0/3 when moved 3 cm; the policy reaches for its memorized position first. A new object of a different size was not a weak spot here (48/48).</span><span class="v"><span class="chip halt">observed</span></span></div>
       <div class="row"><span class="k">AI judge</span><span class="d">In its current setup (one final frame, a one-word answer) Cosmos-Reason2 detected 0 of 7 G6 failures. Do not use it as a success signal until it is validated, for example with video input.</span><span class="v"><span class="chip halt">not reliable</span></span></div>
       <div class="row"><span class="k">Next</span><span class="d">1. Run the FP16 real-arm block. 2. To resolve a cell against FP32 at 10 pp, plan about 110–120 trials per arm. 3. Add demonstrations from varied start positions before relying on position changes. 4. Validate the AI judge on held-out trials.</span><span class="v">actions</span></div>
     </div>
@@ -156,8 +156,8 @@ footer{border-top:1px solid var(--rule); padding-top:18px; color:var(--ink-3); f
       <div class="lock"><div class="lock-id">LOCK-1</div><div class="lock-txt"><strong>Data split fixed → policy training</strong><span>120 demos, 80/20/20 from a seeded hash</span></div><span class="chip ok">done 10-07</span></div>
       <div class="lock"><div class="lock-id">LOCK-2</div><div class="lock-txt"><strong>All audit scores frozen → first real trial</strong><span>5 predictors over 24 INT8 cells, rankings hashed</span></div><span class="chip ok">done</span></div>
       <div class="lock"><div class="lock-id">LOCK-3</div><div class="lock-txt"><strong>225 main + 20 retest trials logged → first analysis run</strong><span>sealed log hashes fixed before unsealing</span></div><span class="chip ok">done 10-11</span></div>
-      <div class="lock"><div class="lock-id">STRESS v1</div><div class="lock-txt"><strong>Pads removed: stopped by the S0 rule (8/24 &lt; 12)</strong><span>logs hashed, kept sealed until v2 ends</span></div><span class="chip seal">sealed</span></div>
-      <div class="lock"><div class="lock-id">STRESS v2</div><div class="lock-txt"><strong>Rubber-band gripper: S0 done, S1 stopped at 3, S4 11 / 48</strong><span>outcome re-judged offline from video (§9); success decisions use Newcombe intervals, fixed before unsealing (§10)</span></div><span class="chip seal">running</span></div>
+      <div class="lock"><div class="lock-id">STRESS v1</div><div class="lock-txt"><strong>Pads removed: stopped by the S0 rule (8/24 &lt; 12)</strong><span>no pattern by fidelity: worst-fidelity cell 3/6, FP32 1/6 (descriptive)</span></div><span class="chip ok">unsealed 10-13</span></div>
+      <div class="lock"><div class="lock-id">STRESS v2</div><div class="lock-txt"><strong>Rubber-band gripper: S0 23/24, S1 0/3 (stopped), S4 48/48</strong><span>outcome re-judged offline from video (§9); success decisions use Newcombe intervals, fixed before unsealing (§10)</span></div><span class="chip ok">unsealed 10-13</span></div>
       <div class="lock"><div class="lock-id">FP16</div><div class="lock-txt"><strong>FP16 20 · FP32 10 · INT8 10, interleaved</strong><span>pre-registered, no trial yet</span></div><span class="chip wait">locked</span></div>
       <div class="lock"><div class="lock-id">LOCK-4</div><div class="lock-txt"><strong>Analysis complete → video and narrative</strong><span>blocks choosing the story after seeing results</span></div><span class="chip wait">pending</span></div>
     </div>
@@ -222,7 +222,7 @@ footer{border-top:1px solid var(--rule); padding-top:18px; color:var(--ink-3); f
       as a randomized comparison.</p>
     <figure>
       <div class="fig-scroll"><svg viewBox="0 0 720 270" role="img" aria-label="Success rate by condition" style="min-width:540px"><g id="margin"></g></svg></div>
-      <figcaption>Wilson 95% CI. Unseen-can (S4) results are added after stress v2 is unsealed.</figcaption>
+      <figcaption>Wilson 95% CI. Unseen can: a 190 g, 50 mm yellow can never seen in training, at the trained start mark; all four engines 12/12. Outcomes use the consensus re-judge (protocol §11).</figcaption>
     </figure>
   </section>
 
@@ -248,15 +248,15 @@ footer{border-top:1px solid var(--rule); padding-top:18px; color:var(--ink-3); f
       <figure class="clip"><video src="clips/v2_rubber_success.mp4" controls muted playsinline preload="metadata"></video>
         <div class="ct"><strong>Rubber-band gripper</strong><span class="chip ok">success</span></div>
         <p>The same scene with rubber bands on the fingers. The can sits about 20 px off center, inside the 35 px target.
-          The block finished 22/24.</p><span class="src">stress v2 S0 trial 1</span></figure>
+          The block finished 23/24.</p><span class="src">stress v2 S0 trial 1</span></figure>
       <figure class="clip"><video src="clips/v2_shift_regrasp.mp4" controls muted playsinline preload="metadata"></video>
         <div class="ct"><strong>Start moved 3 cm</strong><span class="chip halt">failure</span></div>
         <p>The policy first closes on empty air at the trained start spot, then knocks the can over while re-grasping.</p><span class="src">stress v2 S1 trial 1</span></figure>
     </div>
     <figure class="clip"><video src="clips/v2_s0_vs_s4.mp4" controls muted playsinline preload="metadata"></video>
-      <div class="ct"><strong>Cola can vs unseen yellow can, side by side</strong><span class="chip seal">S4 in progress</span></div>
+      <div class="ct"><strong>Cola can vs unseen yellow can, side by side</strong><span class="chip ok">S4 48/48</span></div>
       <p>Stress v2 with the rubber-band gripper: S0 trial i (left) next to S4 trial i (right), each full trial at 4× speed.
-        S4 trials 1–11 so far. Outcomes are not printed; the S4 analysis is still sealed.</p><span class="src">stress v2 S0 + S4 · 4× · regenerated when S4 completes</span></figure>
+        Shown: the first 11 pairs. All 48 S4 trials succeeded.</p><span class="src">stress v2 S0 + S4 trials 1–11 · 4×</span></figure>
   </section>
 
   <section class="panel">
@@ -377,8 +377,8 @@ bars("mj",[["FP16 VC-025",82,"var(--good)"],["INT8 VC-002",101,"var(--signal)"],
 
 /* margin bars */
 (()=>{const g=document.getElementById("margin");const W=(k,n,z=1.96)=>{const p=k/n,d=1+z*z/n,c=p+z*z/(2*n),h=z*Math.sqrt(p*(1-p)/n+z*z/(4*n*n));return[(c-h)/d,(c+h)/d]};
-  const D=[["FP32","G6, pads",24,25,"var(--ink-2)"],["INT8 × 10","G6, pads",194,200,"var(--signal)"],["No pads","stress v1 S0",8,24,"var(--ember)"],["Rubber bands","stress v2 S0",22,24,"var(--ember)"],["Start +3 cm","stress v2 S1",0,3,"var(--halt)"]];
-  const Y0=210,Y1=14,X0=56,bw=86,gap=44; const sy=v=>Y0-(Y0-Y1)*v;
+  const D=[["FP32","G6, pads",24,25,"var(--ink-2)"],["INT8 × 10","G6, pads",194,200,"var(--signal)"],["No pads","stress v1 S0",8,24,"var(--ember)"],["Rubber bands","stress v2 S0",23,24,"var(--ember)"],["Start +3 cm","stress v2 S1",0,3,"var(--halt)"],["Unseen can","stress v2 S4",48,48,"var(--signal)"]];
+  const Y0=210,Y1=14,X0=56,bw=78,gap=30; const sy=v=>Y0-(Y0-Y1)*v;
   [0,.25,.5,.75,1].forEach(t=>{g.appendChild(mk("line",{x1:X0-6,y1:sy(t),x2:X0+D.length*(bw+gap),y2:sy(t),stroke:"var(--rule-2)"}));g.appendChild(mk("text",{x:X0-10,y:sy(t)+4,"text-anchor":"end",class:"ax"},t*100+"%"));});
   D.forEach((d,i)=>{const x=X0+i*(bw+gap),p=d[2]/d[3],[l,h]=W(d[2],d[3]);
     const r=mk("rect",{x,y:sy(p),width:bw,height:Math.max(Y0-sy(p),1),fill:d[4]});g.appendChild(r);wire(r,`${d[0]} (${d[1]}) · ${d[2]}/${d[3]} · CI [${Math.round(l*100)}, ${Math.round(h*100)}]%`);

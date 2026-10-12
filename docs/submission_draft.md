@@ -1,7 +1,7 @@
 # QuantGate — Devpost submission draft (v2, 2026-10-12)
 
 Status: **draft v2**, rewritten around the developer's decision, following the storytelling review. Slots marked
-`[PENDING S4]` and `[PENDING FP16]` are filled after those blocks are unsealed. `[USER]` marks the user's own
+`[PENDING FP16]` are filled after those blocks are unsealed. `[USER]` marks the user's own
 ratings. Every number cites a committed artifact. Wording rules: say "not detected", never "no effect"; FP16 is
 "the cost-favored candidate" until its real-arm run is analyzed; completed and planned trials are counted
 separately.
@@ -47,7 +47,7 @@ Scope throughout: one pick-and-place task, one ACT policy, a Jetson Orin Nano Su
 | On this device FP16 has the lowest latency and energy per inference | trtexec: FP16 11.6 ms and 82 mJ; INT8 16.8–17.1 ms and 101 mJ; FP32 53.4 ms and 403 mJ (`power_bench/SUMMARY.md`) | Don't pick an engine by its precision label. Measure on the target. FP16 is the cost-favored candidate; its real-arm run is `[PENDING FP16]` |
 | Audit-picked INT8 cells did not beat random ones | 73/75 against 73/75, 95% CI [−6.8, +6.8] pp; offline rank against placement, Spearman 0.02–0.08 (`g6_analysis.json`) | In this setting, the offline ranking is not evidence that one calibration is better |
 | Against FP32 the evidence is insufficient for every INT8 cell | 194/200 against 24/25. At a 10 pp tolerance the Newcombe intervals span about ±23–53 pp, so all 10 cells are "insufficient evidence" (`g6_q2_sensitivity.json`) | "No failures seen" is not "safe". You would need about 110–120 trials per arm to show a cell is within 10 pp |
-| Deployment conditions moved success far more | No anti-slip pads 8/24; rubber bands 22/24; start moved 3 cm 0/3 (observational, `stress_operator_notes.md`); unseen can `[PENDING S4]` | Validate the grip, positions and objects you will actually face |
+| Deployment conditions moved success far more | No anti-slip pads 8/24; rubber bands 23/24; start moved 3 cm 0/3 (observational); unseen yellow can 48/48, every engine 12/12 (`stress_v2_analysis.json`) | Validate the grip, positions and objects you will actually face |
 | The AI judge, as configured, missed every failure | Shown the final frame of 245 trials, Cosmos-Reason2 answered "Yes" every time and caught 0 of the 7 failures. Live at 2 Hz on 215 trials, it never left CONTINUE (`d4_retro_judge_g6.json`) | A high agreement rate on mostly-successful data means little. Validate an AI judge on failures before you use it |
 
 These results are about this task, this device and this experimental range. They do not show that INT8 is harmless

@@ -13,7 +13,7 @@ SOURCES = {
     "FP32\n(G6, pads)": (24, 25, "quant", "g6_analysis.json VC-000"),
     "INT8, 10 cells\n(G6, pads)": (194, 200, "quant", "g6_analysis.json, INT8 cells pooled"),
     "No pads\n(stress v1 S0)": (8, 24, "grip", "stress_operator_notes.md, public tally"),
-    "Rubber bands\n(stress v2 S0)": (22, 24, "grip", "stress v2 re-judge (protocol §9)"),
+    "Rubber bands\n(stress v2 S0)": (23, 24, "grip", "stress v2 consensus re-judge (protocol §11)"),
     "Start +3 cm\n(stress v2 S1)": (0, 3, "shift", "public log; stopped early by user"),
 }
 out = sys.argv[1]
@@ -25,7 +25,7 @@ fig, ax = plt.subplots(figsize=(9, 4.6), dpi=160)
 for i, (name, (k, n, g, _)) in enumerate(SOURCES.items()):
     lo, hi = wilson(k, n); p = k / n
     ax.bar(i, p * 100, color=col[g], label=lab[g] if lab[g] not in ax.get_legend_handles_labels()[1] else None)
-    ax.errorbar(i, p * 100, yerr=[[100 * (p - lo)], [100 * (hi - p)]], color="black", capsize=4, lw=1)
+    ax.errorbar(i, p * 100, yerr=[[max(0, 100 * (p - lo))], [max(0, 100 * (hi - p))]], color="black", capsize=4, lw=1)
     ax.text(i, 3, f"{k}/{n}", ha="center", color="white" if p > 0.1 else "black", fontsize=9, fontweight="bold")
 ax.set_xticks(range(len(SOURCES))); ax.set_xticklabels(SOURCES.keys(), fontsize=8.5)
 ax.set_ylabel("real-arm success (%), Wilson 95% CI"); ax.set_ylim(0, 105)
