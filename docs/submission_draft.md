@@ -1,145 +1,125 @@
-# QuantGate — Devpost submission draft (2026-10-12)
+# QuantGate — Devpost submission draft (v2, 2026-10-12)
 
-Status: **draft**. Sections marked `[PENDING S4]` are filled in after stress v2 S4 is unsealed and analyzed. Items
-marked `[USER]` are the user's own ratings and opinions. Every number cites a committed artifact; if a number changes,
-update it from the artifact, never from memory.
+Status: **draft v2**, rewritten around the developer's decision, following the storytelling review. Slots marked
+`[PENDING S4]` and `[PENDING FP16]` are filled after those blocks are unsealed. `[USER]` marks the user's own
+ratings. Every number cites a committed artifact. Wording rules: say "not detected", never "no effect"; FP16 is
+"the cost-favored candidate" until its real-arm run is analyzed; completed and planned trials are counted
+separately.
 
 ---
 
+## Tagline
+
+**QuantGate — Evidence before deployment.**
+
 ## Elevator pitch (≤ 200 chars)
 
-QuantGate gates quantized robot policies before they reach a Jetson arm, and it measured what actually broke them:
-not INT8, but grip margin, a 3 cm shift, and an AI judge that never says no.
+QuantGate helps robot developers decide which precision of a policy to ship to a Jetson, showing engine cost,
+real-arm behavior and how strong the evidence is, before the robot leaves the lab.
 
-## Inspiration
+## The problem
 
-Edge deployment of robot policies usually means INT8. Open-loop metrics look fine, yet closed-loop behaviour can change,
-and checking every quantized variant on the real robot is slow and sometimes unsafe. We wanted to know two things:
-whether an offline audit could screen INT8 variants before they touch the robot, and whether the screen holds up
-against a real arm. We also wanted the answer to be trustworthy, so the whole experiment was pre-registered, blinded
-and hash-locked before the first real trial.
+You have a working robot policy and a small edge device. You can ship it as FP32, FP16 or one of many INT8 builds.
+Benchmarks tell you speed, and open-loop metrics look fine. Neither tells you whether the arm will still put the can
+on the coaster, or how sure you can be. Real-arm testing of every candidate is slow, so teams guess.
 
-## What it does
+## What QuantGate does
 
-1. **Builds a variant grid.** One FP32 ACT policy (LeRobot, 51.6M parameters) is trained on 120 SO-101 teleoperation
-   demos. It is quantized with NVIDIA TensorRT Model Optimizer into 24 INT8 variants that differ only in calibration
-   choices (size 16–1024, data composition, per-tensor vs per-channel), plus FP16 and FP32. All are built as TensorRT
-   engines on a Jetson Orin Nano Super.
-2. **Audits offline.** Five predictors score every variant on 2,000 held-out states, in bootstrap fan-out on Nebius
-   Jobs: two fidelity scores with tail statistics (CVaR@90), a practitioner heuristic, open-loop MSE and latency. The
-   ranking is frozen and hashed (`LOCK-2`) before any real trial.
-3. **Gates on the real arm.** 245 blinded, interleaved trials run on the SO-101 (pick a can and stand it on a
-   coaster). The operator never sees which engine is running, and the cell-to-engine map stays sealed until `LOCK-3`.
-4. **Supervises and judges with AI.** `nvidia/Cosmos-Reason2-2B` on a Nebius AI endpoint watches every run at 2 Hz in
-   shadow mode, and is also asked at the end whether the task succeeded.
-   `nvidia/nemotron-3-super-120b-a12b` on Nebius Token Factory writes go / no-go deployment reports, and every number
-   in a report is machine-checked against the evidence. Tavily collects TensorRT and Jetson errata, with queries
-   derived from the real build environment.
-5. **Stress-tests.** A follow-up with pre-registered stop rules tests what happens when the deployment margins shrink:
-   gripper friction, a shifted start position, and an unseen can.
+For each candidate engine, QuantGate puts three kinds of evidence side by side and turns them into a **deployment
+review**: what the evidence supports, what is still missing, and what to test next.
 
-## Results
+1. **Cost on the real device.** It builds every candidate as a TensorRT engine on the Jetson and measures latency,
+   energy and size there.
+2. **Offline audit.** It scores every candidate on 2,000 held-out robot states, fanned out on Nebius Jobs, and freezes
+   the ranking before any real trial.
+3. **Real-arm check.** It runs blinded, interleaved trials on the arm to test whether the audit's ranking holds. The
+   AI layers are checked against the same evidence: a Cosmos-Reason2 supervisor and judge, and a Nemotron 3 Super
+   report writer. Neither is trusted on its own word.
 
-Sources: `artifacts/reports/g6_analysis.json`, `g6_supplement.json`, `d4_retro_judge_g6.json`,
-`power_bench/SUMMARY.md`, and `docs/sessions/stress_operator_notes.md`.
+The results were sealed until all trials were logged, so no candidate was picked after seeing its results.
 
-**1. INT8 calibration choices did not matter, in this regime.**
-- FP32 succeeded 24/25. Each of the 10 INT8 cells tested succeeded between 9/10 and 25/25.
-- Primary endpoint, audit-selected vs random-selected cells: 73/75 vs 73/75. The difference is 0.0 pp, 95% CI
-  [−6.8, +6.8].
-- Best vs worst fidelity: +0.7 pp, 95% CI [−6.4, +14.1].
-- The same cell re-measured on another day differed by −4.0 pp, 95% CI [−19.5, +12.4], which is wider than any
-  between-cell contrast.
-- Offline rank vs real placement error: Spearman 0.02 for `score_align` and 0.08 for `score_mag`.
-- We report this as "no gap detected", not as "no effect". In this regime, the honest conclusion is that an elaborate
-  audit pipeline was unnecessary.
+## What we found, and how it changes the decision
 
-**2. On the Orin Nano Super (15 W, TensorRT 10.3), FP16 beats INT8.**
+Scope throughout: one pick-and-place task, one ACT policy, a Jetson Orin Nano Super at 15 W, and TensorRT 10.3.
 
-GPU compute time per 100-step chunk, from trtexec:
-- FP16: 11.6 ms, 82 mJ per inference.
-- INT8: 16.8–17.1 ms, 101 mJ.
-- FP32: 53.4 ms, 403 mJ.
+| Finding | Evidence | What it means for the developer |
+|---|---|---|
+| On this device FP16 has the lowest latency and energy per inference | trtexec: FP16 11.6 ms and 82 mJ; INT8 16.8–17.1 ms and 101 mJ; FP32 53.4 ms and 403 mJ (`power_bench/SUMMARY.md`) | Don't pick an engine by its precision label. Measure on the target. FP16 is the cost-favored candidate; its real-arm run is `[PENDING FP16]` |
+| Audit-picked INT8 cells did not beat random ones | 73/75 against 73/75, 95% CI [−6.8, +6.8] pp; offline rank against placement, Spearman 0.02–0.08 (`g6_analysis.json`) | In this setting, the offline ranking is not evidence that one calibration is better |
+| Against FP32 the evidence is insufficient for every INT8 cell | 194/200 against 24/25. At a 10 pp tolerance the Newcombe intervals span about ±23–53 pp, so all 10 cells are "insufficient evidence" (`g6_q2_sensitivity.json`) | "No failures seen" is not "safe". You would need about 110–120 trials per arm to show a cell is within 10 pp |
+| Deployment conditions moved success far more | No anti-slip pads 8/24; rubber bands 22/24; start moved 3 cm 0/3 (observational, `stress_operator_notes.md`); unseen can `[PENDING S4]` | Validate the grip, positions and objects you will actually face |
+| The AI judge, as configured, missed every failure | Shown the final frame of 245 trials, Cosmos-Reason2 answered "Yes" every time and caught 0 of the 7 failures. Live at 2 Hz on 215 trials, it never left CONTINUE (`d4_retro_judge_g6.json`) | A high agreement rate on mostly-successful data means little. Validate an AI judge on failures before you use it |
 
-INT8 draws about 1 W less while it runs but is slower, so it uses more energy per inference. Calibration choice
-changes neither latency nor power. *(Note: an earlier Python-loop latency probe from the audit put FP16 at about the
-INT8 level. The claim above uses the trtexec measurement only, and the FP16 real-arm run below settles end-to-end
-behaviour.)*
+These results are about this task, this device and this experimental range. They do not show that INT8 is harmless
+in general, or that calibration never matters.
 
-**3. Deployment margins dominated quantization** (observational, same arm and policy, not randomized against each
-other).
-- Gripper anti-slip pads removed: 8/24 on the nominal scene. Most failures were the can slipping.
-- Rubber bands on the gripper: 22/24 on the nominal scene.
-- Start spot shifted 3 cm: 0/3. The policy first reaches for the memorized training position, grasps air, then
-  knocks the can over while re-grasping.
-- Unseen yellow can: `[PENDING S4]`.
+## The deployment review (what the developer takes away)
 
-**4. AI judges must be validated before they are trusted (the RLAIF caveat).**
-- Retrospective test: Cosmos-Reason2 was shown the final frame of all 245 G6 trials and asked whether the can stood
-  on the coaster. It answered **"Yes" 245 times** and caught **0 of the 7 failures**. The 97% agreement only mirrors
-  the success rate.
-- In the stress blocks so far it said "No" on only 2 of 20 operator-confirmed failures (public logs: v1 S0 16, v2 S0 1, v2 S1 3).
-- Our own geometric judge also produced false failures once the can sat slightly off-center (a spurious circle on the
-  coaster). We found this from operator reports, fixed it with a blind, pre-declared re-judge rule, verified that the
-  rule changes no G6 outcome, and still disclose the one remaining false negative.
+The dashboard opens with this card (`dashboard/audit_gate.html`, "Deployment review"):
 
-## How we built it
+- **Cost-favored candidate**: FP16, measured on the Orin.
+- **Real-arm status**: INT8 completed (insufficient evidence against FP32). FP16 pending.
+- **Verified for**: the cola can at the trained start mark, a fixed coaster, locked camera exposure and the gripper
+  configuration in use.
+- **Weak spots**: grip friction and changes in start position.
+- **AI judge reliability**: not reliable in the current setup.
+- **Next actions**: run the FP16 block, plan about 110–120 trials per arm to resolve a cell, add varied start
+  positions, and validate the judge with video input.
 
-- **Data**: 120 teleoperated demos on an SO-101. Overhead C922 and OpenMV AE3 wrist cameras. Seeded 80/20/20 splits
-  with loader-level guards so that audit states never touch training or calibration.
-- **Training**: LeRobot 0.6.1 ACT, 100k steps on Nebius Jobs (L40S, 1 h 57 min). Data and weights live in Nebius
-  Object Storage.
-- **Quantization**: TensorRT Model Optimizer INT8 Q/DQ ONNX. Orin TensorRT 10.3 engines built with a frozen timing
-  cache, because builds are otherwise nondeterministic.
-- **Audit**: 25 cells × bootstrap scoring, fanned out on Nebius Jobs (CPU), with a controller that keeps the job count
-  under the quota.
-- **Runtime**: a TensorRT policy server on the Orin at 30 Hz with chunk prefetch and blending. Supervision is
-  Cosmos-Reason2 on a Nebius AI endpoint (vLLM on L40S, about 330 ms round trip), in shadow mode so that network delay
-  cannot contaminate outcomes.
-- **Reports**: Nemotron 3 Super on Token Factory turns frozen evidence into deployment reports. A validator rejects
-  any number that is not in the evidence. Tavily errata snapshots are hashed for reproducibility.
-- **Integrity**: a pre-registration and a decision log that is never rewritten. Hash locks run `LOCK-1` → `LOCK-2`
-  → `LOCK-3`, with sealed schedules and stop rules fixed before outcomes. All amendments and deviations are logged
-  with timestamps.
+It is a review aid, not an automatic approval. The trial videos sit next to the numbers, so the reader can see each
+failure.
+
+## How we built it (NVIDIA and Nebius, each where it did real work)
+
+| Step | What runs | Where |
+|---|---|---|
+| Training | LeRobot ACT, 120 teleoperated demos, 100k steps | **Nebius Jobs** (L40S, 1 h 57 min), data in **Nebius Object Storage** |
+| Candidates | 24 INT8 calibration variants with **TensorRT Model Optimizer**, plus FP16 and FP32 | NGC container |
+| Engines and cost | **TensorRT** 10.3 engines with a frozen timing cache (builds were otherwise nondeterministic); latency and power with trtexec and tegrastats | **Jetson Orin Nano Super** |
+| Offline audit | 25 cells × bootstrap scoring on 2,000 held-out states | **Nebius Jobs** fan-out with a quota-aware controller |
+| Real arm | 30 Hz TensorRT policy server with chunk prefetch and blending, so all engines have identical timing; blinded schedule | SO-101 + Jetson |
+| AI supervisor and judge | **Cosmos-Reason2-2B**, 2 Hz shadow mode, plus an end-of-trial question | **Nebius AI Endpoint** (L40S, vLLM), started per session |
+| Deployment report | **Nemotron 3 Super** writes the report from frozen evidence; a validator checks every number | **Nebius Token Factory** |
+| Errata | Tavily search with queries derived from the real build; the snapshot is hashed | Tavily API |
 
 ## Challenges
 
-- **INT8 slower than FP16** on the deployment target, the opposite of the usual assumption.
-- **Nondeterministic engine builds** gave different engine files from the same inputs. A frozen timing cache made the
-  outputs bit-identical.
-- **Latency as a confound**: the FP32 chunk boundary is slower than INT8, which changed arm motion. Prefetch with
-  blending equalized the timing across cells before any counted trial.
-- **Real hardware**: overload foldback, a camera that hung after unclean exits, a motor packet error, slipping grasps,
-  and anti-slip pads that kept shifting.
-- **A fragile judge**: the circle detector's verdict depended on the RGB → gray conversion path.
+- INT8 was slower than FP16 on the target, the opposite of the usual assumption.
+- Engine builds were nondeterministic; a frozen timing cache fixed it.
+- Inference latency changed arm motion at chunk boundaries. We equalized it before any counted trial.
+- Hardware: overload foldback, a camera that hung after an unclean exit, slipping grasps and shifting pads.
+- Our own judges needed checking:
+  - The circle detector produced false failures when the can sat off-center. We fixed this blind with a pre-declared
+    re-judge.
+  - An external review caught that our percentile bootstrap was too optimistic at zero failures. We corrected it with
+    Newcombe intervals, both before unsealing the follow-up tests and as a separate sensitivity analysis for G6.
 
 ## Accomplishments
 
-- A pre-registered, operator-blinded, hash-sealed real-robot study of quantization, finished inside a hackathon:
-  245 + 120+ trials.
-- A clear, reusable deployment answer for this hardware: FP16. INT8 calibration tuning bought nothing.
-- Evidence that hardware margin and distribution shift are larger risks than quantization error for this policy.
-- A measured failure of an AI judge, which is a concrete caution for RLAIF-style pipelines.
+- A complete gate from cloud to real arm. Every number is traceable to a hashed artifact.
+- 245 completed blinded real-arm trials in the main study, plus stress blocks. Pre-registered stop rules were applied
+  as written.
+- A review that says plainly when the evidence is not enough, including for our own AI components.
 
 ## What we learned
 
-- A deployment gate has to test **margins** (grip, position, object), not only numerics.
-- "No difference detected" needs its noise floor next to it. Our same-cell retest CI was wider than the effect we were
-  looking for.
-- Validate the judge, both the AI judge and our own.
+- Measure cost on the target device; precision labels mislead.
+- "No failures seen" needs its interval next to it, together with the number of trials it would take to decide.
+- Validate the judge, both the AI one and your own.
 
 ## What's next
 
-- Run the FP16 engine on the real arm (pre-registered, 20 trials) to close the precision question end to end.
-- Use a wider deviation range, such as more aggressive quantization, to find where degradation starts.
-- Recompute the offline audit on out-of-distribution inputs, to see whether score gaps widen there.
-- Try an AI judge that uses multiple frames or video before considering any RLAIF use.
+- Run the FP16 real-arm block (pre-registered) and the remaining unseen-can trials.
+- Shorter replanning intervals (10 / 30 / about 90 steps) crossed with start-position shifts, to separate trajectory
+  memorization from slow reaction.
+- An offline re-evaluation of Cosmos: one frame with a larger output budget, and the last seconds of video.
+- Structured verdicts: code decides, and Nemotron explains each verdict with links to its evidence.
 
 ## Built with
 
-NVIDIA Cosmos-Reason2-2B · NVIDIA Nemotron 3 Super · NVIDIA TensorRT · NVIDIA TensorRT Model Optimizer · Jetson Orin
-Nano Super · Nebius AI Cloud (Jobs, AI Endpoints, Object Storage) · Nebius Token Factory · Tavily · LeRobot · SO-101 ·
-vLLM · PyTorch
+NVIDIA Cosmos-Reason2-2B · NVIDIA Nemotron 3 Super · NVIDIA TensorRT · TensorRT Model Optimizer · Jetson Orin Nano
+Super · Nebius AI Cloud (Jobs, AI Endpoints, Object Storage) · Nebius Token Factory · Tavily · LeRobot · SO-101 · vLLM ·
+PyTorch
 
 ---
 
@@ -155,7 +135,7 @@ vLLM · PyTorch
   had **0 unmatched numbers** in every run, took 9–14 s per report, and always produced the complete four-section
   format (`artifacts/reports/d3_model_compare.json`). The larger and smaller variants either leaked reasoning text or
   truncated.
-- `nvidia/Cosmos-Reason2-2B` for vision supervision, because it is small enough for about 330 ms round trips at 2 Hz.
+- `nvidia/Cosmos-Reason2-2B` for vision supervision, because it is small enough for about 330 ms round trips at 2 Hz. In our setup (one frame, one-word answer, 8 output tokens) it did not detect failures, so we report it as a configuration that needs validation, not as a model verdict.
 
 **Nemotron output quality (1–10)**: `[USER]`.
 - Worked well: numeric fidelity to the evidence, section structure, and honest "cannot decide" when no threshold was

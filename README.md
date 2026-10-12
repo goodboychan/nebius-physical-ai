@@ -2,7 +2,8 @@
 
 # QuantGate
 
-**Audit quantized robot policies before they touch the robot, then check the audit on the real arm.**
+**Evidence before deployment.** QuantGate helps robot developers decide which precision of a policy to ship on an
+edge device. It shows the engine's measured cost, its real-arm behavior and how strong the evidence is.
 
 > QuantGate screens INT8 robot policies offline on Nebius and gates which ones reach a Jetson-powered SO-101 arm.
 > Cosmos-Reason2 watched the real runs (215 live, 245 retrospectively) and Nemotron writes the deployment report. The whole real-arm study was
@@ -20,15 +21,17 @@ square leaving it is the one INT8 policy that passed.
 
 Numbers come from committed artifacts. The figure's script lists its sources.
 
-1. **INT8 calibration choices did not change real-arm outcomes in this regime.**
+1. **No success advantage from INT8 calibration choice was detected in this regime.**
    - FP32 succeeded 24/25. The 10 INT8 cells tested succeeded 194/200.
    - Audit-selected vs random cells: 73/75 vs 73/75. The difference is 0.0, 95% CI [−6.8, +6.8] pp.
    - The same cell re-measured on another day had a wider CI, [−19.5, +12.4] pp.
    - The offline rank did not predict placement: Spearman 0.02–0.08.
    - This is reported as *no difference detected*.
+   - Against FP32, every INT8 cell is also *insufficient evidence* at a 10 pp tolerance. The Newcombe intervals are
+     too wide at these sample sizes ([`g6_q2_sensitivity.json`](artifacts/reports/g6_q2_sensitivity.json)).
    - Sources: [`g6_analysis.json`](artifacts/reports/g6_analysis.json),
      [`g6_supplement.json`](artifacts/reports/g6_supplement.json).
-2. **On the Orin Nano Super (15 W), FP16 is the cheapest engine.**
+2. **On the Orin Nano Super (15 W), FP16 is the cost-favored candidate.**
    - GPU compute: FP16 11.6 ms, INT8 16.8–17.1 ms, FP32 53.4 ms.
    - Energy per inference: 82, 101 and 403 mJ.
    - FP16's real-arm run is pre-registered and still pending.

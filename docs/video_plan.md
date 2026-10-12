@@ -1,43 +1,51 @@
-# 데모 영상 계획 (초안, 2026-10-12)
+# 데모 영상 계획 v2 (2026-10-12, 스토리텔링 검토 반영)
 
-Target length: **about 3 minutes**. Check the Devpost limit before editing. Narration is in English, for the judges,
-with Korean subtitles optional.
-Principle: per the `LOCK-4` rule, the story is fixed only after the stress v2 and FP16 analyses. This draft
-leaves those slots empty (`[PENDING]`) and builds the rest around results that are already confirmed.
+- **Length: 2:50.** The official rule recommends under 3 minutes, and the Physical AI track requires at least 1 minute
+  of real hardware in operation. This plan has one **continuous 60 s** real-arm shot.
+- **Main character: the developer who has to ship the robot.** The story asks the developer's question ("Can I ship
+  this, and as what?") and ends on the deployment review card.
+- **Story arc**: problem → how QuantGate gathers evidence → the measurements change the decision → what the developer
+  takes away.
+- Narration is in English. `[PENDING]` marks slots filled after the S4 and FP16 analyses. `LOCK-4`: the narrative is
+  fixed only after those analyses.
 
 ## 장면 구성
 
 | # | Time | Picture | Narration (draft) | Material |
 |---|---|---|---|---|
-| 1 | 0:00–0:15 | The SO-101 picks up the can and stands it on the coaster (one clean success, normal speed) | "Edge robots run quantized policies. The usual question is whether INT8 is safe. We built a gate to find out on a real arm." | G6 main 12 (`main012_1008_004335`, 6.8 px) |
-| 1b | 0:15–0:23 | **Re-enactment** (caption: "re-enactment"): a hand moves the leader arm and the follower copies it → real demo footage (overhead + wrist side by side) → caption "120 demos" | "We taught it with 120 teleoperated demonstrations." | Re-enactment: `lerobot-teleoperate` only, no recording (the locked dataset must not change). Real: `dashboard/clips/demos_top_wrist.mp4` (episodes 0, 47, 102) |
-| 2 | 0:23–0:40 | Pipeline diagram → the 26-cell grid → the Nebius Jobs fan-out | "One ACT policy trained on Nebius Jobs, 24 INT8 variants from TensorRT Model Optimizer, plus FP16 and FP32, all built on a Jetson Orin. Five offline predictors score every variant on Nebius before any real trial." | README pipeline, `build_grid_lerobot.py` output, Jobs console capture |
-| 3 | 0:40–1:00 | Scroll through the decision log and lock hashes, then the blinded runner screen (trial number only) | "Everything was pre-registered and hash-locked. The operator never knew which engine was running." | `docs/decision_log.md`, `artifacts/freeze/lock3.json`, runner terminal capture (latency hidden) |
-| 4 | 1:00–1:30 | Dashboard: per-cell dot plot → forest plot | "245 blinded trials. FP32 24 of 25, INT8 194 of 200. Audit-picked against random cells: 73 against 73. No gap detected, and the offline ranking did not predict the arm." | D7 board "Closed-loop success by cell", "Pre-registered contrasts", "Did the offline rank predict" |
-| 5 | 1:30–1:45 | Dashboard engine-cost bars | "On this Jetson, FP16 is faster and cheaper per inference than INT8. Calibration tuning bought nothing." | D7 board "Engine cost" (`[PENDING FP16 real-arm]` add one line) |
-| 6 | 1:45–2:15 | Fast cuts: no-pad slip → rubber-band success → 3 cm shift air grasp and knock-over → `[PENDING S4 yellow can]` | "What did move the success rate was the margins: gripper friction, 33 to 92 percent. A 3 centimetre shift: the policy reaches for where the can used to be." | stress v1 S0 slip (operator picks one), stress v2 S0 success, stress v2 S1 trial 1, risk-magnitude figure |
-| 7 | 2:15–2:40 | Failure 186 final frame, with Cosmos's "Yes" overlaid. The operator's hand is at the right edge, working at the desk: the real use case, a person working beside the arm (outside the judge area; contact = no) | "This is the setting we built for: a person working while the arm hands them things. Cosmos-Reason2 watched every run on a Nebius endpoint. Shown this frame, it said the can was standing. It said yes to all 245. Validate your AI judge before you trust it." | `main186_1010_221517` last frame, `d4_retro_judge_g6.json` |
-| 8 | 2:40–2:55 | Nemotron report on screen, with the validator line highlighted ("Numbers not in evidence") | "Nemotron 3 Super on Token Factory writes the deployment report, and every number is checked against the evidence." | `artifacts/reports/d3_final_report.md` |
-| 9 | 2:55–3:00 | Logo + repository URL | "QuantGate. The real risk at the edge was not INT8." | `docs/assets/quantgate_logo.png` |
+| 1 | 0:00–0:10 | 3 s success clip → 3 s failure clip (knocked over) → black screen with the question | "Same robot, same task. Can I ship this to a tiny Jetson, and as which model?" | `clips/g6_success.mp4`, `clips/g6_fail_knock.mp4` |
+| 2 | 0:10–1:10 | **Continuous 60 s real-arm shot** (phone, side view), with small captions: task, device, candidate engines, blinded trial | "The arm runs an ACT policy on a Jetson Orin Nano Super, trained on Nebius from 120 demonstrations (re-enactment shown). We built 26 candidate engines: FP32, FP16 and 24 INT8 calibrations. Every real trial is blinded: the operator never knows which engine is running." | New shot: phone 30–40 cm beside the follower, 16:9, leader out of frame, one full trial. A 5 s insert of the re-enactment plus `clips/demos_top_wrist.mp4`, captioned "re-enactment" |
+| 3 | 1:10–1:35 | Dashboard: engine cost bars → per-cell success chart | "QuantGate puts cost measured on the device next to real-arm results. Training and the offline audit ran on Nebius Jobs; the engines are TensorRT on the Jetson." | D7 board "Engine cost" and "Closed-loop success" |
+| 4 | 1:35–2:00 | Three findings, one caption each: FP16 cost → audit vs random 73/75 vs 73/75 → no-pad slip and 3 cm shift clips | "Measuring changed the decision. FP16 was the cheapest engine here, not INT8. The audit's top picks did no better than random picks. What moved success was grip and position." | `clips/v1_nopad_drop.mp4`, `clips/v2_shift_regrasp.mp4`, `[PENDING S4]` |
+| 5 | 2:00–2:20 | Failure 186 final frame with Cosmos's "Yes" overlaid (the operator's hand at the desk edge is the real use case) → Nemotron report with "numbers not in evidence: 0" highlighted | "The AI layers are checked too. In our setup Cosmos-Reason2, on a Nebius endpoint, called this a success, and missed all 7 failures. Nemotron 3 Super on Token Factory writes the report, and every number is checked against the evidence." | `clips/g6_fail_knock.mp4` last frame, `d3_final_report.md` |
+| 6 | 2:20–2:45 | Dashboard deployment review card, line by line, then a click into a failure video | "What you take away is a review: FP16 is the cost-favored candidate, the real-arm evidence for each INT8 cell is still insufficient, the weak spots are grip and position, and here is what to test next." | D7 board "Deployment review" (`[PENDING FP16]` updates the line) |
+| 7 | 2:45–2:50 | Logo + repository URL | "QuantGate. Evidence before deployment." | `docs/assets/quantgate_logo.png` |
+
+## 문구 규칙 (편집 전 확인)
+
+| Do not say | Say instead |
+|---|---|
+| "Calibration tuning bought nothing" | "In this experiment, no success advantage from calibration choice was detected" |
+| "The real risk was not INT8" | "The experiment revealed conditions you must check before deploying" |
+| "Cosmos watches every run" | "215 trials watched live, 245 final frames judged afterwards" |
+| "FP16 is the answer" | "FP16 is the cost-favored candidate" (until the FP16 analysis is in) |
+| Mixing completed and planned trials | "245 completed trials" and "stress tests in progress", stated separately |
 
 ## 촬영할 것 (사용자)
 
-- **New shots** (optional, better quality than the trial videos):
-  - A side view of the arm doing one successful pick-and-place.
-  - A close-up of the gripper with the rubber bands.
-  - The yellow can.
-- **Screen recordings**:
-  - The blinded runner screen. Check that latency is not shown.
-  - Starting or stopping the Cosmos endpoint, or the Nebius console.
-  - The Jobs list.
-- Do not capture keys, tokens or the account email on screen. In particular, mask the endpoint URL and token, and the
-  profile area of the Nebius console.
+- **The continuous 60 s side-view shot** (most important):
+  - Run one extra trial just for the camera, separate from the blinded blocks. Keep the phone and hands out of the
+    overhead camera's view.
+  - Shoot with the gripper in its current configuration, and caption that configuration.
+- **Re-enactment**: `lerobot-teleoperate` only, never `lerobot-record`. Run it after the S4 and FP16 blocks.
+- **Screen recordings**: the dashboard (scroll and clicks) and the Nebius console (Jobs, Endpoint). Mask keys, tokens
+  and the account area.
+- **Optional**: a cold can from the fridge, as an atmosphere shot. No success-rate claim goes with it.
 
 ## 편집 메모
 
-- Every number in the narration must come from the dashboard, the README or the report files. After editing, check
-  each number against its source once.
+- Every number in the narration must come from the dashboard, the README or the report files. Check them once
+  against their sources after editing.
 - Captions must say which results are blinded and pre-registered (precision) and which are observations (gripper,
   position).
-- Trial-video cell names are public after unsealing, but the narration does not name cells. It talks in terms of
-  "audit top" and "random".
+- Do not name engine cells in the narration. Use "audit top" or "random".
