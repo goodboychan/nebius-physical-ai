@@ -1,0 +1,14 @@
+{
+ "S1001_1012_002116": {
+  "success_geom": false,
+  "reason": "can_top_not_found(fallen_or_occluded)"
+ },
+ "S1002_1012_002229": {
+  "success_geom": false,
+  "reason": "can_top_not_found(fallen_or_occluded)"
+ },
+ "S1003_1012_002349": {
+  "success_geom": false,
+  "reason": "can_top_not_found(fallen_or_occluded)"
+ }
+}

@@ -1,0 +1,338 @@
+{
+ "S4001_1012_002921": {
+  "success_geom": true,
+  "reason": "ok",
+  "base_dist_px": 18.4,
+  "move_p80": 1.7,
+  "n_outlier_frames": 2
+ },
+ "S4002_1012_003030": {
+  "success_geom": true,
+  "reason": "ok",
+  "base_dist_px": 17.5,
+  "move_p80": 1.7,
+  "n_outlier_frames": 0
+ },
+ "S4003_1012_003142": {
+  "success_geom": true,
+  "reason": "ok",
+  "base_dist_px": 17.0,
+  "move_p80": 0.2,
+  "n_outlier_frames": 0
+ },
+ "S4004_1012_003253": {
+  "success_geom": false,
+  "reason": "moving",
+  "base_dist_px": 18.3,
+  "move_p80": 20.4,
+  "n_outlier_frames": 4
+ },
+ "S4005_1012_003400": {
+  "success_geom": true,
+  "reason": "ok",
+  "base_dist_px": 15.2,
+  "move_p80": 1.4,
+  "n_outlier_frames": 1
+ },
+ "S4006_1012_003510": {
+  "success_geom": true,
+  "reason": "ok",
+  "base_dist_px": 20.4,
+  "move_p80": 1.7,
+  "n_outlier_frames": 0
+ },
+ "S4007_1012_003619": {
+  "success_geom": false,
+  "reason": "moving",
+  "base_dist_px": 21.0,
+  "move_p80": 22.1,
+  "n_outlier_frames": 4
+ },
+ "S4008_1012_003731": {
+  "success_geom": false,
+  "reason": "moving",
+  "base_dist_px": 20.4,
+  "move_p80": 22.1,
+  "n_outlier_frames": 4
+ },
+ "S4009_1012_003842": {
+  "success_geom": true,
+  "reason": "ok",
+  "base_dist_px": 16.3,
+  "move_p80": 1.2,
+  "n_outlier_frames": 2
+ },
+ "S4010_1012_003952": {
+  "success_geom": false,
+  "reason": "moving",
+  "base_dist_px": 20.5,
+  "move_p80": 25.5,
+  "n_outlier_frames": 6
+ },
+ "S4011_1012_004103": {
+  "success_geom": true,
+  "reason": "ok",
+  "base_dist_px": 17.1,
+  "move_p80": 2.8,
+  "n_outlier_frames": 1
+ },
+ "S4012_1012_233852": {
+  "success_geom": true,
+  "reason": "ok",
+  "base_dist_px": 22.5,
+  "move_p80": 1.7,
+  "n_outlier_frames": 0
+ },
+ "S4013_1012_234004": {
+  "success_geom": true,
+  "reason": "ok",
+  "base_dist_px": 21.5,
+  "move_p80": 1.9,
+  "n_outlier_frames": 1
+ },
+ "S4014_1012_234113": {
+  "success_geom": true,
+  "reason": "ok",
+  "base_dist_px": 20.4,
+  "move_p80": 1.7,
+  "n_outlier_frames": 0
+ },
+ "S4015_1012_234222": {
+  "success_geom": true,
+  "reason": "ok",
+  "base_dist_px": 17.1,
+  "move_p80": 1.2,
+  "n_outlier_frames": 0
+ },
+ "S4016_1012_234330": {
+  "success_geom": true,
+  "reason": "ok",
+  "base_dist_px": 21.6,
+  "move_p80": 1.2,
+  "n_outlier_frames": 2
+ },
+ "S4017_1012_234439": {
+  "success_geom": true,
+  "reason": "ok",
+  "base_dist_px": 18.7,
+  "move_p80": 1.2,
+  "n_outlier_frames": 0
+ },
+ "S4018_1012_234547": {
+  "success_geom": false,
+  "reason": "moving",
+  "base_dist_px": 21.0,
+  "move_p80": 22.8,
+  "n_outlier_frames": 4
+ },
+ "S4019_1012_234656": {
+  "success_geom": false,
+  "reason": "moving",
+  "base_dist_px": 18.8,
+  "move_p80": 20.4,
+  "n_outlier_frames": 4
+ },
+ "S4020_1012_234805": {
+  "success_geom": true,
+  "reason": "ok",
+  "base_dist_px": 21.0,
+  "move_p80": 1.9,
+  "n_outlier_frames": 2
+ },
+ "S4021_1012_234912": {
+  "success_geom": false,
+  "reason": "moving",
+  "base_dist_px": 19.9,
+  "move_p80": 22.8,
+  "n_outlier_frames": 4
+ },
+ "S4022_1012_235021": {
+  "success_geom": true,
+  "reason": "ok",
+  "base_dist_px": 14.5,
+  "move_p80": 1.7,
+  "n_outlier_frames": 0
+ },
+ "S4023_1012_235129": {
+  "success_geom": false,
+  "reason": "moving",
+  "base_dist_px": 19.9,
+  "move_p80": 21.3,
+  "n_outlier_frames": 5
+ },
+ "S4024_1012_235239": {
+  "success_geom": false,
+  "reason": "moving",
+  "base_dist_px": 20.0,
+  "move_p80": 22.0,
+  "n_outlier_frames": 5
+ },
+ "S4025_1012_235349": {
+  "success_geom": false,
+  "reason": "moving",
+  "base_dist_px": 20.0,
+  "move_p80": 21.7,
+  "n_outlier_frames": 4
+ },
+ "S4026_1012_235458": {
+  "success_geom": true,
+  "reason": "ok",
+  "base_dist_px": 21.0,
+  "move_p80": 1.2,
+  "n_outlier_frames": 2
+ },
+ "S4027_1012_235610": {
+  "success_geom": false,
+  "reason": "moving",
+  "base_dist_px": 15.2,
+  "move_p80": 21.3,
+  "n_outlier_frames": 7
+ },
+ "S4028_1012_235728": {
+  "success_geom": false,
+  "reason": "moving",
+  "base_dist_px": 12.5,
+  "move_p80": 21.0,
+  "n_outlier_frames": 7
+ },
+ "S4029_1012_235836": {
+  "success_geom": false,
+  "reason": "moving",
+  "base_dist_px": 18.3,
+  "move_p80": 22.9,
+  "n_outlier_frames": 4
+ },
+ "S4030_1012_235946": {
+  "success_geom": false,
+  "reason": "moving",
+  "base_dist_px": 17.2,
+  "move_p80": 23.3,
+  "n_outlier_frames": 4
+ },
+ "S4031_1013_000057": {
+  "success_geom": false,
+  "reason": "moving",
+  "base_dist_px": 18.8,
+  "move_p80": 21.9,
+  "n_outlier_frames": 5
+ },
+ "S4032_1013_000208": {
+  "success_geom": true,
+  "reason": "ok",
+  "base_dist_px": 21.3,
+  "move_p80": 0.2,
+  "n_outlier_frames": 1
+ },
+ "S4033_1013_000316": {
+  "success_geom": true,
+  "reason": "ok",
+  "base_dist_px": 19.0,
+  "move_p80": 2.7,
+  "n_outlier_frames": 2
+ },
+ "S4034_1013_000431": {
+  "success_geom": true,
+  "reason": "ok",
+  "base_dist_px": 16.3,
+  "move_p80": 1.7,
+  "n_outlier_frames": 2
+ },
+ "S4035_1013_000541": {
+  "success_geom": false,
+  "reason": "moving",
+  "base_dist_px": 11.8,
+  "move_p80": 20.8,
+  "n_outlier_frames": 7
+ },
+ "S4036_1013_000710": {
+  "success_geom": true,
+  "reason": "ok",
+  "base_dist_px": 22.1,
+  "move_p80": 1.7,
+  "n_outlier_frames": 2
+ },
+ "S4037_1013_000819": {
+  "success_geom": false,
+  "reason": "moving",
+  "base_dist_px": 11.8,
+  "move_p80": 22.8,
+  "n_outlier_frames": 5
+ },
+ "S4038_1013_000927": {
+  "success_geom": false,
+  "reason": "moving",
+  "base_dist_px": 21.0,
+  "move_p80": 21.6,
+  "n_outlier_frames": 4
+ },
+ "S4039_1013_001050": {
+  "success_geom": false,
+  "reason": "moving",
+  "base_dist_px": 21.0,
+  "move_p80": 22.9,
+  "n_outlier_frames": 6
+ },
+ "S4040_1013_001159": {
+  "success_geom": false,
+  "reason": "moving",
+  "base_dist_px": 21.0,
+  "move_p80": 25.8,
+  "n_outlier_frames": 4
+ },
+ "S4041_1013_001309": {
+  "success_geom": false,
+  "reason": "moving",
+  "base_dist_px": 18.3,
+  "move_p80": 21.3,
+  "n_outlier_frames": 4
+ },
+ "S4042_1013_001417": {
+  "success_geom": true,
+  "reason": "ok",
+  "base_dist_px": 17.5,
+  "move_p80": 1.7,
+  "n_outlier_frames": 0
+ },
+ "S4043_1013_001526": {
+  "success_geom": false,
+  "reason": "moving",
+  "base_dist_px": 18.8,
+  "move_p80": 21.6,
+  "n_outlier_frames": 4
+ },
+ "S4044_1013_001634": {
+  "success_geom": true,
+  "reason": "ok",
+  "base_dist_px": 17.8,
+  "move_p80": 0.0,
+  "n_outlier_frames": 2
+ },
+ "S4045_1013_001744": {
+  "success_geom": false,
+  "reason": "moving",
+  "base_dist_px": 18.3,
+  "move_p80": 21.7,
+  "n_outlier_frames": 6
+ },
+ "S4046_1013_001854": {
+  "success_geom": true,
+  "reason": "ok",
+  "base_dist_px": 15.6,
+  "move_p80": 1.7,
+  "n_outlier_frames": 2
+ },
+ "S4047_1013_002002": {
+  "success_geom": false,
+  "reason": "moving",
+  "base_dist_px": 21.0,
+  "move_p80": 25.1,
+  "n_outlier_frames": 5
+ },
+ "S4048_1013_002111": {
+  "success_geom": true,
+  "reason": "ok",
+  "base_dist_px": 17.8,
+  "move_p80": 2.7,
+  "n_outlier_frames": 2
+ }
+}

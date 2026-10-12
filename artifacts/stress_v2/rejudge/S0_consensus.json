@@ -1,0 +1,145 @@
+{
+ "S0001_1011_234300": {
+  "success_geom": true,
+  "reason": "ok",
+  "base_dist_px": 20.0,
+  "n_consensus_frames": 15
+ },
+ "S0002_1011_234413": {
+  "success_geom": true,
+  "reason": "ok",
+  "base_dist_px": 23.3,
+  "n_consensus_frames": 15
+ },
+ "S0003_1011_234522": {
+  "success_geom": true,
+  "reason": "ok",
+  "base_dist_px": 22.7,
+  "n_consensus_frames": 15
+ },
+ "S0004_1011_234636": {
+  "success_geom": true,
+  "reason": "ok",
+  "base_dist_px": 20.6,
+  "n_consensus_frames": 15
+ },
+ "S0005_1011_234747": {
+  "success_geom": true,
+  "reason": "ok",
+  "base_dist_px": 23.7,
+  "n_consensus_frames": 15
+ },
+ "S0006_1011_234856": {
+  "success_geom": true,
+  "reason": "ok",
+  "base_dist_px": 20.6,
+  "n_consensus_frames": 15
+ },
+ "S0007_1011_235005": {
+  "success_geom": true,
+  "reason": "ok",
+  "base_dist_px": 20.0,
+  "n_consensus_frames": 15
+ },
+ "S0008_1011_235748": {
+  "success_geom": true,
+  "reason": "ok",
+  "base_dist_px": 21.3,
+  "n_consensus_frames": 15
+ },
+ "S0009_1011_235908": {
+  "success_geom": false,
+  "reason": "moving_or_not_standing",
+  "n_consensus_frames": 6
+ },
+ "S0010_1012_000028": {
+  "success_geom": true,
+  "reason": "ok",
+  "base_dist_px": 18.0,
+  "n_consensus_frames": 15
+ },
+ "S0011_1012_000154": {
+  "success_geom": true,
+  "reason": "ok",
+  "base_dist_px": 19.0,
+  "n_consensus_frames": 15
+ },
+ "S0012_1012_000306": {
+  "success_geom": true,
+  "reason": "ok",
+  "base_dist_px": 22.3,
+  "n_consensus_frames": 15
+ },
+ "S0013_1012_000421": {
+  "success_geom": true,
+  "reason": "ok",
+  "base_dist_px": 22.3,
+  "n_consensus_frames": 15
+ },
+ "S0014_1012_000551": {
+  "success_geom": true,
+  "reason": "ok",
+  "base_dist_px": 19.4,
+  "n_consensus_frames": 15
+ },
+ "S0015_1012_000701": {
+  "success_geom": true,
+  "reason": "ok",
+  "base_dist_px": 20.0,
+  "n_consensus_frames": 15
+ },
+ "S0016_1012_000813": {
+  "success_geom": true,
+  "reason": "ok",
+  "base_dist_px": 19.0,
+  "n_consensus_frames": 15
+ },
+ "S0017_1012_000921": {
+  "success_geom": true,
+  "reason": "ok",
+  "base_dist_px": 23.0,
+  "n_consensus_frames": 15
+ },
+ "S0018_1012_001030": {
+  "success_geom": true,
+  "reason": "ok",
+  "base_dist_px": 22.0,
+  "n_consensus_frames": 15
+ },
+ "S0019_1012_001138": {
+  "success_geom": true,
+  "reason": "ok",
+  "base_dist_px": 22.7,
+  "n_consensus_frames": 15
+ },
+ "S0020_1012_001247": {
+  "success_geom": true,
+  "reason": "ok",
+  "base_dist_px": 24.0,
+  "n_consensus_frames": 15
+ },
+ "S0021_1012_001357": {
+  "success_geom": true,
+  "reason": "ok",
+  "base_dist_px": 23.5,
+  "n_consensus_frames": 15
+ },
+ "S0022_1012_001506": {
+  "success_geom": true,
+  "reason": "ok",
+  "base_dist_px": 20.3,
+  "n_consensus_frames": 15
+ },
+ "S0023_1012_001616": {
+  "success_geom": true,
+  "reason": "ok",
+  "base_dist_px": 23.5,
+  "n_consensus_frames": 15
+ },
+ "S0024_1012_001725": {
+  "success_geom": true,
+  "reason": "ok",
+  "base_dist_px": 19.0,
+  "n_consensus_frames": 15
+ }
+}

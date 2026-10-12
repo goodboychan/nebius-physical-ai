@@ -198,3 +198,25 @@ changes: cells, engines, runtime, success criterion, S1 mark, S4 can, and the Co
   The S0 stop rule and the outcome rules are unchanged.
 - The stress v2 and FP16 sealed logs have not been opened. The public S4 tally seen so far is 11 trials with no
   operator-reported failure.
+
+## 11. Amendment v2-3 (2026-10-13, after the last v2 trial and the post-lock hash, before any v2 cell result was opened)
+
+- **Finding**: the §9 rule (the nearest circle per frame, at most 3/15 outliers) gives S4 v2 24/48. The operator saw
+  all 48 trials succeed. Every one of the 24 failures is "moving", with 4–7 outlier frames on the same spurious circle
+  near (399, 365). With the shorter yellow can, the expected top position sits close to it. This is a measurement
+  failure, not a policy outcome. Only public, cell-blind information was used (the videos and the operator's report).
+- **Rule** (`scripts/stress_rejudge_consensus.py` `382acdf3…`): the same detector, brightness threshold, radius range and
+  offsets.
+  - The can top is the **consensus** circle: the candidate present, within 8 px, in the most of the last 15 frames.
+  - Standing and still means at least 12/15 frames contain it.
+  - Inside means the consensus median plus the offset lies within 35 px of the coaster center.
+  - No candidate means a failure.
+- **Validated before adoption**, on every video available, all cell-blind:
+  - G6: 245/245 agree with the sealed outcomes.
+  - Stress v1: 25/25 agree with the live judge.
+  - Stress v2 S0: 23/24, the one failure is trial 9, a real drop.
+  - S1: 0/3, all three real failures.
+  - S4: 48/48, matching the operator.
+  - Results: `artifacts/reports/judge_validation/`, `artifacts/stress_v2/rejudge/*_consensus.json`.
+- **Primary for v2 and FP16**: this consensus rule ∧ released ∧ no contact ∧ not aborted. The §9 rule and the live
+  judge are reported as sensitivity analyses.

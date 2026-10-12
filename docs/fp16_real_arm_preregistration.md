@@ -66,3 +66,8 @@ The E1 decision uses the Newcombe hybrid-score interval at 97.5%, the bootstrap 
 placements per arm, and each comparison gets a verdict: GO, NO-GO or INSUFFICIENT_EVIDENCE. The analysis function is
 the same as in stress protocol §10 (`stress_analysis.py` `7d99864d…`). The reason is the bootstrap's collapse at 0
 failures.
+
+## 8. Amendment 2 (2026-10-13, before the first F0 trial)
+
+The outcome uses the consensus re-judge of stress protocol §11 (`stress_rejudge_consensus.py` `382acdf3…`) instead of §9.
+The reason is the §9 rule's false failures on an off-center can, documented in §11 and validated on 345 videos.
