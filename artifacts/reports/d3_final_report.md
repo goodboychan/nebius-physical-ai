@@ -91,4 +91,4 @@ Thus the supervisor did not flag any failures and the end judge did not catch an
   It correctly marks FP16 as unvalidated. Our own reading of the same evidence is: INT8 is supported by closed-loop
   evidence, FP16 is cheaper (11.6 ms against 16.8 ms, and 82 mJ against 101 mJ) but pending its pre-registered
   real-arm run. Both readings are consistent with the evidence.
-- The other run (`d3_final_runs.json`, repeat 1) had 6 flags: the same three, plus `95` from "95%" twice and `194`.
+- The other run (`d3_final_runs.json`, repeat 1) had 6 flags: the same three, plus `95` from "95%" twice and `194`. `194` is a correct sum of the INT8 successes (194/200), computed by the agent against rule 1.
