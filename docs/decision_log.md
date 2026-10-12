@@ -696,3 +696,11 @@ ACT는 상태마다 100스텝을 내고 실기에서 100스텝을 모두 실행�
   (콜라캔 (0, 32) — 캔이 더 낮아 보정이 작다). 자체 확인: 가운데 선 캔 base 0.0px, 성공
 - `artifacts/stress_v2/stress_can_S4.json` sha256 `adf71059c0e6607f997ee4a55ee50f33d264df7a3b4000d0949733c7be6cbfb9`
 - 2026-10-12 세션 종료: S4 v2 11/48 진행(조작자: 실패 없음), 다른 날 trial 12부터 잇는다. Cosmos 엔드포인트 정지
+
+---
+
+## 2026-10-12 — FP16 실기 사전등록 v1 잠금 (첫 F0 trial 전)
+
+- 사용자 결정(제안 2번). `docs/fp16_real_arm_preregistration.md` `718320be…`: VC-025 FP16 20 / VC-000 10 / VC-002 10 인터리브, 현재 하드웨어(고무줄),
+  같은 세션 안에서만 비교. 봉인 순서표 `ded2ea11…`, 분석 `fp16_analysis.py` `dfd92ea4…`
+- 실행기 `so101_trial.py` `ffd03e6b…`: `--blind F0 fp16` 추가. v1/v2 경로 동작은 그대로다(S4 v2 재개에 이 버전을 쓴다)
