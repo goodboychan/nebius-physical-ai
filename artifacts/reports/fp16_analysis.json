@@ -1,0 +1,114 @@
+{
+ "n": 40,
+ "cells": {
+  "VC-000": {
+   "k": 10,
+   "n": 10,
+   "place_mean": 18.799999999999997
+  },
+  "VC-002": {
+   "k": 10,
+   "n": 10,
+   "place_mean": 17.12
+  },
+  "VC-025": {
+   "k": 19,
+   "n": 20,
+   "place_mean": 18.173684210526314
+  }
+ },
+ "primary_fp16_vs_fp32": {
+  "ref_k_n": [
+   10,
+   10
+  ],
+  "test_k_n": [
+   19,
+   20
+  ],
+  "E1": {
+   "degradation_pp": 5.000000000000004,
+   "ci_pp": [
+    -28.71073709884875,
+    27.33783813599041
+   ],
+   "method": "Newcombe hybrid score",
+   "decision": "indeterminate (ceiling)",
+   "bootstrap_ci_pp_secondary": [
+    0.0,
+    19.999999999999996
+   ]
+  },
+  "E2": {
+   "degradation_px": -0.6263157894736828,
+   "ci_px": [
+    -2.6373815789473682,
+    1.3726513157894695
+   ],
+   "n_place": [
+    10,
+    19
+   ],
+   "decision": "tolerance_compatible"
+  },
+  "verdict": "INSUFFICIENT_EVIDENCE",
+  "ceiling_rule_applied": true,
+  "conf": 0.975
+ },
+ "secondary_fp16_vs_int8": {
+  "ref_k_n": [
+   10,
+   10
+  ],
+  "test_k_n": [
+   19,
+   20
+  ],
+  "E1": {
+   "degradation_pp": 5.000000000000004,
+   "ci_pp": [
+    -28.71073709884875,
+    27.33783813599041
+   ],
+   "method": "Newcombe hybrid score",
+   "decision": "indeterminate (ceiling)",
+   "bootstrap_ci_pp_secondary": [
+    0.0,
+    19.999999999999996
+   ]
+  },
+  "E2": {
+   "degradation_px": 1.0536842105263133,
+   "ci_px": [
+    -1.3195657894736856,
+    3.5731710526315807
+   ],
+   "n_place": [
+    10,
+    19
+   ],
+   "decision": "tolerance_compatible"
+  },
+  "verdict": "INSUFFICIENT_EVIDENCE",
+  "ceiling_rule_applied": true,
+  "conf": 0.975
+ },
+ "latency": {
+  "VC-000": {
+   "infer_ms_mean": 79.03,
+   "late_chunks": 0,
+   "step_max_ms_median": 229.75
+  },
+  "VC-002": {
+   "infer_ms_mean": 34.309999999999995,
+   "late_chunks": 0,
+   "step_max_ms_median": 198.95
+  },
+  "VC-025": {
+   "infer_ms_mean": 24.660000000000004,
+   "late_chunks": 0,
+   "step_max_ms_median": 186.85000000000002
+  }
+ },
+ "falsified_fp16_safe": false
+}

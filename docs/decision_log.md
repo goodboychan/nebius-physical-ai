@@ -763,3 +763,15 @@ ACT는 상태마다 100스텝을 내고 실기에서 100스텝을 모두 실행�
 - **v1**(패드 없음, 기술 통계 `stress_v1_descriptive.json`): S0 VC-005 3/6, VC-002 2/6, VC-020 2/6, VC-000 1/6 — 충실도 순서와 무관. S1 VC-002 1/1
 - 해석: 처음 보는 캔에서도 정밀도·캘리브레이션 간 차이를 검출하지 못했다(모든 셀 성공 — 천장). 성공률을 크게 바꾼 것은 그리퍼 마찰(8/24 → 23/24)과
   시작 위치(0/3)였고, 그 안에서도 셀 순서는 오프라인 충실도와 맞지 않았다
+
+---
+
+## 2026-10-13 — FP16 실기 봉인 해제와 분석
+
+- 봉인 로그 해시 `2993e509…` = `fp16_post.json`. 해제본 `artifacts/trials/fp16_unsealed/`, 결과 `artifacts/reports/fp16_analysis.json`
+- 주 판정(§11 합의 재판정, 조작자 관찰과 일치: 실패는 trial 13 하나): **FP16 VC-025 19/20**, FP32 VC-000 10/10, INT8 VC-002 10/10.
+  trial 13(그리퍼 끝으로 집다 떨어뜨림)은 FP16 셀이었다
+- 주 비교 FP16 vs FP32: E1 열화 5.0 pp, Newcombe 97.5% [−28.7, +27.3] → 천장 규칙 indeterminate; E2 −0.63 px [−2.64, +1.37] → tolerance_compatible
+  → **INSUFFICIENT_EVIDENCE**, 반증 안 됨. 부 비교 FP16 vs INT8: E2 +1.05 px [−1.32, +3.57] tolerance_compatible, E1 indeterminate
+- 실행기 종단 지연(정책 서버 포함): **FP16 24.7 ms**, INT8 34.3 ms, FP32 79.0 ms; 늦은 chunk 0 — trtexec 순위(FP16 최속)가 실기 경로에서도 같다
+- 해석: FP16은 이 장치에서 비용상 가장 유리하고, 실기에서 배치 오차는 FP32와 허용 범위 안이며 성공률 차이는 검출되지 않았다(표본상 판정 보류)
