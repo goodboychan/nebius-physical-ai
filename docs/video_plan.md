@@ -6,8 +6,7 @@
   this, and as what?") and ends on the deployment review card.
 - **Story arc**: problem → how QuantGate gathers evidence → the measurements change the decision → what the developer
   takes away.
-- Narration is in English. `[PENDING]` marks slots filled after the S4 and FP16 analyses. `LOCK-4`: the narrative is
-  fixed only after those analyses.
+- Narration is in English. All experiments are analyzed (2026-10-13); the narrative is fixed at `LOCK-4`.
 
 ## 장면 구성
 
@@ -16,9 +15,9 @@
 | 1 | 0:00–0:10 | 3 s success clip → 3 s failure clip (knocked over) → black screen with the question | "Same robot, same task. Can I ship this to a tiny Jetson, and as which model?" | `clips/g6_success.mp4`, `clips/g6_fail_knock.mp4` |
 | 2 | 0:10–1:10 | **Continuous 60 s real-arm shot** (phone, side view), with small captions: task, device, candidate engines, blinded trial | "The arm runs an ACT policy on a Jetson Orin Nano Super, trained on Nebius from 120 demonstrations (re-enactment shown). We built 26 candidate engines: FP32, FP16 and 24 INT8 calibrations. Every real trial is blinded: the operator never knows which engine is running." | New shot: phone 30–40 cm beside the follower, 16:9, leader out of frame, one full trial. A 5 s insert of the re-enactment plus `clips/demos_top_wrist.mp4`, captioned "re-enactment" |
 | 3 | 1:10–1:35 | Dashboard: engine cost bars → per-cell success chart | "QuantGate puts cost measured on the device next to real-arm results. Training and the offline audit ran on Nebius Jobs; the engines are TensorRT on the Jetson." | D7 board "Engine cost" and "Closed-loop success" |
-| 4 | 1:35–2:00 | Three findings, one caption each: FP16 cost → audit vs random 73/75 vs 73/75 → no-pad slip and 3 cm shift clips | "Measuring changed the decision. FP16 was the cheapest engine here, not INT8. The audit's top picks did no better than random picks. What moved success was grip and position." | `clips/v1_nopad_drop.mp4`, `clips/v2_shift_regrasp.mp4`, then 3 s of `clips/v2_s0_vs_s4.mp4` (unseen can: 48/48) |
+| 4 | 1:35–2:00 | Three findings, one caption each: FP16 cost → audit vs random 73/75 vs 73/75 → no-pad slip and 3 cm shift clips | "Measuring changed the decision. FP16 was the cheapest engine here, not INT8, and on the arm it went 19 for 20. The audit's top picks did no better than random picks. What moved success was grip and position." | `clips/v1_nopad_drop.mp4`, `clips/v2_shift_regrasp.mp4`, then 3 s of `clips/v2_s0_vs_s4.mp4` (unseen can: 48/48) |
 | 5 | 2:00–2:20 | Failure 186 final frame with Cosmos's "Yes" overlaid (the operator's hand at the desk edge is the real use case) → Nemotron report with "numbers not in evidence: 0" highlighted | "The AI layers are checked too. In our setup Cosmos-Reason2, on a Nebius endpoint, called this a success, and missed all 7 failures. Nemotron 3 Super on Token Factory writes the report, and every number is checked against the evidence." | `clips/g6_fail_knock.mp4` last frame, `d3_final_report.md` |
-| 6 | 2:20–2:45 | Dashboard deployment review card, line by line, then a click into a failure video | "What you take away is a review: FP16 is the cost-favored candidate, the real-arm evidence for each INT8 cell is still insufficient, the weak spots are grip and position, and here is what to test next." | D7 board "Deployment review" (`[PENDING FP16]` updates the line) |
+| 6 | 2:20–2:45 | Dashboard deployment review card, line by line, then a click into a failure video | "What you take away is a review: FP16 is the cheapest engine here and went 19 for 20 on the arm with placement matching FP32, but the success comparison still needs more trials; the weak spots are grip and position; and here is what to test next." | D7 board "Deployment review" |
 | 7 | 2:45–2:50 | Logo + repository URL | "QuantGate. Evidence before deployment." | `docs/assets/quantgate_logo.png` |
 
 ## 문구 규칙 (편집 전 확인)

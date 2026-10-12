@@ -34,7 +34,10 @@ Numbers come from committed artifacts. The figure's script lists its sources.
 2. **On the Orin Nano Super (15 W), FP16 is the cost-favored candidate.**
    - GPU compute: FP16 11.6 ms, INT8 16.8–17.1 ms, FP32 53.4 ms.
    - Energy per inference: 82, 101 and 403 mJ.
-   - FP16's real-arm run is pre-registered and still pending.
+   - On the real arm FP16 succeeded 19/20, against FP32 10/10 and INT8 10/10 (one interleaved blinded session).
+     Placement was within tolerance of FP32 (−0.63 px, CI [−2.64, +1.37]). Success: insufficient evidence at this
+     sample size. End to end it took 24.7 ms per chunk, against 34.3 ms for INT8 and 79.0 ms for FP32
+     ([`fp16_analysis.json`](artifacts/reports/fp16_analysis.json)).
    - Source: [`power_bench/SUMMARY.md`](artifacts/reports/power_bench/SUMMARY.md).
 3. **Deployment margins mattered more than precision** (observational).
    - Without the gripper pads: 8/24. With rubber bands: 23/24.

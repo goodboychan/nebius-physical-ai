@@ -1,7 +1,6 @@
 # QuantGate — Devpost submission draft (v2, 2026-10-12)
 
-Status: **draft v2**, rewritten around the developer's decision, following the storytelling review. Slots marked
-`[PENDING FP16]` are filled after those blocks are unsealed. `[USER]` marks the user's own
+Status: **draft v2**, rewritten around the developer's decision, following the storytelling review. All experiment slots are filled (stress and FP16 unsealed 2026-10-13). `[USER]` marks the user's own
 ratings. Every number cites a committed artifact. Wording rules: say "not detected", never "no effect"; FP16 is
 "the cost-favored candidate" until its real-arm run is analyzed; completed and planned trials are counted
 separately.
@@ -44,7 +43,7 @@ Scope throughout: one pick-and-place task, one ACT policy, a Jetson Orin Nano Su
 
 | Finding | Evidence | What it means for the developer |
 |---|---|---|
-| On this device FP16 has the lowest latency and energy per inference | trtexec: FP16 11.6 ms and 82 mJ; INT8 16.8–17.1 ms and 101 mJ; FP32 53.4 ms and 403 mJ (`power_bench/SUMMARY.md`) | Don't pick an engine by its precision label. Measure on the target. FP16 is the cost-favored candidate; its real-arm run is `[PENDING FP16]` |
+| On this device FP16 has the lowest latency and energy per inference | trtexec: FP16 11.6 ms and 82 mJ; INT8 16.8–17.1 ms and 101 mJ; FP32 53.4 ms and 403 mJ (`power_bench/SUMMARY.md`) | Don't pick an engine by its precision label. Measure on the target. FP16 is the cost-favored candidate. On the arm: FP16 19/20, FP32 10/10, INT8 10/10; placement within tolerance of FP32; success undecided at this sample size; end to end 24.7 ms against 34.3 and 79.0 ms (`fp16_analysis.json`) |
 | Audit-picked INT8 cells did not beat random ones | 73/75 against 73/75, 95% CI [−6.8, +6.8] pp; offline rank against placement, Spearman 0.02–0.08 (`g6_analysis.json`) | In this setting, the offline ranking is not evidence that one calibration is better |
 | Against FP32 the evidence is insufficient for every INT8 cell | 194/200 against 24/25. At a 10 pp tolerance the Newcombe intervals span about ±23–53 pp, so all 10 cells are "insufficient evidence" (`g6_q2_sensitivity.json`) | "No failures seen" is not "safe". You would need about 110–120 trials per arm to show a cell is within 10 pp |
 | Deployment conditions moved success far more | No anti-slip pads 8/24; rubber bands 23/24; start moved 3 cm 0/3 (observational); unseen yellow can 48/48, every engine 12/12 (`stress_v2_analysis.json`) | Validate the grip, positions and objects you will actually face |
@@ -58,13 +57,13 @@ in general, or that calibration never matters.
 The dashboard opens with this card (`dashboard/audit_gate.html`, "Deployment review"):
 
 - **Cost-favored candidate**: FP16, measured on the Orin.
-- **Real-arm status**: INT8 completed (insufficient evidence against FP32). FP16 pending.
+- **Real-arm status**: FP16 19/20, placement within tolerance of FP32, success insufficient evidence. INT8: all 10 cells insufficient evidence against FP32.
 - **Verified for**: the cola can at the trained start mark, a fixed coaster, locked camera exposure and the gripper
   configuration in use.
 - **Weak spots**: grip friction and changes in start position.
 - **AI judge reliability**: not reliable in the current setup.
-- **Next actions**: run the FP16 block, plan about 110–120 trials per arm to resolve a cell, add varied start
-  positions, and validate the judge with video input.
+- **Next actions**: plan about 110–120 trials per arm to settle FP16 (or any cell) against FP32, add varied start
+  positions, validate the judge with video input, and check grip friction on the deployed gripper.
 
 It is a review aid, not an automatic approval. The trial videos sit next to the numbers, so the reader can see each
 failure.
@@ -109,7 +108,7 @@ failure.
 
 ## What's next
 
-- Run the FP16 real-arm block (pre-registered) and the remaining unseen-can trials.
+- Settle FP16 against FP32 on success with about 110–120 trials per arm.
 - Shorter replanning intervals (10 / 30 / about 90 steps) crossed with start-position shifts, to separate trajectory
   memorization from slow reaction.
 - An offline re-evaluation of Cosmos: one frame with a larger output budget, and the last seconds of video.

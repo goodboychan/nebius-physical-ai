@@ -128,8 +128,8 @@ footer{border-top:1px solid var(--rule); padding-top:18px; color:var(--ink-3); f
     <div class="bar"></div>
     <div class="body">
       <div class="t"><span class="code">LOCK-3</span><span>passed. G6 is unsealed and analyzed.</span></div>
-      <p>The cell-to-engine map was opened only after all 245 trials were logged and hashed. The stress tests were unsealed
-        on 10-13. The FP16 run is still pending and stays sealed.</p>
+      <p>The cell-to-engine map was opened only after all 245 trials were logged and hashed. The stress tests and the FP16
+        run were unsealed on 10-13, each after its post-run hash was committed.</p>
     </div>
   </section>
 
@@ -138,12 +138,12 @@ footer{border-top:1px solid var(--rule); padding-top:18px; color:var(--ink-3); f
     <p class="note">A review aid, not an automatic approval. Each line shows what the evidence supports today and what is still missing.</p>
     <div class="rows">
       <div class="row"><span class="k">Cost</span><span class="d"><b>FP16 (VC-025) is the cheapest engine on this device</b>: 11.6 ms and 82 mJ per inference, against 16.8–17.1 ms and 101 mJ for INT8 and 53.4 ms and 403 mJ for FP32 (trtexec, back-to-back). At the deployed rate, one chunk about every 3 s, inference energy is a small part of system power.</span><span class="v"><span class="chip ok">measured</span></span></div>
-      <div class="row"><span class="k">Real arm</span><span class="d"><b>FP16 has no real-arm evidence yet.</b> A pre-registered run (FP16 20, FP32 10, INT8 10, interleaved) is pending. INT8: 10 cells with 194/200 successes against FP32 24/25. Against FP32 with a 10 pp tolerance, every cell is <b>insufficient evidence</b>: the Newcombe 99.75% intervals span about ±23–53 pp at these sample sizes.</span><span class="v"><span class="chip seal">insufficient</span></span></div>
+      <div class="row"><span class="k">Real arm</span><span class="d"><b>FP16 on the real arm: 19/20</b> against FP32 10/10 and INT8 10/10, in one interleaved blinded session with the current gripper. Placement is within the 5 px tolerance of FP32 (−0.63 px, CI [−2.64, +1.37]). The success difference cannot be decided at this sample size (CI ±28 pp), so the verdict is <b>insufficient evidence</b>, not falsified. End to end in the runner, FP16 takes 24.7 ms per chunk against 34.3 ms for INT8 and 79.0 ms for FP32. In G6, against FP32 at 10 pp, every one of the 10 INT8 cells is also insufficient evidence.</span><span class="v"><span class="chip seal">insufficient</span></span></div>
       <div class="row"><span class="k">Placement</span><span class="d">Mean placement error stays within the 5 px tolerance of FP32 for 8 of 10 INT8 cells. The other 2 are indeterminate. Best vs worst audit fidelity: −0.84 px, CI [−2.53, +0.88].</span><span class="v"><span class="chip ok">8 / 10 ok</span></span></div>
       <div class="row"><span class="k">Verified for</span><span class="d">The 268 g cola can at the trained start mark, the fixed coaster, locked camera exposure and indoor desk light, with anti-slip pads (G6) and with rubber bands (stress v2: nominal 23/24, unseen 190 g yellow can 48/48 with every engine 12/12).</span><span class="v">scope</span></div>
       <div class="row"><span class="k">Weak spots</span><span class="d">Grip friction: 8/24 with no pads. Start position: 0/3 when moved 3 cm; the policy reaches for its memorized position first. A new object of a different size was not a weak spot here (48/48).</span><span class="v"><span class="chip halt">observed</span></span></div>
       <div class="row"><span class="k">AI judge</span><span class="d">In its current setup (one final frame, a one-word answer) Cosmos-Reason2 detected 0 of 7 G6 failures. Do not use it as a success signal until it is validated, for example with video input.</span><span class="v"><span class="chip halt">not reliable</span></span></div>
-      <div class="row"><span class="k">Next</span><span class="d">1. Run the FP16 real-arm block. 2. To resolve a cell against FP32 at 10 pp, plan about 110–120 trials per arm. 3. Add demonstrations from varied start positions before relying on position changes. 4. Validate the AI judge on held-out trials.</span><span class="v">actions</span></div>
+      <div class="row"><span class="k">Next</span><span class="d"> 1. If FP16 is the candidate, plan about 110–120 trials each for FP16 and FP32 to settle success within 10 pp. 2. Add demonstrations from varied start positions before relying on position changes. 3. Validate the AI judge on held-out trials, for example with video input. 4. Check grip friction on the gripper you will deploy.</span><span class="v">actions</span></div>
     </div>
   </section>
 
@@ -158,7 +158,7 @@ footer{border-top:1px solid var(--rule); padding-top:18px; color:var(--ink-3); f
       <div class="lock"><div class="lock-id">LOCK-3</div><div class="lock-txt"><strong>225 main + 20 retest trials logged → first analysis run</strong><span>sealed log hashes fixed before unsealing</span></div><span class="chip ok">done 10-11</span></div>
       <div class="lock"><div class="lock-id">STRESS v1</div><div class="lock-txt"><strong>Pads removed: stopped by the S0 rule (8/24 &lt; 12)</strong><span>no pattern by fidelity: worst-fidelity cell 3/6, FP32 1/6 (descriptive)</span></div><span class="chip ok">unsealed 10-13</span></div>
       <div class="lock"><div class="lock-id">STRESS v2</div><div class="lock-txt"><strong>Rubber-band gripper: S0 23/24, S1 0/3 (stopped), S4 48/48</strong><span>outcome re-judged offline from video (§9); success decisions use Newcombe intervals, fixed before unsealing (§10)</span></div><span class="chip ok">unsealed 10-13</span></div>
-      <div class="lock"><div class="lock-id">FP16</div><div class="lock-txt"><strong>FP16 20 · FP32 10 · INT8 10, interleaved</strong><span>pre-registered, no trial yet</span></div><span class="chip wait">locked</span></div>
+      <div class="lock"><div class="lock-id">FP16</div><div class="lock-txt"><strong>FP16 19/20 · FP32 10/10 · INT8 10/10, interleaved</strong><span>pre-registered; unsealed after the post-lock hash</span></div><span class="chip ok">unsealed 10-13</span></div>
       <div class="lock"><div class="lock-id">LOCK-4</div><div class="lock-txt"><strong>Analysis complete → video and narrative</strong><span>blocks choosing the story after seeing results</span></div><span class="chip wait">pending</span></div>
     </div>
   </section>
@@ -211,8 +211,8 @@ footer{border-top:1px solid var(--rule); padding-top:18px; color:var(--ink-3); f
       <figure><svg viewBox="0 0 400 200" role="img" aria-label="GPU compute time per inference"><g id="ms"></g></svg><figcaption>GPU compute per 100-step chunk, median ms.</figcaption></figure>
       <figure><svg viewBox="0 0 400 200" role="img" aria-label="Energy per inference above idle"><g id="mj"></g></svg><figcaption>Energy per inference above idle (4.86 W), mJ.</figcaption></figure>
     </div>
-    <p class="note">End-to-end in the trial runner, including preprocessing and the socket round trip: INT8 34.1–34.6 ms and FP32
-      79.0 ms. FP16 has no real-arm run yet.</p>
+    <p class="note">End to end in the trial runner, including preprocessing and the socket round trip, the same order holds: FP16 24.7 ms, INT8 34.3 ms
+      and FP32 79.0 ms (FP16 block). On the real arm FP16 succeeded 19/20, with placement within tolerance of FP32.</p>
   </section>
 
   <section class="panel">
