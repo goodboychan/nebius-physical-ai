@@ -19,3 +19,10 @@ Stress v2 and FP16 per-cell results are sealed and are not on the board until th
 
 Design: the calibration-certificate identity of version 1 is kept: IBM Plex families, the same tokens, and plates
 ordered by real dependency.
+
+## Trial footage (version 3)
+
+`dashboard/clips/*.mp4` are full 60 s overhead trial videos, re-encoded from AV1 to H.264 by
+`scripts/make_dashboard_clips.py` with no edits or speed change. They are published as supporting files next to the
+page, not through the `assets` capability, because a page that declares `assets` cannot be shared publicly. The clips
+name trial numbers only, never engines.

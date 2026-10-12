@@ -94,6 +94,13 @@ svg{display:block; width:100%; height:auto}
 #tip{position:fixed; pointer-events:none; opacity:0; transition:opacity .12s; background:var(--ink); color:var(--paper); font-family:var(--mono);
   font-size:11.5px; padding:6px 9px; border-radius:3px; z-index:50; white-space:nowrap; font-variant-numeric:tabular-nums}
 [data-tip]:focus-visible{outline:2px solid var(--signal); outline-offset:2px}
+.clips{display:grid; grid-template-columns:repeat(auto-fit,minmax(280px,1fr)); gap:22px}
+.clip{display:flex; flex-direction:column; gap:8px; min-width:0}
+.clip video{width:100%; aspect-ratio:4/3; max-width:100%; background:var(--rule-2); border:1px solid var(--rule); display:block}
+.clip .ct{display:flex; gap:10px; align-items:baseline; flex-wrap:wrap}
+.clip .ct strong{font-size:14px}
+.clip p{font-size:13px; color:var(--ink-2)}
+.clip .src{font-family:var(--mono); font-size:11px; color:var(--ink-3)}
 footer{border-top:1px solid var(--rule); padding-top:18px; color:var(--ink-3); font-size:12.5px; display:flex; flex-direction:column; gap:6px}
 @media (prefers-reduced-motion:reduce){*{transition:none!important}}
 @media (max-width:560px){
@@ -200,6 +207,31 @@ footer{border-top:1px solid var(--rule); padding-top:18px; color:var(--ink-3); f
       <div class="fig-scroll"><svg viewBox="0 0 720 270" role="img" aria-label="Success rate by condition" style="min-width:540px"><g id="margin"></g></svg></div>
       <figcaption>Wilson 95% CI. Unseen-can (S4) results are added after stress v2 is unsealed.</figcaption>
     </figure>
+  </section>
+
+  <section class="panel">
+    <div class="plate"><h2>Trial footage</h2><span class="ref">overhead camera · full 60 s trials · real time</span></div>
+    <p class="note">Unedited overhead videos of single trials, re-encoded for the browser. The clips do not name the
+      engine: stress-test cells are still sealed.</p>
+    <div class="clips">
+      <figure class="clip"><video src="clips/g6_success.mp4" controls muted playsinline preload="metadata"></video>
+        <div class="ct"><strong>Nominal success</strong><span class="chip ok">success</span></div>
+        <p>A G6 blinded trial. The can stands 6.8 px from the coaster center.</p><span class="src">G6 main trial 12</span></figure>
+      <figure class="clip"><video src="clips/g6_fail_knock.mp4" controls muted playsinline preload="metadata"></video>
+        <div class="ct"><strong>Knocked over on withdrawal</strong><span class="chip halt">failure</span></div>
+        <p>The can was placed, then the gripper tipped it over while pulling back. Shown the final frame, Cosmos-Reason2
+          answered "Yes", meaning the can is standing.</p><span class="src">G6 main trial 186</span></figure>
+      <figure class="clip"><video src="clips/v1_nopad_drop.mp4" controls muted playsinline preload="metadata"></video>
+        <div class="ct"><strong>No anti-slip pads</strong><span class="chip halt">failure</span></div>
+        <p>Nominal scene with the gripper pads removed. The can drops while being carried. The block finished 8/24.</p><span class="src">stress v1 S0 trial 5</span></figure>
+      <figure class="clip"><video src="clips/v2_rubber_success.mp4" controls muted playsinline preload="metadata"></video>
+        <div class="ct"><strong>Rubber-band gripper</strong><span class="chip ok">success</span></div>
+        <p>The same scene with rubber bands on the fingers. The can sits about 20 px off center, inside the 35 px target.
+          The block finished 22/24.</p><span class="src">stress v2 S0 trial 1</span></figure>
+      <figure class="clip"><video src="clips/v2_shift_regrasp.mp4" controls muted playsinline preload="metadata"></video>
+        <div class="ct"><strong>Start moved 3 cm</strong><span class="chip halt">failure</span></div>
+        <p>The policy first closes on empty air at the trained start spot, then knocks the can over while re-grasping.</p><span class="src">stress v2 S1 trial 1</span></figure>
+    </div>
   </section>
 
   <section class="panel">
