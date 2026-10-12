@@ -1,0 +1,69 @@
+{
+ "evidence_hash": "dbfae8d521e0936bb9501f7f330d53f7407628dc72429e9038b45b0fc38ddfad",
+ "model": "nvidia/nemotron-3-super-120b-a12b",
+ "runs": [
+  {
+   "repeat": 0,
+   "latency_sec": 20.0,
+   "usage": {
+    "completion_tokens": 4686,
+    "prompt_tokens": 3817,
+    "total_tokens": 8503,
+    "completion_tokens_details": {
+     "accepted_prediction_tokens": null,
+     "audio_tokens": null,
+     "reasoning_tokens": 3086,
+     "rejected_prediction_tokens": null
+    },
+    "prompt_tokens_details": {
+     "audio_tokens": null,
+     "cached_tokens": 0,
+     "created_cache_tokens": 0,
+     "multimodal_tokens": null
+    },
+    "prompt_cache_hit_tokens": 0,
+    "prompt_cache_miss_tokens": 3817
+   },
+   "unmatched_numbers": [
+    "0.05",
+    "0.195",
+    "0.418"
+   ],
+   "sections_present": 5,
+   "text": "\n\n## 1. Closed-loop summary  \n**FP32 arm (VC-000):** successes\u202f=\u202f24/25, success_rate\u202f=\u202f0.96, placement_error_px_mean\u202f=\u202f7.05\u202fpx.  \n\n**INT8 arms (observed across the cells):** successes range\u202f=\u202f9\u201125 out of trials\u202f=\u202f10\u201125; success_rate range\u202f=\u202f0.90\u20111.00; placement_error_px_mean range\u202f=\u202f5.51\u20118.51\u202fpx.  \n\n**Primary contrast (EP\u20111_audit_vs_random):** diff\u202f=\u202f0.0, newcombe95\u202f=\u202f[\u20110.068,\u202f0.068].  \n\n**Noise\u2011floor retest (ES\u20115_retest_noise_floor for VC\u2011002):** newcombe95\u202f=\u202f[\u20110.195,\u202f0.124] (main\u202f=\u202f24/25, retest\u202f=\u202f20/20).  \n\n## 2. Per-cell go / no-go  \n\n**GO** (both vs_fp32_E1_success and vs_fp32_E2_placement = tolerance_compatible)  \n- VC-007: successes\u202f=\u202f15/15, vs_fp32_E1_success\u202f=\u202ftolerance_compatible, vs_fp32_E2_placement\u202f=\u202ftolerance_compatible  \n- VC-010: successes\u202f=\u202f25/25, vs_fp32_E1_success\u202f=\u202ftolerance_compatible, vs_fp32_E2_placement\u202f=\u202ftolerance_compatible  \n\n**UNDECIDED** (at least one vs_fp32 field = indeterminate)  \n- VC-002: successes\u202f=\u202f24/25, vs_fp32_E1_success\u202f=\u202findeterminate, vs_fp32_E2_placement\u202f=\u202ftolerance_compatible  \n- VC-005: successes\u202f=\u202f14/15, vs_fp32_E1_success\u202f=\u202findeterminate, vs_fp32_E2_placement\u202f=\u202ftolerance_compatible  \n- VC-011: successes\u202f=\u202f24/25, vs_fp32_E1_success\u202f=\u202findeterminate, vs_fp32_E2_placement\u202f=\u202ftolerance_compatible  \n- VC-012: successes\u202f=\u202f24/25, vs_fp32_E1_success\u202f=\u202findeterminate, vs_fp32_E2_placement\u202f=\u202ftolerance_compatible  \n- VC-015: successes\u202f=\u202f25/25, vs_fp32_E1_success\u202f=\u202ftolerance_compatible, vs_fp32_E2_placement\u202f=\u202findeterminate  \n- VC-020: successes\u202f=\u202f24/25, vs_fp32_E1_success\u202f=\u202findeterminate, vs_fp32_E2_placement\u202f=\u202ftolerance_compatible  \n- VC-022: successes\u202f=\u202f10/10, vs_fp32_E1_success\u202f=\u202ftolerance_compatible, vs_fp32_E2_placement\u202f=\u202findeterminate  \n- VC-024: successes\u202f=\u202f9/10, vs_fp32_E1_success\u202f=\u202findeterminate, vs_fp32_E2_placement\u202f=\u202ftolerance_compatible  \n\n**NO\u2011GO:** none (no evidence of worse performance).  \n\n## 3. Precision recommendation for this target  \n\n**Engine cost (trtexec)**  \n- FP32 (VC-000_fp32): gpu_compute_ms_median\u202f=\u202f53.4, throughput_qps\u202f=\u202f18.7, module_power_mw_median\u202f=\u202f12397, energy_per_inference_mj_above_idle\u202f=\u202f403.  \n- INT8 example (VC-002_int8): gpu_compute_ms_median\u202f=\u202f16.8, throughput_qps\u202f=\u202f59.3, module_power_mw_median\u202f=\u202f10845, energy_per_inference_mj_above_idle\u202f=\u202f101.  \n- FP16 (VC-025_fp16): gpu_compute_ms_median\u202f=\u202f11.6, throughput_qps\u202f=\u202f86.1, module_power_mw_median\u202f=\u202f11965, energy_per_inference_mj_above_idle\u202f=\u202f82.  \n\n**Closed-loop evidence** shows INT8 arms achieve success rates indistinguishable from FP32 (GO/UNDECIDED) and placement errors within the observed FP32 range. Therefore, INT8 provides the latency and energy benefits measured in trtexec while maintaining task performance on the robot.  \n\n**FP16** offers higher throughput and lower energy but **lacks closed-loop evidence** (fp16_closed_loop\u202f=\u202f\u201cnot run yet\u201d). The recommendation for deployment on Jetson Orin Nano Super is to use INT8; FP16 requires further closed-loop validation before being considered safe for the robot.  \n\n## 4. Supervisor and audit reliability  \n\n**Offline ranking vs. placement (Spearman)**  \n- score_align: rho\u202f=\u202f0.018, perm_p\u202f=\u202f0.974  \n- score_mag: rho\u202f=\u202f0.079, perm_p\u202f=\u202f0.834  \n- score_cheap_A: rho\u202f=\u202f\u20110.418, perm_p\u202f=\u202f0.229  \n- score_cheap_B: rho\u202f=\u202f0.03, perm_p\u202f=\u202f0.945  \n- score_cheap_C: rho\u202f=\u202f\u20110.503, perm_p\u202f=\u202f0.146  \n\nAll perm_p\u202f>\u202f0.05 \u2192 no significant correlation; offline ranking did not predict closed-loop placement outcomes.  \n\n**AI supervisor:** shadow_trials\u202f=\u202f215, non_continue_verdicts\u202f=\u202f0, failures_flagged\u202f=\u202f0, failures_total\u202f=\u202f7.  \n**Retro end judge:** n\u202f=\u202f245, answered_yes\u202f=\u202f245, failures_caught\u202f=\u202f0, failures_total\u202f=\u202f7.  \n\nThus the supervisor did not flag any failures and the end judge did not catch any of the seven recorded failures.  \n\n## 5. What this report cannot answer  \n\n- Long\u2011term reliability or wear\u2011out effects of INT8 on the hardware.  \n- Generalisation to other objects, lighting conditions, or dynamic disturbances.  \n- Closed\u2011loop safety or performance of FP16 (no closed\u2011loop run yet).  \n- Outcomes of any stress\u2011test procedures (not present in the evidence).  \n- Whether any unrecorded failure modes exist beyond the seven logged failures."
+  },
+  {
+   "repeat": 1,
+   "latency_sec": 14.2,
+   "usage": {
+    "completion_tokens": 3292,
+    "prompt_tokens": 3817,
+    "total_tokens": 7109,
+    "completion_tokens_details": {
+     "accepted_prediction_tokens": null,
+     "audio_tokens": null,
+     "reasoning_tokens": 2262,
+     "rejected_prediction_tokens": null
+    },
+    "prompt_tokens_details": {
+     "audio_tokens": null,
+     "cached_tokens": 0,
+     "created_cache_tokens": 0,
+     "multimodal_tokens": null
+    },
+    "prompt_cache_hit_tokens": 0,
+    "prompt_cache_miss_tokens": 3817
+   },
+   "unmatched_numbers": [
+    "0.05",
+    "0.195",
+    "0.418",
+    "95",
+    "95",
+    "194"
+   ],
+   "sections_present": 5,
+   "text": "\n\n## 1. Closed-loop summary  \n**FP32 (VC-000)**: success\u202f=\u202f24/25 (0.96), placement_error_px_mean\u202f=\u202f7.05.  \n**INT8 aggregate (10 cells)**: successes\u202f=\u202f194/200 (0.97); placement_error_px_mean ranges from 5.51\u202fpx (VC-007) to 8.51\u202fpx (VC-022).  \n\n**Primary contrast (EP-1_audit_vs_random)**: diff\u202f=\u202f0.0, 95\u202f% CI\u202f[\u20110.068,\u202f0.068].  \n**Noise\u2011floor retest (ES-5_retest_noise_floor)**: main\u202f[24,\u202f25], retest\u202f[20,\u202f20], 95\u202f% CI\u202f[\u20110.195,\u202f0.124].  \n\n## 2. Per-cell go / no-go  \n**GO** \u2013 cells with both *vs_fp32_E1_success*\u202f=\u202f*tolerance_compatible* and *vs_fp32_E2_placement*\u202f=\u202f*tolerance_compatible*:  \n- VC-010 (success\u202f25/25)  \n- VC-007 (success\u202f15/15)  \n\n**UNDECIDED** \u2013 cells where at least one of the two comparisons is *indeterminate*:  \n- VC-020, VC-002, VC-012, VC-011, VC-005, VC-022, VC-015, VC-024  \n\nNo cell meets a criterion for NO\u2011GO based on the provided evidence.  \n\n## 3. Precision recommendation for this target  \n- **FP32**: end_to_end_infer_ms_mean\u202f=\u202f79.0\u202fms, energy_per_inference_mj_above_idle\u202f=\u202f403\u202fmJ.  \n- **INT8 example (VC-002_int8)**: end_to_end_infer_ms_mean\u202f=\u202f34.3\u202fms, energy\u202f=\u202f101\u202fmJ; closed-loop success\u202f=\u202f24/25, placement_error_px_mean\u202f=\u202f6.52\u202fpx.  \n- **FP16 (VC-025_fp16)**: gpu_compute_ms_median\u202f=\u202f11.6\u202fms, throughput\u202f=\u202f86.1\u202fqps, energy\u202f=\u202f82\u202fmJ; **no closed-loop evidence** (fp16_closed_loop\u202f=\u202f\u201cnot run yet\u201d).  \n\n**Recommendation**: Deploy an INT8 variant (e.g., VC-002) on the Jetson Orin Nano Super for latency and energy efficiency while retaining FP32\u2011level task performance. The FP16 option cannot be recommended for closed\u2011loop robot use until closed\u2011loop validation is completed.  \n\n## 4. Supervisor and audit reliability  \n- Offline ranking vs. placement (Spearman \u03c1): all perm_p\u202f>\u202f0.05 (score_align\u202f\u03c1\u202f0.018\u202fp\u202f0.974; score_mag\u202f\u03c1\u202f0.079\u202fp\u202f0.834; score_cheap_A\u202f\u03c1\u202f\u20110.418\u202fp\u202f0.229; score_cheap_B\u202f\u03c1\u202f0.03\u202fp\u202f0.945; score_cheap_C\u202f\u03c1\u202f\u20110.503\u202fp\u202f0.146). \u2192 No significant prediction of closed\u2011loop results.  \n- AI supervisor: shadow_trials\u202f215, failures_flagged\u202f0, failures_total\u202f7.  \n- End\u2011judge retro\u2011assessment: n\u202f=\u202f245, answered_yes\u202f=\u202f245, failures_caught\u202f=\u202f0, failures_total\u202f=\u202f7.  \n\u2192 Neither the supervisor nor the end judge flagged any of the seven recorded failures.  \n\n## 5. What this report cannot answer  \n- Long\u2011term reliability or wear\u2011out effects of INT8 weights on the Jetson Orin Nano.  \n- Stress\u2011test outcomes (not present in evidence).  \n- Closed\u2011loop safety or performance of FP16 on the robot (no closed\u2011loop run).  \n- Generalisation to other manipulation tasks, different object masses, or alternative coaster configurations.  \n- Influence of calibration granularity beyond the 24 INT8 variants already examined."
+  }
+ ]
+}
