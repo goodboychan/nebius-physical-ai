@@ -1,0 +1,19 @@
+{
+  "schema": "edgeqgate.fp16_post.v1",
+  "frozen_at": "2026-10-12T16:22:32+00:00",
+  "git_commit": "affe0e82bd4281d9d14da4323c36d5f15a1613a7",
+  "status": "FP16 F0 block complete: 40/40 trials, 0 invalid, 0 aborted",
+  "sealed_logs": {
+    "stress_fp16_F0_sealed.jsonl": {
+      "sha256": "2993e509c390f0ad42ac106a0392c7930d036482599458111f3d0e9ae1aa8fe0",
+      "trials": 40
+    }
+  },
+  "sealed_schedule_sha256": "ded2ea119a22d4a950db3209f648475d85ca93fc0031136958b5f0160d8150f2",
+  "analysis": "scripts/fp16_analysis.py with the consensus re-judge (stress protocol \u00a711, FP16 prereg \u00a77\u2013\u00a78)",
+  "public_tally": {
+    "live_judge": "37/40",
+    "operator": "39/40 (trial 13 dropped)"
+  },
+  "record_hash": "dedf90485d1abaabb111cdb260dc06121d3123700d483090974fbc36e749567e"
+}
