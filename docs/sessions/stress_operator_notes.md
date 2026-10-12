@@ -36,3 +36,7 @@ Gripper anti-slip pads are removed for the whole stress session (protocol §7).
 - S1 v2 trial 3 (in progress when S1 was stopped) is recorded and included
 - S4 v2 trials 1–11 (2026-10-12): operator saw **no failures**. The live screen showed "moving" on 1, 4, 9 and 11
   (judge-artifact type, to be re-judged). Session paused here; S4 resumes at trial 12 on another day
+- Scene note (2026-10-12, found while building the S0/S4 montage): during S4 v2 trials 1–11 the cola can stood at
+  the bottom-right edge of the overhead frame, in every trial (first-frame corner brightness 109.3–110.3). It is in
+  the policy's camera input. Keep it in the same place for the remaining S4 trials, so the block stays internally
+  consistent. Report it as part of the S4 scene
