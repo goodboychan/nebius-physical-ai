@@ -76,3 +76,17 @@ The offline pipeline is the one used for the 25 cells: Orin engine outputs on th
   `639fa756d85412ed421be9d9f748161ff49baed1a892274a4ea9e7223823b876`, with 24 trials (PC-B 12, VC-000 12). The public
   copy is `artifacts/positive_control/stress_schedule_public.json`. Script: `scripts/pc_schedule.py`.
 - Runner `so101_trial.py` `61d8e194…`, invoked as `--blind P0 pc`.
+
+## 8. Amendment 1 (2026-10-13, before any positive-control trial; interpretation only)
+
+The real-arm column in §5 lumped GO and INSUFFICIENT_EVIDENCE together as "not NO-GO". They are separate readings.
+The procedure, sample sizes and stop rule are unchanged.
+
+| Offline | Real-arm verdict (PC-B vs FP32) | Reading |
+|---|---|---|
+| NO-GO | **NO-GO** (E1 or E2 materially degraded) | The offline warning for a gross calibration error matches the real arm |
+| NO-GO | **GO** (both endpoints tolerance-compatible) | In this setting the offline warning was too strong; the policy tolerated this error |
+| NO-GO | **INSUFFICIENT_EVIDENCE** | Unresolved. The real-arm meaning of the warning is not settled at this sample size. This is **not** read as "the policy tolerated it" or as "the audit was over-sensitive" |
+
+Scope, stated now: even a NO-GO / NO-GO result shows only that the audit catches a **gross** calibration error. It says
+nothing about whether the audit ranks normal INT8 candidates correctly; G6 found no evidence that it does.
