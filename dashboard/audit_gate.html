@@ -114,9 +114,10 @@ footer{border-top:1px solid var(--rule); padding-top:18px; color:var(--ink-3); f
   <header class="mast">
     <div class="eyebrow">Pre-registered audit gate · Nebius × NVIDIA Physical AI</div>
     <h1>QuantGate audit board</h1>
-    <p class="sub">Can an offline audit screen INT8 robot policies before they reach the arm? This board shows only what
-      was measured: 245 blinded real-arm trials, engine costs on the Jetson, and how well the audit and the AI
-      supervisor predicted what happened.</p>
+    <p class="sub"><b>Evidence before deployment.</b> QuantGate helps a robot developer decide which precision of a policy
+      to ship on an edge device. It shows the engine's cost, its real-arm behavior and the strength of the evidence side
+      by side. Everything below was measured: 245 completed blinded real-arm trials, engine costs on the Jetson, and how
+      well the offline audit and the AI supervisor predicted what happened.</p>
     <div class="mast-meta">
       <span>status 2026-10-12</span><span>SO-101 · ACT 51.6M</span><span>Jetson Orin Nano Super · 15 W · TRT 10.3</span>
       <span>G6 245 / 245 trials</span>
@@ -132,16 +133,31 @@ footer{border-top:1px solid var(--rule); padding-top:18px; color:var(--ink-3); f
     </div>
   </section>
 
+  <section class="panel" id="review">
+    <div class="plate"><h2>Deployment review</h2><span class="ref">ACT pick-and-place policy · Jetson Orin Nano Super 15 W · as of 2026-10-12</span></div>
+    <p class="note">A review aid, not an automatic approval. Each line shows what the evidence supports today and what is still missing.</p>
+    <div class="rows">
+      <div class="row"><span class="k">Cost</span><span class="d"><b>FP16 (VC-025) is the cheapest engine on this device</b>: 11.6 ms and 82 mJ per inference, against 16.8–17.1 ms and 101 mJ for INT8 and 53.4 ms and 403 mJ for FP32 (trtexec, back-to-back). At the deployed rate, one chunk about every 3 s, inference energy is a small part of system power.</span><span class="v"><span class="chip ok">measured</span></span></div>
+      <div class="row"><span class="k">Real arm</span><span class="d"><b>FP16 has no real-arm evidence yet.</b> A pre-registered run (FP16 20, FP32 10, INT8 10, interleaved) is pending. INT8: 10 cells with 194/200 successes against FP32 24/25. Against FP32 with a 10 pp tolerance, every cell is <b>insufficient evidence</b>: the Newcombe 99.75% intervals span about ±23–53 pp at these sample sizes.</span><span class="v"><span class="chip seal">insufficient</span></span></div>
+      <div class="row"><span class="k">Placement</span><span class="d">Mean placement error stays within the 5 px tolerance of FP32 for 8 of 10 INT8 cells. The other 2 are indeterminate. Best vs worst audit fidelity: −0.84 px, CI [−2.53, +0.88].</span><span class="v"><span class="chip ok">8 / 10 ok</span></span></div>
+      <div class="row"><span class="k">Verified for</span><span class="d">The 268 g cola can at the trained start mark, the fixed coaster, locked camera exposure, indoor desk light, and anti-slip gripper pads (G6). The current rubber-band gripper has been validated only on the nominal scene (22/24).</span><span class="v">scope</span></div>
+      <div class="row"><span class="k">Weak spots</span><span class="d">Grip friction: 8/24 with no pads. Start position: 0/3 when moved 3 cm; the policy reaches for its memorized position first. The unseen yellow can is still being tested.</span><span class="v"><span class="chip halt">observed</span></span></div>
+      <div class="row"><span class="k">AI judge</span><span class="d">In its current setup (one final frame, a one-word answer) Cosmos-Reason2 detected 0 of 7 G6 failures. Do not use it as a success signal until it is validated, for example with video input.</span><span class="v"><span class="chip halt">not reliable</span></span></div>
+      <div class="row"><span class="k">Next</span><span class="d">1. Run the FP16 real-arm block. 2. To resolve a cell against FP32 at 10 pp, plan about 110–120 trials per arm. 3. Add demonstrations from varied start positions before relying on position changes. 4. Validate the AI judge on held-out trials.</span><span class="v">actions</span></div>
+    </div>
+  </section>
+
   <section class="panel">
     <div class="plate"><h2>Order locks</h2><span class="ref">preregistration §8</span></div>
-    <p class="note">Each lock is a real dependency. A later step cannot run until the earlier record exists, and the
-      runner and CI both check it.</p>
+    <p class="note">Each lock is a real dependency. Its record was committed and pushed before the next step ran, so the
+      git history proves the order. CI checks the integrity of the LOCK-2 record. The trial runner does not yet check the
+      locks itself; that check is planned.</p>
     <div class="locks">
       <div class="lock"><div class="lock-id">LOCK-1</div><div class="lock-txt"><strong>Data split fixed → policy training</strong><span>120 demos, 80/20/20 from a seeded hash</span></div><span class="chip ok">done 10-07</span></div>
       <div class="lock"><div class="lock-id">LOCK-2</div><div class="lock-txt"><strong>All audit scores frozen → first real trial</strong><span>5 predictors over 24 INT8 cells, rankings hashed</span></div><span class="chip ok">done</span></div>
       <div class="lock"><div class="lock-id">LOCK-3</div><div class="lock-txt"><strong>225 main + 20 retest trials logged → first analysis run</strong><span>sealed log hashes fixed before unsealing</span></div><span class="chip ok">done 10-11</span></div>
       <div class="lock"><div class="lock-id">STRESS v1</div><div class="lock-txt"><strong>Pads removed: stopped by the S0 rule (8/24 &lt; 12)</strong><span>logs hashed, kept sealed until v2 ends</span></div><span class="chip seal">sealed</span></div>
-      <div class="lock"><div class="lock-id">STRESS v2</div><div class="lock-txt"><strong>Rubber-band gripper: S0 done, S1 stopped at 3, S4 11 / 48</strong><span>outcome re-judged offline from video (protocol §9)</span></div><span class="chip seal">running</span></div>
+      <div class="lock"><div class="lock-id">STRESS v2</div><div class="lock-txt"><strong>Rubber-band gripper: S0 done, S1 stopped at 3, S4 11 / 48</strong><span>outcome re-judged offline from video (§9); success decisions use Newcombe intervals, fixed before unsealing (§10)</span></div><span class="chip seal">running</span></div>
       <div class="lock"><div class="lock-id">FP16</div><div class="lock-txt"><strong>FP16 20 · FP32 10 · INT8 10, interleaved</strong><span>pre-registered, no trial yet</span></div><span class="chip wait">locked</span></div>
       <div class="lock"><div class="lock-id">LOCK-4</div><div class="lock-txt"><strong>Analysis complete → video and narrative</strong><span>blocks choosing the story after seeing results</span></div><span class="chip wait">pending</span></div>
     </div>
@@ -149,7 +165,8 @@ footer{border-top:1px solid var(--rule); padding-top:18px; color:var(--ink-3); f
 
   <section class="panel">
     <div class="plate"><h2>Closed-loop success by cell</h2><span class="ref">G6 · g6_analysis.json</span></div>
-    <p class="note">FP32 and ten INT8 cells, interleaved in one blinded session. <b>Every interval overlaps FP32.</b>
+    <p class="note">FP32 and ten INT8 cells, interleaved in one blinded session. <b>Every interval overlaps FP32.</b> At these
+      sample sizes no cell can be shown to be within 10 pp of FP32 either, so each one is "insufficient evidence", not "safe".
       The INT8 cells differ only in calibration: sample count, data composition and per-tensor or per-channel scaling.</p>
     <div class="legend" id="armlegend"></div>
     <figure>
@@ -200,7 +217,7 @@ footer{border-top:1px solid var(--rule); padding-top:18px; color:var(--ink-3); f
 
   <section class="panel">
     <div class="plate"><h2>What moved the success rate</h2><span class="ref">G6 + public stress tallies</span></div>
-    <p class="note">The same arm and the same policy. Changing precision moved nothing measurable. Grip friction and
+    <p class="note">The same arm and the same policy. Between precisions no success difference was detected. Grip friction and
       a 3 cm shift moved a lot. The gripper and shift blocks are separate sessions, so read them as observations, not
       as a randomized comparison.</p>
     <figure>
@@ -245,9 +262,9 @@ footer{border-top:1px solid var(--rule); padding-top:18px; color:var(--ink-3); f
   <section class="panel">
     <div class="plate"><h2>Agent layer</h2><span class="ref">§6 · product components, not hypothesis tests</span></div>
     <div class="rows">
-      <div class="row"><span class="k">D4</span><span class="d"><b>Runtime supervisor</b> · Cosmos-Reason2-2B on a Nebius AI Endpoint (L40S, vLLM), 2 Hz, shadow mode. Across 215 supervised G6 trials it never left CONTINUE and flagged <b>0 of 7</b> failures.</span><span class="v">~330 ms RTT</span></div>
+      <div class="row"><span class="k">D4</span><span class="d"><b>Live supervisor</b> · Cosmos-Reason2-2B on a Nebius AI Endpoint (L40S, vLLM), 2 Hz, shadow mode. Across the 215 G6 trials it watched live (the first 30 ran before it was deployed) it never left CONTINUE and flagged <b>0 of 7</b> failures.</span><span class="v">~330 ms RTT</span></div>
       <div class="row"><span class="k">D4 judge</span><span class="d"><b>End-of-trial judge</b>, retrospective · shown the final frame of all 245 trials, it answered "Yes" every time and caught <b>0 of 7</b> failures. In the stress blocks it said "No" on 2 of 20 operator-confirmed failures.</span><span class="v">245 / 245 yes</span></div>
-      <div class="row"><span class="k">D3</span><span class="d"><b>Deployment report</b> · Nemotron 3 Super on Token Factory. Every number in the report is checked against the evidence: 0 invented values. Three flags were reviewed by hand (a 0.05 threshold and two minus signs). It recommends INT8 and marks FP16 as unvalidated.</span><span class="v">20.0 s · 5/5 sections</span></div>
+      <div class="row"><span class="k">D3</span><span class="d"><b>Deployment report</b> · Nemotron 3 Super on Token Factory. Every number in the report is checked against the evidence: 0 invented values. Three flags were reviewed by hand (a 0.05 threshold and two minus signs). It recommends INT8 and marks FP16 as unvalidated. Its two GO verdicts were later corrected to insufficient evidence; the bootstrap it relied on collapses at zero failures.</span><span class="v">20.0 s · 5/5 sections</span></div>
       <div class="row"><span class="k">D5</span><span class="d"><b>Errata collector</b> · Tavily queries derived from the real TensorRT, device and operator set, frozen as a hashed snapshot.</span><span class="v">snapshot hashed</span></div>
     </div>
   </section>

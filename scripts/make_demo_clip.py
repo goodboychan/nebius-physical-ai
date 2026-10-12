@@ -1,7 +1,7 @@
 """Clip of real teleoperated demonstrations from the LOCK-1 dataset: overhead (left) and wrist camera (right), real
 time, with a label bar. Frames come from the dataset videos at each episode's from/to timestamps, unedited.
 Usage: python make_demo_clip.py <dataset_root> <out.mp4> <episode> [<episode> ...]"""
-import glob, sys
+import glob, os, sys
 import av, numpy as np, pandas as pd
 from PIL import Image, ImageDraw, ImageFont
 
@@ -21,7 +21,7 @@ def clip(cam, ep):
     c.close(); return fs
 
 o = av.open(out, "w", options={"movflags": "+faststart"}); s = o.add_stream("libx264", rate=30)
-s.width, s.height, s.pix_fmt = TW + WW, TH + BAR, "yuv420p"; s.options = {"crf": "25", "preset": "slow"}
+s.width, s.height, s.pix_fmt = TW + WW, TH + BAR, "yuv420p"; s.options = {"crf": os.environ.get("CRF", "29"), "preset": "slow"}
 for ep in eps:
     top, wr = clip("top", ep), clip("wrist", ep)
     for i in range(min(len(top), len(wr))):

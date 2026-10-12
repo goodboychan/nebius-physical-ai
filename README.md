@@ -5,7 +5,7 @@
 **Audit quantized robot policies before they touch the robot, then check the audit on the real arm.**
 
 > QuantGate screens INT8 robot policies offline on Nebius and gates which ones reach a Jetson-powered SO-101 arm.
-> Cosmos-Reason2 watches every real run, and Nemotron writes the deployment report. The whole real-arm study was
+> Cosmos-Reason2 watched the real runs (215 live, 245 retrospectively) and Nemotron writes the deployment report. The whole real-arm study was
 > pre-registered, operator-blinded and hash-sealed.
 
 **License: [Apache 2.0](LICENSE)** · Nebius × NVIDIA Global AI Hackathon, Physical AI track · internal code name

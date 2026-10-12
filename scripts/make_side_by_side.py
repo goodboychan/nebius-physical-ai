@@ -11,7 +11,7 @@ L = sorted(glob.glob(f"{ld}/*_top.mp4")); R = sorted(glob.glob(f"{rd}/*_top.mp4"
 font = ImageFont.truetype("/usr/share/fonts/truetype/dejavu/DejaVuSansMono.ttf", 18)
 W, H, BAR = 640, 480, 34
 o = av.open(out, "w", options={"movflags": "+faststart"}); s = o.add_stream("libx264", rate=30)
-s.width, s.height, s.pix_fmt = 2 * W, H + BAR, "yuv420p"; s.options = {"crf": "26", "preset": "slow"}
+s.width, s.height, s.pix_fmt = 2 * W, H + BAR, "yuv420p"; s.options = {"crf": os.environ.get("CRF", "31"), "preset": "slow"}
 
 def frames(p):
     c = av.open(p); fs = [f.to_ndarray(format="rgb24") for i, f in enumerate(c.decode(c.streams.video[0])) if i % speed == 0]; c.close(); return fs
