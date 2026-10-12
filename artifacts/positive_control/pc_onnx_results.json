@@ -1,0 +1,36 @@
+{
+ "PC-N": {
+  "code": "PC-N",
+  "precision": "int8",
+  "calib_size": 64,
+  "calib_composition": "success-only",
+  "granularity": "per-tensor",
+  "checkpoint_sha256": "bb5e1850de712215792c67b4c30d52b013e594ce0b6949749236cf3137917e3b",
+  "calib_set_hash": "f35d047ec432ddd8f10537b9aad712c3b9656a324874d8a975e64d6d8e1648fc",
+  "calib_frames_hash": "051a8c70d019e849f456a057cddb4d923ec9e070f47f4dd299212635399ad89a",
+  "calib_actual": 64,
+  "calib_images": "noise N(0,1)",
+  "ok": true,
+  "onnx_sha256": "4d080b1141758bb72a5bcaad32a92dab0832caa618d5cf6a8bca45a3940bb4fd",
+  "onnx_bytes": 137915255,
+  "sec": 9.5,
+  "n_quantize": 112
+ },
+ "PC-B": {
+  "code": "PC-B",
+  "precision": "int8",
+  "calib_size": 64,
+  "calib_composition": "success-only",
+  "granularity": "per-tensor",
+  "checkpoint_sha256": "bb5e1850de712215792c67b4c30d52b013e594ce0b6949749236cf3137917e3b",
+  "calib_set_hash": "a424401f6a540b6e3c25dac19ab47c0f70da9b21715964d645c330fbd67d9a5e",
+  "calib_frames_hash": "051a8c70d019e849f456a057cddb4d923ec9e070f47f4dd299212635399ad89a",
+  "calib_actual": 64,
+  "calib_images": "black",
+  "ok": true,
+  "onnx_sha256": "1e1214d2b5d46ae5c9a7b869e52274cae5ad6aa600ade8aba84f4a8996bed4c4",
+  "onnx_bytes": 137915255,
+  "sec": 4.2,
+  "n_quantize": 112
+ }
+}

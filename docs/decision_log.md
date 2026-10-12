@@ -798,3 +798,10 @@ ACT는 상태마다 100스텝을 내고 실기에서 100스텝을 모두 실행�
 - 사용자 결정. `docs/positive_control_preregistration.md` `da94d620…`: VC-007과 같은 구성에서 캘리브레이션 이미지만 바꾼 PC-N(노이즈)·PC-B(검은 화면).
   오프라인 NO-GO 규칙(score_mag·score_align 95% CI 하한 > INT8 24셀 최대 상한), 선택 규칙, 실기 12 vs FP32 12, 안전 중단 규칙(조작자 중단 2회)
 - 아직 ONNX·엔진·점수·trial 없음
+- 양성 대조 오프라인 결과(trial 전): 두 엔진 모두 **오프라인 NO-GO**.
+  - INT8 24셀의 CI 상한 최대값: score_mag 0.2072, score_align 0.0783
+  - PC-N: score_mag 0.233 [0.2205, 0.243], score_align 0.0902 [0.0855, 0.0944]
+  - PC-B: score_mag 0.360 [0.339, 0.379], score_align 0.138 [0.131, 0.145]
+  - 규칙(§3)에 따라 **PC-B** 선택
+  - 안전 확인: FP32 대비 관절 최대 편차 중앙값 4.8°, 상위 99% 16.6° (VC-005 상위 99% 17.5°와 비슷)
+  - 엔진 빌드에는 같은 동결 캐시(`67fca693…`)를 썼고, 출처 기록은 `artifacts/positive_control/`

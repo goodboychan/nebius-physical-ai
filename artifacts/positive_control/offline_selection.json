@@ -1,0 +1,60 @@
+{
+ "rule": "docs/positive_control_preregistration.md \u00a73",
+ "int8_24_max_ci_upper": {
+  "score_mag": 0.2072,
+  "score_align": 0.0783
+ },
+ "PC-N": {
+  "score_mag": [
+   0.233,
+   [
+    0.2205,
+    0.243
+   ]
+  ],
+  "score_align": [
+   0.0902,
+   [
+    0.0855,
+    0.0944
+   ]
+  ],
+  "offline": "NO-GO"
+ },
+ "PC-B": {
+  "score_mag": [
+   0.3597,
+   [
+    0.3393,
+    0.3791
+   ]
+  ],
+  "score_align": [
+   0.1375,
+   [
+    0.1305,
+    0.1446
+   ]
+  ],
+  "offline": "NO-GO"
+ },
+ "selected": "PC-B",
+ "reason": "both offline NO-GO -> larger score_mag point estimate",
+ "safety_screen_deg_vs_fp32": {
+  "PC-B": {
+   "max_joint_dev_p50_p95_p99": [
+    4.8,
+    11.1,
+    16.6
+   ]
+  },
+  "VC-005": {
+   "max_joint_dev_p50_p95_p99": [
+    2.2,
+    6.3,
+    17.5
+   ]
+  }
+ },
+ "g_model_hash_matches_g4": "577927b0dc85fc9f"
+}

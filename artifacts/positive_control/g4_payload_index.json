@@ -1,0 +1,20 @@
+{
+ "g_model_hash": "577927b0dc85fc9fe6d348b3a0386e6ae24af4d7f9435ad0a3441bf75603b155",
+ "audit_buffer_hash": "d9a5297775dd27cc4a9beac095db8f07823275b43a33dc3dace0defae398255d",
+ "cells": {
+  "PC-B": {
+   "cheap_B": 0.042869418127739034,
+   "cheap_C_ms": 32.47459411621094,
+   "mag_mean": 0.1591320068168645,
+   "align_mean": 0.05509831037548274,
+   "payload_sha": "d3f98d42f46d8a3580b146eff43d20eefd6b2246edc2a95e490dbd7a282169bf"
+  },
+  "PC-N": {
+   "cheap_B": 0.010521071881967624,
+   "cheap_C_ms": 25.00124740600586,
+   "mag_mean": 0.10475658477670613,
+   "align_mean": 0.036369815372403226,
+   "payload_sha": "541e0b95f93b77f36478949f16bc72c16ebd168eea77149ba9b1ca1a5e3152f1"
+  }
+ }
+}
