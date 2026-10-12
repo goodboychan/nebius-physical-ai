@@ -2,150 +2,193 @@
 
 # QuantGate
 
-**Audit quantized robot policies before they touch the robot.**
+**Audit quantized robot policies before they touch the robot, then check the audit on the real arm.**
 
-> QuantGate screens INT8 robot policies offline on Nebius, gating which ones reach a Jetson-powered arm. Cosmos-Reason2 watches every real run.
+> QuantGate screens INT8 robot policies offline on Nebius and gates which ones reach a Jetson-powered SO-101 arm.
+> Cosmos-Reason2 watches every real run, and Nemotron writes the deployment report. The whole real-arm study was
+> pre-registered, operator-blinded and hash-sealed.
 
-**License: [Apache 2.0](LICENSE)**
+**License: [Apache 2.0](LICENSE)** · Nebius × NVIDIA Global AI Hackathon, Physical AI track · internal code name
+`edgeqgate`
 
-(내부 코드명 `edgeqgate` — 엣지 양자화 정책 배포 게이트)
+The logo's Q stands for QuantGate and quantization. The open passage at the lower right is the gate, and the small
+square leaving it is the one INT8 policy that passed.
 
-로고: Q 모양은 QuantGate와 양자화(Quantization)를 함께 나타낸다. 오른쪽 아래의 열린 통로는 선별된 정책이 실제 로봇으로
-넘어가는 게이트이고, 통로 밖의 작은 사각형은 검증을 통과해 배포되는 INT8 정책 하나다.
+## Results at a glance
 
-엣지 NPU로 내려보낼 로봇 조작 정책의 INT8 변형들을, **실기 실행 없이 오프라인에서만**
-심사하여 배포 불가 변형을 사전에 걸러낼 수 있는가.
+<p align="center"><img src="docs/assets/risk_magnitude.png" alt="What moved the success rate" width="760"></p>
 
-Nebius x NVIDIA Global AI Hackathon, Physical AI Track 출품작.
+Numbers come from committed artifacts. The figure's script lists its sources.
 
-> **문서 상태**: 진행 중 (2026-10-07). 데모 120개 수집과 분할 확정(`LOCK-1`), FP32 정책 학습 완료. 실기 trial 전.
-> 이 저장소의 어떤 수치도 아직 정책의 실기 성공률이 아니다.
+1. **INT8 calibration choices did not change real-arm outcomes in this regime.**
+   - FP32 succeeded 24/25. The 10 INT8 cells tested succeeded 194/200.
+   - Audit-selected vs random cells: 73/75 vs 73/75. The difference is 0.0, 95% CI [−6.8, +6.8] pp.
+   - The same cell re-measured on another day had a wider CI, [−19.5, +12.4] pp.
+   - The offline rank did not predict placement: Spearman 0.02–0.08.
+   - This is reported as *no difference detected*.
+   - Sources: [`g6_analysis.json`](artifacts/reports/g6_analysis.json),
+     [`g6_supplement.json`](artifacts/reports/g6_supplement.json).
+2. **On the Orin Nano Super (15 W), FP16 is the cheapest engine.**
+   - GPU compute: FP16 11.6 ms, INT8 16.8–17.1 ms, FP32 53.4 ms.
+   - Energy per inference: 82, 101 and 403 mJ.
+   - FP16's real-arm run is pre-registered and still pending.
+   - Source: [`power_bench/SUMMARY.md`](artifacts/reports/power_bench/SUMMARY.md).
+3. **Deployment margins mattered more than precision** (observational).
+   - Without the gripper pads: 8/24. With rubber bands: 22/24.
+   - With the start spot moved 3 cm: 0/3. The policy reaches for its memorized position first.
+   - Source: [`stress_operator_notes.md`](docs/sessions/stress_operator_notes.md).
+4. **The AI judge needs validation before use.**
+   - Shown the final frame of all 245 trials, Cosmos-Reason2 answered "Yes" every time and caught 0 of 7 failures.
+   - Source: [`d4_retro_judge_g6.json`](artifacts/reports/d4_retro_judge_g6.json).
 
-## 이 프로젝트의 차별점 — 사전등록
-
-실험을 **시작하기 전에** 가설·엔드포인트·분석 방법을 문서로 고정하고 해시를 커밋한다.
-결과를 본 뒤에 분석을 고르는 경로를 구조적으로 차단한다.
-
-- [`docs/preregistration.md`](docs/preregistration.md) — 사전등록 문서 (가설, 엔드포인트, 킬 조건)
-- [`docs/decision_log.md`](docs/decision_log.md) — 모든 결정과 개정. **원 계획을 덮어쓰지 않는다**
-- [`docs/progress/`](docs/progress/) — 시도별 기록. 각 노트에 "주장하지 않는 것" 섹션 필수
-- [`docs/success_criterion.md`](docs/success_criterion.md) — 성공 판정 규칙 (실기 전 잠금)
-- [`docs/manual_actions.md`](docs/manual_actions.md) — **사람이 해야 하는 항목** (결정·자격증명·물리 작업)
-- [`docs/tool_feedback.md`](docs/tool_feedback.md) — 도구 피드백 (`D8`)
-- [`docs/cost_model.md`](docs/cost_model.md) — 공식 단가 기반 비용 모델
-
-핵심 잠금은 `LOCK-2`다: **감사 점수를 전량 산출·동결·해시 커밋한 뒤에야 최초 실기 trial을
-실행한다.** 이 순서가 깨지면 연구 전체의 신뢰성이 사라진다.
-
-## Why this matters
-
-Quantizing a robot policy for an edge device usually leaves open-loop metrics looking fine, yet the closed-loop
-behaviour can change. Checking every quantized variant on the real robot is slow, costly and sometimes unsafe, so
-QuantGate tries to screen variants **offline, before** they reach the robot, and tests that screen against
-pre-registered real-arm trials.
-
-The motivation is strongest in **precision-critical settings such as medical, lab-automation or pharmacy robotics**,
-where a policy that only *barely* places an object inside the target is already a failure. That is why the audit scores
-use tail statistics (CVaR@90) instead of averages, and why placement accuracy is recorded on every trial alongside
-binary success.
-
-Scope note: the experiment here is a cola can on a coaster. It makes **no claim** about medical or clinical use.
-The runtime supervisor is also deliberately non-intervening when its verdict is stale, so that network delay cannot
-contaminate the measured success rate. A safety-critical deployment would need the opposite default (stop when unsure).
+Stress-test per-cell results are still sealed. The stress protocol is
+[`docs/stress_test_protocol.md`](docs/stress_test_protocol.md).
 
 ## How QuantGate uses NVIDIA models and Nebius
 
 | Component | What runs | Where |
 |---|---|---|
-| Deployment target | LeRobot ACT policy (51.6M) as **TensorRT** FP32 / FP16 / INT8 engines | **Jetson Orin Nano Super** next to a real SO-101 arm |
-| `D4` runtime supervisor | **`nvidia/Cosmos-Reason2-2B`** — watches the overhead camera, answers CONTINUE / FALLBACK / ABORT | **Nebius AI Cloud endpoint** (L40S, vLLM 0.29). 328 ms median round trip from the robot |
-| `D3` deployment report agent | **`nvidia/nemotron-3-super-120b-a12b`** — writes per-cell go / no-go reports from audit artifacts; every number is checked against the evidence | **Nebius Token Factory** |
-| `D5` errata collector | **Tavily** search for TensorRT / Jetson / INT8 known issues, queries derived from the real build environment, snapshot-hashed | Tavily API at report time |
-| Policy training | LeRobot 0.6.1 ACT, 100k steps | **Nebius Jobs** (L40S, 1h57m) |
-| Audit fan-out | 25 cells × bootstrap scoring | **Nebius Jobs** |
+| Deployment target | LeRobot ACT policy (51.6M) as **TensorRT** FP32 / FP16 / INT8 engines | **Jetson Orin Nano Super** (TensorRT 10.3) next to a real SO-101 arm |
+| Quantization | NVIDIA **TensorRT Model Optimizer** (modelopt) INT8 Q/DQ, 24 calibration variants | NGC PyTorch 25.11 container, local GPU |
+| `D4` runtime supervisor | **`nvidia/Cosmos-Reason2-2B`** watches the overhead camera at 2 Hz (CONTINUE / FALLBACK / ABORT, shadow mode) and is asked at trial end whether the task succeeded | **Nebius AI Endpoint** (L40S, vLLM 0.29), about 330 ms round trip from the robot |
+| `D3` deployment report agent | **`nvidia/nemotron-3-super-120b-a12b`** writes go / no-go reports from frozen evidence; every number is machine-checked | **Nebius Token Factory** |
+| `D5` errata collector | **Tavily** search for TensorRT / Jetson / INT8 known issues, with queries derived from the real build environment and snapshot-hashed | Tavily API |
+| Policy training | LeRobot 0.6.1 ACT, 100k steps | **Nebius Jobs** (L40S, 1 h 57 min) |
+| Audit fan-out | 25 cells × bootstrap scoring on 2,000 held-out states | **Nebius Jobs** (CPU) |
 | Data and weights | demos, checkpoints, Cosmos weights | **Nebius Object Storage** (S3) |
-| Quantization | NVIDIA **TensorRT Model Optimizer** (modelopt) INT8 Q/DQ, 24 calibration variants | GX10 (local) |
 
-Where Token Factory helped: the report agent needs a large reasoning model only for a minute per report. Token Factory gave us
-Nemotron 3 Super (and Nano / Ultra for comparison) behind one OpenAI-compatible API, so there was no GPU server to keep warm for it.
+**Where Token Factory helped.** The report agent needs a large reasoning model for about a minute per report. Token
+Factory served Nemotron 3 Super, and the variants we compared, behind one OpenAI-compatible API, so no GPU server had
+to stay warm. Comparison: [`d3_model_compare.json`](artifacts/reports/d3_model_compare.json). Final report:
+[`d3_final_report.md`](artifacts/reports/d3_final_report.md).
 
 ## Pipeline
 
 ```
-SO-101 teleop demos (120)  ──►  LOCK-1 split 80/20/20  ──►  Nebius Jobs: ACT training
-        │                                                        │
-        │                                       FP32 checkpoint (single source, IG-3)
-        ▼                                                        ▼
-  audit buffer (2,000 audit states)          modelopt INT8 × 24 calibration variants + FP16
-        │                                                        │
-        │                                Jetson Orin TensorRT engines (frozen timing cache)
-        ▼                                                        ▼
-  offline audit scores (5 predictors, Nebius Jobs) ──► LOCK-2 freeze ──► real-arm trials (blinded)
-                                                                         + Cosmos-Reason2 supervisor
-                                                                         + Nemotron deployment report
+SO-101 teleop demos (120) ──► LOCK-1 split 80/20/20 ──► Nebius Jobs: ACT training (FP32, single checkpoint)
+                                                                   │
+                       modelopt INT8 × 24 calibration variants + FP16 ◄┘
+                                                                   │
+                      Jetson Orin TensorRT engines (frozen timing cache)
+                                                                   │
+ offline audit: 5 predictors on 2,000 held-out states (Nebius Jobs) ──► LOCK-2 freeze (rankings hashed)
+                                                                   │
+ 245 blinded, interleaved real-arm trials + Cosmos-Reason2 shadow supervisor ──► LOCK-3 ──► unseal, analyze
+                                                                   │
+ Nemotron 3 Super deployment report (numbers verified)  ·  stress tests (pre-registered stop rules)
 ```
+
+## Research integrity
+
+The hypotheses, endpoints and analysis code were fixed and hashed **before** any real-arm trial.
+
+- [`docs/preregistration.md`](docs/preregistration.md): hypotheses, endpoints and kill conditions.
+- [`docs/decision_log.md`](docs/decision_log.md): every decision, amendment and deviation, append-only.
+- [`docs/success_criterion.md`](docs/success_criterion.md): the success rule, locked before the first trial.
+- [`docs/aep_physical_registration_v1.md`](docs/aep_physical_registration_v1.md): tolerance-based decisions
+  (E1 10 pp, E2 5 px).
+- [`docs/stress_test_protocol.md`](docs/stress_test_protocol.md) and
+  [`docs/fp16_real_arm_preregistration.md`](docs/fp16_real_arm_preregistration.md): follow-up protocols, each locked
+  before its first trial.
+- [`artifacts/freeze/`](artifacts/freeze/): the `LOCK-2`, `LOCK-3` and post-run hash records.
+- [`docs/sessions/`](docs/sessions/): operator observations, which contain no cell information.
+- [`docs/related_work.md`](docs/related_work.md): closest prior work and how this project is positioned.
 
 ## Hardware
 
-- SO-101 leader + follower arm, Feetech STS3215 servos
-- Jetson Orin Nano Super (robot host, TensorRT 10.3, JetPack R36)
-- Logitech C922 overhead camera (640×480, locked exposure / white balance), OpenMV AE3 wrist camera (320×200)
-- Task: pick an unopened 268 g cola can from a marked start spot and stand it on a fixed coaster
+- SO-101 leader and follower arms (Feetech STS3215).
+- Jetson Orin Nano Super 8 GB: robot host, JetPack R36, TensorRT 10.3, nvpmodel 15 W.
+- Logitech C922 overhead camera (640×480, locked exposure and white balance) and OpenMV AE3 wrist camera (320×200).
+- Task: pick an unopened 268 g cola can from a marked start spot and stand it on a fixed coaster.
+- Setup notes: [`docs/bimanual_setup.md`](docs/bimanual_setup.md), used in the single-arm configuration.
 
-Setup notes for the arm, cameras and lighting: [`docs/bimanual_setup.md`](docs/bimanual_setup.md) (single-arm configuration).
+## Setup and reproduction
 
-## 구조
+### 0. Analysis only (no robot, no GPU)
 
-```
-src/edgeqgate/
-  grid.py          변형 그리드 26셀 (§4) — yaml과 정준 생성기를 대조 검증
-  splits.py        시드→SHA 분할 + 용도별 접근 가드 (IG-1, IG-2)
-  audit_buffer.py  감사 상태 버퍼 2,000 + 결정적 부트스트랩 (§3.3)
-  progress.py      진행도 회귀기 g(s,a), 해석적 기울기 (§5.1)
-  scores.py        감사 점수 5종 (§5.1, §5.1b)
-  arms.py          실기 arm 구성 + 커버리지 점검 (§7.1, IG-7)
-  hashing.py       정준 해시 (플랫폼 간 재현 가능)
-scripts/
-  g0_export_build.py   ACT → ONNX → TRT INT8 빌드
-  trt_calib_probe.py   TRT 캘리브레이션 동작을 API 레벨에서 직접 확인 (§4.3)
-  g0_jobs_fanout.py    Nebius Jobs 동시성·큐 지연 측정
-  check_credentials.py 자격증명 존재 확인 (값은 출력하지 않음)
-```
-
-## 설치
+Every reported number can be recomputed from the committed sealed logs:
 
 ```bash
 uv venv .venv && uv pip install --python .venv/bin/python -e ".[dev]"
-.venv/bin/python -m edgeqgate.grid          # 26셀 그리드와 해시 확인
+.venv/bin/python -m pytest -q                                   # 167 tests
+.venv/bin/python -m edgeqgate.grid                              # 26-cell grid and hash
+.venv/bin/python scripts/g6_analysis.py --sealed-dir artifacts/trials/g6_unsealed --out /tmp/g6.json
+.venv/bin/python scripts/g6_supplement.py --sealed-dir artifacts/trials/g6_unsealed \
+    --report /tmp/g6.json --out /tmp/g6_sup.json
+sha256sum artifacts/trials/g6_unsealed/*.jsonl                   # compare with artifacts/freeze/lock3.json
 ```
 
-torch/TensorRT 경로는 호스트에 설치하지 않는다. NGC 컨테이너에서 실행한다:
+### 1. Credentials
+
+No credential is stored in the repository. Put them in `~/.config/edgeqgate/env` (mode 600). The template is
+[`.env.example`](.env.example). It needs `NEBIUS_API_KEY` for Token Factory and `TAVILY_API_KEY`. S3 credentials and
+the Cosmos endpoint token are separate files in the same directory.
 
 ```bash
-docker run --rm --gpus all --ipc=host \
-  -v "$PWD/scripts:/w" -v "$PWD/artifacts/g0:/out" \
-  nvcr.io/nvidia/pytorch:25.11-py3 \
-  python /w/g0_export_build.py --calib-size 64 --granularity per-channel
+.venv/bin/python scripts/check_credentials.py   # reports presence only, never values
 ```
 
-## 자격증명
+### 2. GPU workstation: export and quantize
 
-값은 저장소에 두지 않는다. `~/.config/edgeqgate/env` (권한 600)에 둔다.
-템플릿은 [`.env.example`](.env.example) 참조.
+torch, ONNX and TensorRT run in NGC containers ([`Dockerfile`](Dockerfile), [`Dockerfile.lerobot`](Dockerfile.lerobot)):
 
 ```bash
-.venv/bin/python scripts/check_credentials.py   # 존재 여부만 보고, 값은 출력하지 않음
+docker build -t edgeqgate:25.11 . && docker build -f Dockerfile.lerobot -t edgeqgate-lerobot:25.11 .
+# inside edgeqgate-lerobot:25.11
+python scripts/export_trained_act.py <ckpt_dir> <dataset_root> <out.onnx>
+python scripts/build_grid_lerobot.py <demos> <ckpt>/pretrained_model <out_dir>    # modelopt INT8 x 24 + FP16
+python scripts/g4_prepare_states.py <demos> <ckpt>/pretrained_model <g4_dir>     # audit states
 ```
 
-## 현재 상태
+### 3. Nebius
 
-| 게이트 | 상태 |
-|---|---|
-| `G0` 드라이런 | 완료 |
-| `G1` 데모 120, `LOCK-1` | 완료 (2026-10-07) |
-| `G2` 학습, FP32 기준선 | 학습 완료(Nebius Jobs). 실기 20 trial 대기 |
-| `G3` 26셀 빌드 | 진행 중 (Orin, 동결 timing cache) |
-| `G4` 감사 점수, `LOCK-2` | 입력 준비 완료 |
-| `G6` 실기 | 미착수 |
+```bash
+# ACT training on Nebius Jobs (L40S); env: CALIB, DS, OUT, STEPS, BATCH, SEED
+scripts/job/train_act.sh
+# audit fan-out on Nebius Jobs (one job per cell): scripts/job/audit_job_g4.py
+# Cosmos-Reason2 endpoint (weights from Object Storage, token auth); stop it between sessions
+AWS_CONFIG_FILE=<config with endpoint_url and region> scripts/d4_cosmos_endpoint.sh
+```
 
-자세한 내용은 [`docs/progress/`](docs/progress/)의 최신 노트 참조.
+### 4. Jetson Orin: engines and real-arm trials
+
+```bash
+scripts/build_engines_orin.sh <onnx_dir> <out_dir>          # trtexec, frozen timing cache, one place for flags
+python scripts/g4_lock2.py <g4_dir>                        # LOCK-2: freeze rankings before any trial
+python scripts/g6_schedule.py <out_dir>                    # sealed, interleaved schedule
+# per session: light, wrist and coaster checks, then
+python scripts/so101_trial.py --blind main                 # operator sees trial numbers only
+```
+
+The runner starts a TensorRT policy server (`scripts/trt_policy_server.py`, system Python 3.10 with TensorRT) and
+drives the arm at 30 Hz. It uses chunk prefetch and blending, so FP32 and INT8 cells have identical timing. The
+OpenMV wrist camera needs the plugin in [`plugins/lerobot_camera_openmv`](plugins/lerobot_camera_openmv).
+
+### 5. Reports
+
+```bash
+set -a; . ~/.config/edgeqgate/env; set +a
+.venv/bin/python scripts/d3_final_report.py        # Nemotron 3 Super, numbers verified against evidence
+.venv/bin/python scripts/d5_errata_collector.py    # Tavily errata snapshot (hashed)
+```
+
+## Repository layout
+
+```
+src/edgeqgate/   grid, splits and guards, audit buffer, scores, arms, calibration, freeze, supervisor, hashing
+scripts/         data, training, quantization, audit, real-arm runner, analyses, reports
+plugins/         LeRobot camera plugin for the OpenMV AE3
+artifacts/       manifests, freeze records, unsealed trial logs, reports
+dashboard/       audit_gate.html (D7)
+docs/            pre-registration, decision log, protocols, session notes, related work
+tests/           167 unit tests
+```
+
+## Limitations
+
+- One task, one checkpoint, one robot, one TensorRT build.
+- The precision results are near the success ceiling.
+- The gripper and distribution-shift results are observational. They come from separate sessions, not randomized
+  against each other.
+- The stress S1 block stopped after 3 trials.
+- FP16 has no real-arm evidence yet.
