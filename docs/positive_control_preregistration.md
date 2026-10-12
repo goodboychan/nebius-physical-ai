@@ -68,3 +68,11 @@ The offline pipeline is the one used for the 25 cells: Orin engine outputs on th
 1. This file is committed **before** the ONNX build.
 2. The offline scores and the selection are committed before the trial schedule is generated and before any trial.
 3. After the last trial, the sealed log is hashed into `artifacts/freeze/pc_post.json`. Only then is it opened.
+
+## 7. Schedule (fixed after selection, before any trial)
+
+- Selected: **PC-B** (`artifacts/positive_control/offline_selection.json`).
+- Sealed schedule `~/.edgeqgate_sealed/stress_pc/stress_sealed.json`, sha256
+  `639fa756d85412ed421be9d9f748161ff49baed1a892274a4ea9e7223823b876`, with 24 trials (PC-B 12, VC-000 12). The public
+  copy is `artifacts/positive_control/stress_schedule_public.json`. Script: `scripts/pc_schedule.py`.
+- Runner `so101_trial.py` `61d8e194…`, invoked as `--blind P0 pc`.
