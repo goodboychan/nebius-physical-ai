@@ -37,6 +37,17 @@ review**: what the evidence supports, what is still missing, and what to test ne
 
 The results were sealed until all trials were logged, so no candidate was picked after seeing its results.
 
+## The three decisions QuantGate supports
+
+| Developer's question | Evidence | QuantGate's answer |
+|---|---|---|
+| Which candidate do I validate first? | FP16 is cheapest on this Jetson (11.6 ms, 82 mJ per inference), and went 19/20 on the arm with placement within tolerance of FP32 | **FP16**: the recommended candidate to validate |
+| Which candidates do I distrust? | Black-frame and noise calibrations: flagged by a simple input check, by action MSE and by both audit scores, with no normal cell flagged (`simple_checks_vs_audit.json`) | **Calibration anomalies**: flagged. The real-arm check is `[PC]` |
+| Can I approve deployment? | Success against FP32 is undecided for every candidate at these sample sizes, and position changes are not validated | **Not yet**: on hold, with the missing checks listed |
+
+The recommendation (what to test first) and the approval (whether to ship) are shown separately. A candidate can be
+recommended while its approval is on hold.
+
 ## What we found, and how it changes the decision
 
 Scope throughout: one pick-and-place task, one ACT policy, a Jetson Orin Nano Super at 15 W, and TensorRT 10.3.
