@@ -150,8 +150,8 @@ footer{border-top:1px solid var(--rule); padding-top:18px; color:var(--ink-3); f
   <section class="panel">
     <div class="plate"><h2>Order locks</h2><span class="ref">preregistration §8</span></div>
     <p class="note">Each lock is a real dependency. Its record was committed and pushed before the next step ran, so the
-      git history proves the order. CI checks the integrity of the LOCK-2 record. The trial runner does not yet check the
-      locks itself; that check is planned.</p>
+      git history proves the order. CI checks the integrity of the LOCK-2 record. The trial runner's own pre-run check (schedule seal
+      and LOCK-2) was added after all real-arm blocks had finished; during the experiments the order was enforced by the commits.</p>
     <div class="locks">
       <div class="lock"><div class="lock-id">LOCK-1</div><div class="lock-txt"><strong>Data split fixed → policy training</strong><span>120 demos, 80/20/20 from a seeded hash</span></div><span class="chip ok">done 10-07</span></div>
       <div class="lock"><div class="lock-id">LOCK-2</div><div class="lock-txt"><strong>All audit scores frozen → first real trial</strong><span>5 predictors over 24 INT8 cells, rankings hashed</span></div><span class="chip ok">done</span></div>

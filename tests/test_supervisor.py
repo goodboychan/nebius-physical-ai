@@ -85,6 +85,36 @@ def test_abort_on_stale_is_opt_in():
     assert s.current()[0] == "ABORT"
 
 
+def test_abort_on_stale_aborts_even_after_continue():
+    """abort_on_stale=True는 '모르면 멈춘다'이다. 마지막 판정이 CONTINUE라도 낡았으면 ABORT."""
+    c = Clock()
+    s = make(["CONTINUE"], cfg=SupervisorConfig(abort_on_stale=True), clock=c)
+    s.step()
+    assert s.current()[0] == "CONTINUE"
+    c.advance(2.0)
+    d, info = s.current()
+    assert d == "ABORT" and info["stale"] is True
+
+
+def test_staleness_counts_from_frame_capture_not_verdict_arrival():
+    """판정이 1.0 s 걸려 도착하면, 도착 0.6 s 뒤 관측 나이는 1.6 s다(1500 ms 초과 → 낡음)."""
+    c = Clock()
+    def slow(_):
+        c.advance(1.0); return "CONTINUE"
+    s = Supervisor(infer=slow, grab_frame=lambda: None, clock=c)
+    s.step(); c.advance(0.6)
+    d, info = s.current()
+    assert info["stale"] is True and info["age_ms"] == pytest.approx(1600.0)
+    assert info["verdict_age_ms"] == pytest.approx(600.0)
+
+
+def test_grab_frame_may_supply_capture_time():
+    c = Clock()
+    s = Supervisor(infer=lambda f: "CONTINUE", grab_frame=lambda: ("frame", c.t - 0.3), clock=c)
+    v = s.step()
+    assert v.frame_ts == pytest.approx(c.t - 0.3)
+
+
 def test_no_verdict_yet_continues():
     s = make([])
     d, info = s.current()

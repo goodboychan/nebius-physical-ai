@@ -71,7 +71,22 @@ if BLIND:
     sealed = json.load(open(f"{SEALED}/{'stress' if STRESS else 'g6'}_sealed.json")); plan = sealed[bsession]
     session, cell = f"{'stress' + {'v1': '', 'v2': '_v2', 'fp16': '_fp16'}[SV] if STRESS else 'g6'}_{bsession}", "BLIND"
     engine_of = lambda tok: f"{SEALED}/engines/{tok}.engine"
-    pub = json.load(open(f"{SEALED}/{'stress' if STRESS else 'g6'}_schedule_public.json"))[bsession]
+    pubfull = json.load(open(f"{SEALED}/{'stress' if STRESS else 'g6'}_schedule_public.json")); pub = pubfull[bsession]
+    # 실행 전 확인(2026-10-12 외부 검토 반영): 봉인 순서표가 공개본에 적힌 해시와 같은지, LOCK-2 기록이 온전한지.
+    # 하나라도 실패하면 trial을 시작하지 않는다
+    import hashlib
+    _sb = open(f"{SEALED}/{'stress' if STRESS else 'g6'}_sealed.json", "rb").read()
+    if hashlib.sha256(_sb).hexdigest() != pubfull["sealed_sha256"]:
+        sys.exit("실행 거부: 봉인 순서표 해시가 공개본과 다르다")
+    from pathlib import Path
+    from edgeqgate.freeze import require_lock2
+    _repo = Path(os.path.expanduser("~/edgeqgate/repo"))
+    os.environ.setdefault("EDGEQGATE_GRID_PATH", str(_repo / "configs" / "variant_grid.yaml"))
+    try:
+        require_lock2(_repo / "artifacts" / "freeze" / "lock2.json")
+    except Exception as e:
+        sys.exit(f"실행 거부: LOCK-2 확인 실패 — {type(e).__name__}: {str(e)[:200]}")
+    print("실행 전 확인: 봉인 순서표 해시 일치, LOCK-2 확인 통과")
     engine = engine_of(pub[0]["engine_token"])
 else:
     session, cell, engine = sys.argv[1:4]; N = int(sys.argv[4]) if len(sys.argv) > 4 else 1

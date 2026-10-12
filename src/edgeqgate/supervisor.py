@@ -44,7 +44,9 @@ class Verdict:
 
     @property
     def age_ms_at(self) -> Callable[[float], float]:
-        return lambda now: (now - self.verdict_ts) * 1000.0
+        """관측(프레임) 나이. 판정이 도착한 뒤가 아니라 **판정의 근거가 된 프레임**이 얼마나 오래됐는지가 신선도다
+        (2026-10-12 외부 검토: 이전에는 verdict_ts 기준이라 추론 지연만큼 젊게 셌다)."""
+        return lambda now: (now - self.frame_ts) * 1000.0
 
 
 def parse_decision(text: str) -> Decision:
@@ -87,7 +89,12 @@ class Supervisor:
     # ---- 한 번의 판정 주기 (테스트에서 직접 호출 가능) ----
 
     def step(self) -> Verdict:
-        frame = self.grab_frame()
+        got = self.grab_frame()
+        # grab_frame은 프레임만, 또는 (프레임, 촬영 시각)을 돌려줄 수 있다. 시각이 없으면 지금을 촬영 시각으로 본다
+        if isinstance(got, tuple) and len(got) == 2 and isinstance(got[1], (int, float)):
+            frame, t_cap = got
+        else:
+            frame, t_cap = got, None
         t0 = self.clock()
         err = None
         try:
@@ -96,7 +103,7 @@ class Supervisor:
             raw, err = "", f"{type(e).__name__}: {e}"
         t1 = self.clock()
         v = Verdict(decision=parse_decision(raw) if not err else "UNKNOWN",
-                    frame_ts=t0, verdict_ts=t1, latency_ms=(t1 - t0) * 1000.0,
+                    frame_ts=t0 if t_cap is None else float(t_cap), verdict_ts=t1, latency_ms=(t1 - t0) * 1000.0,
                     raw=(raw or "")[:120], error=err)
         with self._lock:
             self._latest = v
@@ -117,11 +124,16 @@ class Supervisor:
             consec = self._consecutive_abort
         if v is None:
             return "CONTINUE", {"reason": "판정 없음(시작 직후)", "stale": True, "age_ms": None}
-        age = (now - v.verdict_ts) * 1000.0
+        age = v.age_ms_at(now)                      # 관측(프레임) 나이
         stale = age > self.cfg.stale_after_ms
-        info = {"age_ms": round(age, 1), "stale": stale, "latency_ms": round(v.latency_ms, 1),
-                "raw_decision": v.decision, "error": v.error, "consecutive_abort": consec}
-        if stale and not self.cfg.abort_on_stale:
+        info = {"age_ms": round(age, 1), "verdict_age_ms": round((now - v.verdict_ts) * 1000.0, 1), "stale": stale,
+                "latency_ms": round(v.latency_ms, 1), "raw_decision": v.decision, "error": v.error, "consecutive_abort": consec}
+        if stale:
+            if self.cfg.abort_on_stale:
+                # 안전 우선 배포의 기본값: 모르는 상태면 멈춘다. 마지막 판정이 CONTINUE여도 마찬가지다
+                # (2026-10-12 외부 검토: 이전에는 낡은 CONTINUE가 그대로 통과했다)
+                info["reason"] = "판정이 낡아 정지(abort_on_stale)"
+                return "ABORT", info
             # 네트워크 지연이 성공률을 오염시키지 않도록 개입하지 않는다.
             info["reason"] = "판정이 낡아 개입하지 않음"
             return "CONTINUE", info
