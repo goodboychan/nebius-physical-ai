@@ -34,3 +34,27 @@ words per second, with short pauses. Every number is taken from the dashboard, t
 | 4 | `FP16: 11.6 ms · 82 mJ / inference` · `Audit top 3 vs random 3: 73/75 vs 73/75` · `No pads 8/24 · rubber bands 23/24 · start +3 cm 0/3` |
 | 5 | `Cosmos-Reason2 (Nebius Endpoint): 0 of 7 failures caught, single-frame setup` · `Nemotron 3 Super (Token Factory): numbers checked` |
 | 6 | `Deployment review: a review aid, not an automatic approval` |
+
+## 음성 합성 (2026-10-13)
+
+- Model: **Kokoro-82M** (Apache-2.0), running locally on the GX10 GPU. Script: `scripts/make_narration.py`. Input:
+  `docs/narration/tts_input.json` (numbers spelled out, pronunciations given).
+- espeak-ng cannot be used on this host, so words missing from the dictionary would be dropped silently. Five of them
+  (Jetson, Orin, Nebius, Nemotron, int) get explicit phonemes in the input. Check other new words the same way before
+  rendering.
+- Sample renders at speed 1.0, with the target length in brackets:
+
+  | Scene | am_michael | af_heart | Target |
+  |---|---|---|---|
+  | 1 | 11.0 s | 10.0 s | 10 s |
+  | 2 | 42.1 s | 38.5 s | 60 s |
+  | 3 | 17.9 s | 16.0 s | 25 s |
+  | 4 | 20.9 s | 19.3 s | 25 s |
+  | 5 | 19.1 s | 17.5 s | 20 s |
+  | 6 | 19.0 s | 17.8 s | 25 s |
+  | 7 | 3.2 s | 2.8 s | 5 s |
+  | **Total** | **133 s** | **122 s** | |
+
+  The spare time leaves room for pauses and the arm's own sound.
+- The generated audio is not stored in the repository; it can be regenerated from the script and the input. Disclose
+  in the video description that the narration is synthesized.
