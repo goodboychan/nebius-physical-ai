@@ -45,8 +45,8 @@ Scope throughout: one pick-and-place task, one ACT policy, a Jetson Orin Nano Su
 |---|---|---|
 | On this device FP16 has the lowest latency and energy per inference | trtexec: FP16 11.6 ms and 82 mJ; INT8 16.8–17.1 ms and 101 mJ; FP32 53.4 ms and 403 mJ (`power_bench/SUMMARY.md`) | Don't pick an engine by its precision label. Measure on the target. FP16 is the cost-favored candidate. On the arm: FP16 19/20, FP32 10/10, INT8 10/10; placement within tolerance of FP32; success undecided at this sample size; end to end 24.7 ms against 34.3 and 79.0 ms (`fp16_analysis.json`) |
 | Audit-picked INT8 cells did not beat random ones | 73/75 against 73/75, 95% CI [−6.8, +6.8] pp; offline rank against placement, Spearman 0.02–0.08 (`g6_analysis.json`) | In this setting, the offline ranking is not evidence that one calibration is better |
-| Against FP32 the evidence is insufficient for every INT8 cell | 194/200 against 24/25. At a 10 pp tolerance the Newcombe intervals span about ±23–53 pp, so all 10 cells are "insufficient evidence" (`g6_q2_sensitivity.json`) | "No failures seen" is not "safe". You would need about 110–120 trials per arm to show a cell is within 10 pp |
-| Deployment conditions moved success far more | No anti-slip pads 8/24; rubber bands 23/24; start moved 3 cm 0/3 (observational); unseen yellow can 48/48, every engine 12/12 (`stress_v2_analysis.json`) | Validate the grip, positions and objects you will actually face |
+| Against FP32 the evidence is insufficient for every INT8 cell | 194/200 against 24/25. At a 10 pp tolerance the Newcombe intervals span about ±23–53 pp, so all 10 cells are "insufficient evidence" (`g6_q2_sensitivity.json`) | "No failures seen" is not "safe". Showing a cell is within 10 pp would take about 110–120 trials per arm (a planning estimate that assumes both true success rates are equal at about 96–97%; it is not a guarantee) |
+| Deployment conditions moved success far more | No anti-slip pads 8/24; rubber bands 23/24; start moved 3 cm 0/3 in a small, early-stopped test (observational, cause not isolated); unseen yellow can 48/48, every engine 12/12 (`stress_v2_analysis.json`) | Validate the grip, positions and objects you will actually face |
 | The AI judge, as configured, missed every failure | Shown the final frame of 245 trials, Cosmos-Reason2 answered "Yes" every time and caught 0 of the 7 failures. Live at 2 Hz on 215 trials, it never left CONTINUE (`d4_retro_judge_g6.json`) | A high agreement rate on mostly-successful data means little. Validate an AI judge on failures before you use it |
 
 These results are about this task, this device and this experimental range. They do not show that INT8 is harmless
@@ -62,7 +62,7 @@ The dashboard opens with this card (`dashboard/audit_gate.html`, "Deployment rev
   configuration in use.
 - **Weak spots**: grip friction and changes in start position.
 - **AI judge reliability**: not reliable in the current setup.
-- **Next actions**: plan about 110–120 trials per arm to settle FP16 (or any cell) against FP32, add varied start
+- **Next actions**: plan about 110–120 trials per arm (a planning estimate that assumes both true success rates are equal at about 96–97%; it is not a guarantee) to settle FP16 (or any cell) against FP32, add varied start
   positions, validate the judge with video input, and check grip friction on the deployed gripper.
 
 It is a review aid, not an automatic approval. The trial videos sit next to the numbers, so the reader can see each
@@ -108,7 +108,7 @@ failure.
 
 ## What's next
 
-- Settle FP16 against FP32 on success with about 110–120 trials per arm.
+- Settle FP16 against FP32 on success: about 110–120 trials per arm (a planning estimate that assumes both true success rates are equal at about 96–97%; it is not a guarantee).
 - Shorter replanning intervals (10 / 30 / about 90 steps) crossed with start-position shifts, to separate trajectory
   memorization from slow reaction.
 - An offline re-evaluation of Cosmos: one frame with a larger output budget, and the last seconds of video.

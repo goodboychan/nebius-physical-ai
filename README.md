@@ -41,7 +41,8 @@ Numbers come from committed artifacts. The figure's script lists its sources.
    - Source: [`power_bench/SUMMARY.md`](artifacts/reports/power_bench/SUMMARY.md).
 3. **Deployment margins mattered more than precision** (observational).
    - Without the gripper pads: 8/24. With rubber bands: 23/24.
-   - With the start spot moved 3 cm: 0/3. The policy reaches for its memorized position first.
+   - In a small test with the start spot moved 3 cm: 0/3 (stopped after 3 trials). The arm first reached toward the trained
+     start spot. Position changes need more validation; the cause was not isolated.
    - An unseen yellow can: 48/48, all four engines 12/12. Placement was within the 5 px tolerance of FP32 for every
      INT8 cell ([`stress_v2_analysis.json`](artifacts/reports/stress_v2_analysis.json)).
    - Source: [`stress_operator_notes.md`](docs/sessions/stress_operator_notes.md).

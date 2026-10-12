@@ -1,4 +1,7 @@
-# 영상 내레이션 대본 v1 (2026-10-13)
+# 영상 내레이션 대본 v2 (2026-10-13)
+
+v2: scenes 4 and 6 are restructured around the developer's three decisions (validate first / distrust / approve), and the
+position-shift wording is softened. Voice: **am_michael** (user's choice).
 
 The plan is `docs/video_plan.md` v2: 2:50 in total, with one continuous 60 s real-arm shot. Lengths assume about 2.5
 words per second, with short pauses. Every number is taken from the dashboard, the README or the report files. The
@@ -9,10 +12,10 @@ words per second, with short pauses. Every number is taken from the dashboard, t
 | 1 | 0:00–0:10 | ~22 | Same robot. Same task. One run succeeds, one fails. Before I ship this policy to a tiny Jetson, how do I know which model I can trust? |
 | 2 | 0:10–1:10 | ~115 | This is an SO-101 arm running an ACT policy on a Jetson Orin Nano Super. We taught it with one hundred and twenty teleoperated demonstrations, and trained it on Nebius. *(pause)* From that one policy we built twenty-six candidate engines with TensorRT: full precision, half precision, and twenty-four INT8 builds that differ only in how they were calibrated. *(pause)* QuantGate scores every candidate offline first, then checks the arm. Every real trial is blinded. The operator never knows which engine is running, and the results stay sealed until all the trials are logged. *(pause)* That way, no candidate gets picked after we have seen how it did. |
 | 3 | 1:10–1:35 | ~55 | QuantGate puts three things side by side for every candidate: what it costs on the real device, how it scored offline, and what it did on the real arm. Training and the offline audit ran on Nebius Jobs. The engines run as TensorRT on the Jetson. |
-| 4 | 1:35–2:00 | ~60 | Measuring changed the decision. On this Jetson, half precision was the cheapest engine, not INT8, and on the arm it went nineteen for twenty. The audit's top picks did no better than random picks: seventy-three out of seventy-five both ways. What really moved success was grip and position. |
+| 4 | 1:35–2:00 | ~65 | Measuring changed the decision. On this Jetson, half precision was the cheapest engine, not int eight, and on the arm it went nineteen for twenty. The audit's top picks did no better than random picks. A new can, never seen in training, worked forty-eight out of forty-eight. But in a small test with the start moved three centimeters, the arm failed, so position changes still need checking. |
 | 5 | 2:00–2:20 | ~50 | The AI layers get checked too. In our setup, Cosmos Reason, served on a Nebius endpoint, called this frame a success. It missed all seven failures. Nemotron Super on Token Factory writes the deployment report, and every number in it is checked against the evidence. |
 | 5b | (inside 5, +6 s) | ~18 | `[PC]` And when we gave it a deliberately broken engine, the offline audit flagged it, and the arm `[agreed / did not]`. |
-| 6 | 2:20–2:45 | ~58 | What you take away is a review, not a guess. Half precision is the cost-favored candidate. Its placement matched full precision, but the success comparison still needs more trials. The weak spots are grip and start position. And the review tells you exactly what to test next. |
+| 6 | 2:20–2:45 | ~55 | So QuantGate answers three questions. Which candidate do I validate first? Half precision. Which candidates do I distrust? Broken calibrations, which even a simple input check catches. Can I approve deployment? Not yet. The success comparison needs more trials, and the review lists exactly what to test next. |
 | 7 | 2:45–2:50 | ~6 | QuantGate. Evidence before deployment. |
 
 ## 읽기 메모
@@ -58,3 +61,6 @@ words per second, with short pauses. Every number is taken from the dashboard, t
   The spare time leaves room for pauses and the arm's own sound.
 - The generated audio is not stored in the repository; it can be regenerated from the script and the input. Disclose
   in the video description that the narration is synthesized.
+
+- v2 render (am_michael, speed 1.0): scenes 1–7 run 11.0 / 42.1 / 17.9 / 25.4 / 19.1 / 21.9 / 3.2 s, 140.7 s in total.
+  Scene 2 has about 18 s spare, so scenes 1 and 4 can borrow a second or two from it.

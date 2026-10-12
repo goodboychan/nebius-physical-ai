@@ -94,6 +94,12 @@ svg{display:block; width:100%; height:auto}
 #tip{position:fixed; pointer-events:none; opacity:0; transition:opacity .12s; background:var(--ink); color:var(--paper); font-family:var(--mono);
   font-size:11.5px; padding:6px 9px; border-radius:3px; z-index:50; white-space:nowrap; font-variant-numeric:tabular-nums}
 [data-tip]:focus-visible{outline:2px solid var(--signal); outline-offset:2px}
+.decisions{display:grid; grid-template-columns:repeat(auto-fit,minmax(240px,1fr)); gap:14px}
+.dec{display:flex; flex-direction:column; gap:6px; padding:14px 16px; background:var(--plate); border:1px solid var(--rule); min-width:0}
+.dec .q{font-family:var(--cond); font-size:11.5px; letter-spacing:.08em; text-transform:uppercase; color:var(--ink-3)}
+.dec strong{font-size:17px}
+.dec .a{font-size:13px; color:var(--ink-2)}
+.dec .chip{align-self:flex-start}
 .clips{display:grid; grid-template-columns:repeat(auto-fit,minmax(280px,1fr)); gap:22px}
 .clip{display:flex; flex-direction:column; gap:8px; min-width:0}
 .clip video{width:100%; aspect-ratio:4/3; max-width:100%; background:var(--rule-2); border:1px solid var(--rule); display:block}
@@ -135,15 +141,24 @@ footer{border-top:1px solid var(--rule); padding-top:18px; color:var(--ink-3); f
 
   <section class="panel" id="review">
     <div class="plate"><h2>Deployment review</h2><span class="ref">ACT pick-and-place policy · Jetson Orin Nano Super 15 W · as of 2026-10-12</span></div>
-    <p class="note">A review aid, not an automatic approval. Each line shows what the evidence supports today and what is still missing.</p>
+    <p class="note">A review aid, not an automatic approval. It answers the developer's three questions, keeping the
+      cost <b>recommendation</b> separate from the deployment <b>approval</b>. The lines below give the evidence.</p>
+    <div class="decisions">
+      <div class="dec"><span class="q">Which candidate do I validate first?</span><strong>FP16 (VC-025)</strong>
+        <span class="a">Cheapest on this Jetson, 19/20 on the arm, placement within tolerance of FP32.</span><span class="chip ok">recommended</span></div>
+      <div class="dec"><span class="q">Which candidates do I distrust?</span><strong>Calibration anomalies</strong>
+        <span class="a">Black-frame and noise calibrations: flagged by the input check, action MSE and both audit scores. No normal cell was flagged. The real-arm check of PC-B is pending.</span><span class="chip halt">flagged</span></div>
+      <div class="dec"><span class="q">Can I approve deployment?</span><strong>Not yet</strong>
+        <span class="a">Success against FP32 is undecided for every candidate at these sample sizes, and start-position changes are not validated.</span><span class="chip seal">on hold</span></div>
+    </div>
     <div class="rows">
       <div class="row"><span class="k">Cost</span><span class="d"><b>FP16 (VC-025) is the cheapest engine on this device</b>: 11.6 ms and 82 mJ per inference, against 16.8–17.1 ms and 101 mJ for INT8 and 53.4 ms and 403 mJ for FP32 (trtexec, back-to-back). At the deployed rate, one chunk about every 3 s, inference energy is a small part of system power.</span><span class="v"><span class="chip ok">measured</span></span></div>
       <div class="row"><span class="k">Real arm</span><span class="d"><b>FP16 on the real arm: 19/20</b> against FP32 10/10 and INT8 10/10, in one interleaved blinded session with the current gripper. Placement is within the 5 px tolerance of FP32 (−0.63 px, CI [−2.64, +1.37]). The success difference cannot be decided at this sample size (CI ±28 pp), so the verdict is <b>insufficient evidence</b>, not falsified. End to end in the runner, FP16 takes 24.7 ms per chunk against 34.3 ms for INT8 and 79.0 ms for FP32. In G6, against FP32 at 10 pp, every one of the 10 INT8 cells is also insufficient evidence.</span><span class="v"><span class="chip seal">insufficient</span></span></div>
       <div class="row"><span class="k">Placement</span><span class="d">Mean placement error stays within the 5 px tolerance of FP32 for 8 of 10 INT8 cells. The other 2 are indeterminate. Best vs worst audit fidelity: −0.84 px, CI [−2.53, +0.88].</span><span class="v"><span class="chip ok">8 / 10 ok</span></span></div>
       <div class="row"><span class="k">Verified for</span><span class="d">The 268 g cola can at the trained start mark, the fixed coaster, locked camera exposure and indoor desk light, with anti-slip pads (G6) and with rubber bands (stress v2: nominal 23/24, unseen 190 g yellow can 48/48 with every engine 12/12).</span><span class="v">scope</span></div>
-      <div class="row"><span class="k">Weak spots</span><span class="d">Grip friction: 8/24 with no pads. Start position: 0/3 when moved 3 cm; the policy reaches for its memorized position first. A new object of a different size was not a weak spot here (48/48).</span><span class="v"><span class="chip halt">observed</span></span></div>
+      <div class="row"><span class="k">Weak spots</span><span class="d">Grip friction: 8/24 with no pads. Start position: 0/3 in a small test with the start moved 3 cm (stopped after 3); the arm first reached toward the trained start spot, and the cause was not isolated. A new object of a different size succeeded 48/48.</span><span class="v"><span class="chip halt">observed</span></span></div>
       <div class="row"><span class="k">AI judge</span><span class="d">In its current setup (one final frame, a one-word answer) Cosmos-Reason2 detected 0 of 7 G6 failures. Do not use it as a success signal until it is validated, for example with video input.</span><span class="v"><span class="chip halt">not reliable</span></span></div>
-      <div class="row"><span class="k">Next</span><span class="d"> 1. If FP16 is the candidate, plan about 110–120 trials each for FP16 and FP32 to settle success within 10 pp. 2. Add demonstrations from varied start positions before relying on position changes. 3. Validate the AI judge on held-out trials, for example with video input. 4. Check grip friction on the gripper you will deploy.</span><span class="v">actions</span></div>
+      <div class="row"><span class="k">Next</span><span class="d"> 1. To settle FP16 against FP32 on success at 10 pp, plan about 110–120 trials per arm (a planning estimate assuming equal true rates near 96–97%, not a guarantee). 2. Validate start-position changes with more trials and varied demonstrations. 3. Validate the AI judge on held-out trials, for example with video input. 4. Put a calibration-input check first in the pipeline.</span><span class="v">actions</span></div>
     </div>
   </section>
 
