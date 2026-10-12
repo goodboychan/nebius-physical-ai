@@ -1,0 +1,26 @@
+{
+  "schema": "edgeqgate.stress_v2_post.v1",
+  "frozen_at": "2026-10-12T15:23:10+00:00",
+  "git_commit": "0453091af7c01cda0f18a6f6c38a9df781472e09",
+  "status": "stress v2 complete: S0 24/24 trials, S1 3 trials (stopped early by user), S4 48/48 trials",
+  "sealed_logs": {
+    "stress_v2_S0_sealed.jsonl": {
+      "sha256": "ca27668a0c058a3a250321ab7d2279f4d60c026c676ace14544251fc35d8240d",
+      "trials": 24
+    },
+    "stress_v2_S1_sealed.jsonl": {
+      "sha256": "7e77405ba389d69feddd18c4139bb3802a594221f19b90774fd1759a7e9d2e73",
+      "trials": 3
+    },
+    "stress_v2_S4_sealed.jsonl": {
+      "sha256": "3c29c4fb0abf1e94a2907c182228a7a7a27d416ca77b1efe5e80cf9fe3bd4de1",
+      "trials": 48
+    }
+  },
+  "sealed_schedule_sha256": "ddfa696e61f15953ad2b07e16df33f6ab1fc24ad6f1b4d783d94879e3d9328f4",
+  "analysis": "scripts/stress_analysis.py --version v2 --rejudge (protocol \u00a78\u2013\u00a710); v1 opened together (stress_v1_post.json)",
+  "public_tally_live_judge": {
+    "S4": "25/48 live (23 live 'moving'); operator reported no real failure"
+  },
+  "record_hash": "818579b98077ecb01c3113fbf6c4b53d284daa24ce59ad7b9cefb5d4142df26e"
+}

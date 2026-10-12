@@ -40,3 +40,5 @@ Gripper anti-slip pads are removed for the whole stress session (protocol §7).
   the bottom-right edge of the overhead frame, in every trial (first-frame corner brightness 109.3–110.3). It is in
   the policy's camera input. Keep it in the same place for the remaining S4 trials, so the block stays internally
   consistent. Report it as part of the S4 scene
+- S4 v2 complete, 48 trials (2026-10-13). Operator: **all succeeded**. The live screen showed 23 "moving" verdicts
+  (judge artifact type), to be re-judged offline per §9
