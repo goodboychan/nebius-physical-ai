@@ -1,0 +1,29 @@
+{
+ "note": "stress v1 (gripper pads removed), descriptive only; stopped by the S0 rule. Outcomes = live judge, which the consensus re-judge reproduces 25/25.",
+ "blocks": {
+  "S0": {
+   "VC-000": {
+    "k": 1,
+    "n": 6
+   },
+   "VC-002": {
+    "k": 2,
+    "n": 6
+   },
+   "VC-005": {
+    "k": 3,
+    "n": 6
+   },
+   "VC-020": {
+    "k": 2,
+    "n": 6
+   }
+  },
+  "S1": {
+   "VC-002": {
+    "k": 1,
+    "n": 1
+   }
+  }
+ }
+}

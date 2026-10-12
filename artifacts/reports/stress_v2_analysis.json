@@ -1,0 +1,536 @@
+{
+ "n_trials": {
+  "S1": 3,
+  "S4": 48
+ },
+ "n_trials_S0": 24,
+ "S0": {
+  "VC-000": {
+   "k": 6,
+   "n": 6,
+   "place_mean": 21.633333333333336
+  },
+  "VC-002": {
+   "k": 6,
+   "n": 6,
+   "place_mean": 21.683333333333334
+  },
+  "VC-005": {
+   "k": 6,
+   "n": 6,
+   "place_mean": 21.266666666666666
+  },
+  "VC-020": {
+   "k": 5,
+   "n": 6,
+   "place_mean": 20.54
+  }
+ },
+ "S1": {
+  "cells": {
+   "VC-000": {
+    "k": 0,
+    "n": 1,
+    "wilson95": [
+     0.0,
+     0.7934506856227626
+    ],
+    "place_mean": null,
+    "aborted": 0,
+    "nominal_k_n": [
+     24,
+     25
+    ],
+    "S0_k_n": [
+     6,
+     6
+    ],
+    "vs_S0_newcombe95_pp": [
+     11.573485490644696,
+     100.0
+    ]
+   },
+   "VC-002": {
+    "k": 0,
+    "n": 1,
+    "wilson95": [
+     0.0,
+     0.7934506856227626
+    ],
+    "place_mean": null,
+    "aborted": 0,
+    "nominal_k_n": [
+     24,
+     25
+    ],
+    "S0_k_n": [
+     6,
+     6
+    ],
+    "vs_S0_newcombe95_pp": [
+     11.573485490644696,
+     100.0
+    ]
+   },
+   "VC-020": {
+    "k": 0,
+    "n": 1,
+    "wilson95": [
+     0.0,
+     0.7934506856227626
+    ],
+    "place_mean": null,
+    "aborted": 0,
+    "nominal_k_n": [
+     24,
+     25
+    ],
+    "S0_k_n": [
+     5,
+     6
+    ],
+    "vs_S0_newcombe95_pp": [
+     -5.382106407614207,
+     96.99466302516933
+    ]
+   }
+  },
+  "secondary_vs_fp32": {
+   "VC-002": {
+    "ref_k_n": [
+     0,
+     1
+    ],
+    "test_k_n": [
+     0,
+     1
+    ],
+    "E1": {
+     "degradation_pp": 0.0,
+     "ci_pp": [
+      -89.14190215489462,
+      89.14190215489462
+     ],
+     "method": "Newcombe hybrid score",
+     "decision": "indeterminate",
+     "bootstrap_ci_pp_secondary": [
+      0.0,
+      0.0
+     ]
+    },
+    "E2": {
+     "degradation_px": NaN,
+     "ci_px": [
+      NaN,
+      NaN
+     ],
+     "n_place": [
+      0,
+      0
+     ],
+     "decision": "indeterminate (< 5 placements)"
+    },
+    "verdict": "INSUFFICIENT_EVIDENCE",
+    "ceiling_rule_applied": false,
+    "conf": 0.9958333333333333
+   },
+   "VC-020": {
+    "ref_k_n": [
+     0,
+     1
+    ],
+    "test_k_n": [
+     0,
+     1
+    ],
+    "E1": {
+     "degradation_pp": 0.0,
+     "ci_pp": [
+      -89.14190215489462,
+      89.14190215489462
+     ],
+     "method": "Newcombe hybrid score",
+     "decision": "indeterminate",
+     "bootstrap_ci_pp_secondary": [
+      0.0,
+      0.0
+     ]
+    },
+    "E2": {
+     "degradation_px": NaN,
+     "ci_px": [
+      NaN,
+      NaN
+     ],
+     "n_place": [
+      0,
+      0
+     ],
+     "decision": "indeterminate (< 5 placements)"
+    },
+    "verdict": "INSUFFICIENT_EVIDENCE",
+    "ceiling_rule_applied": false,
+    "conf": 0.9958333333333333
+   }
+  },
+  "secondary_calib1024_vs_16": {
+   "ref_k_n": [
+    0,
+    1
+   ],
+   "test_k_n": [
+    0,
+    1
+   ],
+   "E1": {
+    "degradation_pp": 0.0,
+    "ci_pp": [
+     -86.1850453653968,
+     86.1850453653968
+    ],
+    "method": "Newcombe hybrid score",
+    "decision": "indeterminate",
+    "bootstrap_ci_pp_secondary": [
+     0.0,
+     0.0
+    ]
+   },
+   "E2": {
+    "degradation_px": NaN,
+    "ci_px": [
+     NaN,
+     NaN
+    ],
+    "n_place": [
+     0,
+     0
+    ],
+    "decision": "indeterminate (< 5 placements)"
+   },
+   "verdict": "INSUFFICIENT_EVIDENCE",
+   "ceiling_rule_applied": false,
+   "conf": 0.9875
+  },
+  "d4_shadow": {
+   "trials": 3,
+   "trials_with_non_continue": 0,
+   "failures": [
+    1,
+    2,
+    3
+   ],
+   "failures_flagged": []
+  },
+  "d4_judge": {
+   "confusion": {
+    "YES_success": 0,
+    "YES_failure": 3,
+    "NO_success": 0,
+    "NO_failure": 0,
+    "other": 0
+   },
+   "agreement": 0.0
+  }
+ },
+ "S4": {
+  "cells": {
+   "VC-000": {
+    "k": 12,
+    "n": 12,
+    "wilson95": [
+     0.7575059933447591,
+     1.0
+    ],
+    "place_mean": 19.258333333333333,
+    "aborted": 0,
+    "nominal_k_n": [
+     24,
+     25
+    ],
+    "S0_k_n": [
+     6,
+     6
+    ],
+    "vs_S0_newcombe95_pp": [
+     -39.03342879021654,
+     24.24940066552409
+    ]
+   },
+   "VC-002": {
+    "k": 12,
+    "n": 12,
+    "wilson95": [
+     0.7575059933447591,
+     1.0
+    ],
+    "place_mean": 20.283333333333335,
+    "aborted": 0,
+    "nominal_k_n": [
+     24,
+     25
+    ],
+    "S0_k_n": [
+     6,
+     6
+    ],
+    "vs_S0_newcombe95_pp": [
+     -39.03342879021654,
+     24.24940066552409
+    ]
+   },
+   "VC-005": {
+    "k": 12,
+    "n": 12,
+    "wilson95": [
+     0.7575059933447591,
+     1.0
+    ],
+    "place_mean": 18.883333333333333,
+    "aborted": 0,
+    "nominal_k_n": [
+     14,
+     15
+    ],
+    "S0_k_n": [
+     6,
+     6
+    ],
+    "vs_S0_newcombe95_pp": [
+     -39.03342879021654,
+     24.24940066552409
+    ]
+   },
+   "VC-020": {
+    "k": 12,
+    "n": 12,
+    "wilson95": [
+     0.7575059933447591,
+     1.0
+    ],
+    "place_mean": 18.625,
+    "aborted": 0,
+    "nominal_k_n": [
+     24,
+     25
+    ],
+    "S0_k_n": [
+     5,
+     6
+    ],
+    "vs_S0_newcombe95_pp": [
+     -56.35028221864701,
+     11.166144215207275
+    ]
+   }
+  },
+  "primary_worst_vs_best": {
+   "ref_k_n": [
+    12,
+    12
+   ],
+   "test_k_n": [
+    12,
+    12
+   ],
+   "E1": {
+    "degradation_pp": 0.0,
+    "ci_pp": [
+     -34.20523328880387,
+     34.20523328880387
+    ],
+    "method": "Newcombe hybrid score",
+    "decision": "indeterminate (ceiling)",
+    "bootstrap_ci_pp_secondary": [
+     0.0,
+     0.0
+    ]
+   },
+   "E2": {
+    "degradation_px": -1.4000000000000021,
+    "ci_px": [
+     -3.0584375000000055,
+     0.25
+    ],
+    "n_place": [
+     12,
+     12
+    ],
+    "decision": "tolerance_compatible"
+   },
+   "verdict": "INSUFFICIENT_EVIDENCE",
+   "ceiling_rule_applied": true,
+   "conf": 0.9875
+  },
+  "secondary_vs_fp32": {
+   "VC-002": {
+    "ref_k_n": [
+     12,
+     12
+    ],
+    "test_k_n": [
+     12,
+     12
+    ],
+    "E1": {
+     "degradation_pp": 0.0,
+     "ci_pp": [
+      -40.62262002715828,
+      40.62262002715828
+     ],
+     "method": "Newcombe hybrid score",
+     "decision": "indeterminate (ceiling)",
+     "bootstrap_ci_pp_secondary": [
+      0.0,
+      0.0
+     ]
+    },
+    "E2": {
+     "degradation_px": 1.0250000000000021,
+     "ci_px": [
+      -0.8042187500000018,
+      3.052812500000013
+     ],
+     "n_place": [
+      12,
+      12
+     ],
+     "decision": "tolerance_compatible"
+    },
+    "verdict": "INSUFFICIENT_EVIDENCE",
+    "ceiling_rule_applied": true,
+    "conf": 0.9958333333333333
+   },
+   "VC-005": {
+    "ref_k_n": [
+     12,
+     12
+    ],
+    "test_k_n": [
+     12,
+     12
+    ],
+    "E1": {
+     "degradation_pp": 0.0,
+     "ci_pp": [
+      -40.62262002715828,
+      40.62262002715828
+     ],
+     "method": "Newcombe hybrid score",
+     "decision": "indeterminate (ceiling)",
+     "bootstrap_ci_pp_secondary": [
+      0.0,
+      0.0
+     ]
+    },
+    "E2": {
+     "degradation_px": -0.375,
+     "ci_px": [
+      -2.5347395833333395,
+      2.116666666666667
+     ],
+     "n_place": [
+      12,
+      12
+     ],
+     "decision": "tolerance_compatible"
+    },
+    "verdict": "INSUFFICIENT_EVIDENCE",
+    "ceiling_rule_applied": true,
+    "conf": 0.9958333333333333
+   },
+   "VC-020": {
+    "ref_k_n": [
+     12,
+     12
+    ],
+    "test_k_n": [
+     12,
+     12
+    ],
+    "E1": {
+     "degradation_pp": 0.0,
+     "ci_pp": [
+      -40.62262002715828,
+      40.62262002715828
+     ],
+     "method": "Newcombe hybrid score",
+     "decision": "indeterminate (ceiling)",
+     "bootstrap_ci_pp_secondary": [
+      0.0,
+      0.0
+     ]
+    },
+    "E2": {
+     "degradation_px": -0.6333333333333329,
+     "ci_px": [
+      -2.847291666666668,
+      1.8583333333333314
+     ],
+     "n_place": [
+      12,
+      12
+     ],
+     "decision": "tolerance_compatible"
+    },
+    "verdict": "INSUFFICIENT_EVIDENCE",
+    "ceiling_rule_applied": true,
+    "conf": 0.9958333333333333
+   }
+  },
+  "secondary_calib1024_vs_16": {
+   "ref_k_n": [
+    12,
+    12
+   ],
+   "test_k_n": [
+    12,
+    12
+   ],
+   "E1": {
+    "degradation_pp": 0.0,
+    "ci_pp": [
+     -34.20523328880387,
+     34.20523328880387
+    ],
+    "method": "Newcombe hybrid score",
+    "decision": "indeterminate (ceiling)",
+    "bootstrap_ci_pp_secondary": [
+     0.0,
+     0.0
+    ]
+   },
+   "E2": {
+    "degradation_px": -1.658333333333335,
+    "ci_px": [
+     -3.341666666666667,
+     0.18755208333333637
+    ],
+    "n_place": [
+     12,
+     12
+    ],
+    "decision": "tolerance_compatible"
+   },
+   "verdict": "INSUFFICIENT_EVIDENCE",
+   "ceiling_rule_applied": true,
+   "conf": 0.9875
+  },
+  "d4_shadow": {
+   "trials": 48,
+   "trials_with_non_continue": 0,
+   "failures": [],
+   "failures_flagged": []
+  },
+  "d4_judge": {
+   "confusion": {
+    "YES_success": 48,
+    "YES_failure": 0,
+    "NO_success": 0,
+    "NO_failure": 0,
+    "other": 0
+   },
+   "agreement": 1.0
+  }
+ },
+ "falsified": false
+}
