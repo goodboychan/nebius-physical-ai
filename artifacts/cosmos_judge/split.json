@@ -1,0 +1,2460 @@
+{
+ "n": 409,
+ "n_fail": 31,
+ "trials": [
+  {
+   "trial_id": "main001_1008_002836",
+   "video": "/tmp/claude-1000/-home-chanseok-workspace-neubius/517599d4-c5f7-4644-a6db-bbfb1913ca33/scratchpad/g6_vid/main/main001_1008_002836_top.mp4",
+   "standing": true,
+   "set": "eval"
+  },
+  {
+   "trial_id": "main002_1008_003016",
+   "video": "/tmp/claude-1000/-home-chanseok-workspace-neubius/517599d4-c5f7-4644-a6db-bbfb1913ca33/scratchpad/g6_vid/main/main002_1008_003016_top.mp4",
+   "standing": true,
+   "set": "eval"
+  },
+  {
+   "trial_id": "main003_1008_003138",
+   "video": "/tmp/claude-1000/-home-chanseok-workspace-neubius/517599d4-c5f7-4644-a6db-bbfb1913ca33/scratchpad/g6_vid/main/main003_1008_003138_top.mp4",
+   "standing": true,
+   "set": "eval"
+  },
+  {
+   "trial_id": "main004_1008_003255",
+   "video": "/tmp/claude-1000/-home-chanseok-workspace-neubius/517599d4-c5f7-4644-a6db-bbfb1913ca33/scratchpad/g6_vid/main/main004_1008_003255_top.mp4",
+   "standing": true,
+   "set": "eval"
+  },
+  {
+   "trial_id": "main005_1008_003407",
+   "video": "/tmp/claude-1000/-home-chanseok-workspace-neubius/517599d4-c5f7-4644-a6db-bbfb1913ca33/scratchpad/g6_vid/main/main005_1008_003407_top.mp4",
+   "standing": true,
+   "set": "dev"
+  },
+  {
+   "trial_id": "main006_1008_003547",
+   "video": "/tmp/claude-1000/-home-chanseok-workspace-neubius/517599d4-c5f7-4644-a6db-bbfb1913ca33/scratchpad/g6_vid/main/main006_1008_003547_top.mp4",
+   "standing": true,
+   "set": "dev"
+  },
+  {
+   "trial_id": "main007_1008_003743",
+   "video": "/tmp/claude-1000/-home-chanseok-workspace-neubius/517599d4-c5f7-4644-a6db-bbfb1913ca33/scratchpad/g6_vid/main/main007_1008_003743_top.mp4",
+   "standing": true,
+   "set": "dev"
+  },
+  {
+   "trial_id": "main008_1008_003854",
+   "video": "/tmp/claude-1000/-home-chanseok-workspace-neubius/517599d4-c5f7-4644-a6db-bbfb1913ca33/scratchpad/g6_vid/main/main008_1008_003854_top.mp4",
+   "standing": true,
+   "set": "eval"
+  },
+  {
+   "trial_id": "main009_1008_004005",
+   "video": "/tmp/claude-1000/-home-chanseok-workspace-neubius/517599d4-c5f7-4644-a6db-bbfb1913ca33/scratchpad/g6_vid/main/main009_1008_004005_top.mp4",
+   "standing": true,
+   "set": "eval"
+  },
+  {
+   "trial_id": "main010_1008_004115",
+   "video": "/tmp/claude-1000/-home-chanseok-workspace-neubius/517599d4-c5f7-4644-a6db-bbfb1913ca33/scratchpad/g6_vid/main/main010_1008_004115_top.mp4",
+   "standing": true,
+   "set": "eval"
+  },
+  {
+   "trial_id": "main011_1008_004224",
+   "video": "/tmp/claude-1000/-home-chanseok-workspace-neubius/517599d4-c5f7-4644-a6db-bbfb1913ca33/scratchpad/g6_vid/main/main011_1008_004224_top.mp4",
+   "standing": true,
+   "set": "eval"
+  },
+  {
+   "trial_id": "main012_1008_004335",
+   "video": "/tmp/claude-1000/-home-chanseok-workspace-neubius/517599d4-c5f7-4644-a6db-bbfb1913ca33/scratchpad/g6_vid/main/main012_1008_004335_top.mp4",
+   "standing": true,
+   "set": "dev"
+  },
+  {
+   "trial_id": "main013_1008_004444",
+   "video": "/tmp/claude-1000/-home-chanseok-workspace-neubius/517599d4-c5f7-4644-a6db-bbfb1913ca33/scratchpad/g6_vid/main/main013_1008_004444_top.mp4",
+   "standing": true,
+   "set": "eval"
+  },
+  {
+   "trial_id": "main014_1008_004552",
+   "video": "/tmp/claude-1000/-home-chanseok-workspace-neubius/517599d4-c5f7-4644-a6db-bbfb1913ca33/scratchpad/g6_vid/main/main014_1008_004552_top.mp4",
+   "standing": true,
+   "set": "eval"
+  },
+  {
+   "trial_id": "main015_1008_004700",
+   "video": "/tmp/claude-1000/-home-chanseok-workspace-neubius/517599d4-c5f7-4644-a6db-bbfb1913ca33/scratchpad/g6_vid/main/main015_1008_004700_top.mp4",
+   "standing": true,
+   "set": "eval"
+  },
+  {
+   "trial_id": "main016_1008_004809",
+   "video": "/tmp/claude-1000/-home-chanseok-workspace-neubius/517599d4-c5f7-4644-a6db-bbfb1913ca33/scratchpad/g6_vid/main/main016_1008_004809_top.mp4",
+   "standing": true,
+   "set": "eval"
+  },
+  {
+   "trial_id": "main017_1008_004917",
+   "video": "/tmp/claude-1000/-home-chanseok-workspace-neubius/517599d4-c5f7-4644-a6db-bbfb1913ca33/scratchpad/g6_vid/main/main017_1008_004917_top.mp4",
+   "standing": true,
+   "set": "eval"
+  },
+  {
+   "trial_id": "main018_1008_005027",
+   "video": "/tmp/claude-1000/-home-chanseok-workspace-neubius/517599d4-c5f7-4644-a6db-bbfb1913ca33/scratchpad/g6_vid/main/main018_1008_005027_top.mp4",
+   "standing": true,
+   "set": "dev"
+  },
+  {
+   "trial_id": "main019_1008_005135",
+   "video": "/tmp/claude-1000/-home-chanseok-workspace-neubius/517599d4-c5f7-4644-a6db-bbfb1913ca33/scratchpad/g6_vid/main/main019_1008_005135_top.mp4",
+   "standing": true,
+   "set": "dev"
+  },
+  {
+   "trial_id": "main020_1008_005245",
+   "video": "/tmp/claude-1000/-home-chanseok-workspace-neubius/517599d4-c5f7-4644-a6db-bbfb1913ca33/scratchpad/g6_vid/main/main020_1008_005245_top.mp4",
+   "standing": true,
+   "set": "dev"
+  },
+  {
+   "trial_id": "main021_1008_005357",
+   "video": "/tmp/claude-1000/-home-chanseok-workspace-neubius/517599d4-c5f7-4644-a6db-bbfb1913ca33/scratchpad/g6_vid/main/main021_1008_005357_top.mp4",
+   "standing": true,
+   "set": "eval"
+  },
+  {
+   "trial_id": "main022_1008_005550",
+   "video": "/tmp/claude-1000/-home-chanseok-workspace-neubius/517599d4-c5f7-4644-a6db-bbfb1913ca33/scratchpad/g6_vid/main/main022_1008_005550_top.mp4",
+   "standing": true,
+   "set": "dev"
+  },
+  {
+   "trial_id": "main023_1008_005658",
+   "video": "/tmp/claude-1000/-home-chanseok-workspace-neubius/517599d4-c5f7-4644-a6db-bbfb1913ca33/scratchpad/g6_vid/main/main023_1008_005658_top.mp4",
+   "standing": true,
+   "set": "eval"
+  },
+  {
+   "trial_id": "main024_1008_005807",
+   "video": "/tmp/claude-1000/-home-chanseok-workspace-neubius/517599d4-c5f7-4644-a6db-bbfb1913ca33/scratchpad/g6_vid/main/main024_1008_005807_top.mp4",
+   "standing": true,
+   "set": "dev"
+  },
+  {
+   "trial_id": "main025_1008_005917",
+   "video": "/tmp/claude-1000/-home-chanseok-workspace-neubius/517599d4-c5f7-4644-a6db-bbfb1913ca33/scratchpad/g6_vid/main/main025_1008_005917_top.mp4",
+   "standing": true,
+   "set": "dev"
+  },
+  {
+   "trial_id": "main026_1008_010024",
+   "video": "/tmp/claude-1000/-home-chanseok-workspace-neubius/517599d4-c5f7-4644-a6db-bbfb1913ca33/scratchpad/g6_vid/main/main026_1008_010024_top.mp4",
+   "standing": true,
+   "set": "dev"
+  },
+  {
+   "trial_id": "main027_1008_010132",
+   "video": "/tmp/claude-1000/-home-chanseok-workspace-neubius/517599d4-c5f7-4644-a6db-bbfb1913ca33/scratchpad/g6_vid/main/main027_1008_010132_top.mp4",
+   "standing": true,
+   "set": "eval"
+  },
+  {
+   "trial_id": "main028_1008_010240",
+   "video": "/tmp/claude-1000/-home-chanseok-workspace-neubius/517599d4-c5f7-4644-a6db-bbfb1913ca33/scratchpad/g6_vid/main/main028_1008_010240_top.mp4",
+   "standing": true,
+   "set": "dev"
+  },
+  {
+   "trial_id": "main029_1008_010348",
+   "video": "/tmp/claude-1000/-home-chanseok-workspace-neubius/517599d4-c5f7-4644-a6db-bbfb1913ca33/scratchpad/g6_vid/main/main029_1008_010348_top.mp4",
+   "standing": true,
+   "set": "eval"
+  },
+  {
+   "trial_id": "main030_1008_010459",
+   "video": "/tmp/claude-1000/-home-chanseok-workspace-neubius/517599d4-c5f7-4644-a6db-bbfb1913ca33/scratchpad/g6_vid/main/main030_1008_010459_top.mp4",
+   "standing": true,
+   "set": "dev"
+  },
+  {
+   "trial_id": "main031_1008_213612",
+   "video": "/tmp/claude-1000/-home-chanseok-workspace-neubius/517599d4-c5f7-4644-a6db-bbfb1913ca33/scratchpad/g6_vid/main/main031_1008_213612_top.mp4",
+   "standing": true,
+   "set": "eval"
+  },
+  {
+   "trial_id": "main032_1008_213731",
+   "video": "/tmp/claude-1000/-home-chanseok-workspace-neubius/517599d4-c5f7-4644-a6db-bbfb1913ca33/scratchpad/g6_vid/main/main032_1008_213731_top.mp4",
+   "standing": true,
+   "set": "dev"
+  },
+  {
+   "trial_id": "main033_1008_213848",
+   "video": "/tmp/claude-1000/-home-chanseok-workspace-neubius/517599d4-c5f7-4644-a6db-bbfb1913ca33/scratchpad/g6_vid/main/main033_1008_213848_top.mp4",
+   "standing": true,
+   "set": "dev"
+  },
+  {
+   "trial_id": "main034_1008_214001",
+   "video": "/tmp/claude-1000/-home-chanseok-workspace-neubius/517599d4-c5f7-4644-a6db-bbfb1913ca33/scratchpad/g6_vid/main/main034_1008_214001_top.mp4",
+   "standing": true,
+   "set": "dev"
+  },
+  {
+   "trial_id": "main035_1008_214121",
+   "video": "/tmp/claude-1000/-home-chanseok-workspace-neubius/517599d4-c5f7-4644-a6db-bbfb1913ca33/scratchpad/g6_vid/main/main035_1008_214121_top.mp4",
+   "standing": true,
+   "set": "eval"
+  },
+  {
+   "trial_id": "main036_1008_214231",
+   "video": "/tmp/claude-1000/-home-chanseok-workspace-neubius/517599d4-c5f7-4644-a6db-bbfb1913ca33/scratchpad/g6_vid/main/main036_1008_214231_top.mp4",
+   "standing": true,
+   "set": "eval"
+  },
+  {
+   "trial_id": "main037_1008_214342",
+   "video": "/tmp/claude-1000/-home-chanseok-workspace-neubius/517599d4-c5f7-4644-a6db-bbfb1913ca33/scratchpad/g6_vid/main/main037_1008_214342_top.mp4",
+   "standing": true,
+   "set": "eval"
+  },
+  {
+   "trial_id": "main038_1008_214450",
+   "video": "/tmp/claude-1000/-home-chanseok-workspace-neubius/517599d4-c5f7-4644-a6db-bbfb1913ca33/scratchpad/g6_vid/main/main038_1008_214450_top.mp4",
+   "standing": true,
+   "set": "eval"
+  },
+  {
+   "trial_id": "main039_1008_214559",
+   "video": "/tmp/claude-1000/-home-chanseok-workspace-neubius/517599d4-c5f7-4644-a6db-bbfb1913ca33/scratchpad/g6_vid/main/main039_1008_214559_top.mp4",
+   "standing": true,
+   "set": "eval"
+  },
+  {
+   "trial_id": "main040_1008_214708",
+   "video": "/tmp/claude-1000/-home-chanseok-workspace-neubius/517599d4-c5f7-4644-a6db-bbfb1913ca33/scratchpad/g6_vid/main/main040_1008_214708_top.mp4",
+   "standing": true,
+   "set": "eval"
+  },
+  {
+   "trial_id": "main041_1008_214815",
+   "video": "/tmp/claude-1000/-home-chanseok-workspace-neubius/517599d4-c5f7-4644-a6db-bbfb1913ca33/scratchpad/g6_vid/main/main041_1008_214815_top.mp4",
+   "standing": true,
+   "set": "dev"
+  },
+  {
+   "trial_id": "main042_1008_214924",
+   "video": "/tmp/claude-1000/-home-chanseok-workspace-neubius/517599d4-c5f7-4644-a6db-bbfb1913ca33/scratchpad/g6_vid/main/main042_1008_214924_top.mp4",
+   "standing": true,
+   "set": "eval"
+  },
+  {
+   "trial_id": "main043_1008_215040",
+   "video": "/tmp/claude-1000/-home-chanseok-workspace-neubius/517599d4-c5f7-4644-a6db-bbfb1913ca33/scratchpad/g6_vid/main/main043_1008_215040_top.mp4",
+   "standing": true,
+   "set": "eval"
+  },
+  {
+   "trial_id": "main044_1008_215148",
+   "video": "/tmp/claude-1000/-home-chanseok-workspace-neubius/517599d4-c5f7-4644-a6db-bbfb1913ca33/scratchpad/g6_vid/main/main044_1008_215148_top.mp4",
+   "standing": true,
+   "set": "dev"
+  },
+  {
+   "trial_id": "main045_1008_215256",
+   "video": "/tmp/claude-1000/-home-chanseok-workspace-neubius/517599d4-c5f7-4644-a6db-bbfb1913ca33/scratchpad/g6_vid/main/main045_1008_215256_top.mp4",
+   "standing": true,
+   "set": "eval"
+  },
+  {
+   "trial_id": "main046_1008_215405",
+   "video": "/tmp/claude-1000/-home-chanseok-workspace-neubius/517599d4-c5f7-4644-a6db-bbfb1913ca33/scratchpad/g6_vid/main/main046_1008_215405_top.mp4",
+   "standing": true,
+   "set": "eval"
+  },
+  {
+   "trial_id": "main047_1008_215513",
+   "video": "/tmp/claude-1000/-home-chanseok-workspace-neubius/517599d4-c5f7-4644-a6db-bbfb1913ca33/scratchpad/g6_vid/main/main047_1008_215513_top.mp4",
+   "standing": true,
+   "set": "eval"
+  },
+  {
+   "trial_id": "main048_1008_215622",
+   "video": "/tmp/claude-1000/-home-chanseok-workspace-neubius/517599d4-c5f7-4644-a6db-bbfb1913ca33/scratchpad/g6_vid/main/main048_1008_215622_top.mp4",
+   "standing": true,
+   "set": "eval"
+  },
+  {
+   "trial_id": "main049_1008_215730",
+   "video": "/tmp/claude-1000/-home-chanseok-workspace-neubius/517599d4-c5f7-4644-a6db-bbfb1913ca33/scratchpad/g6_vid/main/main049_1008_215730_top.mp4",
+   "standing": false,
+   "set": "eval"
+  },
+  {
+   "trial_id": "main050_1008_215855",
+   "video": "/tmp/claude-1000/-home-chanseok-workspace-neubius/517599d4-c5f7-4644-a6db-bbfb1913ca33/scratchpad/g6_vid/main/main050_1008_215855_top.mp4",
+   "standing": true,
+   "set": "eval"
+  },
+  {
+   "trial_id": "main051_1008_220012",
+   "video": "/tmp/claude-1000/-home-chanseok-workspace-neubius/517599d4-c5f7-4644-a6db-bbfb1913ca33/scratchpad/g6_vid/main/main051_1008_220012_top.mp4",
+   "standing": true,
+   "set": "eval"
+  },
+  {
+   "trial_id": "main052_1008_220211",
+   "video": "/tmp/claude-1000/-home-chanseok-workspace-neubius/517599d4-c5f7-4644-a6db-bbfb1913ca33/scratchpad/g6_vid/main/main052_1008_220211_top.mp4",
+   "standing": true,
+   "set": "eval"
+  },
+  {
+   "trial_id": "main053_1008_220321",
+   "video": "/tmp/claude-1000/-home-chanseok-workspace-neubius/517599d4-c5f7-4644-a6db-bbfb1913ca33/scratchpad/g6_vid/main/main053_1008_220321_top.mp4",
+   "standing": true,
+   "set": "dev"
+  },
+  {
+   "trial_id": "main054_1008_220442",
+   "video": "/tmp/claude-1000/-home-chanseok-workspace-neubius/517599d4-c5f7-4644-a6db-bbfb1913ca33/scratchpad/g6_vid/main/main054_1008_220442_top.mp4",
+   "standing": true,
+   "set": "eval"
+  },
+  {
+   "trial_id": "main055_1008_220554",
+   "video": "/tmp/claude-1000/-home-chanseok-workspace-neubius/517599d4-c5f7-4644-a6db-bbfb1913ca33/scratchpad/g6_vid/main/main055_1008_220554_top.mp4",
+   "standing": true,
+   "set": "eval"
+  },
+  {
+   "trial_id": "main056_1008_220708",
+   "video": "/tmp/claude-1000/-home-chanseok-workspace-neubius/517599d4-c5f7-4644-a6db-bbfb1913ca33/scratchpad/g6_vid/main/main056_1008_220708_top.mp4",
+   "standing": true,
+   "set": "eval"
+  },
+  {
+   "trial_id": "main057_1008_220817",
+   "video": "/tmp/claude-1000/-home-chanseok-workspace-neubius/517599d4-c5f7-4644-a6db-bbfb1913ca33/scratchpad/g6_vid/main/main057_1008_220817_top.mp4",
+   "standing": true,
+   "set": "eval"
+  },
+  {
+   "trial_id": "main058_1008_220927",
+   "video": "/tmp/claude-1000/-home-chanseok-workspace-neubius/517599d4-c5f7-4644-a6db-bbfb1913ca33/scratchpad/g6_vid/main/main058_1008_220927_top.mp4",
+   "standing": true,
+   "set": "eval"
+  },
+  {
+   "trial_id": "main059_1008_221041",
+   "video": "/tmp/claude-1000/-home-chanseok-workspace-neubius/517599d4-c5f7-4644-a6db-bbfb1913ca33/scratchpad/g6_vid/main/main059_1008_221041_top.mp4",
+   "standing": true,
+   "set": "dev"
+  },
+  {
+   "trial_id": "main060_1008_221208",
+   "video": "/tmp/claude-1000/-home-chanseok-workspace-neubius/517599d4-c5f7-4644-a6db-bbfb1913ca33/scratchpad/g6_vid/main/main060_1008_221208_top.mp4",
+   "standing": true,
+   "set": "dev"
+  },
+  {
+   "trial_id": "main061_1008_221316",
+   "video": "/tmp/claude-1000/-home-chanseok-workspace-neubius/517599d4-c5f7-4644-a6db-bbfb1913ca33/scratchpad/g6_vid/main/main061_1008_221316_top.mp4",
+   "standing": true,
+   "set": "eval"
+  },
+  {
+   "trial_id": "main062_1008_221426",
+   "video": "/tmp/claude-1000/-home-chanseok-workspace-neubius/517599d4-c5f7-4644-a6db-bbfb1913ca33/scratchpad/g6_vid/main/main062_1008_221426_top.mp4",
+   "standing": true,
+   "set": "eval"
+  },
+  {
+   "trial_id": "main063_1008_221537",
+   "video": "/tmp/claude-1000/-home-chanseok-workspace-neubius/517599d4-c5f7-4644-a6db-bbfb1913ca33/scratchpad/g6_vid/main/main063_1008_221537_top.mp4",
+   "standing": true,
+   "set": "eval"
+  },
+  {
+   "trial_id": "main064_1008_221651",
+   "video": "/tmp/claude-1000/-home-chanseok-workspace-neubius/517599d4-c5f7-4644-a6db-bbfb1913ca33/scratchpad/g6_vid/main/main064_1008_221651_top.mp4",
+   "standing": true,
+   "set": "dev"
+  },
+  {
+   "trial_id": "main065_1008_221819",
+   "video": "/tmp/claude-1000/-home-chanseok-workspace-neubius/517599d4-c5f7-4644-a6db-bbfb1913ca33/scratchpad/g6_vid/main/main065_1008_221819_top.mp4",
+   "standing": true,
+   "set": "eval"
+  },
+  {
+   "trial_id": "main066_1008_221930",
+   "video": "/tmp/claude-1000/-home-chanseok-workspace-neubius/517599d4-c5f7-4644-a6db-bbfb1913ca33/scratchpad/g6_vid/main/main066_1008_221930_top.mp4",
+   "standing": true,
+   "set": "eval"
+  },
+  {
+   "trial_id": "main067_1008_222040",
+   "video": "/tmp/claude-1000/-home-chanseok-workspace-neubius/517599d4-c5f7-4644-a6db-bbfb1913ca33/scratchpad/g6_vid/main/main067_1008_222040_top.mp4",
+   "standing": true,
+   "set": "eval"
+  },
+  {
+   "trial_id": "main068_1008_222212",
+   "video": "/tmp/claude-1000/-home-chanseok-workspace-neubius/517599d4-c5f7-4644-a6db-bbfb1913ca33/scratchpad/g6_vid/main/main068_1008_222212_top.mp4",
+   "standing": true,
+   "set": "dev"
+  },
+  {
+   "trial_id": "main069_1008_222327",
+   "video": "/tmp/claude-1000/-home-chanseok-workspace-neubius/517599d4-c5f7-4644-a6db-bbfb1913ca33/scratchpad/g6_vid/main/main069_1008_222327_top.mp4",
+   "standing": true,
+   "set": "eval"
+  },
+  {
+   "trial_id": "main070_1008_222441",
+   "video": "/tmp/claude-1000/-home-chanseok-workspace-neubius/517599d4-c5f7-4644-a6db-bbfb1913ca33/scratchpad/g6_vid/main/main070_1008_222441_top.mp4",
+   "standing": true,
+   "set": "dev"
+  },
+  {
+   "trial_id": "main071_1008_222549",
+   "video": "/tmp/claude-1000/-home-chanseok-workspace-neubius/517599d4-c5f7-4644-a6db-bbfb1913ca33/scratchpad/g6_vid/main/main071_1008_222549_top.mp4",
+   "standing": true,
+   "set": "dev"
+  },
+  {
+   "trial_id": "main072_1008_222700",
+   "video": "/tmp/claude-1000/-home-chanseok-workspace-neubius/517599d4-c5f7-4644-a6db-bbfb1913ca33/scratchpad/g6_vid/main/main072_1008_222700_top.mp4",
+   "standing": true,
+   "set": "dev"
+  },
+  {
+   "trial_id": "main073_1008_222815",
+   "video": "/tmp/claude-1000/-home-chanseok-workspace-neubius/517599d4-c5f7-4644-a6db-bbfb1913ca33/scratchpad/g6_vid/main/main073_1008_222815_top.mp4",
+   "standing": true,
+   "set": "eval"
+  },
+  {
+   "trial_id": "main074_1008_222924",
+   "video": "/tmp/claude-1000/-home-chanseok-workspace-neubius/517599d4-c5f7-4644-a6db-bbfb1913ca33/scratchpad/g6_vid/main/main074_1008_222924_top.mp4",
+   "standing": true,
+   "set": "dev"
+  },
+  {
+   "trial_id": "main075_1008_223032",
+   "video": "/tmp/claude-1000/-home-chanseok-workspace-neubius/517599d4-c5f7-4644-a6db-bbfb1913ca33/scratchpad/g6_vid/main/main075_1008_223032_top.mp4",
+   "standing": true,
+   "set": "eval"
+  },
+  {
+   "trial_id": "main076_1008_223203",
+   "video": "/tmp/claude-1000/-home-chanseok-workspace-neubius/517599d4-c5f7-4644-a6db-bbfb1913ca33/scratchpad/g6_vid/main/main076_1008_223203_top.mp4",
+   "standing": true,
+   "set": "eval"
+  },
+  {
+   "trial_id": "main077_1008_223319",
+   "video": "/tmp/claude-1000/-home-chanseok-workspace-neubius/517599d4-c5f7-4644-a6db-bbfb1913ca33/scratchpad/g6_vid/main/main077_1008_223319_top.mp4",
+   "standing": true,
+   "set": "dev"
+  },
+  {
+   "trial_id": "main078_1008_223427",
+   "video": "/tmp/claude-1000/-home-chanseok-workspace-neubius/517599d4-c5f7-4644-a6db-bbfb1913ca33/scratchpad/g6_vid/main/main078_1008_223427_top.mp4",
+   "standing": true,
+   "set": "eval"
+  },
+  {
+   "trial_id": "main079_1008_223541",
+   "video": "/tmp/claude-1000/-home-chanseok-workspace-neubius/517599d4-c5f7-4644-a6db-bbfb1913ca33/scratchpad/g6_vid/main/main079_1008_223541_top.mp4",
+   "standing": true,
+   "set": "eval"
+  },
+  {
+   "trial_id": "main080_1008_223715",
+   "video": "/tmp/claude-1000/-home-chanseok-workspace-neubius/517599d4-c5f7-4644-a6db-bbfb1913ca33/scratchpad/g6_vid/main/main080_1008_223715_top.mp4",
+   "standing": true,
+   "set": "eval"
+  },
+  {
+   "trial_id": "main081_1008_223825",
+   "video": "/tmp/claude-1000/-home-chanseok-workspace-neubius/517599d4-c5f7-4644-a6db-bbfb1913ca33/scratchpad/g6_vid/main/main081_1008_223825_top.mp4",
+   "standing": true,
+   "set": "dev"
+  },
+  {
+   "trial_id": "main082_1008_223934",
+   "video": "/tmp/claude-1000/-home-chanseok-workspace-neubius/517599d4-c5f7-4644-a6db-bbfb1913ca33/scratchpad/g6_vid/main/main082_1008_223934_top.mp4",
+   "standing": true,
+   "set": "eval"
+  },
+  {
+   "trial_id": "main083_1008_224312",
+   "video": "/tmp/claude-1000/-home-chanseok-workspace-neubius/517599d4-c5f7-4644-a6db-bbfb1913ca33/scratchpad/g6_vid/main/main083_1008_224312_top.mp4",
+   "standing": true,
+   "set": "dev"
+  },
+  {
+   "trial_id": "main084_1008_224420",
+   "video": "/tmp/claude-1000/-home-chanseok-workspace-neubius/517599d4-c5f7-4644-a6db-bbfb1913ca33/scratchpad/g6_vid/main/main084_1008_224420_top.mp4",
+   "standing": true,
+   "set": "eval"
+  },
+  {
+   "trial_id": "main085_1008_224529",
+   "video": "/tmp/claude-1000/-home-chanseok-workspace-neubius/517599d4-c5f7-4644-a6db-bbfb1913ca33/scratchpad/g6_vid/main/main085_1008_224529_top.mp4",
+   "standing": true,
+   "set": "eval"
+  },
+  {
+   "trial_id": "main086_1008_224636",
+   "video": "/tmp/claude-1000/-home-chanseok-workspace-neubius/517599d4-c5f7-4644-a6db-bbfb1913ca33/scratchpad/g6_vid/main/main086_1008_224636_top.mp4",
+   "standing": true,
+   "set": "dev"
+  },
+  {
+   "trial_id": "main087_1008_224745",
+   "video": "/tmp/claude-1000/-home-chanseok-workspace-neubius/517599d4-c5f7-4644-a6db-bbfb1913ca33/scratchpad/g6_vid/main/main087_1008_224745_top.mp4",
+   "standing": true,
+   "set": "dev"
+  },
+  {
+   "trial_id": "main088_1008_224857",
+   "video": "/tmp/claude-1000/-home-chanseok-workspace-neubius/517599d4-c5f7-4644-a6db-bbfb1913ca33/scratchpad/g6_vid/main/main088_1008_224857_top.mp4",
+   "standing": true,
+   "set": "dev"
+  },
+  {
+   "trial_id": "main089_1008_225004",
+   "video": "/tmp/claude-1000/-home-chanseok-workspace-neubius/517599d4-c5f7-4644-a6db-bbfb1913ca33/scratchpad/g6_vid/main/main089_1008_225004_top.mp4",
+   "standing": true,
+   "set": "dev"
+  },
+  {
+   "trial_id": "main090_1008_225154",
+   "video": "/tmp/claude-1000/-home-chanseok-workspace-neubius/517599d4-c5f7-4644-a6db-bbfb1913ca33/scratchpad/g6_vid/main/main090_1008_225154_top.mp4",
+   "standing": true,
+   "set": "dev"
+  },
+  {
+   "trial_id": "main091_1008_225311",
+   "video": "/tmp/claude-1000/-home-chanseok-workspace-neubius/517599d4-c5f7-4644-a6db-bbfb1913ca33/scratchpad/g6_vid/main/main091_1008_225311_top.mp4",
+   "standing": true,
+   "set": "dev"
+  },
+  {
+   "trial_id": "main092_1009_183512",
+   "video": "/tmp/claude-1000/-home-chanseok-workspace-neubius/517599d4-c5f7-4644-a6db-bbfb1913ca33/scratchpad/g6_vid/main/main092_1009_183512_top.mp4",
+   "standing": true,
+   "set": "eval"
+  },
+  {
+   "trial_id": "main093_1009_183624",
+   "video": "/tmp/claude-1000/-home-chanseok-workspace-neubius/517599d4-c5f7-4644-a6db-bbfb1913ca33/scratchpad/g6_vid/main/main093_1009_183624_top.mp4",
+   "standing": true,
+   "set": "eval"
+  },
+  {
+   "trial_id": "main094_1009_183741",
+   "video": "/tmp/claude-1000/-home-chanseok-workspace-neubius/517599d4-c5f7-4644-a6db-bbfb1913ca33/scratchpad/g6_vid/main/main094_1009_183741_top.mp4",
+   "standing": true,
+   "set": "dev"
+  },
+  {
+   "trial_id": "main095_1009_183854",
+   "video": "/tmp/claude-1000/-home-chanseok-workspace-neubius/517599d4-c5f7-4644-a6db-bbfb1913ca33/scratchpad/g6_vid/main/main095_1009_183854_top.mp4",
+   "standing": true,
+   "set": "eval"
+  },
+  {
+   "trial_id": "main096_1009_184016",
+   "video": "/tmp/claude-1000/-home-chanseok-workspace-neubius/517599d4-c5f7-4644-a6db-bbfb1913ca33/scratchpad/g6_vid/main/main096_1009_184016_top.mp4",
+   "standing": true,
+   "set": "eval"
+  },
+  {
+   "trial_id": "main097_1009_184133",
+   "video": "/tmp/claude-1000/-home-chanseok-workspace-neubius/517599d4-c5f7-4644-a6db-bbfb1913ca33/scratchpad/g6_vid/main/main097_1009_184133_top.mp4",
+   "standing": true,
+   "set": "eval"
+  },
+  {
+   "trial_id": "main098_1009_184257",
+   "video": "/tmp/claude-1000/-home-chanseok-workspace-neubius/517599d4-c5f7-4644-a6db-bbfb1913ca33/scratchpad/g6_vid/main/main098_1009_184257_top.mp4",
+   "standing": true,
+   "set": "eval"
+  },
+  {
+   "trial_id": "main099_1009_184409",
+   "video": "/tmp/claude-1000/-home-chanseok-workspace-neubius/517599d4-c5f7-4644-a6db-bbfb1913ca33/scratchpad/g6_vid/main/main099_1009_184409_top.mp4",
+   "standing": true,
+   "set": "eval"
+  },
+  {
+   "trial_id": "main100_1009_184546",
+   "video": "/tmp/claude-1000/-home-chanseok-workspace-neubius/517599d4-c5f7-4644-a6db-bbfb1913ca33/scratchpad/g6_vid/main/main100_1009_184546_top.mp4",
+   "standing": true,
+   "set": "eval"
+  },
+  {
+   "trial_id": "main101_1010_202418",
+   "video": "/tmp/claude-1000/-home-chanseok-workspace-neubius/517599d4-c5f7-4644-a6db-bbfb1913ca33/scratchpad/g6_vid/main/main101_1010_202418_top.mp4",
+   "standing": true,
+   "set": "eval"
+  },
+  {
+   "trial_id": "main102_1010_202531",
+   "video": "/tmp/claude-1000/-home-chanseok-workspace-neubius/517599d4-c5f7-4644-a6db-bbfb1913ca33/scratchpad/g6_vid/main/main102_1010_202531_top.mp4",
+   "standing": true,
+   "set": "eval"
+  },
+  {
+   "trial_id": "main103_1010_202641",
+   "video": "/tmp/claude-1000/-home-chanseok-workspace-neubius/517599d4-c5f7-4644-a6db-bbfb1913ca33/scratchpad/g6_vid/main/main103_1010_202641_top.mp4",
+   "standing": true,
+   "set": "eval"
+  },
+  {
+   "trial_id": "main104_1010_202752",
+   "video": "/tmp/claude-1000/-home-chanseok-workspace-neubius/517599d4-c5f7-4644-a6db-bbfb1913ca33/scratchpad/g6_vid/main/main104_1010_202752_top.mp4",
+   "standing": true,
+   "set": "dev"
+  },
+  {
+   "trial_id": "main105_1010_202904",
+   "video": "/tmp/claude-1000/-home-chanseok-workspace-neubius/517599d4-c5f7-4644-a6db-bbfb1913ca33/scratchpad/g6_vid/main/main105_1010_202904_top.mp4",
+   "standing": true,
+   "set": "eval"
+  },
+  {
+   "trial_id": "main106_1010_203016",
+   "video": "/tmp/claude-1000/-home-chanseok-workspace-neubius/517599d4-c5f7-4644-a6db-bbfb1913ca33/scratchpad/g6_vid/main/main106_1010_203016_top.mp4",
+   "standing": true,
+   "set": "eval"
+  },
+  {
+   "trial_id": "main107_1010_203127",
+   "video": "/tmp/claude-1000/-home-chanseok-workspace-neubius/517599d4-c5f7-4644-a6db-bbfb1913ca33/scratchpad/g6_vid/main/main107_1010_203127_top.mp4",
+   "standing": true,
+   "set": "eval"
+  },
+  {
+   "trial_id": "main108_1010_203306",
+   "video": "/tmp/claude-1000/-home-chanseok-workspace-neubius/517599d4-c5f7-4644-a6db-bbfb1913ca33/scratchpad/g6_vid/main/main108_1010_203306_top.mp4",
+   "standing": true,
+   "set": "eval"
+  },
+  {
+   "trial_id": "main109_1010_203415",
+   "video": "/tmp/claude-1000/-home-chanseok-workspace-neubius/517599d4-c5f7-4644-a6db-bbfb1913ca33/scratchpad/g6_vid/main/main109_1010_203415_top.mp4",
+   "standing": true,
+   "set": "eval"
+  },
+  {
+   "trial_id": "main110_1010_203527",
+   "video": "/tmp/claude-1000/-home-chanseok-workspace-neubius/517599d4-c5f7-4644-a6db-bbfb1913ca33/scratchpad/g6_vid/main/main110_1010_203527_top.mp4",
+   "standing": true,
+   "set": "dev"
+  },
+  {
+   "trial_id": "main111_1010_203636",
+   "video": "/tmp/claude-1000/-home-chanseok-workspace-neubius/517599d4-c5f7-4644-a6db-bbfb1913ca33/scratchpad/g6_vid/main/main111_1010_203636_top.mp4",
+   "standing": true,
+   "set": "eval"
+  },
+  {
+   "trial_id": "main112_1010_203744",
+   "video": "/tmp/claude-1000/-home-chanseok-workspace-neubius/517599d4-c5f7-4644-a6db-bbfb1913ca33/scratchpad/g6_vid/main/main112_1010_203744_top.mp4",
+   "standing": true,
+   "set": "dev"
+  },
+  {
+   "trial_id": "main113_1010_203856",
+   "video": "/tmp/claude-1000/-home-chanseok-workspace-neubius/517599d4-c5f7-4644-a6db-bbfb1913ca33/scratchpad/g6_vid/main/main113_1010_203856_top.mp4",
+   "standing": true,
+   "set": "eval"
+  },
+  {
+   "trial_id": "main114_1010_204112",
+   "video": "/tmp/claude-1000/-home-chanseok-workspace-neubius/517599d4-c5f7-4644-a6db-bbfb1913ca33/scratchpad/g6_vid/main/main114_1010_204112_top.mp4",
+   "standing": true,
+   "set": "dev"
+  },
+  {
+   "trial_id": "main115_1010_204319",
+   "video": "/tmp/claude-1000/-home-chanseok-workspace-neubius/517599d4-c5f7-4644-a6db-bbfb1913ca33/scratchpad/g6_vid/main/main115_1010_204319_top.mp4",
+   "standing": true,
+   "set": "dev"
+  },
+  {
+   "trial_id": "main116_1010_204428",
+   "video": "/tmp/claude-1000/-home-chanseok-workspace-neubius/517599d4-c5f7-4644-a6db-bbfb1913ca33/scratchpad/g6_vid/main/main116_1010_204428_top.mp4",
+   "standing": true,
+   "set": "dev"
+  },
+  {
+   "trial_id": "main117_1010_204536",
+   "video": "/tmp/claude-1000/-home-chanseok-workspace-neubius/517599d4-c5f7-4644-a6db-bbfb1913ca33/scratchpad/g6_vid/main/main117_1010_204536_top.mp4",
+   "standing": true,
+   "set": "dev"
+  },
+  {
+   "trial_id": "main118_1010_204646",
+   "video": "/tmp/claude-1000/-home-chanseok-workspace-neubius/517599d4-c5f7-4644-a6db-bbfb1913ca33/scratchpad/g6_vid/main/main118_1010_204646_top.mp4",
+   "standing": true,
+   "set": "eval"
+  },
+  {
+   "trial_id": "main119_1010_204755",
+   "video": "/tmp/claude-1000/-home-chanseok-workspace-neubius/517599d4-c5f7-4644-a6db-bbfb1913ca33/scratchpad/g6_vid/main/main119_1010_204755_top.mp4",
+   "standing": true,
+   "set": "eval"
+  },
+  {
+   "trial_id": "main120_1010_204906",
+   "video": "/tmp/claude-1000/-home-chanseok-workspace-neubius/517599d4-c5f7-4644-a6db-bbfb1913ca33/scratchpad/g6_vid/main/main120_1010_204906_top.mp4",
+   "standing": true,
+   "set": "eval"
+  },
+  {
+   "trial_id": "main121_1010_205014",
+   "video": "/tmp/claude-1000/-home-chanseok-workspace-neubius/517599d4-c5f7-4644-a6db-bbfb1913ca33/scratchpad/g6_vid/main/main121_1010_205014_top.mp4",
+   "standing": true,
+   "set": "eval"
+  },
+  {
+   "trial_id": "main122_1010_205123",
+   "video": "/tmp/claude-1000/-home-chanseok-workspace-neubius/517599d4-c5f7-4644-a6db-bbfb1913ca33/scratchpad/g6_vid/main/main122_1010_205123_top.mp4",
+   "standing": true,
+   "set": "eval"
+  },
+  {
+   "trial_id": "main123_1010_205319",
+   "video": "/tmp/claude-1000/-home-chanseok-workspace-neubius/517599d4-c5f7-4644-a6db-bbfb1913ca33/scratchpad/g6_vid/main/main123_1010_205319_top.mp4",
+   "standing": true,
+   "set": "dev"
+  },
+  {
+   "trial_id": "main124_1010_205428",
+   "video": "/tmp/claude-1000/-home-chanseok-workspace-neubius/517599d4-c5f7-4644-a6db-bbfb1913ca33/scratchpad/g6_vid/main/main124_1010_205428_top.mp4",
+   "standing": true,
+   "set": "eval"
+  },
+  {
+   "trial_id": "main125_1010_205559",
+   "video": "/tmp/claude-1000/-home-chanseok-workspace-neubius/517599d4-c5f7-4644-a6db-bbfb1913ca33/scratchpad/g6_vid/main/main125_1010_205559_top.mp4",
+   "standing": true,
+   "set": "dev"
+  },
+  {
+   "trial_id": "main126_1010_205710",
+   "video": "/tmp/claude-1000/-home-chanseok-workspace-neubius/517599d4-c5f7-4644-a6db-bbfb1913ca33/scratchpad/g6_vid/main/main126_1010_205710_top.mp4",
+   "standing": true,
+   "set": "eval"
+  },
+  {
+   "trial_id": "main127_1010_205819",
+   "video": "/tmp/claude-1000/-home-chanseok-workspace-neubius/517599d4-c5f7-4644-a6db-bbfb1913ca33/scratchpad/g6_vid/main/main127_1010_205819_top.mp4",
+   "standing": true,
+   "set": "eval"
+  },
+  {
+   "trial_id": "main128_1010_205927",
+   "video": "/tmp/claude-1000/-home-chanseok-workspace-neubius/517599d4-c5f7-4644-a6db-bbfb1913ca33/scratchpad/g6_vid/main/main128_1010_205927_top.mp4",
+   "standing": true,
+   "set": "eval"
+  },
+  {
+   "trial_id": "main129_1010_210034",
+   "video": "/tmp/claude-1000/-home-chanseok-workspace-neubius/517599d4-c5f7-4644-a6db-bbfb1913ca33/scratchpad/g6_vid/main/main129_1010_210034_top.mp4",
+   "standing": true,
+   "set": "dev"
+  },
+  {
+   "trial_id": "main130_1010_210143",
+   "video": "/tmp/claude-1000/-home-chanseok-workspace-neubius/517599d4-c5f7-4644-a6db-bbfb1913ca33/scratchpad/g6_vid/main/main130_1010_210143_top.mp4",
+   "standing": true,
+   "set": "eval"
+  },
+  {
+   "trial_id": "main131_1010_210251",
+   "video": "/tmp/claude-1000/-home-chanseok-workspace-neubius/517599d4-c5f7-4644-a6db-bbfb1913ca33/scratchpad/g6_vid/main/main131_1010_210251_top.mp4",
+   "standing": true,
+   "set": "eval"
+  },
+  {
+   "trial_id": "main132_1010_210358",
+   "video": "/tmp/claude-1000/-home-chanseok-workspace-neubius/517599d4-c5f7-4644-a6db-bbfb1913ca33/scratchpad/g6_vid/main/main132_1010_210358_top.mp4",
+   "standing": true,
+   "set": "dev"
+  },
+  {
+   "trial_id": "main133_1010_210506",
+   "video": "/tmp/claude-1000/-home-chanseok-workspace-neubius/517599d4-c5f7-4644-a6db-bbfb1913ca33/scratchpad/g6_vid/main/main133_1010_210506_top.mp4",
+   "standing": true,
+   "set": "eval"
+  },
+  {
+   "trial_id": "main134_1010_210613",
+   "video": "/tmp/claude-1000/-home-chanseok-workspace-neubius/517599d4-c5f7-4644-a6db-bbfb1913ca33/scratchpad/g6_vid/main/main134_1010_210613_top.mp4",
+   "standing": true,
+   "set": "dev"
+  },
+  {
+   "trial_id": "main135_1010_210720",
+   "video": "/tmp/claude-1000/-home-chanseok-workspace-neubius/517599d4-c5f7-4644-a6db-bbfb1913ca33/scratchpad/g6_vid/main/main135_1010_210720_top.mp4",
+   "standing": true,
+   "set": "eval"
+  },
+  {
+   "trial_id": "main136_1010_210830",
+   "video": "/tmp/claude-1000/-home-chanseok-workspace-neubius/517599d4-c5f7-4644-a6db-bbfb1913ca33/scratchpad/g6_vid/main/main136_1010_210830_top.mp4",
+   "standing": true,
+   "set": "eval"
+  },
+  {
+   "trial_id": "main137_1010_210958",
+   "video": "/tmp/claude-1000/-home-chanseok-workspace-neubius/517599d4-c5f7-4644-a6db-bbfb1913ca33/scratchpad/g6_vid/main/main137_1010_210958_top.mp4",
+   "standing": true,
+   "set": "dev"
+  },
+  {
+   "trial_id": "main138_1010_211110",
+   "video": "/tmp/claude-1000/-home-chanseok-workspace-neubius/517599d4-c5f7-4644-a6db-bbfb1913ca33/scratchpad/g6_vid/main/main138_1010_211110_top.mp4",
+   "standing": true,
+   "set": "eval"
+  },
+  {
+   "trial_id": "main139_1010_211229",
+   "video": "/tmp/claude-1000/-home-chanseok-workspace-neubius/517599d4-c5f7-4644-a6db-bbfb1913ca33/scratchpad/g6_vid/main/main139_1010_211229_top.mp4",
+   "standing": true,
+   "set": "eval"
+  },
+  {
+   "trial_id": "main140_1010_211336",
+   "video": "/tmp/claude-1000/-home-chanseok-workspace-neubius/517599d4-c5f7-4644-a6db-bbfb1913ca33/scratchpad/g6_vid/main/main140_1010_211336_top.mp4",
+   "standing": true,
+   "set": "eval"
+  },
+  {
+   "trial_id": "main141_1010_211445",
+   "video": "/tmp/claude-1000/-home-chanseok-workspace-neubius/517599d4-c5f7-4644-a6db-bbfb1913ca33/scratchpad/g6_vid/main/main141_1010_211445_top.mp4",
+   "standing": true,
+   "set": "eval"
+  },
+  {
+   "trial_id": "main142_1010_211552",
+   "video": "/tmp/claude-1000/-home-chanseok-workspace-neubius/517599d4-c5f7-4644-a6db-bbfb1913ca33/scratchpad/g6_vid/main/main142_1010_211552_top.mp4",
+   "standing": true,
+   "set": "eval"
+  },
+  {
+   "trial_id": "main143_1010_211703",
+   "video": "/tmp/claude-1000/-home-chanseok-workspace-neubius/517599d4-c5f7-4644-a6db-bbfb1913ca33/scratchpad/g6_vid/main/main143_1010_211703_top.mp4",
+   "standing": true,
+   "set": "eval"
+  },
+  {
+   "trial_id": "main144_1010_211814",
+   "video": "/tmp/claude-1000/-home-chanseok-workspace-neubius/517599d4-c5f7-4644-a6db-bbfb1913ca33/scratchpad/g6_vid/main/main144_1010_211814_top.mp4",
+   "standing": true,
+   "set": "eval"
+  },
+  {
+   "trial_id": "main145_1010_211936",
+   "video": "/tmp/claude-1000/-home-chanseok-workspace-neubius/517599d4-c5f7-4644-a6db-bbfb1913ca33/scratchpad/g6_vid/main/main145_1010_211936_top.mp4",
+   "standing": true,
+   "set": "eval"
+  },
+  {
+   "trial_id": "main146_1010_212108",
+   "video": "/tmp/claude-1000/-home-chanseok-workspace-neubius/517599d4-c5f7-4644-a6db-bbfb1913ca33/scratchpad/g6_vid/main/main146_1010_212108_top.mp4",
+   "standing": true,
+   "set": "eval"
+  },
+  {
+   "trial_id": "main147_1010_212251",
+   "video": "/tmp/claude-1000/-home-chanseok-workspace-neubius/517599d4-c5f7-4644-a6db-bbfb1913ca33/scratchpad/g6_vid/main/main147_1010_212251_top.mp4",
+   "standing": true,
+   "set": "eval"
+  },
+  {
+   "trial_id": "main148_1010_212418",
+   "video": "/tmp/claude-1000/-home-chanseok-workspace-neubius/517599d4-c5f7-4644-a6db-bbfb1913ca33/scratchpad/g6_vid/main/main148_1010_212418_top.mp4",
+   "standing": true,
+   "set": "eval"
+  },
+  {
+   "trial_id": "main149_1010_212543",
+   "video": "/tmp/claude-1000/-home-chanseok-workspace-neubius/517599d4-c5f7-4644-a6db-bbfb1913ca33/scratchpad/g6_vid/main/main149_1010_212543_top.mp4",
+   "standing": true,
+   "set": "dev"
+  },
+  {
+   "trial_id": "main150_1010_212652",
+   "video": "/tmp/claude-1000/-home-chanseok-workspace-neubius/517599d4-c5f7-4644-a6db-bbfb1913ca33/scratchpad/g6_vid/main/main150_1010_212652_top.mp4",
+   "standing": true,
+   "set": "eval"
+  },
+  {
+   "trial_id": "main151_1010_212803",
+   "video": "/tmp/claude-1000/-home-chanseok-workspace-neubius/517599d4-c5f7-4644-a6db-bbfb1913ca33/scratchpad/g6_vid/main/main151_1010_212803_top.mp4",
+   "standing": true,
+   "set": "eval"
+  },
+  {
+   "trial_id": "main152_1010_212913",
+   "video": "/tmp/claude-1000/-home-chanseok-workspace-neubius/517599d4-c5f7-4644-a6db-bbfb1913ca33/scratchpad/g6_vid/main/main152_1010_212913_top.mp4",
+   "standing": true,
+   "set": "dev"
+  },
+  {
+   "trial_id": "main153_1010_213023",
+   "video": "/tmp/claude-1000/-home-chanseok-workspace-neubius/517599d4-c5f7-4644-a6db-bbfb1913ca33/scratchpad/g6_vid/main/main153_1010_213023_top.mp4",
+   "standing": true,
+   "set": "eval"
+  },
+  {
+   "trial_id": "main154_1010_213132",
+   "video": "/tmp/claude-1000/-home-chanseok-workspace-neubius/517599d4-c5f7-4644-a6db-bbfb1913ca33/scratchpad/g6_vid/main/main154_1010_213132_top.mp4",
+   "standing": true,
+   "set": "eval"
+  },
+  {
+   "trial_id": "main155_1010_213304",
+   "video": "/tmp/claude-1000/-home-chanseok-workspace-neubius/517599d4-c5f7-4644-a6db-bbfb1913ca33/scratchpad/g6_vid/main/main155_1010_213304_top.mp4",
+   "standing": true,
+   "set": "eval"
+  },
+  {
+   "trial_id": "main156_1010_213415",
+   "video": "/tmp/claude-1000/-home-chanseok-workspace-neubius/517599d4-c5f7-4644-a6db-bbfb1913ca33/scratchpad/g6_vid/main/main156_1010_213415_top.mp4",
+   "standing": true,
+   "set": "dev"
+  },
+  {
+   "trial_id": "main157_1010_213523",
+   "video": "/tmp/claude-1000/-home-chanseok-workspace-neubius/517599d4-c5f7-4644-a6db-bbfb1913ca33/scratchpad/g6_vid/main/main157_1010_213523_top.mp4",
+   "standing": true,
+   "set": "eval"
+  },
+  {
+   "trial_id": "main158_1010_213633",
+   "video": "/tmp/claude-1000/-home-chanseok-workspace-neubius/517599d4-c5f7-4644-a6db-bbfb1913ca33/scratchpad/g6_vid/main/main158_1010_213633_top.mp4",
+   "standing": true,
+   "set": "eval"
+  },
+  {
+   "trial_id": "main159_1010_213757",
+   "video": "/tmp/claude-1000/-home-chanseok-workspace-neubius/517599d4-c5f7-4644-a6db-bbfb1913ca33/scratchpad/g6_vid/main/main159_1010_213757_top.mp4",
+   "standing": true,
+   "set": "eval"
+  },
+  {
+   "trial_id": "main160_1010_213917",
+   "video": "/tmp/claude-1000/-home-chanseok-workspace-neubius/517599d4-c5f7-4644-a6db-bbfb1913ca33/scratchpad/g6_vid/main/main160_1010_213917_top.mp4",
+   "standing": true,
+   "set": "eval"
+  },
+  {
+   "trial_id": "main161_1010_214027",
+   "video": "/tmp/claude-1000/-home-chanseok-workspace-neubius/517599d4-c5f7-4644-a6db-bbfb1913ca33/scratchpad/g6_vid/main/main161_1010_214027_top.mp4",
+   "standing": true,
+   "set": "dev"
+  },
+  {
+   "trial_id": "main162_1010_214135",
+   "video": "/tmp/claude-1000/-home-chanseok-workspace-neubius/517599d4-c5f7-4644-a6db-bbfb1913ca33/scratchpad/g6_vid/main/main162_1010_214135_top.mp4",
+   "standing": true,
+   "set": "dev"
+  },
+  {
+   "trial_id": "main163_1010_214243",
+   "video": "/tmp/claude-1000/-home-chanseok-workspace-neubius/517599d4-c5f7-4644-a6db-bbfb1913ca33/scratchpad/g6_vid/main/main163_1010_214243_top.mp4",
+   "standing": false,
+   "set": "dev"
+  },
+  {
+   "trial_id": "main164_1010_214406",
+   "video": "/tmp/claude-1000/-home-chanseok-workspace-neubius/517599d4-c5f7-4644-a6db-bbfb1913ca33/scratchpad/g6_vid/main/main164_1010_214406_top.mp4",
+   "standing": true,
+   "set": "eval"
+  },
+  {
+   "trial_id": "main165_1010_214542",
+   "video": "/tmp/claude-1000/-home-chanseok-workspace-neubius/517599d4-c5f7-4644-a6db-bbfb1913ca33/scratchpad/g6_vid/main/main165_1010_214542_top.mp4",
+   "standing": true,
+   "set": "dev"
+  },
+  {
+   "trial_id": "main166_1010_214655",
+   "video": "/tmp/claude-1000/-home-chanseok-workspace-neubius/517599d4-c5f7-4644-a6db-bbfb1913ca33/scratchpad/g6_vid/main/main166_1010_214655_top.mp4",
+   "standing": true,
+   "set": "eval"
+  },
+  {
+   "trial_id": "main167_1010_214804",
+   "video": "/tmp/claude-1000/-home-chanseok-workspace-neubius/517599d4-c5f7-4644-a6db-bbfb1913ca33/scratchpad/g6_vid/main/main167_1010_214804_top.mp4",
+   "standing": true,
+   "set": "eval"
+  },
+  {
+   "trial_id": "main168_1010_214912",
+   "video": "/tmp/claude-1000/-home-chanseok-workspace-neubius/517599d4-c5f7-4644-a6db-bbfb1913ca33/scratchpad/g6_vid/main/main168_1010_214912_top.mp4",
+   "standing": true,
+   "set": "dev"
+  },
+  {
+   "trial_id": "main169_1010_215022",
+   "video": "/tmp/claude-1000/-home-chanseok-workspace-neubius/517599d4-c5f7-4644-a6db-bbfb1913ca33/scratchpad/g6_vid/main/main169_1010_215022_top.mp4",
+   "standing": true,
+   "set": "dev"
+  },
+  {
+   "trial_id": "main170_1010_215131",
+   "video": "/tmp/claude-1000/-home-chanseok-workspace-neubius/517599d4-c5f7-4644-a6db-bbfb1913ca33/scratchpad/g6_vid/main/main170_1010_215131_top.mp4",
+   "standing": true,
+   "set": "dev"
+  },
+  {
+   "trial_id": "main171_1010_215241",
+   "video": "/tmp/claude-1000/-home-chanseok-workspace-neubius/517599d4-c5f7-4644-a6db-bbfb1913ca33/scratchpad/g6_vid/main/main171_1010_215241_top.mp4",
+   "standing": true,
+   "set": "dev"
+  },
+  {
+   "trial_id": "main172_1010_215350",
+   "video": "/tmp/claude-1000/-home-chanseok-workspace-neubius/517599d4-c5f7-4644-a6db-bbfb1913ca33/scratchpad/g6_vid/main/main172_1010_215350_top.mp4",
+   "standing": true,
+   "set": "dev"
+  },
+  {
+   "trial_id": "main173_1010_215500",
+   "video": "/tmp/claude-1000/-home-chanseok-workspace-neubius/517599d4-c5f7-4644-a6db-bbfb1913ca33/scratchpad/g6_vid/main/main173_1010_215500_top.mp4",
+   "standing": true,
+   "set": "eval"
+  },
+  {
+   "trial_id": "main174_1010_215628",
+   "video": "/tmp/claude-1000/-home-chanseok-workspace-neubius/517599d4-c5f7-4644-a6db-bbfb1913ca33/scratchpad/g6_vid/main/main174_1010_215628_top.mp4",
+   "standing": true,
+   "set": "dev"
+  },
+  {
+   "trial_id": "main175_1010_215738",
+   "video": "/tmp/claude-1000/-home-chanseok-workspace-neubius/517599d4-c5f7-4644-a6db-bbfb1913ca33/scratchpad/g6_vid/main/main175_1010_215738_top.mp4",
+   "standing": true,
+   "set": "eval"
+  },
+  {
+   "trial_id": "main176_1010_215846",
+   "video": "/tmp/claude-1000/-home-chanseok-workspace-neubius/517599d4-c5f7-4644-a6db-bbfb1913ca33/scratchpad/g6_vid/main/main176_1010_215846_top.mp4",
+   "standing": true,
+   "set": "eval"
+  },
+  {
+   "trial_id": "main177_1010_215954",
+   "video": "/tmp/claude-1000/-home-chanseok-workspace-neubius/517599d4-c5f7-4644-a6db-bbfb1913ca33/scratchpad/g6_vid/main/main177_1010_215954_top.mp4",
+   "standing": true,
+   "set": "eval"
+  },
+  {
+   "trial_id": "main178_1010_220103",
+   "video": "/tmp/claude-1000/-home-chanseok-workspace-neubius/517599d4-c5f7-4644-a6db-bbfb1913ca33/scratchpad/g6_vid/main/main178_1010_220103_top.mp4",
+   "standing": false,
+   "set": "eval"
+  },
+  {
+   "trial_id": "main179_1010_220217",
+   "video": "/tmp/claude-1000/-home-chanseok-workspace-neubius/517599d4-c5f7-4644-a6db-bbfb1913ca33/scratchpad/g6_vid/main/main179_1010_220217_top.mp4",
+   "standing": false,
+   "set": "dev"
+  },
+  {
+   "trial_id": "main180_1010_220333",
+   "video": "/tmp/claude-1000/-home-chanseok-workspace-neubius/517599d4-c5f7-4644-a6db-bbfb1913ca33/scratchpad/g6_vid/main/main180_1010_220333_top.mp4",
+   "standing": false,
+   "set": "dev"
+  },
+  {
+   "trial_id": "main181_1010_220923",
+   "video": "/tmp/claude-1000/-home-chanseok-workspace-neubius/517599d4-c5f7-4644-a6db-bbfb1913ca33/scratchpad/g6_vid/main/main181_1010_220923_top.mp4",
+   "standing": true,
+   "set": "dev"
+  },
+  {
+   "trial_id": "main182_1010_221034",
+   "video": "/tmp/claude-1000/-home-chanseok-workspace-neubius/517599d4-c5f7-4644-a6db-bbfb1913ca33/scratchpad/g6_vid/main/main182_1010_221034_top.mp4",
+   "standing": true,
+   "set": "eval"
+  },
+  {
+   "trial_id": "main183_1010_221145",
+   "video": "/tmp/claude-1000/-home-chanseok-workspace-neubius/517599d4-c5f7-4644-a6db-bbfb1913ca33/scratchpad/g6_vid/main/main183_1010_221145_top.mp4",
+   "standing": true,
+   "set": "eval"
+  },
+  {
+   "trial_id": "main184_1010_221255",
+   "video": "/tmp/claude-1000/-home-chanseok-workspace-neubius/517599d4-c5f7-4644-a6db-bbfb1913ca33/scratchpad/g6_vid/main/main184_1010_221255_top.mp4",
+   "standing": true,
+   "set": "eval"
+  },
+  {
+   "trial_id": "main185_1010_221409",
+   "video": "/tmp/claude-1000/-home-chanseok-workspace-neubius/517599d4-c5f7-4644-a6db-bbfb1913ca33/scratchpad/g6_vid/main/main185_1010_221409_top.mp4",
+   "standing": true,
+   "set": "eval"
+  },
+  {
+   "trial_id": "main186_1010_221517",
+   "video": "/tmp/claude-1000/-home-chanseok-workspace-neubius/517599d4-c5f7-4644-a6db-bbfb1913ca33/scratchpad/g6_vid/main/main186_1010_221517_top.mp4",
+   "standing": false,
+   "set": "dev"
+  },
+  {
+   "trial_id": "main187_1010_221633",
+   "video": "/tmp/claude-1000/-home-chanseok-workspace-neubius/517599d4-c5f7-4644-a6db-bbfb1913ca33/scratchpad/g6_vid/main/main187_1010_221633_top.mp4",
+   "standing": true,
+   "set": "eval"
+  },
+  {
+   "trial_id": "main188_1010_221800",
+   "video": "/tmp/claude-1000/-home-chanseok-workspace-neubius/517599d4-c5f7-4644-a6db-bbfb1913ca33/scratchpad/g6_vid/main/main188_1010_221800_top.mp4",
+   "standing": false,
+   "set": "eval"
+  },
+  {
+   "trial_id": "main189_1010_221917",
+   "video": "/tmp/claude-1000/-home-chanseok-workspace-neubius/517599d4-c5f7-4644-a6db-bbfb1913ca33/scratchpad/g6_vid/main/main189_1010_221917_top.mp4",
+   "standing": true,
+   "set": "dev"
+  },
+  {
+   "trial_id": "main190_1010_222114",
+   "video": "/tmp/claude-1000/-home-chanseok-workspace-neubius/517599d4-c5f7-4644-a6db-bbfb1913ca33/scratchpad/g6_vid/main/main190_1010_222114_top.mp4",
+   "standing": true,
+   "set": "dev"
+  },
+  {
+   "trial_id": "main191_1010_222453",
+   "video": "/tmp/claude-1000/-home-chanseok-workspace-neubius/517599d4-c5f7-4644-a6db-bbfb1913ca33/scratchpad/g6_vid/main/main191_1010_222453_top.mp4",
+   "standing": true,
+   "set": "dev"
+  },
+  {
+   "trial_id": "main192_1010_222606",
+   "video": "/tmp/claude-1000/-home-chanseok-workspace-neubius/517599d4-c5f7-4644-a6db-bbfb1913ca33/scratchpad/g6_vid/main/main192_1010_222606_top.mp4",
+   "standing": true,
+   "set": "eval"
+  },
+  {
+   "trial_id": "main193_1010_222741",
+   "video": "/tmp/claude-1000/-home-chanseok-workspace-neubius/517599d4-c5f7-4644-a6db-bbfb1913ca33/scratchpad/g6_vid/main/main193_1010_222741_top.mp4",
+   "standing": true,
+   "set": "eval"
+  },
+  {
+   "trial_id": "main194_1010_222955",
+   "video": "/tmp/claude-1000/-home-chanseok-workspace-neubius/517599d4-c5f7-4644-a6db-bbfb1913ca33/scratchpad/g6_vid/main/main194_1010_222955_top.mp4",
+   "standing": true,
+   "set": "dev"
+  },
+  {
+   "trial_id": "main195_1010_223151",
+   "video": "/tmp/claude-1000/-home-chanseok-workspace-neubius/517599d4-c5f7-4644-a6db-bbfb1913ca33/scratchpad/g6_vid/main/main195_1010_223151_top.mp4",
+   "standing": true,
+   "set": "dev"
+  },
+  {
+   "trial_id": "main196_1010_223259",
+   "video": "/tmp/claude-1000/-home-chanseok-workspace-neubius/517599d4-c5f7-4644-a6db-bbfb1913ca33/scratchpad/g6_vid/main/main196_1010_223259_top.mp4",
+   "standing": true,
+   "set": "dev"
+  },
+  {
+   "trial_id": "main197_1010_223445",
+   "video": "/tmp/claude-1000/-home-chanseok-workspace-neubius/517599d4-c5f7-4644-a6db-bbfb1913ca33/scratchpad/g6_vid/main/main197_1010_223445_top.mp4",
+   "standing": true,
+   "set": "eval"
+  },
+  {
+   "trial_id": "main198_1010_223605",
+   "video": "/tmp/claude-1000/-home-chanseok-workspace-neubius/517599d4-c5f7-4644-a6db-bbfb1913ca33/scratchpad/g6_vid/main/main198_1010_223605_top.mp4",
+   "standing": true,
+   "set": "eval"
+  },
+  {
+   "trial_id": "main199_1010_223715",
+   "video": "/tmp/claude-1000/-home-chanseok-workspace-neubius/517599d4-c5f7-4644-a6db-bbfb1913ca33/scratchpad/g6_vid/main/main199_1010_223715_top.mp4",
+   "standing": true,
+   "set": "dev"
+  },
+  {
+   "trial_id": "main200_1010_223827",
+   "video": "/tmp/claude-1000/-home-chanseok-workspace-neubius/517599d4-c5f7-4644-a6db-bbfb1913ca33/scratchpad/g6_vid/main/main200_1010_223827_top.mp4",
+   "standing": true,
+   "set": "eval"
+  },
+  {
+   "trial_id": "main201_1010_223937",
+   "video": "/tmp/claude-1000/-home-chanseok-workspace-neubius/517599d4-c5f7-4644-a6db-bbfb1913ca33/scratchpad/g6_vid/main/main201_1010_223937_top.mp4",
+   "standing": true,
+   "set": "eval"
+  },
+  {
+   "trial_id": "main202_1010_224336",
+   "video": "/tmp/claude-1000/-home-chanseok-workspace-neubius/517599d4-c5f7-4644-a6db-bbfb1913ca33/scratchpad/g6_vid/main/main202_1010_224336_top.mp4",
+   "standing": true,
+   "set": "eval"
+  },
+  {
+   "trial_id": "main203_1010_224445",
+   "video": "/tmp/claude-1000/-home-chanseok-workspace-neubius/517599d4-c5f7-4644-a6db-bbfb1913ca33/scratchpad/g6_vid/main/main203_1010_224445_top.mp4",
+   "standing": true,
+   "set": "dev"
+  },
+  {
+   "trial_id": "main204_1010_224553",
+   "video": "/tmp/claude-1000/-home-chanseok-workspace-neubius/517599d4-c5f7-4644-a6db-bbfb1913ca33/scratchpad/g6_vid/main/main204_1010_224553_top.mp4",
+   "standing": true,
+   "set": "dev"
+  },
+  {
+   "trial_id": "main205_1010_224701",
+   "video": "/tmp/claude-1000/-home-chanseok-workspace-neubius/517599d4-c5f7-4644-a6db-bbfb1913ca33/scratchpad/g6_vid/main/main205_1010_224701_top.mp4",
+   "standing": true,
+   "set": "dev"
+  },
+  {
+   "trial_id": "main206_1010_224809",
+   "video": "/tmp/claude-1000/-home-chanseok-workspace-neubius/517599d4-c5f7-4644-a6db-bbfb1913ca33/scratchpad/g6_vid/main/main206_1010_224809_top.mp4",
+   "standing": true,
+   "set": "eval"
+  },
+  {
+   "trial_id": "main207_1010_224930",
+   "video": "/tmp/claude-1000/-home-chanseok-workspace-neubius/517599d4-c5f7-4644-a6db-bbfb1913ca33/scratchpad/g6_vid/main/main207_1010_224930_top.mp4",
+   "standing": true,
+   "set": "dev"
+  },
+  {
+   "trial_id": "main208_1010_225039",
+   "video": "/tmp/claude-1000/-home-chanseok-workspace-neubius/517599d4-c5f7-4644-a6db-bbfb1913ca33/scratchpad/g6_vid/main/main208_1010_225039_top.mp4",
+   "standing": true,
+   "set": "dev"
+  },
+  {
+   "trial_id": "main209_1010_225146",
+   "video": "/tmp/claude-1000/-home-chanseok-workspace-neubius/517599d4-c5f7-4644-a6db-bbfb1913ca33/scratchpad/g6_vid/main/main209_1010_225146_top.mp4",
+   "standing": true,
+   "set": "eval"
+  },
+  {
+   "trial_id": "main210_1010_225330",
+   "video": "/tmp/claude-1000/-home-chanseok-workspace-neubius/517599d4-c5f7-4644-a6db-bbfb1913ca33/scratchpad/g6_vid/main/main210_1010_225330_top.mp4",
+   "standing": true,
+   "set": "eval"
+  },
+  {
+   "trial_id": "main211_1010_225442",
+   "video": "/tmp/claude-1000/-home-chanseok-workspace-neubius/517599d4-c5f7-4644-a6db-bbfb1913ca33/scratchpad/g6_vid/main/main211_1010_225442_top.mp4",
+   "standing": true,
+   "set": "dev"
+  },
+  {
+   "trial_id": "main212_1010_225620",
+   "video": "/tmp/claude-1000/-home-chanseok-workspace-neubius/517599d4-c5f7-4644-a6db-bbfb1913ca33/scratchpad/g6_vid/main/main212_1010_225620_top.mp4",
+   "standing": true,
+   "set": "eval"
+  },
+  {
+   "trial_id": "main213_1010_225732",
+   "video": "/tmp/claude-1000/-home-chanseok-workspace-neubius/517599d4-c5f7-4644-a6db-bbfb1913ca33/scratchpad/g6_vid/main/main213_1010_225732_top.mp4",
+   "standing": true,
+   "set": "dev"
+  },
+  {
+   "trial_id": "main214_1010_225902",
+   "video": "/tmp/claude-1000/-home-chanseok-workspace-neubius/517599d4-c5f7-4644-a6db-bbfb1913ca33/scratchpad/g6_vid/main/main214_1010_225902_top.mp4",
+   "standing": true,
+   "set": "eval"
+  },
+  {
+   "trial_id": "main215_1010_230010",
+   "video": "/tmp/claude-1000/-home-chanseok-workspace-neubius/517599d4-c5f7-4644-a6db-bbfb1913ca33/scratchpad/g6_vid/main/main215_1010_230010_top.mp4",
+   "standing": true,
+   "set": "eval"
+  },
+  {
+   "trial_id": "main216_1010_230118",
+   "video": "/tmp/claude-1000/-home-chanseok-workspace-neubius/517599d4-c5f7-4644-a6db-bbfb1913ca33/scratchpad/g6_vid/main/main216_1010_230118_top.mp4",
+   "standing": true,
+   "set": "eval"
+  },
+  {
+   "trial_id": "main217_1010_230228",
+   "video": "/tmp/claude-1000/-home-chanseok-workspace-neubius/517599d4-c5f7-4644-a6db-bbfb1913ca33/scratchpad/g6_vid/main/main217_1010_230228_top.mp4",
+   "standing": true,
+   "set": "eval"
+  },
+  {
+   "trial_id": "main218_1010_230339",
+   "video": "/tmp/claude-1000/-home-chanseok-workspace-neubius/517599d4-c5f7-4644-a6db-bbfb1913ca33/scratchpad/g6_vid/main/main218_1010_230339_top.mp4",
+   "standing": true,
+   "set": "eval"
+  },
+  {
+   "trial_id": "main219_1010_230446",
+   "video": "/tmp/claude-1000/-home-chanseok-workspace-neubius/517599d4-c5f7-4644-a6db-bbfb1913ca33/scratchpad/g6_vid/main/main219_1010_230446_top.mp4",
+   "standing": true,
+   "set": "dev"
+  },
+  {
+   "trial_id": "main220_1010_230557",
+   "video": "/tmp/claude-1000/-home-chanseok-workspace-neubius/517599d4-c5f7-4644-a6db-bbfb1913ca33/scratchpad/g6_vid/main/main220_1010_230557_top.mp4",
+   "standing": true,
+   "set": "eval"
+  },
+  {
+   "trial_id": "main221_1010_230713",
+   "video": "/tmp/claude-1000/-home-chanseok-workspace-neubius/517599d4-c5f7-4644-a6db-bbfb1913ca33/scratchpad/g6_vid/main/main221_1010_230713_top.mp4",
+   "standing": true,
+   "set": "eval"
+  },
+  {
+   "trial_id": "main222_1010_230824",
+   "video": "/tmp/claude-1000/-home-chanseok-workspace-neubius/517599d4-c5f7-4644-a6db-bbfb1913ca33/scratchpad/g6_vid/main/main222_1010_230824_top.mp4",
+   "standing": true,
+   "set": "eval"
+  },
+  {
+   "trial_id": "main223_1010_231005",
+   "video": "/tmp/claude-1000/-home-chanseok-workspace-neubius/517599d4-c5f7-4644-a6db-bbfb1913ca33/scratchpad/g6_vid/main/main223_1010_231005_top.mp4",
+   "standing": true,
+   "set": "eval"
+  },
+  {
+   "trial_id": "main224_1010_231116",
+   "video": "/tmp/claude-1000/-home-chanseok-workspace-neubius/517599d4-c5f7-4644-a6db-bbfb1913ca33/scratchpad/g6_vid/main/main224_1010_231116_top.mp4",
+   "standing": true,
+   "set": "eval"
+  },
+  {
+   "trial_id": "main225_1010_231228",
+   "video": "/tmp/claude-1000/-home-chanseok-workspace-neubius/517599d4-c5f7-4644-a6db-bbfb1913ca33/scratchpad/g6_vid/main/main225_1010_231228_top.mp4",
+   "standing": true,
+   "set": "dev"
+  },
+  {
+   "trial_id": "retest001_1011_110243",
+   "video": "/tmp/claude-1000/-home-chanseok-workspace-neubius/517599d4-c5f7-4644-a6db-bbfb1913ca33/scratchpad/g6_vid/retest/retest001_1011_110243_top.mp4",
+   "standing": true,
+   "set": "eval"
+  },
+  {
+   "trial_id": "retest002_1011_110354",
+   "video": "/tmp/claude-1000/-home-chanseok-workspace-neubius/517599d4-c5f7-4644-a6db-bbfb1913ca33/scratchpad/g6_vid/retest/retest002_1011_110354_top.mp4",
+   "standing": true,
+   "set": "eval"
+  },
+  {
+   "trial_id": "retest003_1011_110516",
+   "video": "/tmp/claude-1000/-home-chanseok-workspace-neubius/517599d4-c5f7-4644-a6db-bbfb1913ca33/scratchpad/g6_vid/retest/retest003_1011_110516_top.mp4",
+   "standing": true,
+   "set": "eval"
+  },
+  {
+   "trial_id": "retest004_1011_110624",
+   "video": "/tmp/claude-1000/-home-chanseok-workspace-neubius/517599d4-c5f7-4644-a6db-bbfb1913ca33/scratchpad/g6_vid/retest/retest004_1011_110624_top.mp4",
+   "standing": true,
+   "set": "dev"
+  },
+  {
+   "trial_id": "retest005_1011_110730",
+   "video": "/tmp/claude-1000/-home-chanseok-workspace-neubius/517599d4-c5f7-4644-a6db-bbfb1913ca33/scratchpad/g6_vid/retest/retest005_1011_110730_top.mp4",
+   "standing": true,
+   "set": "dev"
+  },
+  {
+   "trial_id": "retest006_1011_110838",
+   "video": "/tmp/claude-1000/-home-chanseok-workspace-neubius/517599d4-c5f7-4644-a6db-bbfb1913ca33/scratchpad/g6_vid/retest/retest006_1011_110838_top.mp4",
+   "standing": true,
+   "set": "eval"
+  },
+  {
+   "trial_id": "retest007_1011_111016",
+   "video": "/tmp/claude-1000/-home-chanseok-workspace-neubius/517599d4-c5f7-4644-a6db-bbfb1913ca33/scratchpad/g6_vid/retest/retest007_1011_111016_top.mp4",
+   "standing": true,
+   "set": "eval"
+  },
+  {
+   "trial_id": "retest008_1011_111124",
+   "video": "/tmp/claude-1000/-home-chanseok-workspace-neubius/517599d4-c5f7-4644-a6db-bbfb1913ca33/scratchpad/g6_vid/retest/retest008_1011_111124_top.mp4",
+   "standing": true,
+   "set": "dev"
+  },
+  {
+   "trial_id": "retest009_1011_111237",
+   "video": "/tmp/claude-1000/-home-chanseok-workspace-neubius/517599d4-c5f7-4644-a6db-bbfb1913ca33/scratchpad/g6_vid/retest/retest009_1011_111237_top.mp4",
+   "standing": true,
+   "set": "eval"
+  },
+  {
+   "trial_id": "retest010_1011_111346",
+   "video": "/tmp/claude-1000/-home-chanseok-workspace-neubius/517599d4-c5f7-4644-a6db-bbfb1913ca33/scratchpad/g6_vid/retest/retest010_1011_111346_top.mp4",
+   "standing": true,
+   "set": "dev"
+  },
+  {
+   "trial_id": "retest011_1011_111523",
+   "video": "/tmp/claude-1000/-home-chanseok-workspace-neubius/517599d4-c5f7-4644-a6db-bbfb1913ca33/scratchpad/g6_vid/retest/retest011_1011_111523_top.mp4",
+   "standing": true,
+   "set": "eval"
+  },
+  {
+   "trial_id": "retest012_1011_112203",
+   "video": "/tmp/claude-1000/-home-chanseok-workspace-neubius/517599d4-c5f7-4644-a6db-bbfb1913ca33/scratchpad/g6_vid/retest/retest012_1011_112203_top.mp4",
+   "standing": true,
+   "set": "eval"
+  },
+  {
+   "trial_id": "retest013_1011_112318",
+   "video": "/tmp/claude-1000/-home-chanseok-workspace-neubius/517599d4-c5f7-4644-a6db-bbfb1913ca33/scratchpad/g6_vid/retest/retest013_1011_112318_top.mp4",
+   "standing": true,
+   "set": "dev"
+  },
+  {
+   "trial_id": "retest014_1011_112530",
+   "video": "/tmp/claude-1000/-home-chanseok-workspace-neubius/517599d4-c5f7-4644-a6db-bbfb1913ca33/scratchpad/g6_vid/retest/retest014_1011_112530_top.mp4",
+   "standing": true,
+   "set": "eval"
+  },
+  {
+   "trial_id": "retest015_1011_112738",
+   "video": "/tmp/claude-1000/-home-chanseok-workspace-neubius/517599d4-c5f7-4644-a6db-bbfb1913ca33/scratchpad/g6_vid/retest/retest015_1011_112738_top.mp4",
+   "standing": true,
+   "set": "eval"
+  },
+  {
+   "trial_id": "retest016_1011_112845",
+   "video": "/tmp/claude-1000/-home-chanseok-workspace-neubius/517599d4-c5f7-4644-a6db-bbfb1913ca33/scratchpad/g6_vid/retest/retest016_1011_112845_top.mp4",
+   "standing": true,
+   "set": "eval"
+  },
+  {
+   "trial_id": "retest017_1011_113005",
+   "video": "/tmp/claude-1000/-home-chanseok-workspace-neubius/517599d4-c5f7-4644-a6db-bbfb1913ca33/scratchpad/g6_vid/retest/retest017_1011_113005_top.mp4",
+   "standing": true,
+   "set": "eval"
+  },
+  {
+   "trial_id": "retest018_1011_113119",
+   "video": "/tmp/claude-1000/-home-chanseok-workspace-neubius/517599d4-c5f7-4644-a6db-bbfb1913ca33/scratchpad/g6_vid/retest/retest018_1011_113119_top.mp4",
+   "standing": true,
+   "set": "eval"
+  },
+  {
+   "trial_id": "retest019_1011_113539",
+   "video": "/tmp/claude-1000/-home-chanseok-workspace-neubius/517599d4-c5f7-4644-a6db-bbfb1913ca33/scratchpad/g6_vid/retest/retest019_1011_113539_top.mp4",
+   "standing": true,
+   "set": "eval"
+  },
+  {
+   "trial_id": "retest020_1011_113716",
+   "video": "/tmp/claude-1000/-home-chanseok-workspace-neubius/517599d4-c5f7-4644-a6db-bbfb1913ca33/scratchpad/g6_vid/retest/retest020_1011_113716_top.mp4",
+   "standing": true,
+   "set": "eval"
+  },
+  {
+   "trial_id": "S0001_1011_222807",
+   "video": "/tmp/claude-1000/-home-chanseok-workspace-neubius/517599d4-c5f7-4644-a6db-bbfb1913ca33/scratchpad/v1vid/S0001_1011_222807_top.mp4",
+   "standing": true,
+   "set": "eval"
+  },
+  {
+   "trial_id": "S0002_1011_222916",
+   "video": "/tmp/claude-1000/-home-chanseok-workspace-neubius/517599d4-c5f7-4644-a6db-bbfb1913ca33/scratchpad/v1vid/S0002_1011_222916_top.mp4",
+   "standing": false,
+   "set": "eval"
+  },
+  {
+   "trial_id": "S0003_1011_223031",
+   "video": "/tmp/claude-1000/-home-chanseok-workspace-neubius/517599d4-c5f7-4644-a6db-bbfb1913ca33/scratchpad/v1vid/S0003_1011_223031_top.mp4",
+   "standing": true,
+   "set": "dev"
+  },
+  {
+   "trial_id": "S0004_1011_223142",
+   "video": "/tmp/claude-1000/-home-chanseok-workspace-neubius/517599d4-c5f7-4644-a6db-bbfb1913ca33/scratchpad/v1vid/S0004_1011_223142_top.mp4",
+   "standing": true,
+   "set": "eval"
+  },
+  {
+   "trial_id": "S0005_1011_223252",
+   "video": "/tmp/claude-1000/-home-chanseok-workspace-neubius/517599d4-c5f7-4644-a6db-bbfb1913ca33/scratchpad/v1vid/S0005_1011_223252_top.mp4",
+   "standing": false,
+   "set": "eval"
+  },
+  {
+   "trial_id": "S0006_1011_223719",
+   "video": "/tmp/claude-1000/-home-chanseok-workspace-neubius/517599d4-c5f7-4644-a6db-bbfb1913ca33/scratchpad/v1vid/S0006_1011_223719_top.mp4",
+   "standing": false,
+   "set": "dev"
+  },
+  {
+   "trial_id": "S0007_1011_223906",
+   "video": "/tmp/claude-1000/-home-chanseok-workspace-neubius/517599d4-c5f7-4644-a6db-bbfb1913ca33/scratchpad/v1vid/S0007_1011_223906_top.mp4",
+   "standing": false,
+   "set": "eval"
+  },
+  {
+   "trial_id": "S0008_1011_224020",
+   "video": "/tmp/claude-1000/-home-chanseok-workspace-neubius/517599d4-c5f7-4644-a6db-bbfb1913ca33/scratchpad/v1vid/S0008_1011_224020_top.mp4",
+   "standing": true,
+   "set": "dev"
+  },
+  {
+   "trial_id": "S0009_1011_224353",
+   "video": "/tmp/claude-1000/-home-chanseok-workspace-neubius/517599d4-c5f7-4644-a6db-bbfb1913ca33/scratchpad/v1vid/S0009_1011_224353_top.mp4",
+   "standing": false,
+   "set": "eval"
+  },
+  {
+   "trial_id": "S0010_1011_224505",
+   "video": "/tmp/claude-1000/-home-chanseok-workspace-neubius/517599d4-c5f7-4644-a6db-bbfb1913ca33/scratchpad/v1vid/S0010_1011_224505_top.mp4",
+   "standing": false,
+   "set": "dev"
+  },
+  {
+   "trial_id": "S0011_1011_224620",
+   "video": "/tmp/claude-1000/-home-chanseok-workspace-neubius/517599d4-c5f7-4644-a6db-bbfb1913ca33/scratchpad/v1vid/S0011_1011_224620_top.mp4",
+   "standing": true,
+   "set": "eval"
+  },
+  {
+   "trial_id": "S0012_1011_225008",
+   "video": "/tmp/claude-1000/-home-chanseok-workspace-neubius/517599d4-c5f7-4644-a6db-bbfb1913ca33/scratchpad/v1vid/S0012_1011_225008_top.mp4",
+   "standing": true,
+   "set": "dev"
+  },
+  {
+   "trial_id": "S0013_1011_225426",
+   "video": "/tmp/claude-1000/-home-chanseok-workspace-neubius/517599d4-c5f7-4644-a6db-bbfb1913ca33/scratchpad/v1vid/S0013_1011_225426_top.mp4",
+   "standing": false,
+   "set": "eval"
+  },
+  {
+   "trial_id": "S0014_1011_225618",
+   "video": "/tmp/claude-1000/-home-chanseok-workspace-neubius/517599d4-c5f7-4644-a6db-bbfb1913ca33/scratchpad/v1vid/S0014_1011_225618_top.mp4",
+   "standing": false,
+   "set": "eval"
+  },
+  {
+   "trial_id": "S0015_1011_225733",
+   "video": "/tmp/claude-1000/-home-chanseok-workspace-neubius/517599d4-c5f7-4644-a6db-bbfb1913ca33/scratchpad/v1vid/S0015_1011_225733_top.mp4",
+   "standing": false,
+   "set": "dev"
+  },
+  {
+   "trial_id": "S0016_1011_225847",
+   "video": "/tmp/claude-1000/-home-chanseok-workspace-neubius/517599d4-c5f7-4644-a6db-bbfb1913ca33/scratchpad/v1vid/S0016_1011_225847_top.mp4",
+   "standing": false,
+   "set": "eval"
+  },
+  {
+   "trial_id": "S0017_1011_230000",
+   "video": "/tmp/claude-1000/-home-chanseok-workspace-neubius/517599d4-c5f7-4644-a6db-bbfb1913ca33/scratchpad/v1vid/S0017_1011_230000_top.mp4",
+   "standing": false,
+   "set": "eval"
+  },
+  {
+   "trial_id": "S0018_1011_230119",
+   "video": "/tmp/claude-1000/-home-chanseok-workspace-neubius/517599d4-c5f7-4644-a6db-bbfb1913ca33/scratchpad/v1vid/S0018_1011_230119_top.mp4",
+   "standing": false,
+   "set": "eval"
+  },
+  {
+   "trial_id": "S0019_1011_230303",
+   "video": "/tmp/claude-1000/-home-chanseok-workspace-neubius/517599d4-c5f7-4644-a6db-bbfb1913ca33/scratchpad/v1vid/S0019_1011_230303_top.mp4",
+   "standing": false,
+   "set": "eval"
+  },
+  {
+   "trial_id": "S0020_1011_232422",
+   "video": "/tmp/claude-1000/-home-chanseok-workspace-neubius/517599d4-c5f7-4644-a6db-bbfb1913ca33/scratchpad/v1vid/S0020_1011_232422_top.mp4",
+   "standing": false,
+   "set": "dev"
+  },
+  {
+   "trial_id": "S0021_1011_232533",
+   "video": "/tmp/claude-1000/-home-chanseok-workspace-neubius/517599d4-c5f7-4644-a6db-bbfb1913ca33/scratchpad/v1vid/S0021_1011_232533_top.mp4",
+   "standing": true,
+   "set": "eval"
+  },
+  {
+   "trial_id": "S0022_1011_232648",
+   "video": "/tmp/claude-1000/-home-chanseok-workspace-neubius/517599d4-c5f7-4644-a6db-bbfb1913ca33/scratchpad/v1vid/S0022_1011_232648_top.mp4",
+   "standing": false,
+   "set": "eval"
+  },
+  {
+   "trial_id": "S0023_1011_232759",
+   "video": "/tmp/claude-1000/-home-chanseok-workspace-neubius/517599d4-c5f7-4644-a6db-bbfb1913ca33/scratchpad/v1vid/S0023_1011_232759_top.mp4",
+   "standing": true,
+   "set": "eval"
+  },
+  {
+   "trial_id": "S0024_1011_232912",
+   "video": "/tmp/claude-1000/-home-chanseok-workspace-neubius/517599d4-c5f7-4644-a6db-bbfb1913ca33/scratchpad/v1vid/S0024_1011_232912_top.mp4",
+   "standing": false,
+   "set": "eval"
+  },
+  {
+   "trial_id": "S1001_1011_222332",
+   "video": "/tmp/claude-1000/-home-chanseok-workspace-neubius/517599d4-c5f7-4644-a6db-bbfb1913ca33/scratchpad/v1vid/S1001_1011_222332_top.mp4",
+   "standing": true,
+   "set": "dev"
+  },
+  {
+   "trial_id": "S0001_1011_234300",
+   "video": "/tmp/claude-1000/-home-chanseok-workspace-neubius/517599d4-c5f7-4644-a6db-bbfb1913ca33/scratchpad/v2vid/S0001_1011_234300_top.mp4",
+   "standing": true,
+   "set": "eval"
+  },
+  {
+   "trial_id": "S0002_1011_234413",
+   "video": "/tmp/claude-1000/-home-chanseok-workspace-neubius/517599d4-c5f7-4644-a6db-bbfb1913ca33/scratchpad/v2vid/S0002_1011_234413_top.mp4",
+   "standing": true,
+   "set": "eval"
+  },
+  {
+   "trial_id": "S0003_1011_234522",
+   "video": "/tmp/claude-1000/-home-chanseok-workspace-neubius/517599d4-c5f7-4644-a6db-bbfb1913ca33/scratchpad/v2vid/S0003_1011_234522_top.mp4",
+   "standing": true,
+   "set": "eval"
+  },
+  {
+   "trial_id": "S0004_1011_234636",
+   "video": "/tmp/claude-1000/-home-chanseok-workspace-neubius/517599d4-c5f7-4644-a6db-bbfb1913ca33/scratchpad/v2vid/S0004_1011_234636_top.mp4",
+   "standing": true,
+   "set": "eval"
+  },
+  {
+   "trial_id": "S0005_1011_234747",
+   "video": "/tmp/claude-1000/-home-chanseok-workspace-neubius/517599d4-c5f7-4644-a6db-bbfb1913ca33/scratchpad/v2vid/S0005_1011_234747_top.mp4",
+   "standing": true,
+   "set": "dev"
+  },
+  {
+   "trial_id": "S0006_1011_234856",
+   "video": "/tmp/claude-1000/-home-chanseok-workspace-neubius/517599d4-c5f7-4644-a6db-bbfb1913ca33/scratchpad/v2vid/S0006_1011_234856_top.mp4",
+   "standing": true,
+   "set": "dev"
+  },
+  {
+   "trial_id": "S0007_1011_235005",
+   "video": "/tmp/claude-1000/-home-chanseok-workspace-neubius/517599d4-c5f7-4644-a6db-bbfb1913ca33/scratchpad/v2vid/S0007_1011_235005_top.mp4",
+   "standing": true,
+   "set": "eval"
+  },
+  {
+   "trial_id": "S0008_1011_235748",
+   "video": "/tmp/claude-1000/-home-chanseok-workspace-neubius/517599d4-c5f7-4644-a6db-bbfb1913ca33/scratchpad/v2vid/S0008_1011_235748_top.mp4",
+   "standing": true,
+   "set": "eval"
+  },
+  {
+   "trial_id": "S0009_1011_235908",
+   "video": "/tmp/claude-1000/-home-chanseok-workspace-neubius/517599d4-c5f7-4644-a6db-bbfb1913ca33/scratchpad/v2vid/S0009_1011_235908_top.mp4",
+   "standing": false,
+   "set": "eval"
+  },
+  {
+   "trial_id": "S0010_1012_000028",
+   "video": "/tmp/claude-1000/-home-chanseok-workspace-neubius/517599d4-c5f7-4644-a6db-bbfb1913ca33/scratchpad/v2vid/S0010_1012_000028_top.mp4",
+   "standing": true,
+   "set": "eval"
+  },
+  {
+   "trial_id": "S0011_1012_000154",
+   "video": "/tmp/claude-1000/-home-chanseok-workspace-neubius/517599d4-c5f7-4644-a6db-bbfb1913ca33/scratchpad/v2vid/S0011_1012_000154_top.mp4",
+   "standing": true,
+   "set": "eval"
+  },
+  {
+   "trial_id": "S0012_1012_000306",
+   "video": "/tmp/claude-1000/-home-chanseok-workspace-neubius/517599d4-c5f7-4644-a6db-bbfb1913ca33/scratchpad/v2vid/S0012_1012_000306_top.mp4",
+   "standing": true,
+   "set": "eval"
+  },
+  {
+   "trial_id": "S0013_1012_000421",
+   "video": "/tmp/claude-1000/-home-chanseok-workspace-neubius/517599d4-c5f7-4644-a6db-bbfb1913ca33/scratchpad/v2vid/S0013_1012_000421_top.mp4",
+   "standing": true,
+   "set": "dev"
+  },
+  {
+   "trial_id": "S0014_1012_000551",
+   "video": "/tmp/claude-1000/-home-chanseok-workspace-neubius/517599d4-c5f7-4644-a6db-bbfb1913ca33/scratchpad/v2vid/S0014_1012_000551_top.mp4",
+   "standing": true,
+   "set": "eval"
+  },
+  {
+   "trial_id": "S0015_1012_000701",
+   "video": "/tmp/claude-1000/-home-chanseok-workspace-neubius/517599d4-c5f7-4644-a6db-bbfb1913ca33/scratchpad/v2vid/S0015_1012_000701_top.mp4",
+   "standing": true,
+   "set": "eval"
+  },
+  {
+   "trial_id": "S0016_1012_000813",
+   "video": "/tmp/claude-1000/-home-chanseok-workspace-neubius/517599d4-c5f7-4644-a6db-bbfb1913ca33/scratchpad/v2vid/S0016_1012_000813_top.mp4",
+   "standing": true,
+   "set": "eval"
+  },
+  {
+   "trial_id": "S0017_1012_000921",
+   "video": "/tmp/claude-1000/-home-chanseok-workspace-neubius/517599d4-c5f7-4644-a6db-bbfb1913ca33/scratchpad/v2vid/S0017_1012_000921_top.mp4",
+   "standing": true,
+   "set": "eval"
+  },
+  {
+   "trial_id": "S0018_1012_001030",
+   "video": "/tmp/claude-1000/-home-chanseok-workspace-neubius/517599d4-c5f7-4644-a6db-bbfb1913ca33/scratchpad/v2vid/S0018_1012_001030_top.mp4",
+   "standing": true,
+   "set": "eval"
+  },
+  {
+   "trial_id": "S0019_1012_001138",
+   "video": "/tmp/claude-1000/-home-chanseok-workspace-neubius/517599d4-c5f7-4644-a6db-bbfb1913ca33/scratchpad/v2vid/S0019_1012_001138_top.mp4",
+   "standing": true,
+   "set": "eval"
+  },
+  {
+   "trial_id": "S0020_1012_001247",
+   "video": "/tmp/claude-1000/-home-chanseok-workspace-neubius/517599d4-c5f7-4644-a6db-bbfb1913ca33/scratchpad/v2vid/S0020_1012_001247_top.mp4",
+   "standing": true,
+   "set": "eval"
+  },
+  {
+   "trial_id": "S0021_1012_001357",
+   "video": "/tmp/claude-1000/-home-chanseok-workspace-neubius/517599d4-c5f7-4644-a6db-bbfb1913ca33/scratchpad/v2vid/S0021_1012_001357_top.mp4",
+   "standing": true,
+   "set": "dev"
+  },
+  {
+   "trial_id": "S0022_1012_001506",
+   "video": "/tmp/claude-1000/-home-chanseok-workspace-neubius/517599d4-c5f7-4644-a6db-bbfb1913ca33/scratchpad/v2vid/S0022_1012_001506_top.mp4",
+   "standing": true,
+   "set": "eval"
+  },
+  {
+   "trial_id": "S0023_1012_001616",
+   "video": "/tmp/claude-1000/-home-chanseok-workspace-neubius/517599d4-c5f7-4644-a6db-bbfb1913ca33/scratchpad/v2vid/S0023_1012_001616_top.mp4",
+   "standing": true,
+   "set": "eval"
+  },
+  {
+   "trial_id": "S0024_1012_001725",
+   "video": "/tmp/claude-1000/-home-chanseok-workspace-neubius/517599d4-c5f7-4644-a6db-bbfb1913ca33/scratchpad/v2vid/S0024_1012_001725_top.mp4",
+   "standing": true,
+   "set": "eval"
+  },
+  {
+   "trial_id": "S1001_1012_002116",
+   "video": "/tmp/claude-1000/-home-chanseok-workspace-neubius/517599d4-c5f7-4644-a6db-bbfb1913ca33/scratchpad/s1vid/S1001_1012_002116_top.mp4",
+   "standing": false,
+   "set": "eval"
+  },
+  {
+   "trial_id": "S1002_1012_002229",
+   "video": "/tmp/claude-1000/-home-chanseok-workspace-neubius/517599d4-c5f7-4644-a6db-bbfb1913ca33/scratchpad/s1vid/S1002_1012_002229_top.mp4",
+   "standing": false,
+   "set": "dev"
+  },
+  {
+   "trial_id": "S1003_1012_002349",
+   "video": "/tmp/claude-1000/-home-chanseok-workspace-neubius/517599d4-c5f7-4644-a6db-bbfb1913ca33/scratchpad/s1vid/S1003_1012_002349_top.mp4",
+   "standing": false,
+   "set": "eval"
+  },
+  {
+   "trial_id": "S4001_1012_002921",
+   "video": "/tmp/claude-1000/-home-chanseok-workspace-neubius/517599d4-c5f7-4644-a6db-bbfb1913ca33/scratchpad/s4vid/S4001_1012_002921_top.mp4",
+   "standing": true,
+   "set": "eval"
+  },
+  {
+   "trial_id": "S4002_1012_003030",
+   "video": "/tmp/claude-1000/-home-chanseok-workspace-neubius/517599d4-c5f7-4644-a6db-bbfb1913ca33/scratchpad/s4vid/S4002_1012_003030_top.mp4",
+   "standing": true,
+   "set": "eval"
+  },
+  {
+   "trial_id": "S4003_1012_003142",
+   "video": "/tmp/claude-1000/-home-chanseok-workspace-neubius/517599d4-c5f7-4644-a6db-bbfb1913ca33/scratchpad/s4vid/S4003_1012_003142_top.mp4",
+   "standing": true,
+   "set": "eval"
+  },
+  {
+   "trial_id": "S4004_1012_003253",
+   "video": "/tmp/claude-1000/-home-chanseok-workspace-neubius/517599d4-c5f7-4644-a6db-bbfb1913ca33/scratchpad/s4vid/S4004_1012_003253_top.mp4",
+   "standing": true,
+   "set": "dev"
+  },
+  {
+   "trial_id": "S4005_1012_003400",
+   "video": "/tmp/claude-1000/-home-chanseok-workspace-neubius/517599d4-c5f7-4644-a6db-bbfb1913ca33/scratchpad/s4vid/S4005_1012_003400_top.mp4",
+   "standing": true,
+   "set": "eval"
+  },
+  {
+   "trial_id": "S4006_1012_003510",
+   "video": "/tmp/claude-1000/-home-chanseok-workspace-neubius/517599d4-c5f7-4644-a6db-bbfb1913ca33/scratchpad/s4vid/S4006_1012_003510_top.mp4",
+   "standing": true,
+   "set": "eval"
+  },
+  {
+   "trial_id": "S4007_1012_003619",
+   "video": "/tmp/claude-1000/-home-chanseok-workspace-neubius/517599d4-c5f7-4644-a6db-bbfb1913ca33/scratchpad/s4vid/S4007_1012_003619_top.mp4",
+   "standing": true,
+   "set": "eval"
+  },
+  {
+   "trial_id": "S4008_1012_003731",
+   "video": "/tmp/claude-1000/-home-chanseok-workspace-neubius/517599d4-c5f7-4644-a6db-bbfb1913ca33/scratchpad/s4vid/S4008_1012_003731_top.mp4",
+   "standing": true,
+   "set": "eval"
+  },
+  {
+   "trial_id": "S4009_1012_003842",
+   "video": "/tmp/claude-1000/-home-chanseok-workspace-neubius/517599d4-c5f7-4644-a6db-bbfb1913ca33/scratchpad/s4vid/S4009_1012_003842_top.mp4",
+   "standing": true,
+   "set": "eval"
+  },
+  {
+   "trial_id": "S4010_1012_003952",
+   "video": "/tmp/claude-1000/-home-chanseok-workspace-neubius/517599d4-c5f7-4644-a6db-bbfb1913ca33/scratchpad/s4vid/S4010_1012_003952_top.mp4",
+   "standing": true,
+   "set": "dev"
+  },
+  {
+   "trial_id": "S4011_1012_004103",
+   "video": "/tmp/claude-1000/-home-chanseok-workspace-neubius/517599d4-c5f7-4644-a6db-bbfb1913ca33/scratchpad/s4vid/S4011_1012_004103_top.mp4",
+   "standing": true,
+   "set": "eval"
+  },
+  {
+   "trial_id": "S4012_1012_233852",
+   "video": "/tmp/claude-1000/-home-chanseok-workspace-neubius/517599d4-c5f7-4644-a6db-bbfb1913ca33/scratchpad/s4vid/S4012_1012_233852_top.mp4",
+   "standing": true,
+   "set": "eval"
+  },
+  {
+   "trial_id": "S4013_1012_234004",
+   "video": "/tmp/claude-1000/-home-chanseok-workspace-neubius/517599d4-c5f7-4644-a6db-bbfb1913ca33/scratchpad/s4vid/S4013_1012_234004_top.mp4",
+   "standing": true,
+   "set": "dev"
+  },
+  {
+   "trial_id": "S4014_1012_234113",
+   "video": "/tmp/claude-1000/-home-chanseok-workspace-neubius/517599d4-c5f7-4644-a6db-bbfb1913ca33/scratchpad/s4vid/S4014_1012_234113_top.mp4",
+   "standing": true,
+   "set": "eval"
+  },
+  {
+   "trial_id": "S4015_1012_234222",
+   "video": "/tmp/claude-1000/-home-chanseok-workspace-neubius/517599d4-c5f7-4644-a6db-bbfb1913ca33/scratchpad/s4vid/S4015_1012_234222_top.mp4",
+   "standing": true,
+   "set": "eval"
+  },
+  {
+   "trial_id": "S4016_1012_234330",
+   "video": "/tmp/claude-1000/-home-chanseok-workspace-neubius/517599d4-c5f7-4644-a6db-bbfb1913ca33/scratchpad/s4vid/S4016_1012_234330_top.mp4",
+   "standing": true,
+   "set": "eval"
+  },
+  {
+   "trial_id": "S4017_1012_234439",
+   "video": "/tmp/claude-1000/-home-chanseok-workspace-neubius/517599d4-c5f7-4644-a6db-bbfb1913ca33/scratchpad/s4vid/S4017_1012_234439_top.mp4",
+   "standing": true,
+   "set": "eval"
+  },
+  {
+   "trial_id": "S4018_1012_234547",
+   "video": "/tmp/claude-1000/-home-chanseok-workspace-neubius/517599d4-c5f7-4644-a6db-bbfb1913ca33/scratchpad/s4vid/S4018_1012_234547_top.mp4",
+   "standing": true,
+   "set": "eval"
+  },
+  {
+   "trial_id": "S4019_1012_234656",
+   "video": "/tmp/claude-1000/-home-chanseok-workspace-neubius/517599d4-c5f7-4644-a6db-bbfb1913ca33/scratchpad/s4vid/S4019_1012_234656_top.mp4",
+   "standing": true,
+   "set": "eval"
+  },
+  {
+   "trial_id": "S4020_1012_234805",
+   "video": "/tmp/claude-1000/-home-chanseok-workspace-neubius/517599d4-c5f7-4644-a6db-bbfb1913ca33/scratchpad/s4vid/S4020_1012_234805_top.mp4",
+   "standing": true,
+   "set": "eval"
+  },
+  {
+   "trial_id": "S4021_1012_234912",
+   "video": "/tmp/claude-1000/-home-chanseok-workspace-neubius/517599d4-c5f7-4644-a6db-bbfb1913ca33/scratchpad/s4vid/S4021_1012_234912_top.mp4",
+   "standing": true,
+   "set": "eval"
+  },
+  {
+   "trial_id": "S4022_1012_235021",
+   "video": "/tmp/claude-1000/-home-chanseok-workspace-neubius/517599d4-c5f7-4644-a6db-bbfb1913ca33/scratchpad/s4vid/S4022_1012_235021_top.mp4",
+   "standing": true,
+   "set": "eval"
+  },
+  {
+   "trial_id": "S4023_1012_235129",
+   "video": "/tmp/claude-1000/-home-chanseok-workspace-neubius/517599d4-c5f7-4644-a6db-bbfb1913ca33/scratchpad/s4vid/S4023_1012_235129_top.mp4",
+   "standing": true,
+   "set": "dev"
+  },
+  {
+   "trial_id": "S4024_1012_235239",
+   "video": "/tmp/claude-1000/-home-chanseok-workspace-neubius/517599d4-c5f7-4644-a6db-bbfb1913ca33/scratchpad/s4vid/S4024_1012_235239_top.mp4",
+   "standing": true,
+   "set": "dev"
+  },
+  {
+   "trial_id": "S4025_1012_235349",
+   "video": "/tmp/claude-1000/-home-chanseok-workspace-neubius/517599d4-c5f7-4644-a6db-bbfb1913ca33/scratchpad/s4vid/S4025_1012_235349_top.mp4",
+   "standing": true,
+   "set": "eval"
+  },
+  {
+   "trial_id": "S4026_1012_235458",
+   "video": "/tmp/claude-1000/-home-chanseok-workspace-neubius/517599d4-c5f7-4644-a6db-bbfb1913ca33/scratchpad/s4vid/S4026_1012_235458_top.mp4",
+   "standing": true,
+   "set": "eval"
+  },
+  {
+   "trial_id": "S4027_1012_235610",
+   "video": "/tmp/claude-1000/-home-chanseok-workspace-neubius/517599d4-c5f7-4644-a6db-bbfb1913ca33/scratchpad/s4vid/S4027_1012_235610_top.mp4",
+   "standing": true,
+   "set": "dev"
+  },
+  {
+   "trial_id": "S4028_1012_235728",
+   "video": "/tmp/claude-1000/-home-chanseok-workspace-neubius/517599d4-c5f7-4644-a6db-bbfb1913ca33/scratchpad/s4vid/S4028_1012_235728_top.mp4",
+   "standing": true,
+   "set": "eval"
+  },
+  {
+   "trial_id": "S4029_1012_235836",
+   "video": "/tmp/claude-1000/-home-chanseok-workspace-neubius/517599d4-c5f7-4644-a6db-bbfb1913ca33/scratchpad/s4vid/S4029_1012_235836_top.mp4",
+   "standing": true,
+   "set": "eval"
+  },
+  {
+   "trial_id": "S4030_1012_235946",
+   "video": "/tmp/claude-1000/-home-chanseok-workspace-neubius/517599d4-c5f7-4644-a6db-bbfb1913ca33/scratchpad/s4vid/S4030_1012_235946_top.mp4",
+   "standing": true,
+   "set": "dev"
+  },
+  {
+   "trial_id": "S4031_1013_000057",
+   "video": "/tmp/claude-1000/-home-chanseok-workspace-neubius/517599d4-c5f7-4644-a6db-bbfb1913ca33/scratchpad/s4vid/S4031_1013_000057_top.mp4",
+   "standing": true,
+   "set": "eval"
+  },
+  {
+   "trial_id": "S4032_1013_000208",
+   "video": "/tmp/claude-1000/-home-chanseok-workspace-neubius/517599d4-c5f7-4644-a6db-bbfb1913ca33/scratchpad/s4vid/S4032_1013_000208_top.mp4",
+   "standing": true,
+   "set": "dev"
+  },
+  {
+   "trial_id": "S4033_1013_000316",
+   "video": "/tmp/claude-1000/-home-chanseok-workspace-neubius/517599d4-c5f7-4644-a6db-bbfb1913ca33/scratchpad/s4vid/S4033_1013_000316_top.mp4",
+   "standing": true,
+   "set": "eval"
+  },
+  {
+   "trial_id": "S4034_1013_000431",
+   "video": "/tmp/claude-1000/-home-chanseok-workspace-neubius/517599d4-c5f7-4644-a6db-bbfb1913ca33/scratchpad/s4vid/S4034_1013_000431_top.mp4",
+   "standing": true,
+   "set": "eval"
+  },
+  {
+   "trial_id": "S4035_1013_000541",
+   "video": "/tmp/claude-1000/-home-chanseok-workspace-neubius/517599d4-c5f7-4644-a6db-bbfb1913ca33/scratchpad/s4vid/S4035_1013_000541_top.mp4",
+   "standing": true,
+   "set": "eval"
+  },
+  {
+   "trial_id": "S4036_1013_000710",
+   "video": "/tmp/claude-1000/-home-chanseok-workspace-neubius/517599d4-c5f7-4644-a6db-bbfb1913ca33/scratchpad/s4vid/S4036_1013_000710_top.mp4",
+   "standing": true,
+   "set": "eval"
+  },
+  {
+   "trial_id": "S4037_1013_000819",
+   "video": "/tmp/claude-1000/-home-chanseok-workspace-neubius/517599d4-c5f7-4644-a6db-bbfb1913ca33/scratchpad/s4vid/S4037_1013_000819_top.mp4",
+   "standing": true,
+   "set": "dev"
+  },
+  {
+   "trial_id": "S4038_1013_000927",
+   "video": "/tmp/claude-1000/-home-chanseok-workspace-neubius/517599d4-c5f7-4644-a6db-bbfb1913ca33/scratchpad/s4vid/S4038_1013_000927_top.mp4",
+   "standing": true,
+   "set": "dev"
+  },
+  {
+   "trial_id": "S4039_1013_001050",
+   "video": "/tmp/claude-1000/-home-chanseok-workspace-neubius/517599d4-c5f7-4644-a6db-bbfb1913ca33/scratchpad/s4vid/S4039_1013_001050_top.mp4",
+   "standing": true,
+   "set": "dev"
+  },
+  {
+   "trial_id": "S4040_1013_001159",
+   "video": "/tmp/claude-1000/-home-chanseok-workspace-neubius/517599d4-c5f7-4644-a6db-bbfb1913ca33/scratchpad/s4vid/S4040_1013_001159_top.mp4",
+   "standing": true,
+   "set": "eval"
+  },
+  {
+   "trial_id": "S4041_1013_001309",
+   "video": "/tmp/claude-1000/-home-chanseok-workspace-neubius/517599d4-c5f7-4644-a6db-bbfb1913ca33/scratchpad/s4vid/S4041_1013_001309_top.mp4",
+   "standing": true,
+   "set": "dev"
+  },
+  {
+   "trial_id": "S4042_1013_001417",
+   "video": "/tmp/claude-1000/-home-chanseok-workspace-neubius/517599d4-c5f7-4644-a6db-bbfb1913ca33/scratchpad/s4vid/S4042_1013_001417_top.mp4",
+   "standing": true,
+   "set": "dev"
+  },
+  {
+   "trial_id": "S4043_1013_001526",
+   "video": "/tmp/claude-1000/-home-chanseok-workspace-neubius/517599d4-c5f7-4644-a6db-bbfb1913ca33/scratchpad/s4vid/S4043_1013_001526_top.mp4",
+   "standing": true,
+   "set": "eval"
+  },
+  {
+   "trial_id": "S4044_1013_001634",
+   "video": "/tmp/claude-1000/-home-chanseok-workspace-neubius/517599d4-c5f7-4644-a6db-bbfb1913ca33/scratchpad/s4vid/S4044_1013_001634_top.mp4",
+   "standing": true,
+   "set": "eval"
+  },
+  {
+   "trial_id": "S4045_1013_001744",
+   "video": "/tmp/claude-1000/-home-chanseok-workspace-neubius/517599d4-c5f7-4644-a6db-bbfb1913ca33/scratchpad/s4vid/S4045_1013_001744_top.mp4",
+   "standing": true,
+   "set": "eval"
+  },
+  {
+   "trial_id": "S4046_1013_001854",
+   "video": "/tmp/claude-1000/-home-chanseok-workspace-neubius/517599d4-c5f7-4644-a6db-bbfb1913ca33/scratchpad/s4vid/S4046_1013_001854_top.mp4",
+   "standing": true,
+   "set": "eval"
+  },
+  {
+   "trial_id": "S4047_1013_002002",
+   "video": "/tmp/claude-1000/-home-chanseok-workspace-neubius/517599d4-c5f7-4644-a6db-bbfb1913ca33/scratchpad/s4vid/S4047_1013_002002_top.mp4",
+   "standing": true,
+   "set": "dev"
+  },
+  {
+   "trial_id": "S4048_1013_002111",
+   "video": "/tmp/claude-1000/-home-chanseok-workspace-neubius/517599d4-c5f7-4644-a6db-bbfb1913ca33/scratchpad/s4vid/S4048_1013_002111_top.mp4",
+   "standing": true,
+   "set": "dev"
+  },
+  {
+   "trial_id": "F0001_1013_003453",
+   "video": "/tmp/claude-1000/-home-chanseok-workspace-neubius/517599d4-c5f7-4644-a6db-bbfb1913ca33/scratchpad/f0vid/F0001_1013_003453_top.mp4",
+   "standing": true,
+   "set": "eval"
+  },
+  {
+   "trial_id": "F0002_1013_003605",
+   "video": "/tmp/claude-1000/-home-chanseok-workspace-neubius/517599d4-c5f7-4644-a6db-bbfb1913ca33/scratchpad/f0vid/F0002_1013_003605_top.mp4",
+   "standing": true,
+   "set": "dev"
+  },
+  {
+   "trial_id": "F0003_1013_003730",
+   "video": "/tmp/claude-1000/-home-chanseok-workspace-neubius/517599d4-c5f7-4644-a6db-bbfb1913ca33/scratchpad/f0vid/F0003_1013_003730_top.mp4",
+   "standing": true,
+   "set": "eval"
+  },
+  {
+   "trial_id": "F0004_1013_003838",
+   "video": "/tmp/claude-1000/-home-chanseok-workspace-neubius/517599d4-c5f7-4644-a6db-bbfb1913ca33/scratchpad/f0vid/F0004_1013_003838_top.mp4",
+   "standing": true,
+   "set": "eval"
+  },
+  {
+   "trial_id": "F0005_1013_003946",
+   "video": "/tmp/claude-1000/-home-chanseok-workspace-neubius/517599d4-c5f7-4644-a6db-bbfb1913ca33/scratchpad/f0vid/F0005_1013_003946_top.mp4",
+   "standing": true,
+   "set": "dev"
+  },
+  {
+   "trial_id": "F0006_1013_004054",
+   "video": "/tmp/claude-1000/-home-chanseok-workspace-neubius/517599d4-c5f7-4644-a6db-bbfb1913ca33/scratchpad/f0vid/F0006_1013_004054_top.mp4",
+   "standing": true,
+   "set": "eval"
+  },
+  {
+   "trial_id": "F0007_1013_004202",
+   "video": "/tmp/claude-1000/-home-chanseok-workspace-neubius/517599d4-c5f7-4644-a6db-bbfb1913ca33/scratchpad/f0vid/F0007_1013_004202_top.mp4",
+   "standing": true,
+   "set": "eval"
+  },
+  {
+   "trial_id": "F0008_1013_004309",
+   "video": "/tmp/claude-1000/-home-chanseok-workspace-neubius/517599d4-c5f7-4644-a6db-bbfb1913ca33/scratchpad/f0vid/F0008_1013_004309_top.mp4",
+   "standing": true,
+   "set": "dev"
+  },
+  {
+   "trial_id": "F0009_1013_004416",
+   "video": "/tmp/claude-1000/-home-chanseok-workspace-neubius/517599d4-c5f7-4644-a6db-bbfb1913ca33/scratchpad/f0vid/F0009_1013_004416_top.mp4",
+   "standing": true,
+   "set": "eval"
+  },
+  {
+   "trial_id": "F0010_1013_004528",
+   "video": "/tmp/claude-1000/-home-chanseok-workspace-neubius/517599d4-c5f7-4644-a6db-bbfb1913ca33/scratchpad/f0vid/F0010_1013_004528_top.mp4",
+   "standing": true,
+   "set": "dev"
+  },
+  {
+   "trial_id": "F0011_1013_004637",
+   "video": "/tmp/claude-1000/-home-chanseok-workspace-neubius/517599d4-c5f7-4644-a6db-bbfb1913ca33/scratchpad/f0vid/F0011_1013_004637_top.mp4",
+   "standing": true,
+   "set": "eval"
+  },
+  {
+   "trial_id": "F0012_1013_004746",
+   "video": "/tmp/claude-1000/-home-chanseok-workspace-neubius/517599d4-c5f7-4644-a6db-bbfb1913ca33/scratchpad/f0vid/F0012_1013_004746_top.mp4",
+   "standing": true,
+   "set": "dev"
+  },
+  {
+   "trial_id": "F0013_1013_004854",
+   "video": "/tmp/claude-1000/-home-chanseok-workspace-neubius/517599d4-c5f7-4644-a6db-bbfb1913ca33/scratchpad/f0vid/F0013_1013_004854_top.mp4",
+   "standing": false,
+   "set": "eval"
+  },
+  {
+   "trial_id": "F0014_1013_005011",
+   "video": "/tmp/claude-1000/-home-chanseok-workspace-neubius/517599d4-c5f7-4644-a6db-bbfb1913ca33/scratchpad/f0vid/F0014_1013_005011_top.mp4",
+   "standing": true,
+   "set": "dev"
+  },
+  {
+   "trial_id": "F0015_1013_005131",
+   "video": "/tmp/claude-1000/-home-chanseok-workspace-neubius/517599d4-c5f7-4644-a6db-bbfb1913ca33/scratchpad/f0vid/F0015_1013_005131_top.mp4",
+   "standing": true,
+   "set": "eval"
+  },
+  {
+   "trial_id": "F0016_1013_005240",
+   "video": "/tmp/claude-1000/-home-chanseok-workspace-neubius/517599d4-c5f7-4644-a6db-bbfb1913ca33/scratchpad/f0vid/F0016_1013_005240_top.mp4",
+   "standing": true,
+   "set": "eval"
+  },
+  {
+   "trial_id": "F0017_1013_005351",
+   "video": "/tmp/claude-1000/-home-chanseok-workspace-neubius/517599d4-c5f7-4644-a6db-bbfb1913ca33/scratchpad/f0vid/F0017_1013_005351_top.mp4",
+   "standing": true,
+   "set": "eval"
+  },
+  {
+   "trial_id": "F0018_1013_005458",
+   "video": "/tmp/claude-1000/-home-chanseok-workspace-neubius/517599d4-c5f7-4644-a6db-bbfb1913ca33/scratchpad/f0vid/F0018_1013_005458_top.mp4",
+   "standing": true,
+   "set": "eval"
+  },
+  {
+   "trial_id": "F0019_1013_005608",
+   "video": "/tmp/claude-1000/-home-chanseok-workspace-neubius/517599d4-c5f7-4644-a6db-bbfb1913ca33/scratchpad/f0vid/F0019_1013_005608_top.mp4",
+   "standing": true,
+   "set": "eval"
+  },
+  {
+   "trial_id": "F0020_1013_005716",
+   "video": "/tmp/claude-1000/-home-chanseok-workspace-neubius/517599d4-c5f7-4644-a6db-bbfb1913ca33/scratchpad/f0vid/F0020_1013_005716_top.mp4",
+   "standing": true,
+   "set": "eval"
+  },
+  {
+   "trial_id": "F0021_1013_005826",
+   "video": "/tmp/claude-1000/-home-chanseok-workspace-neubius/517599d4-c5f7-4644-a6db-bbfb1913ca33/scratchpad/f0vid/F0021_1013_005826_top.mp4",
+   "standing": true,
+   "set": "eval"
+  },
+  {
+   "trial_id": "F0022_1013_005934",
+   "video": "/tmp/claude-1000/-home-chanseok-workspace-neubius/517599d4-c5f7-4644-a6db-bbfb1913ca33/scratchpad/f0vid/F0022_1013_005934_top.mp4",
+   "standing": true,
+   "set": "eval"
+  },
+  {
+   "trial_id": "F0023_1013_010041",
+   "video": "/tmp/claude-1000/-home-chanseok-workspace-neubius/517599d4-c5f7-4644-a6db-bbfb1913ca33/scratchpad/f0vid/F0023_1013_010041_top.mp4",
+   "standing": true,
+   "set": "eval"
+  },
+  {
+   "trial_id": "F0024_1013_010149",
+   "video": "/tmp/claude-1000/-home-chanseok-workspace-neubius/517599d4-c5f7-4644-a6db-bbfb1913ca33/scratchpad/f0vid/F0024_1013_010149_top.mp4",
+   "standing": true,
+   "set": "dev"
+  },
+  {
+   "trial_id": "F0025_1013_010256",
+   "video": "/tmp/claude-1000/-home-chanseok-workspace-neubius/517599d4-c5f7-4644-a6db-bbfb1913ca33/scratchpad/f0vid/F0025_1013_010256_top.mp4",
+   "standing": true,
+   "set": "dev"
+  },
+  {
+   "trial_id": "F0026_1013_010406",
+   "video": "/tmp/claude-1000/-home-chanseok-workspace-neubius/517599d4-c5f7-4644-a6db-bbfb1913ca33/scratchpad/f0vid/F0026_1013_010406_top.mp4",
+   "standing": true,
+   "set": "eval"
+  },
+  {
+   "trial_id": "F0027_1013_010514",
+   "video": "/tmp/claude-1000/-home-chanseok-workspace-neubius/517599d4-c5f7-4644-a6db-bbfb1913ca33/scratchpad/f0vid/F0027_1013_010514_top.mp4",
+   "standing": true,
+   "set": "eval"
+  },
+  {
+   "trial_id": "F0028_1013_010622",
+   "video": "/tmp/claude-1000/-home-chanseok-workspace-neubius/517599d4-c5f7-4644-a6db-bbfb1913ca33/scratchpad/f0vid/F0028_1013_010622_top.mp4",
+   "standing": true,
+   "set": "eval"
+  },
+  {
+   "trial_id": "F0029_1013_010729",
+   "video": "/tmp/claude-1000/-home-chanseok-workspace-neubius/517599d4-c5f7-4644-a6db-bbfb1913ca33/scratchpad/f0vid/F0029_1013_010729_top.mp4",
+   "standing": true,
+   "set": "eval"
+  },
+  {
+   "trial_id": "F0030_1013_010839",
+   "video": "/tmp/claude-1000/-home-chanseok-workspace-neubius/517599d4-c5f7-4644-a6db-bbfb1913ca33/scratchpad/f0vid/F0030_1013_010839_top.mp4",
+   "standing": true,
+   "set": "dev"
+  },
+  {
+   "trial_id": "F0031_1013_010948",
+   "video": "/tmp/claude-1000/-home-chanseok-workspace-neubius/517599d4-c5f7-4644-a6db-bbfb1913ca33/scratchpad/f0vid/F0031_1013_010948_top.mp4",
+   "standing": true,
+   "set": "dev"
+  },
+  {
+   "trial_id": "F0032_1013_011119",
+   "video": "/tmp/claude-1000/-home-chanseok-workspace-neubius/517599d4-c5f7-4644-a6db-bbfb1913ca33/scratchpad/f0vid/F0032_1013_011119_top.mp4",
+   "standing": true,
+   "set": "eval"
+  },
+  {
+   "trial_id": "F0033_1013_011231",
+   "video": "/tmp/claude-1000/-home-chanseok-workspace-neubius/517599d4-c5f7-4644-a6db-bbfb1913ca33/scratchpad/f0vid/F0033_1013_011231_top.mp4",
+   "standing": true,
+   "set": "dev"
+  },
+  {
+   "trial_id": "F0034_1013_011342",
+   "video": "/tmp/claude-1000/-home-chanseok-workspace-neubius/517599d4-c5f7-4644-a6db-bbfb1913ca33/scratchpad/f0vid/F0034_1013_011342_top.mp4",
+   "standing": true,
+   "set": "eval"
+  },
+  {
+   "trial_id": "F0035_1013_011450",
+   "video": "/tmp/claude-1000/-home-chanseok-workspace-neubius/517599d4-c5f7-4644-a6db-bbfb1913ca33/scratchpad/f0vid/F0035_1013_011450_top.mp4",
+   "standing": true,
+   "set": "eval"
+  },
+  {
+   "trial_id": "F0036_1013_011558",
+   "video": "/tmp/claude-1000/-home-chanseok-workspace-neubius/517599d4-c5f7-4644-a6db-bbfb1913ca33/scratchpad/f0vid/F0036_1013_011558_top.mp4",
+   "standing": true,
+   "set": "eval"
+  },
+  {
+   "trial_id": "F0037_1013_011712",
+   "video": "/tmp/claude-1000/-home-chanseok-workspace-neubius/517599d4-c5f7-4644-a6db-bbfb1913ca33/scratchpad/f0vid/F0037_1013_011712_top.mp4",
+   "standing": true,
+   "set": "eval"
+  },
+  {
+   "trial_id": "F0038_1013_011822",
+   "video": "/tmp/claude-1000/-home-chanseok-workspace-neubius/517599d4-c5f7-4644-a6db-bbfb1913ca33/scratchpad/f0vid/F0038_1013_011822_top.mp4",
+   "standing": true,
+   "set": "eval"
+  },
+  {
+   "trial_id": "F0039_1013_011930",
+   "video": "/tmp/claude-1000/-home-chanseok-workspace-neubius/517599d4-c5f7-4644-a6db-bbfb1913ca33/scratchpad/f0vid/F0039_1013_011930_top.mp4",
+   "standing": true,
+   "set": "dev"
+  },
+  {
+   "trial_id": "F0040_1013_012039",
+   "video": "/tmp/claude-1000/-home-chanseok-workspace-neubius/517599d4-c5f7-4644-a6db-bbfb1913ca33/scratchpad/f0vid/F0040_1013_012039_top.mp4",
+   "standing": true,
+   "set": "eval"
+  },
+  {
+   "trial_id": "P0001_1013_212044",
+   "video": "/tmp/claude-1000/-home-chanseok-workspace-neubius/517599d4-c5f7-4644-a6db-bbfb1913ca33/scratchpad/p0vid/P0001_1013_212044_top.mp4",
+   "standing": true,
+   "set": "eval"
+  },
+  {
+   "trial_id": "P0002_1013_212155",
+   "video": "/tmp/claude-1000/-home-chanseok-workspace-neubius/517599d4-c5f7-4644-a6db-bbfb1913ca33/scratchpad/p0vid/P0002_1013_212155_top.mp4",
+   "standing": true,
+   "set": "dev"
+  },
+  {
+   "trial_id": "P0003_1013_212303",
+   "video": "/tmp/claude-1000/-home-chanseok-workspace-neubius/517599d4-c5f7-4644-a6db-bbfb1913ca33/scratchpad/p0vid/P0003_1013_212303_top.mp4",
+   "standing": true,
+   "set": "eval"
+  },
+  {
+   "trial_id": "P0004_1013_212413",
+   "video": "/tmp/claude-1000/-home-chanseok-workspace-neubius/517599d4-c5f7-4644-a6db-bbfb1913ca33/scratchpad/p0vid/P0004_1013_212413_top.mp4",
+   "standing": true,
+   "set": "eval"
+  },
+  {
+   "trial_id": "P0005_1013_212521",
+   "video": "/tmp/claude-1000/-home-chanseok-workspace-neubius/517599d4-c5f7-4644-a6db-bbfb1913ca33/scratchpad/p0vid/P0005_1013_212521_top.mp4",
+   "standing": true,
+   "set": "eval"
+  },
+  {
+   "trial_id": "P0006_1013_212628",
+   "video": "/tmp/claude-1000/-home-chanseok-workspace-neubius/517599d4-c5f7-4644-a6db-bbfb1913ca33/scratchpad/p0vid/P0006_1013_212628_top.mp4",
+   "standing": true,
+   "set": "eval"
+  },
+  {
+   "trial_id": "P0007_1013_212735",
+   "video": "/tmp/claude-1000/-home-chanseok-workspace-neubius/517599d4-c5f7-4644-a6db-bbfb1913ca33/scratchpad/p0vid/P0007_1013_212735_top.mp4",
+   "standing": true,
+   "set": "dev"
+  },
+  {
+   "trial_id": "P0008_1013_212846",
+   "video": "/tmp/claude-1000/-home-chanseok-workspace-neubius/517599d4-c5f7-4644-a6db-bbfb1913ca33/scratchpad/p0vid/P0008_1013_212846_top.mp4",
+   "standing": true,
+   "set": "eval"
+  },
+  {
+   "trial_id": "P0009_1013_213301",
+   "video": "/tmp/claude-1000/-home-chanseok-workspace-neubius/517599d4-c5f7-4644-a6db-bbfb1913ca33/scratchpad/p0vid/P0009_1013_213301_top.mp4",
+   "standing": true,
+   "set": "eval"
+  },
+  {
+   "trial_id": "P0010_1013_213409",
+   "video": "/tmp/claude-1000/-home-chanseok-workspace-neubius/517599d4-c5f7-4644-a6db-bbfb1913ca33/scratchpad/p0vid/P0010_1013_213409_top.mp4",
+   "standing": true,
+   "set": "eval"
+  },
+  {
+   "trial_id": "P0011_1013_213515",
+   "video": "/tmp/claude-1000/-home-chanseok-workspace-neubius/517599d4-c5f7-4644-a6db-bbfb1913ca33/scratchpad/p0vid/P0011_1013_213515_top.mp4",
+   "standing": true,
+   "set": "dev"
+  },
+  {
+   "trial_id": "P0012_1013_213626",
+   "video": "/tmp/claude-1000/-home-chanseok-workspace-neubius/517599d4-c5f7-4644-a6db-bbfb1913ca33/scratchpad/p0vid/P0012_1013_213626_top.mp4",
+   "standing": true,
+   "set": "dev"
+  },
+  {
+   "trial_id": "P0013_1013_213735",
+   "video": "/tmp/claude-1000/-home-chanseok-workspace-neubius/517599d4-c5f7-4644-a6db-bbfb1913ca33/scratchpad/p0vid/P0013_1013_213735_top.mp4",
+   "standing": true,
+   "set": "eval"
+  },
+  {
+   "trial_id": "P0014_1013_213843",
+   "video": "/tmp/claude-1000/-home-chanseok-workspace-neubius/517599d4-c5f7-4644-a6db-bbfb1913ca33/scratchpad/p0vid/P0014_1013_213843_top.mp4",
+   "standing": true,
+   "set": "eval"
+  },
+  {
+   "trial_id": "P0015_1013_213952",
+   "video": "/tmp/claude-1000/-home-chanseok-workspace-neubius/517599d4-c5f7-4644-a6db-bbfb1913ca33/scratchpad/p0vid/P0015_1013_213952_top.mp4",
+   "standing": true,
+   "set": "eval"
+  },
+  {
+   "trial_id": "P0016_1013_214101",
+   "video": "/tmp/claude-1000/-home-chanseok-workspace-neubius/517599d4-c5f7-4644-a6db-bbfb1913ca33/scratchpad/p0vid/P0016_1013_214101_top.mp4",
+   "standing": false,
+   "set": "dev"
+  },
+  {
+   "trial_id": "P0017_1013_214213",
+   "video": "/tmp/claude-1000/-home-chanseok-workspace-neubius/517599d4-c5f7-4644-a6db-bbfb1913ca33/scratchpad/p0vid/P0017_1013_214213_top.mp4",
+   "standing": true,
+   "set": "dev"
+  },
+  {
+   "trial_id": "P0018_1013_214324",
+   "video": "/tmp/claude-1000/-home-chanseok-workspace-neubius/517599d4-c5f7-4644-a6db-bbfb1913ca33/scratchpad/p0vid/P0018_1013_214324_top.mp4",
+   "standing": true,
+   "set": "eval"
+  },
+  {
+   "trial_id": "P0019_1013_214432",
+   "video": "/tmp/claude-1000/-home-chanseok-workspace-neubius/517599d4-c5f7-4644-a6db-bbfb1913ca33/scratchpad/p0vid/P0019_1013_214432_top.mp4",
+   "standing": true,
+   "set": "eval"
+  },
+  {
+   "trial_id": "P0020_1013_214541",
+   "video": "/tmp/claude-1000/-home-chanseok-workspace-neubius/517599d4-c5f7-4644-a6db-bbfb1913ca33/scratchpad/p0vid/P0020_1013_214541_top.mp4",
+   "standing": true,
+   "set": "dev"
+  },
+  {
+   "trial_id": "P0021_1013_214651",
+   "video": "/tmp/claude-1000/-home-chanseok-workspace-neubius/517599d4-c5f7-4644-a6db-bbfb1913ca33/scratchpad/p0vid/P0021_1013_214651_top.mp4",
+   "standing": false,
+   "set": "eval"
+  },
+  {
+   "trial_id": "P0022_1013_214800",
+   "video": "/tmp/claude-1000/-home-chanseok-workspace-neubius/517599d4-c5f7-4644-a6db-bbfb1913ca33/scratchpad/p0vid/P0022_1013_214800_top.mp4",
+   "standing": true,
+   "set": "eval"
+  },
+  {
+   "trial_id": "P0023_1013_214916",
+   "video": "/tmp/claude-1000/-home-chanseok-workspace-neubius/517599d4-c5f7-4644-a6db-bbfb1913ca33/scratchpad/p0vid/P0023_1013_214916_top.mp4",
+   "standing": true,
+   "set": "dev"
+  },
+  {
+   "trial_id": "P0024_1013_215029",
+   "video": "/tmp/claude-1000/-home-chanseok-workspace-neubius/517599d4-c5f7-4644-a6db-bbfb1913ca33/scratchpad/p0vid/P0024_1013_215029_top.mp4",
+   "standing": false,
+   "set": "eval"
+  }
+ ]
+}
