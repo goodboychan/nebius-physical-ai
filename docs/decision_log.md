@@ -940,3 +940,6 @@ ACT는 상태마다 100스텝을 내고 실기에서 100스텝을 모두 실행�
   체크포인트 `g2/act_ft_pos_20k/020000`, model.safetensors sha256 `1385d3dd95f42508…` (엔진 빌드 전 고정)
 - 공개: LeRobot이 `--policy.path` 파인튜닝에서 상태·행동 정규화 통계를 병합 데이터셋(130 에피소드) 기준으로 다시 잡았다(영상 통계는 같다).
   엔진 정규화는 FT 체크포인트의 통계로 만든다(`scripts/make_norm_stats.py`; 같은 규칙이 G2 파일을 모든 키에서 재현함을 확인). FT norm_stats `a97ca102f1db204d…`
+- 양성 대조 Cosmos 재생(개정 2, `scripts/d4_replay.py`, `artifacts/positive_control/d4_replay_P0.json`; 엔드포인트가 10/14에 L40S를 받아 실행):
+  24 trial, 2 Hz 판정 2,880개가 **모두 CONTINUE**. 끝 질문은 24/24 "Yes"(실패 16·21·24 포함, 실패 감지 0/3). G6·스트레스와 같은 패턴이다.
+  누적: 사람이 확인한 실패 23건 중 끝 판정 "No" 2건
