@@ -7,7 +7,7 @@ edge device. It shows the engine's measured cost, its real-arm behavior and how 
 
 > QuantGate screens INT8 robot policies offline on Nebius and gates which ones reach a Jetson-powered SO-101 arm.
 > Cosmos-Reason2 watched the real runs (215 live, 245 retrospectively) and Nemotron writes the deployment report. The whole real-arm study was
-> pre-registered, operator-blinded and hash-sealed.
+> pre-registered, operator-blinded and hash-sealed (follow-up caveats under Limitations).
 
 **License: [Apache 2.0](LICENSE)** · Nebius × NVIDIA Global AI Hackathon, Physical AI track · internal code name
 `edgeqgate`
@@ -60,7 +60,7 @@ Stress tests were unsealed on 2026-10-13. The stress protocol is
 | Deployment target | LeRobot ACT policy (51.6M) as **TensorRT** FP32 / FP16 / INT8 engines | **Jetson Orin Nano Super** (TensorRT 10.3) next to a real SO-101 arm |
 | Quantization | NVIDIA **TensorRT Model Optimizer** (modelopt) INT8 Q/DQ, 24 calibration variants | NGC PyTorch 25.11 container, local GPU |
 | `D4` runtime supervisor | **`nvidia/Cosmos-Reason2-2B`** watches the overhead camera at 2 Hz (CONTINUE / FALLBACK / ABORT, shadow mode) and is asked at trial end whether the task succeeded | **Nebius AI Endpoint** (L40S, vLLM 0.29), about 330 ms round trip from the robot |
-| `D3` deployment report agent | **`nvidia/nemotron-3-super-120b-a12b`** writes go / no-go reports from frozen evidence; every number is machine-checked | **Nebius Token Factory** |
+| `D3` deployment report agent | **`nvidia/nemotron-3-super-120b-a12b`** explains verdicts that code has already decided; a structured validator checks each candidate's verdict, success fractions and latency in the prose (report v2) | **Nebius Token Factory** |
 | `D5` errata collector | **Tavily** search for TensorRT / Jetson / INT8 known issues, with queries derived from the real build environment and snapshot-hashed | Tavily API |
 | Policy training | LeRobot 0.6.1 ACT, 100k steps | **Nebius Jobs** (L40S, 1 h 57 min) |
 | Audit fan-out | 25 cells × bootstrap scoring on 2,000 held-out states | **Nebius Jobs** (CPU) |
@@ -69,7 +69,7 @@ Stress tests were unsealed on 2026-10-13. The stress protocol is
 **Where Token Factory helped.** The report agent needs a large reasoning model for about a minute per report. Token
 Factory served Nemotron 3 Super, and the variants we compared, behind one OpenAI-compatible API, so no GPU server had
 to stay warm. Comparison: [`d3_model_compare.json`](artifacts/reports/d3_model_compare.json). Final report:
-[`d3_final_report.md`](artifacts/reports/d3_final_report.md).
+[`d3_report_v2.md`](artifacts/reports/d3_report_v2.md) (v1 kept as history: [`d3_final_report.md`](artifacts/reports/d3_final_report.md)).
 
 ## Pipeline
 
@@ -84,7 +84,7 @@ SO-101 teleop demos (120) ──► LOCK-1 split 80/20/20 ──► Nebius Jobs:
                                                                    │
  245 blinded, interleaved real-arm trials + Cosmos-Reason2 shadow supervisor ──► LOCK-3 ──► unseal, analyze
                                                                    │
- Nemotron 3 Super deployment report (numbers verified)  ·  stress tests (pre-registered stop rules)
+ Nemotron 3 Super deployment report (code decides, model explains)  ·  stress tests (stop rules; see caveats)
 ```
 
 ## Research integrity
@@ -119,7 +119,7 @@ Every reported number can be recomputed from the committed sealed logs:
 
 ```bash
 uv venv .venv && uv pip install --python .venv/bin/python -e ".[dev]"
-.venv/bin/python -m pytest -q                                   # 167 tests
+.venv/bin/python -m pytest -q                                   # 176 tests
 .venv/bin/python -m edgeqgate.grid                              # 26-cell grid and hash
 .venv/bin/python scripts/g6_analysis.py --sealed-dir artifacts/trials/g6_unsealed --out /tmp/g6.json
 .venv/bin/python scripts/g6_supplement.py --sealed-dir artifacts/trials/g6_unsealed \
@@ -190,7 +190,7 @@ plugins/         LeRobot camera plugin for the OpenMV AE3
 artifacts/       manifests, freeze records, unsealed trial logs, reports
 dashboard/       audit_gate.html (D7)
 docs/            pre-registration, decision log, protocols, session notes, related work
-tests/           167 unit tests
+tests/           176 unit tests
 ```
 
 ## Limitations
@@ -200,4 +200,5 @@ tests/           167 unit tests
 - The gripper and distribution-shift results are observational. They come from separate sessions, not randomized
   against each other.
 - The stress S1 block stopped after 3 trials.
-- FP16 has no real-arm evidence yet.
+- FP16 was tested on the real arm in one block (19/20 against FP32 10/10); the success comparison is still insufficient evidence.
+- Integrity caveats: the main study (G6) was pre-registered and blinded end to end. In the follow-ups the operator stayed blind to cells throughout, but some rules were set after aggregate outcomes were seen and before cells were unsealed: the stress re-judge rules (§9, §11) and the stress v2 design after v1 stopped. S1 was stopped early by the user after 3 trials. All are logged.

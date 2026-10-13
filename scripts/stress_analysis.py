@@ -161,5 +161,11 @@ if __name__ == "__main__":
             sys.exit("stress_lock_post.json이 없다. 스트레스 trial을 모두 마치고 봉인 로그 해시를 고정한 뒤 실행한다")
         st = {c: load(os.path.join(a.sealed_dir, f"{pre}{c}_sealed.jsonl")) for c in CONDS + ("S0",)}
         rep = analyse(st, load("artifacts/trials/g6_unsealed/g6_main_sealed.jsonl"), a.n_boot)
-    json.dump(rep, open(a.out, "w"), indent=1, default=lambda o: list(o) if isinstance(o, (set, tuple)) else str(o))
+    import math
+    def _clean(o):   # strict JSON: NaN/inf -> null (2026-10-13 external review)
+        if isinstance(o, float) and (math.isnan(o) or math.isinf(o)): return None
+        if isinstance(o, dict): return {k: _clean(v) for k, v in o.items()}
+        if isinstance(o, (list, tuple)): return [_clean(v) for v in o]
+        return o
+    json.dump(_clean(rep), open(a.out, "w"), indent=1, allow_nan=False, default=lambda o: list(o) if isinstance(o, set) else str(o))
     print("written", a.out)

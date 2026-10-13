@@ -119,10 +119,10 @@
      ]
     },
     "E2": {
-     "degradation_px": NaN,
+     "degradation_px": null,
      "ci_px": [
-      NaN,
-      NaN
+      null,
+      null
      ],
      "n_place": [
       0,
@@ -157,10 +157,10 @@
      ]
     },
     "E2": {
-     "degradation_px": NaN,
+     "degradation_px": null,
      "ci_px": [
-      NaN,
-      NaN
+      null,
+      null
      ],
      "n_place": [
       0,
@@ -196,10 +196,10 @@
     ]
    },
    "E2": {
-    "degradation_px": NaN,
+    "degradation_px": null,
     "ci_px": [
-     NaN,
-     NaN
+     null,
+     null
     ],
     "n_place": [
      0,

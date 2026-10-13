@@ -1,0 +1,323 @@
+{
+ "rows": [
+  {
+   "candidate": "VC-002",
+   "context": "G6 nominal, pads",
+   "success": [
+    24,
+    25
+   ],
+   "reference": [
+    24,
+    25
+   ],
+   "e1_ci_pp": [
+    -28.5,
+    28.5
+   ],
+   "e2": "tolerance_compatible",
+   "verdict": "INSUFFICIENT_EVIDENCE",
+   "e2e_ms": 34.3,
+   "evidence_path": "artifacts/reports/g6_q2_sensitivity.json#Q2.VC-002",
+   "gpu_ms_trtexec": 16.8
+  },
+  {
+   "candidate": "VC-020",
+   "context": "G6 nominal, pads",
+   "success": [
+    24,
+    25
+   ],
+   "reference": [
+    24,
+    25
+   ],
+   "e1_ci_pp": [
+    -28.5,
+    28.5
+   ],
+   "e2": "tolerance_compatible",
+   "verdict": "INSUFFICIENT_EVIDENCE",
+   "e2e_ms": 34.3,
+   "evidence_path": "artifacts/reports/g6_q2_sensitivity.json#Q2.VC-020",
+   "gpu_ms_trtexec": 16.8
+  },
+  {
+   "candidate": "VC-010",
+   "context": "G6 nominal, pads",
+   "success": [
+    25,
+    25
+   ],
+   "reference": [
+    24,
+    25
+   ],
+   "e1_ci_pp": [
+    -32.3,
+    23.0
+   ],
+   "e2": "tolerance_compatible",
+   "verdict": "INSUFFICIENT_EVIDENCE",
+   "e2e_ms": 34.3,
+   "evidence_path": "artifacts/reports/g6_q2_sensitivity.json#Q2.VC-010"
+  },
+  {
+   "candidate": "VC-011",
+   "context": "G6 nominal, pads",
+   "success": [
+    24,
+    25
+   ],
+   "reference": [
+    24,
+    25
+   ],
+   "e1_ci_pp": [
+    -28.5,
+    28.5
+   ],
+   "e2": "tolerance_compatible",
+   "verdict": "INSUFFICIENT_EVIDENCE",
+   "e2e_ms": 34.6,
+   "evidence_path": "artifacts/reports/g6_q2_sensitivity.json#Q2.VC-011"
+  },
+  {
+   "candidate": "VC-012",
+   "context": "G6 nominal, pads",
+   "success": [
+    24,
+    25
+   ],
+   "reference": [
+    24,
+    25
+   ],
+   "e1_ci_pp": [
+    -28.5,
+    28.5
+   ],
+   "e2": "tolerance_compatible",
+   "verdict": "INSUFFICIENT_EVIDENCE",
+   "e2e_ms": 34.3,
+   "evidence_path": "artifacts/reports/g6_q2_sensitivity.json#Q2.VC-012"
+  },
+  {
+   "candidate": "VC-015",
+   "context": "G6 nominal, pads",
+   "success": [
+    25,
+    25
+   ],
+   "reference": [
+    24,
+    25
+   ],
+   "e1_ci_pp": [
+    -32.3,
+    23.0
+   ],
+   "e2": "indeterminate",
+   "verdict": "INSUFFICIENT_EVIDENCE",
+   "e2e_ms": 34.6,
+   "evidence_path": "artifacts/reports/g6_q2_sensitivity.json#Q2.VC-015"
+  },
+  {
+   "candidate": "VC-005",
+   "context": "G6 nominal, pads",
+   "success": [
+    14,
+    15
+   ],
+   "reference": [
+    24,
+    25
+   ],
+   "e1_ci_pp": [
+    -26.2,
+    41.7
+   ],
+   "e2": "tolerance_compatible",
+   "verdict": "INSUFFICIENT_EVIDENCE",
+   "e2e_ms": 34.5,
+   "evidence_path": "artifacts/reports/g6_q2_sensitivity.json#Q2.VC-005",
+   "gpu_ms_trtexec": 17.1
+  },
+  {
+   "candidate": "VC-007",
+   "context": "G6 nominal, pads",
+   "success": [
+    15,
+    15
+   ],
+   "reference": [
+    24,
+    25
+   ],
+   "e1_ci_pp": [
+    -32.3,
+    34.0
+   ],
+   "e2": "tolerance_compatible",
+   "verdict": "INSUFFICIENT_EVIDENCE",
+   "e2e_ms": 34.6,
+   "evidence_path": "artifacts/reports/g6_q2_sensitivity.json#Q2.VC-007"
+  },
+  {
+   "candidate": "VC-022",
+   "context": "G6 nominal, pads",
+   "success": [
+    10,
+    10
+   ],
+   "reference": [
+    24,
+    25
+   ],
+   "e1_ci_pp": [
+    -32.3,
+    43.9
+   ],
+   "e2": "indeterminate",
+   "verdict": "INSUFFICIENT_EVIDENCE",
+   "e2e_ms": 34.3,
+   "evidence_path": "artifacts/reports/g6_q2_sensitivity.json#Q2.VC-022"
+  },
+  {
+   "candidate": "VC-024",
+   "context": "G6 nominal, pads",
+   "success": [
+    9,
+    10
+   ],
+   "reference": [
+    24,
+    25
+   ],
+   "e1_ci_pp": [
+    -23.7,
+    53.4
+   ],
+   "e2": "tolerance_compatible",
+   "verdict": "INSUFFICIENT_EVIDENCE",
+   "e2e_ms": 34.1,
+   "evidence_path": "artifacts/reports/g6_q2_sensitivity.json#Q2.VC-024"
+  },
+  {
+   "candidate": "VC-025",
+   "context": "FP16 run, rubber bands",
+   "success": [
+    19,
+    20
+   ],
+   "reference": [
+    10,
+    10
+   ],
+   "e1_ci_pp": [
+    -28.7,
+    27.3
+   ],
+   "e2_px": -0.63,
+   "e2_ci_px": [
+    -2.64,
+    1.37
+   ],
+   "e2": "tolerance_compatible",
+   "verdict": "INSUFFICIENT_EVIDENCE",
+   "e2e_ms": 24.7,
+   "evidence_path": "artifacts/reports/fp16_analysis.json#primary_fp16_vs_fp32",
+   "gpu_ms_trtexec": 11.6
+  },
+  {
+   "candidate": "VC-002",
+   "context": "stress S4 unseen can",
+   "success": [
+    12,
+    12
+   ],
+   "reference": [
+    12,
+    12
+   ],
+   "e1_ci_pp": [
+    -40.6,
+    40.6
+   ],
+   "e2": "tolerance_compatible",
+   "verdict": "INSUFFICIENT_EVIDENCE",
+   "evidence_path": "artifacts/reports/stress_v2_analysis.json#S4.secondary_vs_fp32.VC-002",
+   "gpu_ms_trtexec": 16.8
+  },
+  {
+   "candidate": "VC-005",
+   "context": "stress S4 unseen can",
+   "success": [
+    12,
+    12
+   ],
+   "reference": [
+    12,
+    12
+   ],
+   "e1_ci_pp": [
+    -40.6,
+    40.6
+   ],
+   "e2": "tolerance_compatible",
+   "verdict": "INSUFFICIENT_EVIDENCE",
+   "evidence_path": "artifacts/reports/stress_v2_analysis.json#S4.secondary_vs_fp32.VC-005",
+   "gpu_ms_trtexec": 17.1
+  },
+  {
+   "candidate": "VC-020",
+   "context": "stress S4 unseen can",
+   "success": [
+    12,
+    12
+   ],
+   "reference": [
+    12,
+    12
+   ],
+   "e1_ci_pp": [
+    -40.6,
+    40.6
+   ],
+   "e2": "tolerance_compatible",
+   "verdict": "INSUFFICIENT_EVIDENCE",
+   "evidence_path": "artifacts/reports/stress_v2_analysis.json#S4.secondary_vs_fp32.VC-020",
+   "gpu_ms_trtexec": 16.8
+  },
+  {
+   "candidate": "PC-N",
+   "context": "offline, deliberately miscalibrated",
+   "verdict": "FLAGGED",
+   "flags": {
+    "input_check": true,
+    "action_mse_flag": true,
+    "score_mag_flag": true,
+    "score_align_flag": true
+   },
+   "evidence_path": "artifacts/reports/simple_checks_vs_audit.json#cells.PC-N"
+  },
+  {
+   "candidate": "PC-B",
+   "context": "offline, deliberately miscalibrated",
+   "verdict": "FLAGGED",
+   "flags": {
+    "input_check": true,
+    "action_mse_flag": true,
+    "score_mag_flag": true,
+    "score_align_flag": true
+   },
+   "evidence_path": "artifacts/reports/simple_checks_vs_audit.json#cells.PC-B"
+  }
+ ],
+ "notes": {
+  "recommendation_vs_approval": "FP16 (VC-025) is the recommended candidate to validate first (cheapest on the device). Approval is a separate status: on hold while every success comparison is INSUFFICIENT_EVIDENCE.",
+  "gpu_ms_source": "artifacts/reports/power_bench/SUMMARY.md (trtexec, 15 W)",
+  "simple_checks_scope": "The action-MSE and audit-score thresholds were set on the same 24 normal cells, so '0 normal cells flagged' holds by construction; only the input check is independent of that set.",
+  "ai_judge": "Cosmos-Reason2 single-frame end judge: 0 of 7 G6 failures detected (d4_retro_judge_g6.json)."
+ }
+}

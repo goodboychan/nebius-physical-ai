@@ -42,7 +42,7 @@ The results were sealed until all trials were logged, so no candidate was picked
 | Developer's question | Evidence | QuantGate's answer |
 |---|---|---|
 | Which candidate do I validate first? | FP16 is cheapest on this Jetson (11.6 ms, 82 mJ per inference), and went 19/20 on the arm with placement within tolerance of FP32 | **FP16**: the recommended candidate to validate |
-| Which candidates do I distrust? | Black-frame and noise calibrations: flagged by a simple input check, by action MSE and by both audit scores, with no normal cell flagged (`simple_checks_vs_audit.json`) | **Calibration anomalies**: flagged. The real-arm check is `[PC]` |
+| Which candidates do I distrust? | Black-frame and noise calibrations: flagged by a simple input check, and by action MSE and both audit scores. The last three use thresholds set on the same 24 normal cells, so "no normal cell flagged" holds by construction (`simple_checks_vs_audit.json`) | **Calibration anomalies**: flagged. The real-arm check is `[PC]` |
 | Can I approve deployment? | Success against FP32 is undecided for every candidate at these sample sizes, and position changes are not validated | **Not yet**: on hold, with the missing checks listed |
 
 The recommendation (what to test first) and the approval (whether to ship) are shown separately. A candidate can be
@@ -89,7 +89,7 @@ failure.
 | Offline audit | 25 cells × bootstrap scoring on 2,000 held-out states | **Nebius Jobs** fan-out with a quota-aware controller |
 | Real arm | 30 Hz TensorRT policy server with chunk prefetch and blending, so all engines have identical timing; blinded schedule | SO-101 + Jetson |
 | AI supervisor and judge | **Cosmos-Reason2-2B**, 2 Hz shadow mode, plus an end-of-trial question | **Nebius AI Endpoint** (L40S, vLLM), started per session |
-| Deployment report | **Nemotron 3 Super** writes the report from frozen evidence; a validator checks every number | **Nebius Token Factory** |
+| Deployment report | Code decides the verdicts; **Nemotron 3 Super** explains them; a structured validator checks each candidate's verdict, fractions and latency in the prose (`d3_report_v2.md`) | **Nebius Token Factory** |
 | Errata | Tavily search with queries derived from the real build; the snapshot is hashed | Tavily API |
 
 ## Challenges
@@ -107,7 +107,7 @@ failure.
 ## Accomplishments
 
 - A complete gate from cloud to real arm. Every number is traceable to a hashed artifact.
-- 245 completed blinded real-arm trials in the main study, plus stress blocks. Pre-registered stop rules were applied
+- 245 completed blinded real-arm trials in the main study, plus stress and FP16 blocks. Integrity caveats: the main study (G6) was pre-registered and blinded end to end. In the follow-ups the operator stayed blind to cells throughout, but some rules were set after aggregate outcomes were seen and before cells were unsealed: the stress re-judge rules (§9, §11) and the stress v2 design after v1 stopped. S1 was stopped early by the user after 3 trials. All are logged. Stop rules were applied
   as written.
 - A review that says plainly when the evidence is not enough, including for our own AI components.
 
@@ -155,7 +155,7 @@ PyTorch
 
 **Fine-tune, prompt-engineer or out of the box?** Out of the box, with prompt engineering. A fixed system prompt
 defines the four-section format and the forbidden claims, and the evidence is passed as JSON. A post-hoc validator
-checks every number against the evidence and flags forbidden claims, so a report is rejected rather than trusted.
+checks numbers and, in report v2, each candidate's verdict, success fractions and latency against a code-decided table, so a report is checked rather than trusted. (The v1 validator only checked that each number existed somewhere in the evidence; an external review showed it missed swapped values, which v2 catches: `tests/test_d3_structured.py`.)
 
 **Compared with other models**: In the same Token Factory harness, Super was the only variant with zero unmatched
 numbers and a complete format in every repeat. Ultra and the smaller variants leaked reasoning or truncated.

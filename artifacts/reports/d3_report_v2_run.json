@@ -1,0 +1,15 @@
+{
+ "verdict_hash": "8ebbd4fedf61b71dfab4478a43929fe916435c6d402a4d4b6ddb8c6cb9acf5b3",
+ "issues": [],
+ "latency_sec": 5.5,
+ "selftest": {
+  "good_issues": [],
+  "bad_caught": {
+   "VC-025 succeeded 20/20.": true,
+   "VC-025 is GO.": true,
+   "VC-025 took 34.3 ms end to end.": true,
+   "VC-002 is NO-GO.": true
+  }
+ },
+ "text": "\n\n## 1. Recommendation  \nValidate **VC-025** first. It has the lowest device\u2011level latency reported (e2e_ms\u202f=\u202f24.7\u202fms) and the fastest GPU inference time (gpu_ms_trtexec\u202f=\u202f11.6\u202fms) among the candidates with timing data, making it the cheapest to test on the hardware.\n\n## 2. Approval status  \nNo candidate carries a **GO** or **NO\u2011GO** verdict. All non\u2011flagged entries are marked **INSUFFICIENT_EVIDENCE**; therefore, approval is pending pending further evidence.\n\n## 3. Flagged candidates  \n- **PC-N** \u2013 verdict **FLAGGED** (input_check, action_mse_flag, score_mag_flag, score_align_flag all true)  \n- **PC-B** \u2013 verdict **FLAGGED** (same flag set as PC-N)\n\n## 4. What is still missing  \nFor each **INSUFFICIENT_EVIDENCE** entry (e.g., VC-002, VC-020, VC-010, VC-011, VC-012, VC-015, VC-005, VC-007, VC-022, VC-024, VC-025 under its respective context), additional evidence is needed to tighten the confidence intervals (e1_ci_pp) or increase the success count relative to the reference so that the success comparison can be deemed conclusive. Likewise, the flagged PCs require resolution of the four flag conditions (input check, action MSE, score magnitude, score alignment) before they can be re\u2011evaluated. Until such data are supplied, the verdicts remain unchanged."
+}

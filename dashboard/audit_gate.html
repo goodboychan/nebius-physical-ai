@@ -147,7 +147,7 @@ footer{border-top:1px solid var(--rule); padding-top:18px; color:var(--ink-3); f
       <div class="dec"><span class="q">Which candidate do I validate first?</span><strong>FP16 (VC-025)</strong>
         <span class="a">Cheapest on this Jetson, 19/20 on the arm, placement within tolerance of FP32.</span><span class="chip ok">recommended</span></div>
       <div class="dec"><span class="q">Which candidates do I distrust?</span><strong>Calibration anomalies</strong>
-        <span class="a">Black-frame and noise calibrations: flagged by the input check, action MSE and both audit scores. No normal cell was flagged. The real-arm check of PC-B is pending.</span><span class="chip halt">flagged</span></div>
+        <span class="a">Black-frame and noise calibrations: flagged by a simple input check, and by action MSE and both audit scores. The last three use thresholds set on the 24 normal cells, so 0 normal cells flagged holds by construction; the input check is independent of that set. The real-arm check of PC-B is pending.</span><span class="chip halt">flagged</span></div>
       <div class="dec"><span class="q">Can I approve deployment?</span><strong>Not yet</strong>
         <span class="a">Success against FP32 is undecided for every candidate at these sample sizes, and start-position changes are not validated.</span><span class="chip seal">on hold</span></div>
     </div>
@@ -279,7 +279,7 @@ footer{border-top:1px solid var(--rule); padding-top:18px; color:var(--ink-3); f
     <div class="rows">
       <div class="row"><span class="k">D4</span><span class="d"><b>Live supervisor</b> · Cosmos-Reason2-2B on a Nebius AI Endpoint (L40S, vLLM), 2 Hz, shadow mode. Across the 215 G6 trials it watched live (the first 30 ran before it was deployed) it never left CONTINUE and flagged <b>0 of 7</b> failures.</span><span class="v">~330 ms RTT</span></div>
       <div class="row"><span class="k">D4 judge</span><span class="d"><b>End-of-trial judge</b>, retrospective · shown the final frame of all 245 trials, it answered "Yes" every time and caught <b>0 of 7</b> failures. In the stress blocks it said "No" on 2 of 20 operator-confirmed failures.</span><span class="v">245 / 245 yes</span></div>
-      <div class="row"><span class="k">D3</span><span class="d"><b>Deployment report</b> · Nemotron 3 Super on Token Factory. Every number in the report is checked against the evidence: 0 invented values. Three flags were reviewed by hand (a 0.05 threshold and two minus signs). It recommends INT8 and marks FP16 as unvalidated. Its two GO verdicts were later corrected to insufficient evidence; the bootstrap it relied on collapses at zero failures.</span><span class="v">20.0 s · 5/5 sections</span></div>
+      <div class="row"><span class="k">D3</span><span class="d"><b>Deployment report</b> · Nemotron 3 Super on Token Factory, report v2: code decides every verdict and Nemotron explains them. A structured validator checks each candidate&#39;s verdict, success fractions and latency in the prose, with 0 findings. It catches swapped values that the v1 check missed. v1 is kept as history, with its corrected GO verdicts.</span><span class="v">v2 · 0 findings</span></div>
       <div class="row"><span class="k">D5</span><span class="d"><b>Errata collector</b> · Tavily queries derived from the real TensorRT, device and operator set, frozen as a hashed snapshot.</span><span class="v">snapshot hashed</span></div>
     </div>
   </section>
