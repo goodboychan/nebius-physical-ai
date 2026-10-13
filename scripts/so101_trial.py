@@ -41,7 +41,11 @@ D4_PROMPT = ("Overhead camera view of a robot arm that picks up a " + ("can" if 
              "in the workspace).")
 D4_JUDGE_PROMPT = ("Overhead camera view after a robot arm tried to stand a can upright on a round coaster. "
                    "Is the can standing upright on the coaster now? Answer with exactly one word: YES or NO.")
-latest_top = {"img": None}; d4_ask = {"f": None}
+latest_top = {"img": None, "ts": None}; d4_ask = {"f": None}
+def grab_latest():
+    """감독자에 프레임과 **촬영 시각**을 함께 준다(2026-10-13 외부 검토: 시각이 없으면 낡은 프레임도 새것으로 셌다)."""
+    img, ts = latest_top["img"], latest_top["ts"]
+    return img if ts is None else (img, ts)
 def make_d4():
     if not os.path.exists(D4_CFG): return None
     import base64, http.client, urllib.parse
@@ -60,7 +64,7 @@ def make_d4():
             conn["c"] = http.client.HTTPSConnection(u.netloc, timeout=10); raise
         return d["choices"][0]["message"]["content"]
     d4_ask["f"] = infer
-    return lambda: Supervisor(infer, lambda: latest_top["img"], SupervisorConfig(rate_hz=2.0))
+    return lambda: Supervisor(infer, grab_latest, SupervisorConfig(rate_hz=2.0))
 
 BLIND = sys.argv[1] == "--blind"
 SEALED = os.path.expanduser("~/.edgeqgate_sealed")
@@ -175,13 +179,13 @@ def run_one(tid, label, cellname, engname):
     aq, states, actions, inf_ms, last_top, tick, rtt, late = [], [], [], [], [], [], [], 0
     pf = Prefetch(); newc = None; k0 = 0
     sup = d4_factory() if d4_factory else None
-    latest_top["img"] = None
+    latest_top["img"] = None; latest_top["ts"] = None
     if sup: sup.start()
-    t0 = time.perf_counter(); aborted = False; k = 0; nxt = t0
+    t0 = time.perf_counter(); aborted = False; runtime_error = None; k = 0; nxt = t0
     try:
         while time.perf_counter() - t0 < T_MAX:
             tick.append(time.perf_counter() - t0)
-            obs = robot.get_observation(); s = state_of(obs)
+            obs = robot.get_observation(); t_obs = time.time(); s = state_of(obs)
             if not aq:                                   # 첫 chunk: 지금 관측으로 요청하고 기다린다
                 pf.start(s, obs["top"], obs["wrist"], k); acts, ims, k0, ms = pf.take()
                 inf_ms.append(ims); rtt.append(ms); aq = list(acts[k - k0:N_ACT]); nxt = time.perf_counter()
@@ -199,7 +203,7 @@ def run_one(tid, label, cellname, engname):
             if not aq and newc is not None:
                 aq = list(newc[k + 1 - k0:N_ACT]); newc = None
             states.append(s); actions.append(a)
-            wtop.put(obs["top"]); wwr.put(obs["wrist"]); latest_top["img"] = obs["top"]
+            wtop.put(obs["top"]); wwr.put(obs["wrist"]); latest_top["img"] = obs["top"]; latest_top["ts"] = t_obs
             last_top.append(cv2.cvtColor(obs["top"], cv2.COLOR_RGB2GRAY)); last_top = last_top[-15:]
             k += 1; nxt += 1 / FPS
             now = time.perf_counter()
@@ -207,14 +211,24 @@ def run_one(tid, label, cellname, engname):
             elif now - nxt > 1 / FPS: nxt = now   # 한 스텝 넘게 늦으면 몰아서 따라잡지 않는다
     except KeyboardInterrupt:
         aborted = True; print("\n  Ctrl+C: 중단 (unsafe)")
+    except Exception as e:   # 하드웨어·카메라 오류도 기록을 남기고 중단으로 처리한다
+        aborted = True; runtime_error = f"{type(e).__name__}: {str(e)[:160]}"; print(f"\n  실행 오류로 중단: {runtime_error}")
+    # 진행 중이던 정책 요청의 응답을 비운다. 남겨 두면 다음 trial이 이전 응답을 읽는다(2026-10-13)
+    if pf.t is not None:
+        pf.t.join(timeout=10)
+        if pf.t.is_alive(): print("  경고: 정책 서버 응답이 10초 안에 오지 않았다 — 다음 trial 전에 실행기를 다시 시작하세요")
     t_loop = time.perf_counter() - t0
     d4 = None
     if sup:
         sup.stop(); d4 = sup.ex3_summary(); d4["mode"] = "shadow"; d4["log"] = [{k2: e[k2] for k2 in ("decision", "latency_ms", "error")} for e in sup.log]
     # 영상 마무리(남은 압축·파일 닫기)는 판정과 무관하므로 백그라운드에서 한다. 프로그램 끝에서 모두 기다린다
     closers.append(threading.Thread(target=lambda w=(wtop, wwr): [x.close() for x in w])); closers[-1].start()
-    S = np.stack(states); A = np.stack(actions)
-    j = judge(last_top, float(S[-1, 5]), CAN) if not aborted else {"success": False, "reason": "unsafe(operator abort)"}
+    # 첫 상태가 쌓이기 전에 중단돼도 기록을 남긴다(빈 궤적, aborted=True)
+    S = np.stack(states) if states else np.zeros((0, 6), np.float32); A = np.stack(actions) if actions else np.zeros((0, 6), np.float32)
+    if aborted:
+        j = {"success": False, "reason": "unsafe(operator abort)" if runtime_error is None else "runtime_error"}
+    else:
+        j = judge(last_top, float(S[-1, 5]), CAN)
     ai = None   # 스트레스: trial 끝 프레임으로 Cosmos에게 한 번 묻는다(기술 통계, 판정에 쓰지 않는다)
     if STRESS and d4_ask["f"] and not aborted:
         t_a = time.perf_counter()
@@ -235,12 +249,14 @@ def run_one(tid, label, cellname, engname):
     rec = {"trial_id": tid, "session": session, "cell": cellname, "engine": engname, "aborted": aborted, "invalid": inv == "x",
            "duration_s": round(t_loop, 2), "steps": len(S), "judge_auto": j,
            "released": rel == "y", "human_contact": touch == "y", "success": final,
-           "infer_ms_mean": round(float(np.mean(inf_ms)), 1), "n_infer": len(inf_ms), "d4": d4}
+           "infer_ms_mean": round(float(np.mean(inf_ms)), 1) if inf_ms else None, "n_infer": len(inf_ms), "d4": d4,
+           "runtime_error": runtime_error}
     if STRESS: rec["condition"] = bsession; rec["d4_judge"] = ai
     np.savez(f"{SEALED if BLIND else OUT}/{tid}_traj.npz", state=S, action=A, infer_ms=np.array(inf_ms), tick_s=np.array(tick), rtt_ms=np.array(rtt))
-    rec["rtt_ms_max"] = round(float(max(rtt)), 1); rec["late_chunks"] = late   # late > 0: 섞기 시작까지 결과가 오지 않은 chunk 수
+    rec["rtt_ms_max"] = round(float(max(rtt)), 1) if rtt else None; rec["late_chunks"] = late   # late > 0: 섞기 시작까지 결과가 오지 않은 chunk 수
     dt = np.diff(np.array(tick)) * 1000
-    rec["step_ms_p50_p99_max"] = [round(float(np.percentile(dt, 50)), 1), round(float(np.percentile(dt, 99)), 1), round(float(dt.max()), 1)]
+    rec["step_ms_p50_p99_max"] = ([round(float(np.percentile(dt, 50)), 1), round(float(np.percentile(dt, 99)), 1), round(float(dt.max()), 1)]
+                                  if len(dt) else [None, None, None])
     return rec, final, j, rel, touch
 def report(rec, final, j, rel, touch):
     head = f"  -> {'무효' if rec['invalid'] else ('성공' if final else '실패')} (자동 {j['reason']}, 놓음 {rel}, 개입 {touch})  {rec['duration_s']}s, 스텝 간격 p50/p99 {rec['step_ms_p50_p99_max'][:2]} ms, 늦은 chunk {rec['late_chunks']}"

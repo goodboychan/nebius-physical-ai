@@ -90,3 +90,14 @@ The procedure, sample sizes and stop rule are unchanged.
 
 Scope, stated now: even a NO-GO / NO-GO result shows only that the audit catches a **gross** calibration error. It says
 nothing about whether the audit ranks normal INT8 candidates correctly; G6 found no evidence that it does.
+
+## 9. Runner fix before the first trial (2026-10-13)
+
+An external review found that a Ctrl+C before the first state was recorded raised an exception, so the abort record
+was lost. This is the abort path this block relies on. The runner (`so101_trial.py` `59b0669c…`) now:
+- saves an empty trajectory with `aborted=true`;
+- records runtime errors as aborts;
+- waits for any in-flight policy reply, so that the next trial cannot read it;
+- passes each frame's capture time to the shadow supervisor.
+
+Verified with `tests/runner_abort_harness.py`, which needs no hardware. No outcome or analysis rule changes.
