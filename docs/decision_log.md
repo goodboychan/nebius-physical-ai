@@ -847,3 +847,12 @@ ACT는 상태마다 100스텝을 내고 실기에서 100스텝을 모두 실행�
   - 그림 3종은 코드가 판정 표에서 그린다(`scripts/d3_figures.py`): 성공률 비교·허용 범위, 비용 대 근거, 판정 근거 장면
   - `scripts/build_dashboard_report.py`가 보고서와 그림을 대시보드 "Deployment report" 칸에 주입한다
   - 결과적으로 분석 → 판정 표 → 보고서 → 화면이 한 경로로 이어진다
+
+---
+
+## 2026-10-13 — 위치 파인튜닝 사전등록 v1 잠금 (데모 녹화 전)
+
+- 사용자 결정: 새 과제 대신 약점 보완 파인튜닝. `docs/finetune_position_preregistration.md` `01c06b1e…`
+- 데모 50개: S1 축 위 -4/-2/0/+2/+4 cm에서 10개씩, 시드로 섞은 순서(`artifacts/finetune/demo_order.txt`). **+3 cm는 평가용으로 학습에서 뺀다**
+- 학습: G2 100k에서 시작, 새 50 + LOCK-1 train 80을 섞어 20k 스텝. 최종 체크포인트를 쓴다(선택 없음). FP16 엔진
+- 평가: T1(+3 cm) FT 12 vs OLD-FP16 12, T0(정상) 12 vs 12. 주 비교는 T1 개선이고, Newcombe 95% 하한 > 0이면 개선 검출로 본다
