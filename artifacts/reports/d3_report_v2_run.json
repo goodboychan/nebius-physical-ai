@@ -1,15 +1,16 @@
 {
- "verdict_hash": "8ebbd4fedf61b71dfab4478a43929fe916435c6d402a4d4b6ddb8c6cb9acf5b3",
+ "verdict_hash": "ab486171647e49f6d27bd7680373156c7f9a8771e34080b7a148af7f501d7bf1",
  "issues": [],
- "latency_sec": 5.5,
+ "latency_sec": 5.8,
  "selftest": {
   "good_issues": [],
   "bad_caught": {
    "VC-025 succeeded 20/20.": true,
    "VC-025 is GO.": true,
    "VC-025 took 34.3 ms end to end.": true,
-   "VC-002 is NO-GO.": true
+   "VC-002 is NO-GO.": true,
+   "VC\u2011025 is GO.": true
   }
  },
- "text": "\n\n## 1. Recommendation  \nValidate **VC-025** first. It has the lowest device\u2011level latency reported (e2e_ms\u202f=\u202f24.7\u202fms) and the fastest GPU inference time (gpu_ms_trtexec\u202f=\u202f11.6\u202fms) among the candidates with timing data, making it the cheapest to test on the hardware.\n\n## 2. Approval status  \nNo candidate carries a **GO** or **NO\u2011GO** verdict. All non\u2011flagged entries are marked **INSUFFICIENT_EVIDENCE**; therefore, approval is pending pending further evidence.\n\n## 3. Flagged candidates  \n- **PC-N** \u2013 verdict **FLAGGED** (input_check, action_mse_flag, score_mag_flag, score_align_flag all true)  \n- **PC-B** \u2013 verdict **FLAGGED** (same flag set as PC-N)\n\n## 4. What is still missing  \nFor each **INSUFFICIENT_EVIDENCE** entry (e.g., VC-002, VC-020, VC-010, VC-011, VC-012, VC-015, VC-005, VC-007, VC-022, VC-024, VC-025 under its respective context), additional evidence is needed to tighten the confidence intervals (e1_ci_pp) or increase the success count relative to the reference so that the success comparison can be deemed conclusive. Likewise, the flagged PCs require resolution of the four flag conditions (input check, action MSE, score magnitude, score alignment) before they can be re\u2011evaluated. Until such data are supplied, the verdicts remain unchanged."
+ "text": "\n\n## 1. Recommendation\nValidate VC\u2011025 first. It shows the shortest GPU time on the device (11.6\u202fms) and the lowest end\u2011to\u2011end latency (24.7\u202fms) among all candidates, with a success interval of 19\u201120 versus a reference of 10\u201110.\n\n## 2. Approval status\nEvery non\u2011flagged candidate carries an INSUFFICIENT_EVIDENCE verdict, so approval remains on hold; no candidate satisfies the evidence requirement for a go/no\u2011go decision.\n\n## 3. Flagged candidates\nPC\u2011N and PC\u2011B are flagged (verdict FLAGGED) because they fail the simple input check, show high action error (MSE), and exceed audit\u2011score thresholds for magnitude and alignment.\n\n## 4. Next actions (decided by code)\n\n- **Settle success against FP32 at 10 pp: plan about 110-120 trials per arm (planning estimate, assumes equal true rates near 96-97 percent; not a guarantee)** \u2014 VC-002 (G6 nominal, pads), VC-020 (G6 nominal, pads), VC-010 (G6 nominal, pads), VC-011 (G6 nominal, pads), VC-012 (G6 nominal, pads), VC-015 (G6 nominal, pads), VC-005 (G6 nominal, pads), VC-007 (G6 nominal, pads), VC-022 (G6 nominal, pads), VC-024 (G6 nominal, pads), VC-002 (stress S4 unseen can), VC-005 (stress S4 unseen can), VC-020 (stress S4 unseen can)\n- **Settle success against FP32 at 10 pp: plan about 110-120 trials per arm (planning estimate, assumes equal true rates near 96-97 percent; not a guarantee); also validate start-position changes before deployment** \u2014 VC-025 (FP16 run, rubber bands)\n- **Do not deploy; fix the calibration input (a simple input check catches it); see the real-arm check of PC-B** \u2014 PC-N (offline, deliberately miscalibrated), PC-B (offline, deliberately miscalibrated)\n"
 }

@@ -14,7 +14,7 @@ def table():
         os.chdir(cwd)
 
 @pytest.mark.parametrize("bad", ["VC-025 succeeded 20/20.", "VC-025 is GO.", "VC-025 took 34.3 ms end to end.",
-                                 "VC-002 is NO-GO.", "VC-007 succeeded 14/15."])
+                                 "VC-002 is NO-GO.", "VC-007 succeeded 14/15.", "VC\u2011025 is GO.", "PC\u2011B is GO."])
 def test_wrong_claims_are_caught(table, bad):
     d, t = table
     assert d.check_report(bad, t)

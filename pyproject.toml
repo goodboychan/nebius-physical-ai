@@ -13,6 +13,7 @@ dependencies = [
 
 [project.optional-dependencies]
 dev = ["pytest>=8.0"]
+report = ["matplotlib>=3.8", "av>=12"]   # D3 v2 figures (scripts/d3_figures.py)
 # torch/ONNX/TensorRT 경로는 호스트에 설치하지 않는다. NGC 컨테이너에서 실행한다.
 # scripts/g0_dryrun.sh 참조.
 

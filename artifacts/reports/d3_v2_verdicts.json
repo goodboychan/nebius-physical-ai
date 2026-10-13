@@ -19,6 +19,7 @@
    "verdict": "INSUFFICIENT_EVIDENCE",
    "e2e_ms": 34.3,
    "evidence_path": "artifacts/reports/g6_q2_sensitivity.json#Q2.VC-002",
+   "next_action": "Settle success against FP32 at 10 pp: plan about 110-120 trials per arm (planning estimate, assumes equal true rates near 96-97 percent; not a guarantee)",
    "gpu_ms_trtexec": 16.8
   },
   {
@@ -40,6 +41,7 @@
    "verdict": "INSUFFICIENT_EVIDENCE",
    "e2e_ms": 34.3,
    "evidence_path": "artifacts/reports/g6_q2_sensitivity.json#Q2.VC-020",
+   "next_action": "Settle success against FP32 at 10 pp: plan about 110-120 trials per arm (planning estimate, assumes equal true rates near 96-97 percent; not a guarantee)",
    "gpu_ms_trtexec": 16.8
   },
   {
@@ -60,7 +62,8 @@
    "e2": "tolerance_compatible",
    "verdict": "INSUFFICIENT_EVIDENCE",
    "e2e_ms": 34.3,
-   "evidence_path": "artifacts/reports/g6_q2_sensitivity.json#Q2.VC-010"
+   "evidence_path": "artifacts/reports/g6_q2_sensitivity.json#Q2.VC-010",
+   "next_action": "Settle success against FP32 at 10 pp: plan about 110-120 trials per arm (planning estimate, assumes equal true rates near 96-97 percent; not a guarantee)"
   },
   {
    "candidate": "VC-011",
@@ -80,7 +83,8 @@
    "e2": "tolerance_compatible",
    "verdict": "INSUFFICIENT_EVIDENCE",
    "e2e_ms": 34.6,
-   "evidence_path": "artifacts/reports/g6_q2_sensitivity.json#Q2.VC-011"
+   "evidence_path": "artifacts/reports/g6_q2_sensitivity.json#Q2.VC-011",
+   "next_action": "Settle success against FP32 at 10 pp: plan about 110-120 trials per arm (planning estimate, assumes equal true rates near 96-97 percent; not a guarantee)"
   },
   {
    "candidate": "VC-012",
@@ -100,7 +104,8 @@
    "e2": "tolerance_compatible",
    "verdict": "INSUFFICIENT_EVIDENCE",
    "e2e_ms": 34.3,
-   "evidence_path": "artifacts/reports/g6_q2_sensitivity.json#Q2.VC-012"
+   "evidence_path": "artifacts/reports/g6_q2_sensitivity.json#Q2.VC-012",
+   "next_action": "Settle success against FP32 at 10 pp: plan about 110-120 trials per arm (planning estimate, assumes equal true rates near 96-97 percent; not a guarantee)"
   },
   {
    "candidate": "VC-015",
@@ -120,7 +125,8 @@
    "e2": "indeterminate",
    "verdict": "INSUFFICIENT_EVIDENCE",
    "e2e_ms": 34.6,
-   "evidence_path": "artifacts/reports/g6_q2_sensitivity.json#Q2.VC-015"
+   "evidence_path": "artifacts/reports/g6_q2_sensitivity.json#Q2.VC-015",
+   "next_action": "Settle success against FP32 at 10 pp: plan about 110-120 trials per arm (planning estimate, assumes equal true rates near 96-97 percent; not a guarantee)"
   },
   {
    "candidate": "VC-005",
@@ -141,6 +147,7 @@
    "verdict": "INSUFFICIENT_EVIDENCE",
    "e2e_ms": 34.5,
    "evidence_path": "artifacts/reports/g6_q2_sensitivity.json#Q2.VC-005",
+   "next_action": "Settle success against FP32 at 10 pp: plan about 110-120 trials per arm (planning estimate, assumes equal true rates near 96-97 percent; not a guarantee)",
    "gpu_ms_trtexec": 17.1
   },
   {
@@ -161,7 +168,8 @@
    "e2": "tolerance_compatible",
    "verdict": "INSUFFICIENT_EVIDENCE",
    "e2e_ms": 34.6,
-   "evidence_path": "artifacts/reports/g6_q2_sensitivity.json#Q2.VC-007"
+   "evidence_path": "artifacts/reports/g6_q2_sensitivity.json#Q2.VC-007",
+   "next_action": "Settle success against FP32 at 10 pp: plan about 110-120 trials per arm (planning estimate, assumes equal true rates near 96-97 percent; not a guarantee)"
   },
   {
    "candidate": "VC-022",
@@ -181,7 +189,8 @@
    "e2": "indeterminate",
    "verdict": "INSUFFICIENT_EVIDENCE",
    "e2e_ms": 34.3,
-   "evidence_path": "artifacts/reports/g6_q2_sensitivity.json#Q2.VC-022"
+   "evidence_path": "artifacts/reports/g6_q2_sensitivity.json#Q2.VC-022",
+   "next_action": "Settle success against FP32 at 10 pp: plan about 110-120 trials per arm (planning estimate, assumes equal true rates near 96-97 percent; not a guarantee)"
   },
   {
    "candidate": "VC-024",
@@ -201,7 +210,8 @@
    "e2": "tolerance_compatible",
    "verdict": "INSUFFICIENT_EVIDENCE",
    "e2e_ms": 34.1,
-   "evidence_path": "artifacts/reports/g6_q2_sensitivity.json#Q2.VC-024"
+   "evidence_path": "artifacts/reports/g6_q2_sensitivity.json#Q2.VC-024",
+   "next_action": "Settle success against FP32 at 10 pp: plan about 110-120 trials per arm (planning estimate, assumes equal true rates near 96-97 percent; not a guarantee)"
   },
   {
    "candidate": "VC-025",
@@ -227,6 +237,7 @@
    "verdict": "INSUFFICIENT_EVIDENCE",
    "e2e_ms": 24.7,
    "evidence_path": "artifacts/reports/fp16_analysis.json#primary_fp16_vs_fp32",
+   "next_action": "Settle success against FP32 at 10 pp: plan about 110-120 trials per arm (planning estimate, assumes equal true rates near 96-97 percent; not a guarantee); also validate start-position changes before deployment",
    "gpu_ms_trtexec": 11.6
   },
   {
@@ -247,6 +258,7 @@
    "e2": "tolerance_compatible",
    "verdict": "INSUFFICIENT_EVIDENCE",
    "evidence_path": "artifacts/reports/stress_v2_analysis.json#S4.secondary_vs_fp32.VC-002",
+   "next_action": "Settle success against FP32 at 10 pp: plan about 110-120 trials per arm (planning estimate, assumes equal true rates near 96-97 percent; not a guarantee)",
    "gpu_ms_trtexec": 16.8
   },
   {
@@ -267,6 +279,7 @@
    "e2": "tolerance_compatible",
    "verdict": "INSUFFICIENT_EVIDENCE",
    "evidence_path": "artifacts/reports/stress_v2_analysis.json#S4.secondary_vs_fp32.VC-005",
+   "next_action": "Settle success against FP32 at 10 pp: plan about 110-120 trials per arm (planning estimate, assumes equal true rates near 96-97 percent; not a guarantee)",
    "gpu_ms_trtexec": 17.1
   },
   {
@@ -287,31 +300,34 @@
    "e2": "tolerance_compatible",
    "verdict": "INSUFFICIENT_EVIDENCE",
    "evidence_path": "artifacts/reports/stress_v2_analysis.json#S4.secondary_vs_fp32.VC-020",
+   "next_action": "Settle success against FP32 at 10 pp: plan about 110-120 trials per arm (planning estimate, assumes equal true rates near 96-97 percent; not a guarantee)",
    "gpu_ms_trtexec": 16.8
   },
   {
    "candidate": "PC-N",
    "context": "offline, deliberately miscalibrated",
    "verdict": "FLAGGED",
-   "flags": {
-    "input_check": true,
-    "action_mse_flag": true,
-    "score_mag_flag": true,
-    "score_align_flag": true
-   },
-   "evidence_path": "artifacts/reports/simple_checks_vs_audit.json#cells.PC-N"
+   "flagged_by": [
+    "simple input check",
+    "action error (MSE)",
+    "audit score (magnitude)",
+    "audit score (alignment)"
+   ],
+   "evidence_path": "artifacts/reports/simple_checks_vs_audit.json#cells.PC-N",
+   "next_action": "Do not deploy; fix the calibration input (a simple input check catches it); see the real-arm check of PC-B"
   },
   {
    "candidate": "PC-B",
    "context": "offline, deliberately miscalibrated",
    "verdict": "FLAGGED",
-   "flags": {
-    "input_check": true,
-    "action_mse_flag": true,
-    "score_mag_flag": true,
-    "score_align_flag": true
-   },
-   "evidence_path": "artifacts/reports/simple_checks_vs_audit.json#cells.PC-B"
+   "flagged_by": [
+    "simple input check",
+    "action error (MSE)",
+    "audit score (magnitude)",
+    "audit score (alignment)"
+   ],
+   "evidence_path": "artifacts/reports/simple_checks_vs_audit.json#cells.PC-B",
+   "next_action": "Do not deploy; fix the calibration input (a simple input check catches it); see the real-arm check of PC-B"
   }
  ],
  "notes": {
