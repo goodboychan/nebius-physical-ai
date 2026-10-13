@@ -936,3 +936,7 @@ ACT는 상태마다 100스텝을 내고 실기에서 100스텝을 모두 실행�
 | 10/27–28 | Devpost 등록 |
 | 10/29 | 예비일 |
 | 10/30 | 제출 → 서비스 계정 키 교체 |
+- 파인튜닝 학습 완료: Nebius Job `aijob-e00q3qawnjzzbgtjw4` (L40S, 20k 스텝, 1,489 s, 최종 loss 0.072, G2는 0.064).
+  체크포인트 `g2/act_ft_pos_20k/020000`, model.safetensors sha256 `1385d3dd95f42508…` (엔진 빌드 전 고정)
+- 공개: LeRobot이 `--policy.path` 파인튜닝에서 상태·행동 정규화 통계를 병합 데이터셋(130 에피소드) 기준으로 다시 잡았다(영상 통계는 같다).
+  엔진 정규화는 FT 체크포인트의 통계로 만든다(`scripts/make_norm_stats.py`; 같은 규칙이 G2 파일을 모든 키에서 재현함을 확인). FT norm_stats `a97ca102f1db204d…`
