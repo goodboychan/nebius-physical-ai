@@ -51,3 +51,22 @@ There is no pass threshold. The result is read as "which setup, if any, works", 
 1. This file and the script are committed before any C1 or C2 query.
 2. The dev runs and the chosen prompts are committed before the eval run.
 3. Eval runs once per condition. Its results are reported as they come, including if no condition improves.
+
+## 6. Dev results and chosen prompts (committed before eval, 2026-10-14)
+
+Dev: 136 trials, 10 failures (`artifacts/cosmos_judge/dev/`, `dev_scores.jsonl`).
+
+| Condition | Failure recall | False alarms | Abstain | Balanced accuracy |
+|---|---|---|---|---|
+| C0 (baseline) | 0/10 | 0/126 | 0 | 0.50 (always YES) |
+| C1 p1 | **10/10** | **3/126** | 0 | **0.988** |
+| C1 p2 | 10/10 | 126/126 | 0 | 0.50 (always NO) |
+| C1 p3 | — | — | 136 (answered "Yes" without the required format) | 0.00 |
+| C2 v1 | 5/10 | 47/126 | 83 | 0.25 |
+| C2 v2 | 10/10 | 126/126 | 0 | 0.50 (always NO) |
+| C2 v3 | 10/10 | 126/126 | 0 | 0.50 (always NO) |
+
+- **Chosen**: C1 → **p1**. C2 → **v3**: v2 and v3 tie at 0.50, and v3 is the shorter prompt (rule §3).
+- In every condition the model wrote only the final line, with no reasoning text, despite the 768-token budget.
+- Note, stated now: the prompt sensitivity is large. Small wording changes flip the model between always-YES and
+  always-NO, and the eval result is read with that in mind.
