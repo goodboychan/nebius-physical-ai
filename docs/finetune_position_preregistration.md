@@ -72,3 +72,16 @@ The result is reported as measured. The study does not assume the fix works.
 2. The training config and the checkpoint hash are committed before the engine build. The engine hash and the schedule
    are committed before any trial.
 3. Each block's sealed log is hashed into `artifacts/freeze/ft_post.json` before it is opened.
+
+## 8. Build and schedule (fixed before the first trial, 2026-10-14)
+
+- Checkpoint: `g2/act_ft_pos_20k/020000`, model sha256 `1385d3dd…`. ONNX sha256 `a218303e…`; torch and ONNX differ by at
+  most 1.3e-6.
+- FP16 engine `FT-FP16`, sha256 `4affc06d…`, built with the same frozen cache (`67fca693…`). The rebuild hash is
+  identical. Engine and torch differ by at most 0.0035 in normalized units.
+- Normalization: the fine-tune re-estimated the state and action statistics. The runner therefore loads per-engine
+  statistics (`<token>.norm_stats.npz` for FT, the folder default for OLD = G2), via `so101_trial.py` `bdf2c3a6…`.
+- Sealed schedule `~/.edgeqgate_sealed/stress_ft/stress_sealed.json`, sha256
+  `996d4a9a584c20d80ce221add95bec8cb4893b1b0c44a0990634fd113653d053`. Blocks run T1, then T0, with 24 trials each.
+  Public copy: `artifacts/finetune/stress_schedule_public.json`. Analysis: `scripts/ft_analysis.py`.
+- Runner commands: `so101_trial.py --blind T1 ft`, then `--blind T0 ft`.
