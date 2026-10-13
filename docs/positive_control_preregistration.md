@@ -101,3 +101,16 @@ was lost. This is the abort path this block relies on. The runner (`so101_trial.
 - passes each frame's capture time to the shadow supervisor.
 
 Verified with `tests/runner_abort_harness.py`, which needs no hardware. No outcome or analysis rule changes.
+
+## 10. Amendment 2 (2026-10-13, before any trial): Cosmos replayed offline
+
+The Nebius endpoint could not be scheduled: a start request had waited 20+ minutes with no L40S instance allocated.
+The block therefore runs **without the live shadow supervisor**. That supervisor never affects the arm or the
+outcome, so nothing in §3–§5 changes.
+
+When the endpoint is up, Cosmos-Reason2 is replayed offline on each trial's saved overhead video:
+- the same 2 Hz sampling (every 15th frame) with the same CONTINUE / FALLBACK / ABORT prompt;
+- the same end-of-trial question on the last frame (`scripts/d4_replay.py`, written before the trials).
+
+Two differences from live operation are disclosed: the replay sees AV1-compressed frames instead of raw camera frames,
+and live latency is not measured. The replay is descriptive (EX-3) and is never used for an outcome.
