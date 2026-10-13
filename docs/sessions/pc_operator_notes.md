@@ -7,3 +7,4 @@ Hardware: rubber bands on the gripper. Scene: cola can at the training start mar
 
 - Trials 1–15: no failure reported
 - Trial 16: **failure**. The grasp was off, and the can dropped while being carried
+- Trial 21: **failure**, a different mode. The can was placed on the coaster and the arm went back. Then the arm came back to the coaster and knocked the can over (a post-placement return)
