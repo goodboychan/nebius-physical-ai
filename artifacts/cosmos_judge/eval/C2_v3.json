@@ -1,0 +1,1920 @@
+{
+ "cond": "C2",
+ "variant": "v3",
+ "set": "eval",
+ "prompt": "You are a strict inspector watching the end of a robot trial from above. Answer YES only if at the end you clearly see the can standing upright on the round coaster; if it falls, lies on its side, or is off the coaster, answer NO. Think briefly about what you see, then end with exactly one line: 'Answer: YES' or 'Answer: NO'.",
+ "max_tokens": 768,
+ "results": [
+  {
+   "trial_id": "main001_1008_002836",
+   "standing": true,
+   "answer": "NO",
+   "latency_ms": 1922.3992824554443,
+   "raw": "Answer: NO"
+  },
+  {
+   "trial_id": "main002_1008_003016",
+   "standing": true,
+   "answer": "NO",
+   "latency_ms": 1024.012565612793,
+   "raw": "Answer: NO"
+  },
+  {
+   "trial_id": "main003_1008_003138",
+   "standing": true,
+   "answer": "NO",
+   "latency_ms": 1015.2056217193604,
+   "raw": "Answer: NO"
+  },
+  {
+   "trial_id": "main004_1008_003255",
+   "standing": true,
+   "answer": "NO",
+   "latency_ms": 1040.093183517456,
+   "raw": "Answer: NO"
+  },
+  {
+   "trial_id": "main008_1008_003854",
+   "standing": true,
+   "answer": "NO",
+   "latency_ms": 1017.0350074768066,
+   "raw": "Answer: NO"
+  },
+  {
+   "trial_id": "main009_1008_004005",
+   "standing": true,
+   "answer": "NO",
+   "latency_ms": 1016.6513919830322,
+   "raw": "Answer: NO"
+  },
+  {
+   "trial_id": "main010_1008_004115",
+   "standing": true,
+   "answer": "NO",
+   "latency_ms": 1028.167963027954,
+   "raw": "Answer: NO"
+  },
+  {
+   "trial_id": "main011_1008_004224",
+   "standing": true,
+   "answer": "NO",
+   "latency_ms": 1022.2897529602051,
+   "raw": "Answer: NO"
+  },
+  {
+   "trial_id": "main013_1008_004444",
+   "standing": true,
+   "answer": "NO",
+   "latency_ms": 1015.6903266906738,
+   "raw": "Answer: NO"
+  },
+  {
+   "trial_id": "main014_1008_004552",
+   "standing": true,
+   "answer": "NO",
+   "latency_ms": 1019.6151733398438,
+   "raw": "Answer: NO"
+  },
+  {
+   "trial_id": "main015_1008_004700",
+   "standing": true,
+   "answer": "NO",
+   "latency_ms": 1021.5134620666504,
+   "raw": "Answer: NO"
+  },
+  {
+   "trial_id": "main016_1008_004809",
+   "standing": true,
+   "answer": "NO",
+   "latency_ms": 1021.0118293762207,
+   "raw": "Answer: NO"
+  },
+  {
+   "trial_id": "main017_1008_004917",
+   "standing": true,
+   "answer": "NO",
+   "latency_ms": 744.6796894073486,
+   "raw": "Answer: NO"
+  },
+  {
+   "trial_id": "main021_1008_005357",
+   "standing": true,
+   "answer": "NO",
+   "latency_ms": 1017.4973011016846,
+   "raw": "Answer: NO"
+  },
+  {
+   "trial_id": "main023_1008_005658",
+   "standing": true,
+   "answer": "NO",
+   "latency_ms": 777.7652740478516,
+   "raw": "Answer: NO"
+  },
+  {
+   "trial_id": "main027_1008_010132",
+   "standing": true,
+   "answer": "NO",
+   "latency_ms": 737.567663192749,
+   "raw": "Answer: NO"
+  },
+  {
+   "trial_id": "main029_1008_010348",
+   "standing": true,
+   "answer": "NO",
+   "latency_ms": 1022.0692157745361,
+   "raw": "Answer: NO"
+  },
+  {
+   "trial_id": "main031_1008_213612",
+   "standing": true,
+   "answer": "NO",
+   "latency_ms": 1023.0484008789062,
+   "raw": "Answer: NO"
+  },
+  {
+   "trial_id": "main035_1008_214121",
+   "standing": true,
+   "answer": "NO",
+   "latency_ms": 739.4349575042725,
+   "raw": "Answer: NO"
+  },
+  {
+   "trial_id": "main036_1008_214231",
+   "standing": true,
+   "answer": "NO",
+   "latency_ms": 1014.93239402771,
+   "raw": "Answer: NO"
+  },
+  {
+   "trial_id": "main037_1008_214342",
+   "standing": true,
+   "answer": "NO",
+   "latency_ms": 748.201847076416,
+   "raw": "Answer: NO"
+  },
+  {
+   "trial_id": "main038_1008_214450",
+   "standing": true,
+   "answer": "NO",
+   "latency_ms": 1013.8216018676758,
+   "raw": "Answer: NO"
+  },
+  {
+   "trial_id": "main039_1008_214559",
+   "standing": true,
+   "answer": "NO",
+   "latency_ms": 738.6817932128906,
+   "raw": "Answer: NO"
+  },
+  {
+   "trial_id": "main040_1008_214708",
+   "standing": true,
+   "answer": "NO",
+   "latency_ms": 1014.8546695709229,
+   "raw": "Answer: NO"
+  },
+  {
+   "trial_id": "main042_1008_214924",
+   "standing": true,
+   "answer": "NO",
+   "latency_ms": 1014.063835144043,
+   "raw": "Answer: NO"
+  },
+  {
+   "trial_id": "main043_1008_215040",
+   "standing": true,
+   "answer": "NO",
+   "latency_ms": 742.9962158203125,
+   "raw": "Answer: NO"
+  },
+  {
+   "trial_id": "main045_1008_215256",
+   "standing": true,
+   "answer": "NO",
+   "latency_ms": 1022.0065116882324,
+   "raw": "Answer: NO"
+  },
+  {
+   "trial_id": "main046_1008_215405",
+   "standing": true,
+   "answer": "NO",
+   "latency_ms": 751.2152194976807,
+   "raw": "Answer: NO"
+  },
+  {
+   "trial_id": "main047_1008_215513",
+   "standing": true,
+   "answer": "NO",
+   "latency_ms": 1026.7212390899658,
+   "raw": "Answer: NO"
+  },
+  {
+   "trial_id": "main048_1008_215622",
+   "standing": true,
+   "answer": "NO",
+   "latency_ms": 742.6004409790039,
+   "raw": "Answer: NO"
+  },
+  {
+   "trial_id": "main049_1008_215730",
+   "standing": false,
+   "answer": "NO",
+   "latency_ms": 1024.245262145996,
+   "raw": "Answer: NO"
+  },
+  {
+   "trial_id": "main050_1008_215855",
+   "standing": true,
+   "answer": "NO",
+   "latency_ms": 740.7989501953125,
+   "raw": "Answer: NO"
+  },
+  {
+   "trial_id": "main051_1008_220012",
+   "standing": true,
+   "answer": "NO",
+   "latency_ms": 748.84033203125,
+   "raw": "Answer: NO"
+  },
+  {
+   "trial_id": "main052_1008_220211",
+   "standing": true,
+   "answer": "NO",
+   "latency_ms": 1025.6073474884033,
+   "raw": "Answer: NO"
+  },
+  {
+   "trial_id": "main054_1008_220442",
+   "standing": true,
+   "answer": "NO",
+   "latency_ms": 1028.1598567962646,
+   "raw": "Answer: NO"
+  },
+  {
+   "trial_id": "main055_1008_220554",
+   "standing": true,
+   "answer": "NO",
+   "latency_ms": 1017.4047946929932,
+   "raw": "Answer: NO"
+  },
+  {
+   "trial_id": "main056_1008_220708",
+   "standing": true,
+   "answer": "NO",
+   "latency_ms": 735.8300685882568,
+   "raw": "Answer: NO"
+  },
+  {
+   "trial_id": "main057_1008_220817",
+   "standing": true,
+   "answer": "NO",
+   "latency_ms": 1014.5742893218994,
+   "raw": "Answer: NO"
+  },
+  {
+   "trial_id": "main058_1008_220927",
+   "standing": true,
+   "answer": "NO",
+   "latency_ms": 745.2280521392822,
+   "raw": "Answer: NO"
+  },
+  {
+   "trial_id": "main061_1008_221316",
+   "standing": true,
+   "answer": "NO",
+   "latency_ms": 1022.4425792694092,
+   "raw": "Answer: NO"
+  },
+  {
+   "trial_id": "main062_1008_221426",
+   "standing": true,
+   "answer": "NO",
+   "latency_ms": 1016.9267654418945,
+   "raw": "Answer: NO"
+  },
+  {
+   "trial_id": "main063_1008_221537",
+   "standing": true,
+   "answer": "NO",
+   "latency_ms": 1018.10622215271,
+   "raw": "Answer: NO"
+  },
+  {
+   "trial_id": "main065_1008_221819",
+   "standing": true,
+   "answer": "NO",
+   "latency_ms": 1020.7898616790771,
+   "raw": "Answer: NO"
+  },
+  {
+   "trial_id": "main066_1008_221930",
+   "standing": true,
+   "answer": "NO",
+   "latency_ms": 742.7854537963867,
+   "raw": "Answer: NO"
+  },
+  {
+   "trial_id": "main067_1008_222040",
+   "standing": true,
+   "answer": "NO",
+   "latency_ms": 1032.097339630127,
+   "raw": "Answer: NO"
+  },
+  {
+   "trial_id": "main069_1008_222327",
+   "standing": true,
+   "answer": "NO",
+   "latency_ms": 1017.6336765289307,
+   "raw": "Answer: NO"
+  },
+  {
+   "trial_id": "main073_1008_222815",
+   "standing": true,
+   "answer": "NO",
+   "latency_ms": 747.2641468048096,
+   "raw": "Answer: NO"
+  },
+  {
+   "trial_id": "main075_1008_223032",
+   "standing": true,
+   "answer": "NO",
+   "latency_ms": 746.6185092926025,
+   "raw": "Answer: NO"
+  },
+  {
+   "trial_id": "main076_1008_223203",
+   "standing": true,
+   "answer": "NO",
+   "latency_ms": 1015.1636600494385,
+   "raw": "Answer: NO"
+  },
+  {
+   "trial_id": "main078_1008_223427",
+   "standing": true,
+   "answer": "NO",
+   "latency_ms": 1021.186113357544,
+   "raw": "Answer: NO"
+  },
+  {
+   "trial_id": "main079_1008_223541",
+   "standing": true,
+   "answer": "NO",
+   "latency_ms": 756.9262981414795,
+   "raw": "Answer: NO"
+  },
+  {
+   "trial_id": "main080_1008_223715",
+   "standing": true,
+   "answer": "NO",
+   "latency_ms": 738.9814853668213,
+   "raw": "Answer: NO"
+  },
+  {
+   "trial_id": "main082_1008_223934",
+   "standing": true,
+   "answer": "NO",
+   "latency_ms": 1019.5012092590332,
+   "raw": "Answer: NO"
+  },
+  {
+   "trial_id": "main084_1008_224420",
+   "standing": true,
+   "answer": "NO",
+   "latency_ms": 735.8927726745605,
+   "raw": "Answer: NO"
+  },
+  {
+   "trial_id": "main085_1008_224529",
+   "standing": true,
+   "answer": "NO",
+   "latency_ms": 1015.7909393310547,
+   "raw": "Answer: NO"
+  },
+  {
+   "trial_id": "main092_1009_183512",
+   "standing": true,
+   "answer": "NO",
+   "latency_ms": 1032.249927520752,
+   "raw": "Answer: NO"
+  },
+  {
+   "trial_id": "main093_1009_183624",
+   "standing": true,
+   "answer": "NO",
+   "latency_ms": 1020.4122066497803,
+   "raw": "Answer: NO"
+  },
+  {
+   "trial_id": "main095_1009_183854",
+   "standing": true,
+   "answer": "NO",
+   "latency_ms": 1025.6798267364502,
+   "raw": "Answer: NO"
+  },
+  {
+   "trial_id": "main096_1009_184016",
+   "standing": true,
+   "answer": "NO",
+   "latency_ms": 1300.9388446807861,
+   "raw": "Answer: NO"
+  },
+  {
+   "trial_id": "main097_1009_184133",
+   "standing": true,
+   "answer": "NO",
+   "latency_ms": 1021.8601226806641,
+   "raw": "Answer: NO"
+  },
+  {
+   "trial_id": "main098_1009_184257",
+   "standing": true,
+   "answer": "NO",
+   "latency_ms": 1019.1681385040283,
+   "raw": "Answer: NO"
+  },
+  {
+   "trial_id": "main099_1009_184409",
+   "standing": true,
+   "answer": "NO",
+   "latency_ms": 736.5307807922363,
+   "raw": "Answer: NO"
+  },
+  {
+   "trial_id": "main100_1009_184546",
+   "standing": true,
+   "answer": "NO",
+   "latency_ms": 748.8031387329102,
+   "raw": "Answer: NO"
+  },
+  {
+   "trial_id": "main101_1010_202418",
+   "standing": true,
+   "answer": "NO",
+   "latency_ms": 1018.8162326812744,
+   "raw": "Answer: NO"
+  },
+  {
+   "trial_id": "main102_1010_202531",
+   "standing": true,
+   "answer": "NO",
+   "latency_ms": 745.7773685455322,
+   "raw": "Answer: NO"
+  },
+  {
+   "trial_id": "main103_1010_202641",
+   "standing": true,
+   "answer": "NO",
+   "latency_ms": 1017.0783996582031,
+   "raw": "Answer: NO"
+  },
+  {
+   "trial_id": "main105_1010_202904",
+   "standing": true,
+   "answer": "NO",
+   "latency_ms": 741.1398887634277,
+   "raw": "Answer: NO"
+  },
+  {
+   "trial_id": "main106_1010_203016",
+   "standing": true,
+   "answer": "NO",
+   "latency_ms": 1017.7319049835205,
+   "raw": "Answer: NO"
+  },
+  {
+   "trial_id": "main107_1010_203127",
+   "standing": true,
+   "answer": "NO",
+   "latency_ms": 749.183177947998,
+   "raw": "Answer: NO"
+  },
+  {
+   "trial_id": "main108_1010_203306",
+   "standing": true,
+   "answer": "NO",
+   "latency_ms": 1022.3395824432373,
+   "raw": "Answer: NO"
+  },
+  {
+   "trial_id": "main109_1010_203415",
+   "standing": true,
+   "answer": "NO",
+   "latency_ms": 1021.8977928161621,
+   "raw": "Answer: NO"
+  },
+  {
+   "trial_id": "main111_1010_203636",
+   "standing": true,
+   "answer": "NO",
+   "latency_ms": 744.1704273223877,
+   "raw": "Answer: NO"
+  },
+  {
+   "trial_id": "main113_1010_203856",
+   "standing": true,
+   "answer": "NO",
+   "latency_ms": 741.6284084320068,
+   "raw": "Answer: NO"
+  },
+  {
+   "trial_id": "main118_1010_204646",
+   "standing": true,
+   "answer": "NO",
+   "latency_ms": 1015.3114795684814,
+   "raw": "Answer: NO"
+  },
+  {
+   "trial_id": "main119_1010_204755",
+   "standing": true,
+   "answer": "NO",
+   "latency_ms": 1015.5255794525146,
+   "raw": "Answer: NO"
+  },
+  {
+   "trial_id": "main120_1010_204906",
+   "standing": true,
+   "answer": "NO",
+   "latency_ms": 1017.268180847168,
+   "raw": "Answer: NO"
+  },
+  {
+   "trial_id": "main121_1010_205014",
+   "standing": true,
+   "answer": "NO",
+   "latency_ms": 1021.8393802642822,
+   "raw": "Answer: NO"
+  },
+  {
+   "trial_id": "main122_1010_205123",
+   "standing": true,
+   "answer": "NO",
+   "latency_ms": 740.6039237976074,
+   "raw": "Answer: NO"
+  },
+  {
+   "trial_id": "main124_1010_205428",
+   "standing": true,
+   "answer": "NO",
+   "latency_ms": 1018.449068069458,
+   "raw": "Answer: NO"
+  },
+  {
+   "trial_id": "main126_1010_205710",
+   "standing": true,
+   "answer": "NO",
+   "latency_ms": 1017.3249244689941,
+   "raw": "Answer: NO"
+  },
+  {
+   "trial_id": "main127_1010_205819",
+   "standing": true,
+   "answer": "NO",
+   "latency_ms": 754.3745040893555,
+   "raw": "Answer: NO"
+  },
+  {
+   "trial_id": "main128_1010_205927",
+   "standing": true,
+   "answer": "NO",
+   "latency_ms": 1015.6190395355225,
+   "raw": "Answer: NO"
+  },
+  {
+   "trial_id": "main130_1010_210143",
+   "standing": true,
+   "answer": "NO",
+   "latency_ms": 1019.8101997375488,
+   "raw": "Answer: NO"
+  },
+  {
+   "trial_id": "main131_1010_210251",
+   "standing": true,
+   "answer": "NO",
+   "latency_ms": 1015.833854675293,
+   "raw": "Answer: NO"
+  },
+  {
+   "trial_id": "main133_1010_210506",
+   "standing": true,
+   "answer": "NO",
+   "latency_ms": 736.4869117736816,
+   "raw": "Answer: NO"
+  },
+  {
+   "trial_id": "main135_1010_210720",
+   "standing": true,
+   "answer": "NO",
+   "latency_ms": 1015.739917755127,
+   "raw": "Answer: NO"
+  },
+  {
+   "trial_id": "main136_1010_210830",
+   "standing": true,
+   "answer": "NO",
+   "latency_ms": 743.5119152069092,
+   "raw": "Answer: NO"
+  },
+  {
+   "trial_id": "main138_1010_211110",
+   "standing": true,
+   "answer": "NO",
+   "latency_ms": 1012.7112865447998,
+   "raw": "Answer: NO"
+  },
+  {
+   "trial_id": "main139_1010_211229",
+   "standing": true,
+   "answer": "NO",
+   "latency_ms": 1014.1949653625488,
+   "raw": "Answer: NO"
+  },
+  {
+   "trial_id": "main140_1010_211336",
+   "standing": true,
+   "answer": "NO",
+   "latency_ms": 1015.4402256011963,
+   "raw": "Answer: NO"
+  },
+  {
+   "trial_id": "main141_1010_211445",
+   "standing": true,
+   "answer": "NO",
+   "latency_ms": 1012.5658512115479,
+   "raw": "Answer: NO"
+  },
+  {
+   "trial_id": "main142_1010_211552",
+   "standing": true,
+   "answer": "NO",
+   "latency_ms": 1022.9921340942383,
+   "raw": "Answer: NO"
+  },
+  {
+   "trial_id": "main143_1010_211703",
+   "standing": true,
+   "answer": "NO",
+   "latency_ms": 1016.0765647888184,
+   "raw": "Answer: NO"
+  },
+  {
+   "trial_id": "main144_1010_211814",
+   "standing": true,
+   "answer": "NO",
+   "latency_ms": 739.861011505127,
+   "raw": "Answer: NO"
+  },
+  {
+   "trial_id": "main145_1010_211936",
+   "standing": true,
+   "answer": "NO",
+   "latency_ms": 749.8924732208252,
+   "raw": "Answer: NO"
+  },
+  {
+   "trial_id": "main146_1010_212108",
+   "standing": true,
+   "answer": "NO",
+   "latency_ms": 1023.4906673431396,
+   "raw": "Answer: NO"
+  },
+  {
+   "trial_id": "main147_1010_212251",
+   "standing": true,
+   "answer": "NO",
+   "latency_ms": 744.4031238555908,
+   "raw": "Answer: NO"
+  },
+  {
+   "trial_id": "main148_1010_212418",
+   "standing": true,
+   "answer": "NO",
+   "latency_ms": 738.7130260467529,
+   "raw": "Answer: NO"
+  },
+  {
+   "trial_id": "main150_1010_212652",
+   "standing": true,
+   "answer": "NO",
+   "latency_ms": 1015.8381462097168,
+   "raw": "Answer: NO"
+  },
+  {
+   "trial_id": "main151_1010_212803",
+   "standing": true,
+   "answer": "NO",
+   "latency_ms": 1013.192892074585,
+   "raw": "Answer: NO"
+  },
+  {
+   "trial_id": "main153_1010_213023",
+   "standing": true,
+   "answer": "NO",
+   "latency_ms": 1017.1027183532715,
+   "raw": "Answer: NO"
+  },
+  {
+   "trial_id": "main154_1010_213132",
+   "standing": true,
+   "answer": "NO",
+   "latency_ms": 1014.2607688903809,
+   "raw": "Answer: NO"
+  },
+  {
+   "trial_id": "main155_1010_213304",
+   "standing": true,
+   "answer": "NO",
+   "latency_ms": 1014.0507221221924,
+   "raw": "Answer: NO"
+  },
+  {
+   "trial_id": "main157_1010_213523",
+   "standing": true,
+   "answer": "NO",
+   "latency_ms": 1013.1840705871582,
+   "raw": "Answer: NO"
+  },
+  {
+   "trial_id": "main158_1010_213633",
+   "standing": true,
+   "answer": "NO",
+   "latency_ms": 748.3575344085693,
+   "raw": "Answer: NO"
+  },
+  {
+   "trial_id": "main159_1010_213757",
+   "standing": true,
+   "answer": "NO",
+   "latency_ms": 744.8573112487793,
+   "raw": "Answer: NO"
+  },
+  {
+   "trial_id": "main160_1010_213917",
+   "standing": true,
+   "answer": "NO",
+   "latency_ms": 1013.4358406066895,
+   "raw": "Answer: NO"
+  },
+  {
+   "trial_id": "main164_1010_214406",
+   "standing": true,
+   "answer": "NO",
+   "latency_ms": 747.9147911071777,
+   "raw": "Answer: NO"
+  },
+  {
+   "trial_id": "main166_1010_214655",
+   "standing": true,
+   "answer": "NO",
+   "latency_ms": 740.3860092163086,
+   "raw": "Answer: NO"
+  },
+  {
+   "trial_id": "main167_1010_214804",
+   "standing": true,
+   "answer": "NO",
+   "latency_ms": 736.7920875549316,
+   "raw": "Answer: NO"
+  },
+  {
+   "trial_id": "main173_1010_215500",
+   "standing": true,
+   "answer": "NO",
+   "latency_ms": 743.4611320495605,
+   "raw": "Answer: NO"
+  },
+  {
+   "trial_id": "main175_1010_215738",
+   "standing": true,
+   "answer": "NO",
+   "latency_ms": 1021.7776298522949,
+   "raw": "Answer: NO"
+  },
+  {
+   "trial_id": "main176_1010_215846",
+   "standing": true,
+   "answer": "NO",
+   "latency_ms": 1027.8589725494385,
+   "raw": "Answer: NO"
+  },
+  {
+   "trial_id": "main177_1010_215954",
+   "standing": true,
+   "answer": "NO",
+   "latency_ms": 1050.0891208648682,
+   "raw": "Answer: NO"
+  },
+  {
+   "trial_id": "main178_1010_220103",
+   "standing": false,
+   "answer": "NO",
+   "latency_ms": 1037.0707511901855,
+   "raw": "Answer: NO"
+  },
+  {
+   "trial_id": "main182_1010_221034",
+   "standing": true,
+   "answer": "NO",
+   "latency_ms": 738.2056713104248,
+   "raw": "Answer: NO"
+  },
+  {
+   "trial_id": "main183_1010_221145",
+   "standing": true,
+   "answer": "NO",
+   "latency_ms": 763.5288238525391,
+   "raw": "Answer: NO"
+  },
+  {
+   "trial_id": "main184_1010_221255",
+   "standing": true,
+   "answer": "NO",
+   "latency_ms": 742.9895401000977,
+   "raw": "Answer: NO"
+  },
+  {
+   "trial_id": "main185_1010_221409",
+   "standing": true,
+   "answer": "NO",
+   "latency_ms": 736.5787029266357,
+   "raw": "Answer: NO"
+  },
+  {
+   "trial_id": "main187_1010_221633",
+   "standing": true,
+   "answer": "NO",
+   "latency_ms": 1021.7061042785645,
+   "raw": "Answer: NO"
+  },
+  {
+   "trial_id": "main188_1010_221800",
+   "standing": false,
+   "answer": "NO",
+   "latency_ms": 1022.4123001098633,
+   "raw": "Answer: NO"
+  },
+  {
+   "trial_id": "main192_1010_222606",
+   "standing": true,
+   "answer": "NO",
+   "latency_ms": 737.3127937316895,
+   "raw": "Answer: NO"
+  },
+  {
+   "trial_id": "main193_1010_222741",
+   "standing": true,
+   "answer": "NO",
+   "latency_ms": 1010.1079940795898,
+   "raw": "Answer: NO"
+  },
+  {
+   "trial_id": "main197_1010_223445",
+   "standing": true,
+   "answer": "NO",
+   "latency_ms": 740.1449680328369,
+   "raw": "Answer: NO"
+  },
+  {
+   "trial_id": "main198_1010_223605",
+   "standing": true,
+   "answer": "NO",
+   "latency_ms": 736.6399765014648,
+   "raw": "Answer: NO"
+  },
+  {
+   "trial_id": "main200_1010_223827",
+   "standing": true,
+   "answer": "NO",
+   "latency_ms": 1011.368989944458,
+   "raw": "Answer: NO"
+  },
+  {
+   "trial_id": "main201_1010_223937",
+   "standing": true,
+   "answer": "NO",
+   "latency_ms": 748.0857372283936,
+   "raw": "Answer: NO"
+  },
+  {
+   "trial_id": "main202_1010_224336",
+   "standing": true,
+   "answer": "NO",
+   "latency_ms": 1018.1872844696045,
+   "raw": "Answer: NO"
+  },
+  {
+   "trial_id": "main206_1010_224809",
+   "standing": true,
+   "answer": "NO",
+   "latency_ms": 1011.1873149871826,
+   "raw": "Answer: NO"
+  },
+  {
+   "trial_id": "main209_1010_225146",
+   "standing": true,
+   "answer": "NO",
+   "latency_ms": 1025.0599384307861,
+   "raw": "Answer: NO"
+  },
+  {
+   "trial_id": "main210_1010_225330",
+   "standing": true,
+   "answer": "NO",
+   "latency_ms": 1013.1368637084961,
+   "raw": "Answer: NO"
+  },
+  {
+   "trial_id": "main212_1010_225620",
+   "standing": true,
+   "answer": "NO",
+   "latency_ms": 1016.7865753173828,
+   "raw": "Answer: NO"
+  },
+  {
+   "trial_id": "main214_1010_225902",
+   "standing": true,
+   "answer": "NO",
+   "latency_ms": 734.142541885376,
+   "raw": "Answer: NO"
+  },
+  {
+   "trial_id": "main215_1010_230010",
+   "standing": true,
+   "answer": "NO",
+   "latency_ms": 1016.3724422454834,
+   "raw": "Answer: NO"
+  },
+  {
+   "trial_id": "main216_1010_230118",
+   "standing": true,
+   "answer": "NO",
+   "latency_ms": 745.8627223968506,
+   "raw": "Answer: NO"
+  },
+  {
+   "trial_id": "main217_1010_230228",
+   "standing": true,
+   "answer": "NO",
+   "latency_ms": 750.6101131439209,
+   "raw": "Answer: NO"
+  },
+  {
+   "trial_id": "main218_1010_230339",
+   "standing": true,
+   "answer": "NO",
+   "latency_ms": 759.6352100372314,
+   "raw": "Answer: NO"
+  },
+  {
+   "trial_id": "main220_1010_230557",
+   "standing": true,
+   "answer": "NO",
+   "latency_ms": 748.3556270599365,
+   "raw": "Answer: NO"
+  },
+  {
+   "trial_id": "main221_1010_230713",
+   "standing": true,
+   "answer": "NO",
+   "latency_ms": 1011.4588737487793,
+   "raw": "Answer: NO"
+  },
+  {
+   "trial_id": "main222_1010_230824",
+   "standing": true,
+   "answer": "NO",
+   "latency_ms": 739.630937576294,
+   "raw": "Answer: NO"
+  },
+  {
+   "trial_id": "main223_1010_231005",
+   "standing": true,
+   "answer": "NO",
+   "latency_ms": 744.1468238830566,
+   "raw": "Answer: NO"
+  },
+  {
+   "trial_id": "main224_1010_231116",
+   "standing": true,
+   "answer": "NO",
+   "latency_ms": 1013.0603313446045,
+   "raw": "Answer: NO"
+  },
+  {
+   "trial_id": "retest001_1011_110243",
+   "standing": true,
+   "answer": "NO",
+   "latency_ms": 1016.7427062988281,
+   "raw": "Answer: NO"
+  },
+  {
+   "trial_id": "retest002_1011_110354",
+   "standing": true,
+   "answer": "NO",
+   "latency_ms": 1013.1525993347168,
+   "raw": "Answer: NO"
+  },
+  {
+   "trial_id": "retest003_1011_110516",
+   "standing": true,
+   "answer": "NO",
+   "latency_ms": 1012.3336315155029,
+   "raw": "Answer: NO"
+  },
+  {
+   "trial_id": "retest006_1011_110838",
+   "standing": true,
+   "answer": "NO",
+   "latency_ms": 1015.4705047607422,
+   "raw": "Answer: NO"
+  },
+  {
+   "trial_id": "retest007_1011_111016",
+   "standing": true,
+   "answer": "NO",
+   "latency_ms": 1015.0594711303711,
+   "raw": "Answer: NO"
+  },
+  {
+   "trial_id": "retest009_1011_111237",
+   "standing": true,
+   "answer": "NO",
+   "latency_ms": 747.5430965423584,
+   "raw": "Answer: NO"
+  },
+  {
+   "trial_id": "retest011_1011_111523",
+   "standing": true,
+   "answer": "NO",
+   "latency_ms": 1017.8442001342773,
+   "raw": "Answer: NO"
+  },
+  {
+   "trial_id": "retest012_1011_112203",
+   "standing": true,
+   "answer": "NO",
+   "latency_ms": 738.027811050415,
+   "raw": "Answer: NO"
+  },
+  {
+   "trial_id": "retest014_1011_112530",
+   "standing": true,
+   "answer": "NO",
+   "latency_ms": 1014.1777992248535,
+   "raw": "Answer: NO"
+  },
+  {
+   "trial_id": "retest015_1011_112738",
+   "standing": true,
+   "answer": "NO",
+   "latency_ms": 744.1854476928711,
+   "raw": "Answer: NO"
+  },
+  {
+   "trial_id": "retest016_1011_112845",
+   "standing": true,
+   "answer": "NO",
+   "latency_ms": 736.4728450775146,
+   "raw": "Answer: NO"
+  },
+  {
+   "trial_id": "retest017_1011_113005",
+   "standing": true,
+   "answer": "NO",
+   "latency_ms": 1014.080286026001,
+   "raw": "Answer: NO"
+  },
+  {
+   "trial_id": "retest018_1011_113119",
+   "standing": true,
+   "answer": "NO",
+   "latency_ms": 1009.627103805542,
+   "raw": "Answer: NO"
+  },
+  {
+   "trial_id": "retest019_1011_113539",
+   "standing": true,
+   "answer": "NO",
+   "latency_ms": 1017.4319744110107,
+   "raw": "Answer: NO"
+  },
+  {
+   "trial_id": "retest020_1011_113716",
+   "standing": true,
+   "answer": "NO",
+   "latency_ms": 750.0088214874268,
+   "raw": "Answer: NO"
+  },
+  {
+   "trial_id": "S0001_1011_222807",
+   "standing": true,
+   "answer": "NO",
+   "latency_ms": 1016.1805152893066,
+   "raw": "Answer: NO"
+  },
+  {
+   "trial_id": "S0002_1011_222916",
+   "standing": false,
+   "answer": "NO",
+   "latency_ms": 1023.3511924743652,
+   "raw": "Answer: NO"
+  },
+  {
+   "trial_id": "S0004_1011_223142",
+   "standing": true,
+   "answer": "NO",
+   "latency_ms": 731.0512065887451,
+   "raw": "Answer: NO"
+  },
+  {
+   "trial_id": "S0005_1011_223252",
+   "standing": false,
+   "answer": "NO",
+   "latency_ms": 1013.5786533355713,
+   "raw": "Answer: NO"
+  },
+  {
+   "trial_id": "S0007_1011_223906",
+   "standing": false,
+   "answer": "NO",
+   "latency_ms": 1017.8227424621582,
+   "raw": "Answer: NO"
+  },
+  {
+   "trial_id": "S0009_1011_224353",
+   "standing": false,
+   "answer": "NO",
+   "latency_ms": 1017.6348686218262,
+   "raw": "Answer: NO"
+  },
+  {
+   "trial_id": "S0011_1011_224620",
+   "standing": true,
+   "answer": "NO",
+   "latency_ms": 733.9248657226562,
+   "raw": "Answer: NO"
+  },
+  {
+   "trial_id": "S0013_1011_225426",
+   "standing": false,
+   "answer": "NO",
+   "latency_ms": 1016.1111354827881,
+   "raw": "Answer: NO"
+  },
+  {
+   "trial_id": "S0014_1011_225618",
+   "standing": false,
+   "answer": "NO",
+   "latency_ms": 1013.298511505127,
+   "raw": "Answer: NO"
+  },
+  {
+   "trial_id": "S0016_1011_225847",
+   "standing": false,
+   "answer": "NO",
+   "latency_ms": 748.2149600982666,
+   "raw": "Answer: NO"
+  },
+  {
+   "trial_id": "S0017_1011_230000",
+   "standing": false,
+   "answer": "NO",
+   "latency_ms": 1013.7417316436768,
+   "raw": "Answer: NO"
+  },
+  {
+   "trial_id": "S0018_1011_230119",
+   "standing": false,
+   "answer": "NO",
+   "latency_ms": 740.4117584228516,
+   "raw": "Answer: NO"
+  },
+  {
+   "trial_id": "S0019_1011_230303",
+   "standing": false,
+   "answer": "NO",
+   "latency_ms": 1015.9902572631836,
+   "raw": "Answer: NO"
+  },
+  {
+   "trial_id": "S0021_1011_232533",
+   "standing": true,
+   "answer": "NO",
+   "latency_ms": 740.1154041290283,
+   "raw": "Answer: NO"
+  },
+  {
+   "trial_id": "S0022_1011_232648",
+   "standing": false,
+   "answer": "NO",
+   "latency_ms": 1019.4103717803955,
+   "raw": "Answer: NO"
+  },
+  {
+   "trial_id": "S0023_1011_232759",
+   "standing": true,
+   "answer": "NO",
+   "latency_ms": 731.804370880127,
+   "raw": "Answer: NO"
+  },
+  {
+   "trial_id": "S0024_1011_232912",
+   "standing": false,
+   "answer": "NO",
+   "latency_ms": 1021.709680557251,
+   "raw": "Answer: NO"
+  },
+  {
+   "trial_id": "S0001_1011_234300",
+   "standing": true,
+   "answer": "NO",
+   "latency_ms": 736.0444068908691,
+   "raw": "Answer: NO"
+  },
+  {
+   "trial_id": "S0002_1011_234413",
+   "standing": true,
+   "answer": "NO",
+   "latency_ms": 1016.6323184967041,
+   "raw": "Answer: NO"
+  },
+  {
+   "trial_id": "S0003_1011_234522",
+   "standing": true,
+   "answer": "NO",
+   "latency_ms": 1013.1549835205078,
+   "raw": "Answer: NO"
+  },
+  {
+   "trial_id": "S0004_1011_234636",
+   "standing": true,
+   "answer": "NO",
+   "latency_ms": 736.6273403167725,
+   "raw": "Answer: NO"
+  },
+  {
+   "trial_id": "S0007_1011_235005",
+   "standing": true,
+   "answer": "NO",
+   "latency_ms": 1012.824296951294,
+   "raw": "Answer: NO"
+  },
+  {
+   "trial_id": "S0008_1011_235748",
+   "standing": true,
+   "answer": "NO",
+   "latency_ms": 1014.124870300293,
+   "raw": "Answer: NO"
+  },
+  {
+   "trial_id": "S0009_1011_235908",
+   "standing": false,
+   "answer": "NO",
+   "latency_ms": 1017.8666114807129,
+   "raw": "Answer: NO"
+  },
+  {
+   "trial_id": "S0010_1012_000028",
+   "standing": true,
+   "answer": "NO",
+   "latency_ms": 744.9245452880859,
+   "raw": "Answer: NO"
+  },
+  {
+   "trial_id": "S0011_1012_000154",
+   "standing": true,
+   "answer": "NO",
+   "latency_ms": 1017.7013874053955,
+   "raw": "Answer: NO"
+  },
+  {
+   "trial_id": "S0012_1012_000306",
+   "standing": true,
+   "answer": "NO",
+   "latency_ms": 1023.7102508544922,
+   "raw": "Answer: NO"
+  },
+  {
+   "trial_id": "S0014_1012_000551",
+   "standing": true,
+   "answer": "NO",
+   "latency_ms": 736.6628646850586,
+   "raw": "Answer: NO"
+  },
+  {
+   "trial_id": "S0015_1012_000701",
+   "standing": true,
+   "answer": "NO",
+   "latency_ms": 1011.1954212188721,
+   "raw": "Answer: NO"
+  },
+  {
+   "trial_id": "S0016_1012_000813",
+   "standing": true,
+   "answer": "NO",
+   "latency_ms": 1010.2396011352539,
+   "raw": "Answer: NO"
+  },
+  {
+   "trial_id": "S0017_1012_000921",
+   "standing": true,
+   "answer": "NO",
+   "latency_ms": 741.7781352996826,
+   "raw": "Answer: NO"
+  },
+  {
+   "trial_id": "S0018_1012_001030",
+   "standing": true,
+   "answer": "NO",
+   "latency_ms": 1070.397138595581,
+   "raw": "Answer: NO"
+  },
+  {
+   "trial_id": "S0019_1012_001138",
+   "standing": true,
+   "answer": "NO",
+   "latency_ms": 1022.4153995513916,
+   "raw": "Answer: NO"
+  },
+  {
+   "trial_id": "S0020_1012_001247",
+   "standing": true,
+   "answer": "NO",
+   "latency_ms": 1021.4285850524902,
+   "raw": "Answer: NO"
+  },
+  {
+   "trial_id": "S0022_1012_001506",
+   "standing": true,
+   "answer": "NO",
+   "latency_ms": 1029.5028686523438,
+   "raw": "Answer: NO"
+  },
+  {
+   "trial_id": "S0023_1012_001616",
+   "standing": true,
+   "answer": "NO",
+   "latency_ms": 1022.5324630737305,
+   "raw": "Answer: NO"
+  },
+  {
+   "trial_id": "S0024_1012_001725",
+   "standing": true,
+   "answer": "NO",
+   "latency_ms": 1020.3845500946045,
+   "raw": "Answer: NO"
+  },
+  {
+   "trial_id": "S1001_1012_002116",
+   "standing": false,
+   "answer": "NO",
+   "latency_ms": 1023.3986377716064,
+   "raw": "Answer: NO"
+  },
+  {
+   "trial_id": "S1003_1012_002349",
+   "standing": false,
+   "answer": "NO",
+   "latency_ms": 1027.097463607788,
+   "raw": "Answer: NO"
+  },
+  {
+   "trial_id": "S4001_1012_002921",
+   "standing": true,
+   "answer": "NO",
+   "latency_ms": 1015.5432224273682,
+   "raw": "Answer: NO"
+  },
+  {
+   "trial_id": "S4002_1012_003030",
+   "standing": true,
+   "answer": "NO",
+   "latency_ms": 1045.987844467163,
+   "raw": "Answer: NO"
+  },
+  {
+   "trial_id": "S4003_1012_003142",
+   "standing": true,
+   "answer": "NO",
+   "latency_ms": 1035.9609127044678,
+   "raw": "Answer: NO"
+  },
+  {
+   "trial_id": "S4005_1012_003400",
+   "standing": true,
+   "answer": "NO",
+   "latency_ms": 1029.618740081787,
+   "raw": "Answer: NO"
+  },
+  {
+   "trial_id": "S4006_1012_003510",
+   "standing": true,
+   "answer": "NO",
+   "latency_ms": 1035.3467464447021,
+   "raw": "Answer: NO"
+  },
+  {
+   "trial_id": "S4007_1012_003619",
+   "standing": true,
+   "answer": "NO",
+   "latency_ms": 1025.3527164459229,
+   "raw": "Answer: NO"
+  },
+  {
+   "trial_id": "S4008_1012_003731",
+   "standing": true,
+   "answer": "NO",
+   "latency_ms": 1019.118070602417,
+   "raw": "Answer: NO"
+  },
+  {
+   "trial_id": "S4009_1012_003842",
+   "standing": true,
+   "answer": "NO",
+   "latency_ms": 1024.961233139038,
+   "raw": "Answer: NO"
+  },
+  {
+   "trial_id": "S4011_1012_004103",
+   "standing": true,
+   "answer": "NO",
+   "latency_ms": 1026.4441967010498,
+   "raw": "Answer: NO"
+  },
+  {
+   "trial_id": "S4012_1012_233852",
+   "standing": true,
+   "answer": "NO",
+   "latency_ms": 1053.9109706878662,
+   "raw": "Answer: NO"
+  },
+  {
+   "trial_id": "S4014_1012_234113",
+   "standing": true,
+   "answer": "NO",
+   "latency_ms": 1022.4130153656006,
+   "raw": "Answer: NO"
+  },
+  {
+   "trial_id": "S4015_1012_234222",
+   "standing": true,
+   "answer": "NO",
+   "latency_ms": 1016.5162086486816,
+   "raw": "Answer: NO"
+  },
+  {
+   "trial_id": "S4016_1012_234330",
+   "standing": true,
+   "answer": "NO",
+   "latency_ms": 1033.7498188018799,
+   "raw": "Answer: NO"
+  },
+  {
+   "trial_id": "S4017_1012_234439",
+   "standing": true,
+   "answer": "NO",
+   "latency_ms": 1018.9976692199707,
+   "raw": "Answer: NO"
+  },
+  {
+   "trial_id": "S4018_1012_234547",
+   "standing": true,
+   "answer": "NO",
+   "latency_ms": 1018.8803672790527,
+   "raw": "Answer: NO"
+  },
+  {
+   "trial_id": "S4019_1012_234656",
+   "standing": true,
+   "answer": "NO",
+   "latency_ms": 1017.3044204711914,
+   "raw": "Answer: NO"
+  },
+  {
+   "trial_id": "S4020_1012_234805",
+   "standing": true,
+   "answer": "NO",
+   "latency_ms": 1023.0200290679932,
+   "raw": "Answer: NO"
+  },
+  {
+   "trial_id": "S4021_1012_234912",
+   "standing": true,
+   "answer": "NO",
+   "latency_ms": 1029.590368270874,
+   "raw": "Answer: NO"
+  },
+  {
+   "trial_id": "S4022_1012_235021",
+   "standing": true,
+   "answer": "NO",
+   "latency_ms": 1022.4456787109375,
+   "raw": "Answer: NO"
+  },
+  {
+   "trial_id": "S4025_1012_235349",
+   "standing": true,
+   "answer": "NO",
+   "latency_ms": 1019.6568965911865,
+   "raw": "Answer: NO"
+  },
+  {
+   "trial_id": "S4026_1012_235458",
+   "standing": true,
+   "answer": "NO",
+   "latency_ms": 1022.4790573120117,
+   "raw": "Answer: NO"
+  },
+  {
+   "trial_id": "S4028_1012_235728",
+   "standing": true,
+   "answer": "NO",
+   "latency_ms": 1024.2946147918701,
+   "raw": "Answer: NO"
+  },
+  {
+   "trial_id": "S4029_1012_235836",
+   "standing": true,
+   "answer": "NO",
+   "latency_ms": 1029.7811031341553,
+   "raw": "Answer: NO"
+  },
+  {
+   "trial_id": "S4031_1013_000057",
+   "standing": true,
+   "answer": "NO",
+   "latency_ms": 1021.0003852844238,
+   "raw": "Answer: NO"
+  },
+  {
+   "trial_id": "S4033_1013_000316",
+   "standing": true,
+   "answer": "NO",
+   "latency_ms": 1023.1451988220215,
+   "raw": "Answer: NO"
+  },
+  {
+   "trial_id": "S4034_1013_000431",
+   "standing": true,
+   "answer": "NO",
+   "latency_ms": 1024.3241786956787,
+   "raw": "Answer: NO"
+  },
+  {
+   "trial_id": "S4035_1013_000541",
+   "standing": true,
+   "answer": "NO",
+   "latency_ms": 1016.671895980835,
+   "raw": "Answer: NO"
+  },
+  {
+   "trial_id": "S4036_1013_000710",
+   "standing": true,
+   "answer": "NO",
+   "latency_ms": 1037.5220775604248,
+   "raw": "Answer: NO"
+  },
+  {
+   "trial_id": "S4040_1013_001159",
+   "standing": true,
+   "answer": "NO",
+   "latency_ms": 1023.8955020904541,
+   "raw": "Answer: NO"
+  },
+  {
+   "trial_id": "S4043_1013_001526",
+   "standing": true,
+   "answer": "NO",
+   "latency_ms": 1018.37158203125,
+   "raw": "Answer: NO"
+  },
+  {
+   "trial_id": "S4044_1013_001634",
+   "standing": true,
+   "answer": "NO",
+   "latency_ms": 1018.6526775360107,
+   "raw": "Answer: NO"
+  },
+  {
+   "trial_id": "S4045_1013_001744",
+   "standing": true,
+   "answer": "NO",
+   "latency_ms": 1030.0965309143066,
+   "raw": "Answer: NO"
+  },
+  {
+   "trial_id": "S4046_1013_001854",
+   "standing": true,
+   "answer": "NO",
+   "latency_ms": 1025.3312587738037,
+   "raw": "Answer: NO"
+  },
+  {
+   "trial_id": "F0001_1013_003453",
+   "standing": true,
+   "answer": "NO",
+   "latency_ms": 1027.3754596710205,
+   "raw": "Answer: NO"
+  },
+  {
+   "trial_id": "F0003_1013_003730",
+   "standing": true,
+   "answer": "NO",
+   "latency_ms": 1021.8944549560547,
+   "raw": "Answer: NO"
+  },
+  {
+   "trial_id": "F0004_1013_003838",
+   "standing": true,
+   "answer": "NO",
+   "latency_ms": 1025.4125595092773,
+   "raw": "Answer: NO"
+  },
+  {
+   "trial_id": "F0006_1013_004054",
+   "standing": true,
+   "answer": "NO",
+   "latency_ms": 1020.2693939208984,
+   "raw": "Answer: NO"
+  },
+  {
+   "trial_id": "F0007_1013_004202",
+   "standing": true,
+   "answer": "NO",
+   "latency_ms": 1013.3857727050781,
+   "raw": "Answer: NO"
+  },
+  {
+   "trial_id": "F0009_1013_004416",
+   "standing": true,
+   "answer": "NO",
+   "latency_ms": 1019.7582244873047,
+   "raw": "Answer: NO"
+  },
+  {
+   "trial_id": "F0011_1013_004637",
+   "standing": true,
+   "answer": "NO",
+   "latency_ms": 1023.3609676361084,
+   "raw": "Answer: NO"
+  },
+  {
+   "trial_id": "F0013_1013_004854",
+   "standing": false,
+   "answer": "NO",
+   "latency_ms": 1035.341501235962,
+   "raw": "Answer: NO"
+  },
+  {
+   "trial_id": "F0015_1013_005131",
+   "standing": true,
+   "answer": "NO",
+   "latency_ms": 1015.7628059387207,
+   "raw": "Answer: NO"
+  },
+  {
+   "trial_id": "F0016_1013_005240",
+   "standing": true,
+   "answer": "NO",
+   "latency_ms": 1017.2796249389648,
+   "raw": "Answer: NO"
+  },
+  {
+   "trial_id": "F0017_1013_005351",
+   "standing": true,
+   "answer": "NO",
+   "latency_ms": 1017.8053379058838,
+   "raw": "Answer: NO"
+  },
+  {
+   "trial_id": "F0018_1013_005458",
+   "standing": true,
+   "answer": "NO",
+   "latency_ms": 1017.1504020690918,
+   "raw": "Answer: NO"
+  },
+  {
+   "trial_id": "F0019_1013_005608",
+   "standing": true,
+   "answer": "NO",
+   "latency_ms": 1025.6755352020264,
+   "raw": "Answer: NO"
+  },
+  {
+   "trial_id": "F0020_1013_005716",
+   "standing": true,
+   "answer": "NO",
+   "latency_ms": 1019.8466777801514,
+   "raw": "Answer: NO"
+  },
+  {
+   "trial_id": "F0021_1013_005826",
+   "standing": true,
+   "answer": "NO",
+   "latency_ms": 1018.7234878540039,
+   "raw": "Answer: NO"
+  },
+  {
+   "trial_id": "F0022_1013_005934",
+   "standing": true,
+   "answer": "NO",
+   "latency_ms": 1016.1652565002441,
+   "raw": "Answer: NO"
+  },
+  {
+   "trial_id": "F0023_1013_010041",
+   "standing": true,
+   "answer": "NO",
+   "latency_ms": 1036.6334915161133,
+   "raw": "Answer: NO"
+  },
+  {
+   "trial_id": "F0026_1013_010406",
+   "standing": true,
+   "answer": "NO",
+   "latency_ms": 1022.1858024597168,
+   "raw": "Answer: NO"
+  },
+  {
+   "trial_id": "F0027_1013_010514",
+   "standing": true,
+   "answer": "NO",
+   "latency_ms": 1018.5127258300781,
+   "raw": "Answer: NO"
+  },
+  {
+   "trial_id": "F0028_1013_010622",
+   "standing": true,
+   "answer": "NO",
+   "latency_ms": 1027.085781097412,
+   "raw": "Answer: NO"
+  },
+  {
+   "trial_id": "F0029_1013_010729",
+   "standing": true,
+   "answer": "NO",
+   "latency_ms": 1025.4197120666504,
+   "raw": "Answer: NO"
+  },
+  {
+   "trial_id": "F0032_1013_011119",
+   "standing": true,
+   "answer": "NO",
+   "latency_ms": 1014.8451328277588,
+   "raw": "Answer: NO"
+  },
+  {
+   "trial_id": "F0034_1013_011342",
+   "standing": true,
+   "answer": "NO",
+   "latency_ms": 1019.0458297729492,
+   "raw": "Answer: NO"
+  },
+  {
+   "trial_id": "F0035_1013_011450",
+   "standing": true,
+   "answer": "NO",
+   "latency_ms": 1018.6314582824707,
+   "raw": "Answer: NO"
+  },
+  {
+   "trial_id": "F0036_1013_011558",
+   "standing": true,
+   "answer": "NO",
+   "latency_ms": 1016.5355205535889,
+   "raw": "Answer: NO"
+  },
+  {
+   "trial_id": "F0037_1013_011712",
+   "standing": true,
+   "answer": "NO",
+   "latency_ms": 1019.7525024414062,
+   "raw": "Answer: NO"
+  },
+  {
+   "trial_id": "F0038_1013_011822",
+   "standing": true,
+   "answer": "NO",
+   "latency_ms": 1019.5472240447998,
+   "raw": "Answer: NO"
+  },
+  {
+   "trial_id": "F0040_1013_012039",
+   "standing": true,
+   "answer": "NO",
+   "latency_ms": 1018.3506011962891,
+   "raw": "Answer: NO"
+  },
+  {
+   "trial_id": "P0001_1013_212044",
+   "standing": true,
+   "answer": "NO",
+   "latency_ms": 1022.0005512237549,
+   "raw": "Answer: NO"
+  },
+  {
+   "trial_id": "P0003_1013_212303",
+   "standing": true,
+   "answer": "NO",
+   "latency_ms": 1020.0240612030029,
+   "raw": "Answer: NO"
+  },
+  {
+   "trial_id": "P0004_1013_212413",
+   "standing": true,
+   "answer": "NO",
+   "latency_ms": 1026.2219905853271,
+   "raw": "Answer: NO"
+  },
+  {
+   "trial_id": "P0005_1013_212521",
+   "standing": true,
+   "answer": "NO",
+   "latency_ms": 1025.458812713623,
+   "raw": "Answer: NO"
+  },
+  {
+   "trial_id": "P0006_1013_212628",
+   "standing": true,
+   "answer": "NO",
+   "latency_ms": 1019.1810131072998,
+   "raw": "Answer: NO"
+  },
+  {
+   "trial_id": "P0008_1013_212846",
+   "standing": true,
+   "answer": "NO",
+   "latency_ms": 1017.3978805541992,
+   "raw": "Answer: NO"
+  },
+  {
+   "trial_id": "P0009_1013_213301",
+   "standing": true,
+   "answer": "NO",
+   "latency_ms": 1017.017126083374,
+   "raw": "Answer: NO"
+  },
+  {
+   "trial_id": "P0010_1013_213409",
+   "standing": true,
+   "answer": "NO",
+   "latency_ms": 1019.667387008667,
+   "raw": "Answer: NO"
+  },
+  {
+   "trial_id": "P0013_1013_213735",
+   "standing": true,
+   "answer": "NO",
+   "latency_ms": 1021.9707489013672,
+   "raw": "Answer: NO"
+  },
+  {
+   "trial_id": "P0014_1013_213843",
+   "standing": true,
+   "answer": "NO",
+   "latency_ms": 1050.276517868042,
+   "raw": "Answer: NO"
+  },
+  {
+   "trial_id": "P0015_1013_213952",
+   "standing": true,
+   "answer": "NO",
+   "latency_ms": 1030.5061340332031,
+   "raw": "Answer: NO"
+  },
+  {
+   "trial_id": "P0018_1013_214324",
+   "standing": true,
+   "answer": "NO",
+   "latency_ms": 1031.3737392425537,
+   "raw": "Answer: NO"
+  },
+  {
+   "trial_id": "P0019_1013_214432",
+   "standing": true,
+   "answer": "NO",
+   "latency_ms": 1049.863338470459,
+   "raw": "Answer: NO"
+  },
+  {
+   "trial_id": "P0021_1013_214651",
+   "standing": false,
+   "answer": "NO",
+   "latency_ms": 1024.017333984375,
+   "raw": "Answer: NO"
+  },
+  {
+   "trial_id": "P0022_1013_214800",
+   "standing": true,
+   "answer": "NO",
+   "latency_ms": 1022.1567153930664,
+   "raw": "Answer: NO"
+  },
+  {
+   "trial_id": "P0024_1013_215029",
+   "standing": false,
+   "answer": "NO",
+   "latency_ms": 1036.7562770843506,
+   "raw": "Answer: NO"
+  }
+ ]
+}

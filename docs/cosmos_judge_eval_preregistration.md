@@ -70,3 +70,23 @@ Dev: 136 trials, 10 failures (`artifacts/cosmos_judge/dev/`, `dev_scores.jsonl`)
 - In every condition the model wrote only the final line, with no reasoning text, despite the 768-token budget.
 - Note, stated now: the prompt sensitivity is large. Small wording changes flip the model between always-YES and
   always-NO, and the eval result is read with that in mind.
+
+## 7. Eval results (run once per condition, 2026-10-14)
+
+Eval: 273 trials, 21 failures (`artifacts/cosmos_judge/eval/`, `eval_scores.jsonl`).
+
+| Condition | Failure recall (Wilson 95%) | False alarms (Wilson 95%) | Abstain | Balanced accuracy | Median latency |
+|---|---|---|---|---|---|
+| C0 baseline | 1/21 [0.008, 0.23] | 0/252 | 0 | 0.52 | — |
+| **C1 p1** (final frame, explicit criterion, `Answer:` format) | **20/21** [0.77, 0.99] | **5/252** [0.009, 0.046] | 0 | **0.966** | 893 ms |
+| C2 v3 (last 3 s of video) | 21/21 | 252/252 (always NO) | 0 | 0.50 | 1017 ms |
+
+- The C1 dev result held on eval. One failure was missed: stress v1 S0 trial 2, where the can was set down tilted and
+  fell. Of the 5 false alarms, 4 are S4 yellow-can trials and 1 is a positive-control trial.
+- Video input (C2) collapsed to always-NO with the chosen prompt.
+- **Reading**:
+  - In this setup Cosmos-Reason2-2B can serve as an end-of-trial success judge, but only with an explicit success
+    criterion and a fixed answer format on the final frame.
+  - It is very sensitive to wording (§6), so a deployment must re-validate the exact prompt on held-out labelled
+    trials.
+  - The live 2 Hz supervisor prompt (CONTINUE / FALLBACK / ABORT) was not re-evaluated here.
