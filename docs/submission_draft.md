@@ -123,7 +123,15 @@ failure.
 - Shorter replanning intervals (10 / 30 / about 90 steps) crossed with start-position shifts, to separate trajectory
   memorization from slow reaction.
 - An offline re-evaluation of Cosmos: one frame with a larger output budget, and the last seconds of video.
-- Structured verdicts: code decides, and Nemotron explains each verdict with links to its evidence.
+- Structured verdicts (done in report v2): next, link each verdict to its trials and videos on the dashboard.
+- **On-policy audit and distillation.** Build the audit buffer from the states the deployed engine actually visits:
+  the 385 logged real-arm rollouts already have states and both camera videos. Label those states offline with the
+  FP32 teacher, then use them in two ways:
+  1. score candidates on the deployment distribution instead of demonstration states, to narrow the offline-to-real gap;
+  2. run quantization-aware, on-policy distillation (DAgger with FP32 as the expert) to try to recover a broken build
+     such as PC-B.
+  Distillation can only close the student-teacher gap. It cannot fix weaknesses the teacher shares, such as the
+  position shift; those need new demonstrations, as in the position fine-tune.
 
 ## Built with
 

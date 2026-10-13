@@ -193,6 +193,15 @@ docs/            pre-registration, decision log, protocols, session notes, relat
 tests/           176 unit tests
 ```
 
+## Next steps
+
+- **On-policy audit**: score candidates on the states the deployed engine visits (385 logged rollouts with both camera
+  videos), labelled offline by the FP32 teacher, instead of on demonstration states.
+- **On-policy distillation**: quantization-aware fine-tuning on those states (DAgger with FP32 as the expert), to try to
+  recover a broken build such as PC-B. It closes the student-teacher gap only; weaknesses the teacher shares, such as
+  the start-position shift, need new demonstrations.
+- The position fine-tune, pre-registered in [`docs/finetune_position_preregistration.md`](docs/finetune_position_preregistration.md).
+
 ## Limitations
 
 - One task, one checkpoint, one robot, one TensorRT build.
