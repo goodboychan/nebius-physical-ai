@@ -55,10 +55,15 @@ def verdict_table():
     if P:
         p = P["comparison"]
         rows.append({"candidate": "PC-B", "context": "positive control real arm", "success": p["test_k_n"], "reference": p["ref_k_n"],
-                     "verdict": p["verdict"], "evidence_path": f"{R}/positive_control_analysis.json#comparison"})
+                     "e1_ci_pp": [round(x, 1) for x in p["E1"]["ci_pp"]], "e2": p["E2"]["decision"], "verdict": p["verdict"],
+                     "e2e_ms": P["e2e_ms"].get("PC-B"), "offline_verdict": "NO-GO",
+                     "evidence_path": f"{R}/positive_control_analysis.json#comparison"})
     cost = {"VC-025": 11.6, "VC-002": 16.8, "VC-020": 16.8, "VC-005": 17.1, "VC-000": 53.4}
     for r in rows:   # next actions are decided by code, not by the model
-        if r["verdict"] == "INSUFFICIENT_EVIDENCE":
+        if r["candidate"] == "PC-B" and r["context"] == "positive control real arm":
+            r["next_action"] = ("Offline warning not confirmed on the arm in 12 trials (unresolved, not 'tolerated'); keep rejecting this build at the "
+                                "calibration-input check; do not read the offline audit as a predictor of closed-loop failure")
+        elif r["verdict"] == "INSUFFICIENT_EVIDENCE":
             r["next_action"] = ("Settle success against FP32 at 10 pp: plan about 110-120 trials per arm (planning estimate, assumes equal true rates near 96-97 percent; not a guarantee)"
                                 + ("; also validate start-position changes before deployment" if r["candidate"] == "VC-025" else ""))
         elif r["verdict"] == "FLAGGED":

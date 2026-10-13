@@ -1,0 +1,143 @@
+{
+ "P0001_1013_212044": {
+  "success_geom": true,
+  "reason": "ok",
+  "base_dist_px": 20.1,
+  "n_consensus_frames": 15
+ },
+ "P0002_1013_212155": {
+  "success_geom": true,
+  "reason": "ok",
+  "base_dist_px": 19.5,
+  "n_consensus_frames": 15
+ },
+ "P0003_1013_212303": {
+  "success_geom": true,
+  "reason": "ok",
+  "base_dist_px": 17.4,
+  "n_consensus_frames": 15
+ },
+ "P0004_1013_212413": {
+  "success_geom": true,
+  "reason": "ok",
+  "base_dist_px": 18.8,
+  "n_consensus_frames": 15
+ },
+ "P0005_1013_212521": {
+  "success_geom": true,
+  "reason": "ok",
+  "base_dist_px": 19.0,
+  "n_consensus_frames": 15
+ },
+ "P0006_1013_212628": {
+  "success_geom": true,
+  "reason": "ok",
+  "base_dist_px": 22.4,
+  "n_consensus_frames": 15
+ },
+ "P0007_1013_212735": {
+  "success_geom": true,
+  "reason": "ok",
+  "base_dist_px": 18.6,
+  "n_consensus_frames": 15
+ },
+ "P0008_1013_212846": {
+  "success_geom": true,
+  "reason": "ok",
+  "base_dist_px": 19.6,
+  "n_consensus_frames": 15
+ },
+ "P0009_1013_213301": {
+  "success_geom": true,
+  "reason": "ok",
+  "base_dist_px": 21.7,
+  "n_consensus_frames": 15
+ },
+ "P0010_1013_213409": {
+  "success_geom": true,
+  "reason": "ok",
+  "base_dist_px": 16.8,
+  "n_consensus_frames": 15
+ },
+ "P0011_1013_213515": {
+  "success_geom": true,
+  "reason": "ok",
+  "base_dist_px": 21.3,
+  "n_consensus_frames": 15
+ },
+ "P0012_1013_213626": {
+  "success_geom": true,
+  "reason": "ok",
+  "base_dist_px": 17.9,
+  "n_consensus_frames": 15
+ },
+ "P0013_1013_213735": {
+  "success_geom": true,
+  "reason": "ok",
+  "base_dist_px": 16.8,
+  "n_consensus_frames": 15
+ },
+ "P0014_1013_213843": {
+  "success_geom": true,
+  "reason": "ok",
+  "base_dist_px": 17.0,
+  "n_consensus_frames": 15
+ },
+ "P0015_1013_213952": {
+  "success_geom": true,
+  "reason": "ok",
+  "base_dist_px": 22.9,
+  "n_consensus_frames": 15
+ },
+ "P0016_1013_214101": {
+  "success_geom": false,
+  "reason": "moving_or_not_standing",
+  "n_consensus_frames": 4
+ },
+ "P0017_1013_214213": {
+  "success_geom": true,
+  "reason": "ok",
+  "base_dist_px": 19.0,
+  "n_consensus_frames": 15
+ },
+ "P0018_1013_214324": {
+  "success_geom": true,
+  "reason": "ok",
+  "base_dist_px": 14.5,
+  "n_consensus_frames": 15
+ },
+ "P0019_1013_214432": {
+  "success_geom": true,
+  "reason": "ok",
+  "base_dist_px": 18.2,
+  "n_consensus_frames": 15
+ },
+ "P0020_1013_214541": {
+  "success_geom": true,
+  "reason": "ok",
+  "base_dist_px": 21.3,
+  "n_consensus_frames": 15
+ },
+ "P0021_1013_214651": {
+  "success_geom": false,
+  "reason": "moving_or_not_standing",
+  "n_consensus_frames": 5
+ },
+ "P0022_1013_214800": {
+  "success_geom": true,
+  "reason": "ok",
+  "base_dist_px": 20.0,
+  "n_consensus_frames": 15
+ },
+ "P0023_1013_214916": {
+  "success_geom": true,
+  "reason": "ok",
+  "base_dist_px": 17.5,
+  "n_consensus_frames": 15
+ },
+ "P0024_1013_215029": {
+  "success_geom": false,
+  "reason": "moving_or_not_standing",
+  "n_consensus_frames": 3
+ }
+}

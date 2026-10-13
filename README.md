@@ -193,6 +193,15 @@ docs/            pre-registration, decision log, protocols, session notes, relat
 tests/           176 unit tests
 ```
 
+## Positive control
+
+A deliberately miscalibrated INT8 build, PC-B (calibrated on black frames), was flagged offline. It was caught by a
+simple input check, by action MSE and by both audit scores, far outside the 24 normal cells. On the arm, blinded and
+interleaved, it went **11/12 against FP32 10/12**. Placement was within tolerance (+1.11 px, CI [−0.74, +3.08]); the
+success comparison is insufficient evidence. The offline warning was **not confirmed** in 12 trials, which is read as
+unresolved, not as "tolerated" ([`positive_control_analysis.json`](artifacts/reports/positive_control_analysis.json)).
+Such builds are still rejected at the input check.
+
 ## Next steps
 
 - **On-policy audit**: score candidates on the states the deployed engine visits (385 logged rollouts with both camera

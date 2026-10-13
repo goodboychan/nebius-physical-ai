@@ -1,0 +1,67 @@
+{
+ "n": 24,
+ "cells": {
+  "PC-B": {
+   "k": 11,
+   "n": 12,
+   "place_mean": 19.59090909090909
+  },
+  "VC-000": {
+   "k": 10,
+   "n": 12,
+   "place_mean": 18.48
+  }
+ },
+ "failures": {
+  "PC-B": [
+   21
+  ],
+  "VC-000": [
+   16,
+   24
+  ]
+ },
+ "comparison": {
+  "ref_k_n": [
+   10,
+   12
+  ],
+  "test_k_n": [
+   11,
+   12
+  ],
+  "E1": {
+   "degradation_pp": -8.333333333333325,
+   "ci_pp": [
+    -41.45124604437721,
+    25.80831865995933
+   ],
+   "method": "Newcombe hybrid score",
+   "decision": "indeterminate",
+   "bootstrap_ci_pp_secondary": [
+    -41.666666666666664,
+    16.666666666666675
+   ]
+  },
+  "E2": {
+   "degradation_px": 1.1109090909090966,
+   "ci_px": [
+    -0.740034090909089,
+    3.0755000000000052
+   ],
+   "n_place": [
+    10,
+    11
+   ],
+   "decision": "tolerance_compatible"
+  },
+  "verdict": "INSUFFICIENT_EVIDENCE",
+  "ceiling_rule_applied": false,
+  "conf": 0.975
+ },
+ "e2e_ms": {
+  "PC-B": 34.5,
+  "VC-000": 79.2
+ },
+ "offline_verdict": "NO-GO (artifacts/positive_control/offline_selection.json)"
+}

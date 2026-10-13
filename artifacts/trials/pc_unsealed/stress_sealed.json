@@ -1,0 +1,108 @@
+{
+ "P0": [
+  {
+   "cell": "PC-B",
+   "trial": 1
+  },
+  {
+   "cell": "VC-000",
+   "trial": 2
+  },
+  {
+   "cell": "VC-000",
+   "trial": 3
+  },
+  {
+   "cell": "PC-B",
+   "trial": 4
+  },
+  {
+   "cell": "VC-000",
+   "trial": 5
+  },
+  {
+   "cell": "PC-B",
+   "trial": 6
+  },
+  {
+   "cell": "PC-B",
+   "trial": 7
+  },
+  {
+   "cell": "VC-000",
+   "trial": 8
+  },
+  {
+   "cell": "VC-000",
+   "trial": 9
+  },
+  {
+   "cell": "PC-B",
+   "trial": 10
+  },
+  {
+   "cell": "PC-B",
+   "trial": 11
+  },
+  {
+   "cell": "VC-000",
+   "trial": 12
+  },
+  {
+   "cell": "PC-B",
+   "trial": 13
+  },
+  {
+   "cell": "VC-000",
+   "trial": 14
+  },
+  {
+   "cell": "PC-B",
+   "trial": 15
+  },
+  {
+   "cell": "VC-000",
+   "trial": 16
+  },
+  {
+   "cell": "PC-B",
+   "trial": 17
+  },
+  {
+   "cell": "VC-000",
+   "trial": 18
+  },
+  {
+   "cell": "VC-000",
+   "trial": 19
+  },
+  {
+   "cell": "PC-B",
+   "trial": 20
+  },
+  {
+   "cell": "PC-B",
+   "trial": 21
+  },
+  {
+   "cell": "VC-000",
+   "trial": 22
+  },
+  {
+   "cell": "PC-B",
+   "trial": 23
+  },
+  {
+   "cell": "VC-000",
+   "trial": 24
+  }
+ ],
+ "block_order": [
+  "P0"
+ ],
+ "lock2_record_hash": "5fb513a435b3b7b90dcb6e25e61a48d61ffc43fc2f8f14338903544a173540ec",
+ "token_to_cell": {
+  "342e2ca3": "PC-B",
+  "d24c09cc": "VC-000"
+ }
+}

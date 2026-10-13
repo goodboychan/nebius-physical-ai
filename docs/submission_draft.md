@@ -42,7 +42,7 @@ The results were sealed until all trials were logged, so no candidate was picked
 | Developer's question | Evidence | QuantGate's answer |
 |---|---|---|
 | Which candidate do I validate first? | FP16 is cheapest on this Jetson (11.6 ms, 82 mJ per inference), and went 19/20 on the arm with placement within tolerance of FP32 | **FP16**: the recommended candidate to validate |
-| Which candidates do I distrust? | Black-frame and noise calibrations: flagged by a simple input check, and by action MSE and both audit scores. The last three use thresholds set on the same 24 normal cells, so "no normal cell flagged" holds by construction (`simple_checks_vs_audit.json`) | **Calibration anomalies**: flagged. The real-arm check is `[PC]` |
+| Which candidates do I distrust? | Black-frame and noise calibrations: flagged by a simple input check, and by action MSE and both audit scores. The last three use thresholds set on the same 24 normal cells, so "no normal cell flagged" holds by construction (`simple_checks_vs_audit.json`) | **Calibration anomalies**: flagged offline. On the arm, PC-B went 11/12 against FP32 10/12, so the warning was not confirmed (insufficient evidence). Reject such builds at the input check anyway (`positive_control_analysis.json`) |
 | Can I approve deployment? | Success against FP32 is undecided for every candidate at these sample sizes, and position changes are not validated | **Not yet**: on hold, with the missing checks listed |
 
 The recommendation (what to test first) and the approval (whether to ship) are shown separately. A candidate can be

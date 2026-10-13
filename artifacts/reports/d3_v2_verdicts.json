@@ -328,6 +328,28 @@
    ],
    "evidence_path": "artifacts/reports/simple_checks_vs_audit.json#cells.PC-B",
    "next_action": "Do not deploy; fix the calibration input (a simple input check catches it); see the real-arm check of PC-B"
+  },
+  {
+   "candidate": "PC-B",
+   "context": "positive control real arm",
+   "success": [
+    11,
+    12
+   ],
+   "reference": [
+    10,
+    12
+   ],
+   "e1_ci_pp": [
+    -41.5,
+    25.8
+   ],
+   "e2": "tolerance_compatible",
+   "verdict": "INSUFFICIENT_EVIDENCE",
+   "e2e_ms": 34.5,
+   "offline_verdict": "NO-GO",
+   "evidence_path": "artifacts/reports/positive_control_analysis.json#comparison",
+   "next_action": "Offline warning not confirmed on the arm in 12 trials (unresolved, not 'tolerated'); keep rejecting this build at the calibration-input check; do not read the offline audit as a predictor of closed-loop failure"
   }
  ],
  "notes": {
