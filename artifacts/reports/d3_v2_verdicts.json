@@ -356,6 +356,6 @@
   "recommendation_vs_approval": "FP16 (VC-025) is the recommended candidate to validate first (cheapest on the device). Approval is a separate status: on hold while every success comparison is INSUFFICIENT_EVIDENCE.",
   "gpu_ms_source": "artifacts/reports/power_bench/SUMMARY.md (trtexec, 15 W)",
   "simple_checks_scope": "The action-MSE and audit-score thresholds were set on the same 24 normal cells, so '0 normal cells flagged' holds by construction; only the input check is independent of that set.",
-  "ai_judge": "Cosmos-Reason2 single-frame end judge: 0 of 7 G6 failures detected (d4_retro_judge_g6.json)."
+  "ai_judge": "Cosmos-Reason2 end-of-trial judge, held-out eval of 273 recorded trials (artifacts/cosmos_judge/eval_scores.jsonl): first setup 1/21 failures caught; validated prompt C1 p1 20/21 caught, 5/252 false alarms, 4 of them on the unseen yellow can (4/33). Wording-sensitive; end state only; re-checked live in the fine-tune evaluation."
  }
 }

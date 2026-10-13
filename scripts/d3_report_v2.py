@@ -78,7 +78,9 @@ def verdict_table():
         "recommendation_vs_approval": "FP16 (VC-025) is the recommended candidate to validate first (cheapest on the device). Approval is a separate status: on hold while every success comparison is INSUFFICIENT_EVIDENCE.",
         "gpu_ms_source": f"{R}/power_bench/SUMMARY.md (trtexec, 15 W)",
         "simple_checks_scope": "The action-MSE and audit-score thresholds were set on the same 24 normal cells, so '0 normal cells flagged' holds by construction; only the input check is independent of that set.",
-        "ai_judge": "Cosmos-Reason2 single-frame end judge: 0 of 7 G6 failures detected (d4_retro_judge_g6.json)."}}
+        "ai_judge": ("Cosmos-Reason2 end-of-trial judge, held-out eval of 273 recorded trials (artifacts/cosmos_judge/eval_scores.jsonl): "
+                     "first setup 1/21 failures caught; validated prompt C1 p1 20/21 caught, 5/252 false alarms, 4 of them on the unseen yellow can (4/33). "
+                     "Wording-sensitive; end state only; re-checked live in the fine-tune evaluation.")}}
 
 
 SYSTEM = """You explain a robotics deployment review. The verdicts and numbers are already decided by code.
@@ -99,6 +101,8 @@ VERD = re.compile(r"\b(INSUFFICIENT_EVIDENCE|INSUFFICIENT EVIDENCE|NO-GO|GO|FLAG
 MS = re.compile(r"(\d+(?:\.\d+)?)\s*ms\b")
 
 
+CONTEXT_WORDS = {"G6": ("g6", "nominal"), "S4": ("s4", "unseen", "yellow"), "FP16 run": ("fp16 run", "fp16 block"),
+                 "positive control": ("positive control", "real arm"), "offline": ("offline",)}
 DASHES = dict.fromkeys(map(ord, "\u2010\u2011\u2012\u2013\u2014\u2212"), "-")
 
 
@@ -118,6 +122,10 @@ def check_report(text, table):
         codes = set(CODE.findall(sent)); s_clean = CODE.sub(" ", sent)
         if len(codes) == 1:
             c = codes.pop(); rows = by.get(c, [])
+            low = s_clean.lower()
+            ctx = [k for k, v in CONTEXT_WORDS.items() if any(w in low for w in v)]
+            if ctx:   # restrict to the rows of the named context(s), so values cannot be borrowed across experiments
+                rows = [r for r in rows if any(k in r["context"] for k in ctx)] or rows
             ok_v = {r["verdict"] for r in rows}
             for v in VERD.findall(s_clean):
                 v = v.replace(" ", "_")
@@ -138,7 +146,8 @@ def check_report(text, table):
 
 def selftest(table):
     good = "VC-025 is INSUFFICIENT_EVIDENCE: it succeeded 19/20 against 10/10, with 24.7 ms end to end."
-    bad = ["VC-025 succeeded 20/20.", "VC-025 is GO.", "VC-025 took 34.3 ms end to end.", "VC-002 is NO-GO.", "VC\u2011025 is GO."]
+    bad = ["VC-025 succeeded 20/20.", "VC-025 is GO.", "VC-025 took 34.3 ms end to end.", "VC-002 is NO-GO.", "VC\u2011025 is GO.",
+           "On the unseen can VC-002 succeeded 24/25."]
     res = {"good_issues": check_report(good, table), "bad_caught": {b: bool(check_report(b, table)) for b in bad}}
     assert not res["good_issues"] and all(res["bad_caught"].values()), res
     return res

@@ -35,7 +35,7 @@ words per second, with short pauses. Every number is taken from the dashboard, t
 | 2 | `Re-enactment` (teleop scene only) · `120 demos` · `26 engines: FP32 · FP16 · 24× INT8` · `Blinded trial` |
 | 3 | `Nebius Jobs: training + offline audit` · `TensorRT on Jetson Orin Nano Super` |
 | 4 | `FP16: 11.6 ms · 82 mJ / inference` · `Audit top 3 vs random 3: 73/75 vs 73/75` · `No pads 8/24 · rubber bands 23/24 · start +3 cm 0/3` |
-| 5 | `Cosmos-Reason2 (Nebius Endpoint): 0 of 7 failures caught, single-frame setup` · `Nemotron 3 Super (Token Factory): explains code-decided verdicts, checked` |
+| 5 | `Cosmos-Reason2 (Nebius Endpoint), held-out eval: first setup 1/21 → validated prompt 20/21 · false alarms 5/252 (yellow can 4/33)` · `Nemotron 3 Super (Token Factory): explains code-decided verdicts, checked` |
 | 6 | `Deployment review: a review aid, not an automatic approval` |
 
 ## 음성 합성 (2026-10-13)

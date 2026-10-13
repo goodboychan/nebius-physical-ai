@@ -14,7 +14,8 @@ def table():
         os.chdir(cwd)
 
 @pytest.mark.parametrize("bad", ["VC-025 succeeded 20/20.", "VC-025 is GO.", "VC-025 took 34.3 ms end to end.",
-                                 "VC-002 is NO-GO.", "VC-007 succeeded 14/15.", "VC\u2011025 is GO.", "PC\u2011B is GO."])
+                                 "VC-002 is NO-GO.", "VC-007 succeeded 14/15.", "VC\u2011025 is GO.", "PC\u2011B is GO.",
+                                 "On the unseen can VC-002 succeeded 24/25.", "In G6 VC-002 succeeded 12/12."])
 def test_wrong_claims_are_caught(table, bad):
     d, t = table
     assert d.check_report(bad, t)
@@ -23,3 +24,5 @@ def test_correct_claims_pass(table):
     d, t = table
     assert not d.check_report("VC-025 is INSUFFICIENT_EVIDENCE: 19/20 against 10/10, 24.7 ms end to end.", t)
     assert not d.check_report("## 1. Recommendation", t)
+    assert not d.check_report("On the unseen can VC-002 succeeded 12/12.", t)
+    assert not d.check_report("In G6 VC-002 succeeded 24/25.", t)

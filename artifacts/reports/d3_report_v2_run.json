@@ -1,7 +1,7 @@
 {
- "verdict_hash": "1041eb597810cc298387ae49dd3033fd333138de7cf94618536ef9e0a7ea0e05",
+ "verdict_hash": "b55dda59ebf5878e3493f73d75109a97ea65a621bf3fe7f6fcc62bf085a85c98",
  "issues": [],
- "latency_sec": 4.2,
+ "latency_sec": 6.7,
  "selftest": {
   "good_issues": [],
   "bad_caught": {
@@ -9,8 +9,9 @@
    "VC-025 is GO.": true,
    "VC-025 took 34.3 ms end to end.": true,
    "VC-002 is NO-GO.": true,
-   "VC\u2011025 is GO.": true
+   "VC\u2011025 is GO.": true,
+   "On the unseen can VC-002 succeeded 24/25.": true
   }
  },
- "text": "\n\n## 1. Recommendation\nValidate VC-025 first; it has the lowest GPU time on the device (11.6\u202fms) among the candidates with reported trtexec times.\n\n## 2. Approval status\nNo candidate carries a GO or NO\u2011GO verdict; all non\u2011flagged entries are INSUFFICIENT_EVIDENCE, so approval remains on hold pending sufficient evidence.\n\n## 3. Flagged candidates\n- PC\u2011N \u2013 context: offline, deliberately miscalibrated \u2013 verdict: FLAGGED  \n- PC\u2011B \u2013 context: offline, deliberately miscalibrated \u2013 verdict: FLAGGED\n\n## 4. Next actions (decided by code)\n\n- **Settle success against FP32 at 10 pp: plan about 110-120 trials per arm (planning estimate, assumes equal true rates near 96-97 percent; not a guarantee)** \u2014 VC-002 (G6 nominal, pads), VC-020 (G6 nominal, pads), VC-010 (G6 nominal, pads), VC-011 (G6 nominal, pads), VC-012 (G6 nominal, pads), VC-015 (G6 nominal, pads), VC-005 (G6 nominal, pads), VC-007 (G6 nominal, pads), VC-022 (G6 nominal, pads), VC-024 (G6 nominal, pads), VC-002 (stress S4 unseen can), VC-005 (stress S4 unseen can), VC-020 (stress S4 unseen can)\n- **Settle success against FP32 at 10 pp: plan about 110-120 trials per arm (planning estimate, assumes equal true rates near 96-97 percent; not a guarantee); also validate start-position changes before deployment** \u2014 VC-025 (FP16 run, rubber bands)\n- **Do not deploy; fix the calibration input (a simple input check catches it); see the real-arm check of PC-B** \u2014 PC-N (offline, deliberately miscalibrated), PC-B (offline, deliberately miscalibrated)\n- **Offline warning not confirmed on the arm in 12 trials (unresolved, not 'tolerated'); keep rejecting this build at the calibration-input check; do not read the offline audit as a predictor of closed-loop failure** \u2014 PC-B (positive control real arm)\n"
+ "text": "\n\n## 1. Recommendation\nValidate VC\u2011025 first. It is the FP16 run with rubber bands and shows the lowest end\u2011to\u2011end latency at 24.7\u202fms and the shortest GPU time on the device at 11.6\u202fms.\n\n## 2. Approval status\nAll non\u2011flagged candidates have an INSUFFICIENT_EVIDENCE verdict; none received a GO verdict. Consequently, overall approval is withheld (on hold) until sufficient evidence is obtained.\n\n## 3. Flagged candidates\n- PC\u2011N (offline, deliberately miscalibrated) \u2013 verdict FLAGGED  \n- PC\u2011B (offline, deliberately miscalibrated) \u2013 verdict FLAGGED\n\n## 4. Next actions (decided by code)\n\n- **Settle success against FP32 at 10 pp: plan about 110-120 trials per arm (planning estimate, assumes equal true rates near 96-97 percent; not a guarantee)** \u2014 VC-002 (G6 nominal, pads), VC-020 (G6 nominal, pads), VC-010 (G6 nominal, pads), VC-011 (G6 nominal, pads), VC-012 (G6 nominal, pads), VC-015 (G6 nominal, pads), VC-005 (G6 nominal, pads), VC-007 (G6 nominal, pads), VC-022 (G6 nominal, pads), VC-024 (G6 nominal, pads), VC-002 (stress S4 unseen can), VC-005 (stress S4 unseen can), VC-020 (stress S4 unseen can)\n- **Settle success against FP32 at 10 pp: plan about 110-120 trials per arm (planning estimate, assumes equal true rates near 96-97 percent; not a guarantee); also validate start-position changes before deployment** \u2014 VC-025 (FP16 run, rubber bands)\n- **Do not deploy; fix the calibration input (a simple input check catches it); see the real-arm check of PC-B** \u2014 PC-N (offline, deliberately miscalibrated), PC-B (offline, deliberately miscalibrated)\n- **Offline warning not confirmed on the arm in 12 trials (unresolved, not 'tolerated'); keep rejecting this build at the calibration-input check; do not read the offline audit as a predictor of closed-loop failure** \u2014 PC-B (positive control real arm)\n"
 }

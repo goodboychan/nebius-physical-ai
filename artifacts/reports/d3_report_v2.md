@@ -1,10 +1,10 @@
 # QuantGate — deployment report v2 (auto-generated)
 
-> Verdicts are decided by code (`d3_v2_verdicts.json`, hash `1041eb597810cc29`); Nemotron 3 Super (Token Factory) wrote the explanation. A structured validator checked every candidate's verdict, success fractions and latency in the prose. v1 is kept as history (`d3_final_report.md`).
+> Verdicts are decided by code (`d3_v2_verdicts.json`, hash `b55dda59ebf5878e`); Nemotron 3 Super (Token Factory) wrote the explanation. A structured validator checked every candidate's verdict, success fractions and latency in the prose. v1 is kept as history (`d3_final_report.md`).
 
 | Item | Value |
 |---|---|
-| Latency | 4.2 s |
+| Latency | 6.7 s |
 | **Validator findings** | **0** |
 
 ---
@@ -12,14 +12,14 @@
 
 
 ## 1. Recommendation
-Validate VC-025 first; it has the lowest GPU time on the device (11.6 ms) among the candidates with reported trtexec times.
+Validate VC‑025 first. It is the FP16 run with rubber bands and shows the lowest end‑to‑end latency at 24.7 ms and the shortest GPU time on the device at 11.6 ms.
 
 ## 2. Approval status
-No candidate carries a GO or NO‑GO verdict; all non‑flagged entries are INSUFFICIENT_EVIDENCE, so approval remains on hold pending sufficient evidence.
+All non‑flagged candidates have an INSUFFICIENT_EVIDENCE verdict; none received a GO verdict. Consequently, overall approval is withheld (on hold) until sufficient evidence is obtained.
 
 ## 3. Flagged candidates
-- PC‑N – context: offline, deliberately miscalibrated – verdict: FLAGGED  
-- PC‑B – context: offline, deliberately miscalibrated – verdict: FLAGGED
+- PC‑N (offline, deliberately miscalibrated) – verdict FLAGGED  
+- PC‑B (offline, deliberately miscalibrated) – verdict FLAGGED
 
 ## 4. Next actions (decided by code)
 

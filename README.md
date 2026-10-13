@@ -46,9 +46,12 @@ Numbers come from committed artifacts. The figure's script lists its sources.
    - An unseen yellow can: 48/48, all four engines 12/12. Placement was within the 5 px tolerance of FP32 for every
      INT8 cell ([`stress_v2_analysis.json`](artifacts/reports/stress_v2_analysis.json)).
    - Source: [`stress_operator_notes.md`](docs/sessions/stress_operator_notes.md).
-4. **The AI judge needs validation before use.**
-   - Shown the final frame of all 245 trials, Cosmos-Reason2 answered "Yes" every time and caught 0 of 7 failures.
-   - Source: [`d4_retro_judge_g6.json`](artifacts/reports/d4_retro_judge_g6.json).
+4. **The AI judge was validated and improved, within limits.**
+   - In its first setup (final frame, one-word answer) Cosmos-Reason2 caught 1 of 21 failures on a held-out set.
+   - After a dev/eval-split re-evaluation, a final-frame prompt with an explicit success criterion and an `Answer:` format caught **20/21** failures (Wilson 95% 0.77–0.99) with **5/252** false alarms on the same held-out set.
+   - The false alarms concentrate on the unseen yellow can (4/33, 12%).
+   - The setup is very sensitive to wording, the change combined prompt, format and token budget, and it judges only the end state (median 893 ms). It is being re-checked live, unchanged, in the fine-tune evaluation.
+   - Source: [`cosmos_judge_eval_preregistration.md`](docs/cosmos_judge_eval_preregistration.md), [`eval_scores.jsonl`](artifacts/cosmos_judge/eval_scores.jsonl).
 
 Stress tests were unsealed on 2026-10-13. The stress protocol is
 [`docs/stress_test_protocol.md`](docs/stress_test_protocol.md).
