@@ -20,7 +20,7 @@
                                               S4는 시험 전에 잰 캔 판정 값 stress_can_S4.json, trial 끝에 Cosmos에게 판정 질문 1회 — 기술 통계용)
 블라인드 모드: 셀↔토큰 대응과 순서는 ~/.edgeqgate_sealed/에만 있다. 화면과 공개 로그에는 trial 번호만 남고, 셀·arm은 봉인 로그에만
 쓴다. 중간에 끝내도 다음 실행이 다음 trial부터 잇는다. 무효(시작 조건 실수 등)로 표시한 trial은 같은 번호로 다시 한다."""
-import json, os, queue, socket, struct, subprocess, sys, threading, time
+import json, os, queue, re, socket, struct, subprocess, sys, threading, time
 import numpy as np, av, cv2
 from lerobot.utils.import_utils import register_third_party_plugins; register_third_party_plugins()
 from lerobot.robots.so_follower import SO101Follower
@@ -42,6 +42,10 @@ D4_PROMPT = ("Overhead camera view of a robot arm that picks up a " + ("can" if 
              "in the workspace).")
 D4_JUDGE_PROMPT = ("Overhead camera view after a robot arm tried to stand a can upright on a round coaster. "
                    "Is the can standing upright on the coaster now? Answer with exactly one word: YES or NO.")
+# 파인튜닝 평가(T1/T0)부터: 오프라인 재평가(docs/cosmos_judge_eval_preregistration.md)에서 고른 C1 p1을 실시간으로 처음 검증한다
+D4_JUDGE_PROMPT_C1 = ("This is the final overhead camera frame of a robot trial. The goal: a can stands upright on a round coaster. "
+                      "Is the can upright on the coaster? Think briefly about what you see, then end with exactly one line: "
+                      "'Answer: YES' or 'Answer: NO'.")
 latest_top = {"img": None, "ts": None}; d4_ask = {"f": None}
 def grab_latest():
     """감독자에 프레임과 **촬영 시각**을 함께 준다(2026-10-13 외부 검토: 시각이 없으면 낡은 프레임도 새것으로 셌다)."""
@@ -53,10 +57,10 @@ def make_d4():
     cfg = json.load(open(D4_CFG)); u = urllib.parse.urlparse(cfg["url"])
     hdr = {"Authorization": "Bearer " + open(os.path.expanduser(cfg["token_file"])).read().strip(), "Content-Type": "application/json"}
     conn = {"c": http.client.HTTPSConnection(u.netloc, timeout=10)}
-    def infer(img, prompt=D4_PROMPT):
+    def infer(img, prompt=D4_PROMPT, max_tokens=8):
         if img is None: return ""
         ok, jpg = cv2.imencode(".jpg", cv2.cvtColor(img, cv2.COLOR_RGB2BGR), [cv2.IMWRITE_JPEG_QUALITY, 85])
-        body = json.dumps({"model": "nvidia/Cosmos-Reason2-2B", "max_tokens": 8, "temperature": 0, "messages": [{"role": "user", "content": [
+        body = json.dumps({"model": "nvidia/Cosmos-Reason2-2B", "max_tokens": max_tokens, "temperature": 0, "messages": [{"role": "user", "content": [
             {"type": "image_url", "image_url": {"url": "data:image/jpeg;base64," + base64.b64encode(jpg.tobytes()).decode()}},
             {"type": "text", "text": prompt}]}]})
         try:
@@ -237,7 +241,11 @@ def run_one(tid, label, cellname, engname):
     ai = None   # 스트레스: trial 끝 프레임으로 Cosmos에게 한 번 묻는다(기술 통계, 판정에 쓰지 않는다)
     if STRESS and d4_ask["f"] and not aborted:
         t_a = time.perf_counter()
-        try: ai = {"answer": d4_ask["f"](latest_top["img"], D4_JUDGE_PROMPT).strip(), "error": None}
+        c1 = SV == "ft"
+        try:
+            raw = d4_ask["f"](latest_top["img"], D4_JUDGE_PROMPT_C1 if c1 else D4_JUDGE_PROMPT, 768 if c1 else 8).strip()
+            m = re.findall(r"ANSWER\s*[:：]\s*(YES|NO)", raw.upper()) if c1 else None
+            ai = {"answer": (m[-1] if m else None) if c1 else raw, "raw": raw[-200:], "prompt": "C1p1" if c1 else "C0", "error": None}
         except Exception as e: ai = {"answer": None, "error": type(e).__name__}
         ai["latency_ms"] = round((time.perf_counter() - t_a) * 1000, 1)
     # '놓음'은 자동 판정하지 않는다(success_criterion §3). 조작자가 마지막 상태를 보고 답한다

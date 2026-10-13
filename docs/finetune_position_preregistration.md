@@ -85,3 +85,11 @@ The result is reported as measured. The study does not assume the fix works.
   `996d4a9a584c20d80ce221add95bec8cb4893b1b0c44a0990634fd113653d053`. Blocks run T1, then T0, with 24 trials each.
   Public copy: `artifacts/finetune/stress_schedule_public.json`. Analysis: `scripts/ft_analysis.py`.
 - Runner commands: `so101_trial.py --blind T1 ft`, then `--blind T0 ft`.
+
+## 9. Amendment 1 (2026-10-14, before the first trial): the end judge uses the validated prompt
+
+The end-of-trial Cosmos question in T1 and T0 uses the C1 p1 prompt chosen in
+`docs/cosmos_judge_eval_preregistration.md`: on eval it caught 20/21 failures with 5/252 false alarms. It runs with
+max_tokens 768 and the `Answer:` parse. This makes the 48 trials a **prospective, live check** of that prompt on new
+data. It stays descriptive and is never used for an outcome. Runner `so101_trial.py` `891a6e95…`. The live Cosmos
+configuration was restored on the Orin.
