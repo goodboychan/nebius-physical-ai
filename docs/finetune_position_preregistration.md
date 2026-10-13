@@ -93,3 +93,22 @@ The end-of-trial Cosmos question in T1 and T0 uses the C1 p1 prompt chosen in
 max_tokens 768 and the `Answer:` parse. This makes the 48 trials a **prospective, live check** of that prompt on new
 data. It stays descriptive and is never used for an outcome. Runner `so101_trial.py` `891a6e95…`. The live Cosmos
 configuration was restored on the Orin.
+
+## 10. Amendment 2 (2026-10-14, before the first trial; interpretation and safety only)
+
+- **Readings, refined.** The §6 row "improvement detected / not NO-GO" lumped two cases together. They are separated:
+
+  | T1 | T0 verdict | Reading |
+  |---|---|---|
+  | improvement detected | GO | Position improved, and nominal performance is maintained within tolerance |
+  | improvement detected | INSUFFICIENT_EVIDENCE | **Position improved; whether nominal performance is maintained is undetermined** |
+  | improvement detected | NO-GO | The fix moved the weakness: position improved, nominal degraded |
+  | not detected | any | No evidence that this fine-tune fixed the position weakness |
+
+- **Normalization guard.** Each engine must load the normalization file recorded for it. A sealed manifest
+  (`norm_manifest.json`: token → sha256 of the normalization file) is checked before each engine starts. A missing or
+  mismatched file **refuses the run** instead of falling back to the folder default.
+- **Policy-server timeout.** A policy reply that does not arrive within 5 s aborts the trial as `runtime_error`, and the
+  server is restarted before the next trial. The runner no longer waits forever.
+- Procedure, sample sizes and the primary rule are unchanged.
+- Runner `so101_trial.py` `ee80efe4…`; sealed normalization manifest `stress_ft/engines/norm_manifest.json` sha256 `6ecf919d95ac79a5…` (one token → FT normalization, one → G2). Verified with `tests/runner_abort_harness.py`, which now includes a policy-server timeout case.

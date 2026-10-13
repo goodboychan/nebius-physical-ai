@@ -123,6 +123,14 @@ def start_server(eng):
     # (2026-10-14: 파인튜닝 평가는 정규화가 다른 두 정책을 한 블록에 섞는다)
     per = eng[:-len(".engine")] + ".norm_stats.npz"
     norm = per if os.path.exists(per) else os.path.join(os.path.dirname(eng), "norm_stats.npz")
+    man = os.path.join(os.path.dirname(eng), "norm_manifest.json")
+    if os.path.exists(man):   # 봉인 매니페스트가 있으면 엔진마다 정해진 정규화 파일과 해시가 맞아야 한다. 아니면 실행 거부
+        import hashlib
+        ent = json.load(open(man)).get(os.path.basename(eng)[:-len(".engine")])
+        want = os.path.join(os.path.dirname(eng), ent["file"]) if ent else None
+        if not ent or not os.path.exists(want) or hashlib.sha256(open(want, "rb").read()).hexdigest() != ent["sha256"]:
+            print("실행 거부: 엔진의 정규화 파일이 매니페스트와 맞지 않는다"); sys.exit(1)
+        norm = want
     srv = subprocess.Popen(["/usr/bin/python3", os.path.join(HERE, "trt_policy_server.py"), eng, norm, SOCK],
                            stdout=subprocess.PIPE, stderr=subprocess.STDOUT, text=True)
     for line in srv.stdout:
@@ -149,11 +157,21 @@ class Prefetch:
         global seq
         payload = struct.pack("<I", seq) + s.tobytes() + np.ascontiguousarray(top).tobytes() + np.ascontiguousarray(wrist).tobytes(); seq += 1
         def run():
-            t = time.perf_counter(); sk.sendall(payload); r = json.loads(rf.readline())
-            self.res = (np.array(r["actions"]), r["infer_ms"], step, (time.perf_counter() - t) * 1000)
-        self.res = None; self.t = threading.Thread(target=run, daemon=True); self.t.start()
-    def take(self):
-        self.t.join(); self.t = None; return self.res
+            try:
+                t = time.perf_counter(); sk.sendall(payload); r = json.loads(rf.readline())
+                self.res = (np.array(r["actions"]), r["infer_ms"], step, (time.perf_counter() - t) * 1000)
+            except Exception as e:
+                self.err = f"{type(e).__name__}: {str(e)[:80]}"
+        self.res = None; self.err = None; self.t = threading.Thread(target=run, daemon=True); self.t.start()
+    def take(self, timeout=5.0):
+        """정책 응답을 기다린다. 5초 안에 오지 않거나 오류면 예외를 낸다(2026-10-14 외부 검토: 무한 대기 방지).
+        trial은 runtime_error로 중단되고, 다음 trial 전에 서버를 다시 띄운다."""
+        global cur_engine
+        self.t.join(timeout)
+        if self.t.is_alive() or self.res is None:
+            cur_engine = None
+            raise RuntimeError("policy server reply " + ("timeout" if self.t.is_alive() else f"error {self.err}"))
+        self.t = None; return self.res
 
 def state_of(obs): return np.array([obs[f"{n}.pos"] for n in NAMES], np.float32)
 def send(a): robot.send_action({f"{n}.pos": float(v) for n, v in zip(NAMES, np.clip(a, lo, hi))})
