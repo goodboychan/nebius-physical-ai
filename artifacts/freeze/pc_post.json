@@ -1,0 +1,29 @@
+{
+  "schema": "edgeqgate.pc_post.v1",
+  "frozen_at": "2026-10-13T12:52:13+00:00",
+  "git_commit": "51c778d0c88873271488873af7d8e5ed467cdfc5",
+  "status": "positive-control P0 block complete: 24/24 trials, 0 invalid, 0 aborted",
+  "sealed_logs": {
+    "stress_pc_P0_sealed.jsonl": {
+      "sha256": "c6969f230e9c5a1379a18313798e5a8421e334a86483c3105deee376bee6865a",
+      "trials": 24
+    }
+  },
+  "sealed_schedule_sha256": "639fa756d85412ed421be9d9f748161ff49baed1a892274a4ea9e7223823b876",
+  "public_tally": {
+    "operator_failures": [
+      16,
+      21,
+      24
+    ],
+    "live_judge_failures": [
+      8,
+      16,
+      20,
+      21,
+      22,
+      24
+    ]
+  },
+  "record_hash": "c5ebd68ed0af9e5b252544ca2bd12688ae7c9087cab32a614f6bd9570ca6eac1"
+}
