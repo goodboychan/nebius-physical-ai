@@ -135,3 +135,18 @@ ResourceExhausted: Quota limit exceeded ... compute.instance.non-gpu.vcpu (limit
 
 **개선 제안**: 프로젝트 생성 시 "이 리전에서 사용 가능한 자원" 요약을 보여주거나,
 쿼터 0인 자원을 콘솔에서 눈에 띄게 표시하면 된다.
+
+## 2026-10-13 — Nebius AI Cloud: capacity visibility (user's suggestion)
+
+- **Observed**: `nebius ai endpoint start` stayed in PROVISIONING for over 20 minutes, with the compute instance
+  STOPPED. It then went to ERROR `NotEnoughResources` ("VM schedule timeout, most likely due to insufficient hardware
+  resources"; eu-north1, gpu-l40s-a 1gpu-8vcpu-32gb). A second start request returned "operation conflict" while the
+  first was pending. About an hour later, a Job on the same platform and region got a GPU at once.
+- **Impact**: the live Cosmos supervisor was dropped from the positive-control block and replaced by an offline replay,
+  and the session plan had to change on the spot.
+- **Suggestions**:
+  1. Show live availability per region and platform (console and CLI).
+  2. Fail fast, or give an estimated wait.
+  3. Suggest fallback regions or platforms, or offer an opt-in automatic fallback.
+  4. Notify the user, or queue the start, when capacity frees up.
+  The goal is fewer blind retries and fewer VMs started in the wrong region.

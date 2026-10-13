@@ -186,6 +186,14 @@ numbers and a complete format in every repeat. Ultra and the smaller variants le
 - Clearer quota errors on Jobs; we hit the instance limit and had to write a controller.
 - vLLM argument quoting on endpoint creation, which broke one endpoint.
 - Faster endpoint cold start, which took about 10 minutes from stopped.
+- **Capacity visibility per region and platform.** On 2026-10-13 an AI Endpoint start waited over 20 minutes with no
+  indication, then failed with `NotEnoughResources` (eu-north1, L40S). About an hour later, a Job in the same region got
+  an L40S immediately. What would help:
+  1. a live availability indicator per region and GPU type, in the console and the CLI;
+  2. a fast failure or an estimated wait, instead of a silent timeout;
+  3. suggested fallback regions or platforms, or an opt-in automatic fallback;
+  4. a notification or queued reservation when capacity frees up.
+  These would avoid launching VMs in the wrong region and retrying blind.
 
 **What we hope to see from Nemotron next**: `[USER]`.
 
