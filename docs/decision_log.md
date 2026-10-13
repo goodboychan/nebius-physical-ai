@@ -904,3 +904,14 @@ ACT는 상태마다 100스텝을 내고 실기에서 100스텝을 모두 실행�
   - 이 블록에서는 오프라인 충실도가 크게 나쁜 빌드조차 폐루프 성능 저하로 이어지지 않았다. 이는 AEP 방향의 관찰이지만 표본이 작다
   - 제품 판단: 이런 빌드는 결과와 무관하게 입력 검사 단계에서 거절한다
 - ftpos 녹화: episode 8은 q를 누르고 시작돼 동작이 없었다(조작자) → `lerobot-edit-dataset delete_episodes [8]`로 제거(원본은 `~/so101_data/ftpos.with_empty_ep8-1013`로 보존). 8개 남음, 순서표 episode 08 위치부터 다시 녹화
+
+---
+
+## 2026-10-14 — 위치 파인튜닝: 데이터·학습 설정 고정 (학습 전)
+
+- ftpos 50개 녹화 완료. 모두 25초 전체 길이이고, 동작이 적은 에피소드는 0개다. 빈 에피소드 8은 앞서 제거했다
+- 리셋 시간은 15초를 썼다. 사전등록에는 10초로 적었으나 캔을 옮길 시간 때문에 늘렸고, 데이터 내용과는 무관하다
+- 학습 데이터 `ft_train` = LOCK-1 train 80 + ftpos 50 = **130 에피소드, 81,101 프레임**(`lerobot-edit-dataset merge`).
+  파일 해시 합 `24ed915b…`, S3 경로 `g2/ft_train`
+- 학습: `scripts/job/finetune_act.sh` `4aebcc0c…`(train_act.sh와 같고 `--policy.path=/s3/g2/act_fp32_100k/100000/pretrained_model`만 다름),
+  STEPS 20000, BATCH 8, SEED 1001, 저장은 마지막 1회. Nebius Jobs L40S. L40S를 배정받지 못하면 H100으로 바꾸고 기록한다
