@@ -22,3 +22,6 @@ Outcomes are decided by the locked criterion (automatic judge and §11 consensus
   - The operator's inputs are the release and contact answers and the can placement.
   - The operator was asked to keep the placement and answers identical regardless of the motion seen.
   - Side-view recording may stop mid-block. A non-blind demonstration of both policies is planned after T0.
+- T1 complete (22:08 KST): 24/24 trials logged; 0 invalid, 0 aborted, 0 runtime errors, 0 human contact; 24 overhead
+  videos. The operator did not see some failures directly; outcomes come from the automatic judge and the §11 video
+  consensus re-judge, so this does not change any result.
