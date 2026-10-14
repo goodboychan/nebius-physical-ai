@@ -91,6 +91,8 @@ failure.
 | AI supervisor and judge | **Cosmos-Reason2-2B**, 2 Hz shadow mode, plus an end-of-trial question | **Nebius AI Endpoint** (L40S, vLLM), started per session |
 | Deployment report | Code decides the verdicts; **Nemotron 3 Super** explains them; a structured validator checks each candidate's verdict, fractions and latency in the prose (`d3_report_v2.md`) | **Nebius Token Factory** |
 | Errata | Tavily search with queries derived from the real build; the snapshot is hashed | Tavily API |
+| Experiment record | 5 experiments, 73 runs, filled from committed artifacts by a script; each run tagged with its source file and commit | **Nebius Managed MLflow**, run only for publishing and capture |
+| Portability probe | The same checkpoint and calibration frames on a Hailo-8 (Raspberry Pi 5); backbones INT8 on Hailo, transformer FP32 on the CPU | Hailo DFC on a GPU workstation, measured on the device |
 
 ## Challenges
 
@@ -116,13 +118,21 @@ failure.
 - Measure cost on the target device; precision labels mislead.
 - "No failures seen" needs its interval next to it, together with the number of trials it would take to decide.
 - Validate the judge, both the AI one and your own.
+- **A verdict belongs to a target, not to "INT8".**
+  - We used the same checkpoint and the same calibration frames on a Hailo-8.
+  - Going from 16 to 1024 calibration frames *raised* the Orin INT8 error (0.054 → 0.062) and *lowered* the Hailo
+    error (0.048 → 0.035).
+  - The vendor emulator differed from the device by about half the quantization error.
+  - This probe is offline only, and Hailo quantizes less of the graph.
 
 ## What's next
 
 - Settle FP16 against FP32 on success: about 110–120 trials per arm (a planning estimate that assumes both true success rates are equal at about 96–97%; it is not a guarantee).
 - Shorter replanning intervals (10 / 30 / about 90 steps) crossed with start-position shifts, to separate trajectory
   memorization from slow reaction.
-- An offline re-evaluation of Cosmos: one frame with a larger output budget, and the last seconds of video.
+- Re-check the validated Cosmos judge prompt live, on new trials. The offline re-evaluation is done: 1/21 → 20/21
+  failures caught on held-out videos.
+- A sealed real-arm block on the Hailo-8 target (FP32 vs Hailo, 12 vs 12), pre-registered separately.
 - Structured verdicts (done in report v2): next, link each verdict to its trials and videos on the dashboard.
 - **On-policy audit and distillation.** Build the audit buffer from the states the deployed engine actually visits:
   the 385 logged real-arm rollouts already have states and both camera videos. Label those states offline with the
@@ -136,8 +146,8 @@ failure.
 ## Built with
 
 NVIDIA Cosmos-Reason2-2B · NVIDIA Nemotron 3 Super · NVIDIA TensorRT · TensorRT Model Optimizer · Jetson Orin Nano
-Super · Nebius AI Cloud (Jobs, AI Endpoints, Object Storage) · Nebius Token Factory · Tavily · LeRobot · SO-101 · vLLM ·
-PyTorch
+Super · Nebius AI Cloud (Jobs, AI Endpoints, Object Storage, Managed MLflow) · Nebius Token Factory · Tavily · LeRobot · SO-101 · vLLM ·
+PyTorch · Hailo-8 (portability probe)
 
 ---
 

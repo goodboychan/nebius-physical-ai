@@ -68,11 +68,18 @@ Stress tests were unsealed on 2026-10-13. The stress protocol is
 | Policy training | LeRobot 0.6.1 ACT, 100k steps | **Nebius Jobs** (L40S, 1 h 57 min) |
 | Audit fan-out | 25 cells × bootstrap scoring on 2,000 held-out states | **Nebius Jobs** (CPU) |
 | Data and weights | demos, checkpoints, Cosmos weights | **Nebius Object Storage** (S3) |
+| Experiment record | 5 experiments, 73 runs (grid, verdicts, real arm, Cosmos judge, Hailo probe), filled from committed artifacts by [`mlflow_publish.py`](scripts/mlflow_publish.py), each run tagged with its source file and commit | **Nebius Managed MLflow** (short-lived; CSV exports in [`artifacts/mlflow/`](artifacts/mlflow/)) |
 
 **Where Token Factory helped.** The report agent needs a large reasoning model for about a minute per report. Token
 Factory served Nemotron 3 Super, and the variants we compared, behind one OpenAI-compatible API, so no GPU server had
 to stay warm. Comparison: [`d3_model_compare.json`](artifacts/reports/d3_model_compare.json). Final report:
 [`d3_report_v2.md`](artifacts/reports/d3_report_v2.md) (v1 kept as history: [`d3_final_report.md`](artifacts/reports/d3_final_report.md)).
+
+**Where Managed MLflow helped.** The same results, as standard tracked runs: code-decided verdicts next to their
+intervals, and the 25 grid cells comparable in one view. The cluster ran only for publishing and capture
+(about $0.48/h), and the publish script refills it from the repository at any time.
+
+![MLflow: deployment verdicts](docs/media/mlflow/deployment_verdicts.png)
 
 ## Pipeline
 
@@ -205,6 +212,28 @@ success comparison is insufficient evidence. The offline warning was **not confi
 unresolved, not as "tolerated" ([`positive_control_analysis.json`](artifacts/reports/positive_control_analysis.json)).
 Such builds are still rejected at the input check.
 
+## Portability: does the INT8 verdict transfer to another accelerator?
+
+An offline probe, pre-registered before any quantized output ([`docs/hailo_portability_probe.md`](docs/hailo_portability_probe.md)).
+- **Setup**: the same checkpoint and the same calibration frames, deployed on a Raspberry Pi 5 with a Hailo-8.
+- **Split**: only the two ResNet backbones compile for Hailo. The transformer runs in FP32 on the Pi CPU.
+- **Toolchain**: Hailo DFC 3.34 on a GPU workstation. The error is measured on the Hailo-8 itself.
+
+| Calibration frames | Orin TensorRT INT8 (whole graph) | Hailo-8 device (backbones INT8) |
+|---|---|---|
+| 16 | 0.054 | 0.048 |
+| 1024 | 0.062 | 0.035 |
+
+Error is the mean action error against FP32 on the 2,000 audit states, in normalised units.
+
+- **The calibration-size effect reverses between targets.** A plausible cause, not tested: the Hailo compiler uses
+  the frames for quantization-aware fine-tuning, while TensorRT uses them only for activation ranges.
+- **The vendor emulator differs from the device** by about half the quantization error (0.020–0.026).
+- **Latency on the Pi 5 is 239 ms.** The Hailo backbones take 13 ms; the CPU transformer takes the rest.
+- **Scope**: Hailo quantizes less of the graph, so this is not a claim that it quantizes better. No real-arm result
+  follows from it.
+- A verdict belongs to a deployment target, not to the label "INT8".
+
 ## Next steps
 
 - **On-policy audit**: score candidates on the states the deployed engine visits (385 logged rollouts with both camera
@@ -212,11 +241,12 @@ Such builds are still rejected at the input check.
 - **On-policy distillation**: quantization-aware fine-tuning on those states (DAgger with FP32 as the expert), to try to
   recover a broken build such as PC-B. It closes the student-teacher gap only; weaknesses the teacher shares, such as
   the start-position shift, need new demonstrations.
+- A sealed real-arm block on the Hailo-8 target (FP32 vs Hailo, 12 vs 12), pre-registered separately.
 - The position fine-tune, pre-registered in [`docs/finetune_position_preregistration.md`](docs/finetune_position_preregistration.md).
 
 ## Limitations
 
-- One task, one checkpoint, one robot, one TensorRT build.
+- One task, one checkpoint, one robot, one TensorRT build. The Hailo-8 portability result is offline only.
 - The precision results are near the success ceiling.
 - The gripper and distribution-shift results are observational. They come from separate sessions, not randomized
   against each other.
