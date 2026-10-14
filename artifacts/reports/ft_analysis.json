@@ -1,0 +1,147 @@
+{
+ "T1": {
+  "cells": {
+   "FT-FP16": {
+    "k": 12,
+    "n": 12
+   },
+   "VC-025": {
+    "k": 3,
+    "n": 12
+   }
+  },
+  "failures": {
+   "FT-FP16": [],
+   "VC-025": [
+    2,
+    3,
+    6,
+    8,
+    10,
+    11,
+    13,
+    15,
+    17
+   ]
+  },
+  "primary": {
+   "ft": [
+    12,
+    12
+   ],
+   "old": [
+    3,
+    12
+   ],
+   "diff_pp": 75.0,
+   "newcombe95_pp": [
+    37.78445951008306,
+    91.10583316059453
+   ],
+   "improvement_detected": true
+  }
+ },
+ "T0": {
+  "cells": {
+   "VC-025": {
+    "k": 12,
+    "n": 12
+   },
+   "FT-FP16": {
+    "k": 10,
+    "n": 12
+   }
+  },
+  "failures": {
+   "VC-025": [],
+   "FT-FP16": [
+    18,
+    22
+   ]
+  },
+  "secondary": {
+   "ref_k_n": [
+    12,
+    12
+   ],
+   "test_k_n": [
+    10,
+    12
+   ],
+   "E1": {
+    "degradation_pp": 16.666666666666664,
+    "ci_pp": [
+     -15.44967048940855,
+     49.01221448097574
+    ],
+    "method": "Newcombe hybrid score",
+    "decision": "indeterminate",
+    "bootstrap_ci_pp_secondary": [
+     0.0,
+     41.666666666666664
+    ]
+   },
+   "E2": {
+    "degradation_px": 5.2659090909090835,
+    "ci_px": [
+     -7.260833333333334,
+     30.768229166666703
+    ],
+    "n_place": [
+     12,
+     11
+    ],
+    "decision": "indeterminate"
+   },
+   "verdict": "INSUFFICIENT_EVIDENCE",
+   "ceiling_rule_applied": false,
+   "conf": 0.975
+  }
+ },
+ "T2": {
+  "cells": {
+   "VC-025": {
+    "k": 2,
+    "n": 12
+   },
+   "FT-FP16": {
+    "k": 10,
+    "n": 12
+   }
+  },
+  "failures": {
+   "VC-025": [
+    1,
+    3,
+    5,
+    10,
+    11,
+    14,
+    16,
+    17,
+    19,
+    22
+   ],
+   "FT-FP16": [
+    9,
+    12
+   ]
+  },
+  "primary": {
+   "ft": [
+    10,
+    12
+   ],
+   "old": [
+    2,
+    12
+   ],
+   "diff_pp": 66.66666666666667,
+   "newcombe95_pp": [
+    26.875760530231556,
+    83.59501860269958
+   ],
+   "improvement_detected": true
+  }
+ }
+}

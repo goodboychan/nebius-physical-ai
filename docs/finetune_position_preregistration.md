@@ -190,3 +190,59 @@ configuration was restored on the Orin.
      the policy from the session;
   3. the FP16 blocks vs G6 cells (FP32/INT8, anti-slip pads), descriptive only, since the gripper changed.
 - No result from this metric changes the T1/T0/T2 readings.
+
+## 14. Results (2026-10-14, unsealed after T2)
+
+Order kept:
+1. T1 and T0 logs were hashed (`ft_post.json`), then T2 was run and hashed (`ft2_post.json`).
+2. The video consensus re-judge was run blind to cells (`artifacts/finetune/rejudge/`). Block totals were T1 15/24,
+   T0 22/24 and T2 12/24, each equal to the live automatic judge.
+3. Only then was the data unsealed. The unsealed logs match both post records (`artifacts/trials/ft_unsealed/`,
+   `ft2_unsealed/`).
+
+Analysis: `scripts/ft_analysis.py`, written to `artifacts/reports/ft_analysis.json`.
+
+| Block | FT-FP16 | OLD-FP16 (VC-025) | FT − OLD, Newcombe 95% | Pre-registered reading |
+|---|---|---|---|---|
+| **T1, +3 cm (primary)** | **12/12** | 3/12 | **+75.0 pp [+37.8, +91.1]** | **improvement detected** |
+| **T2, −3 cm (symmetry, §12)** | **10/12** | 2/12 | **+66.7 pp [+26.9, +83.6]** | **improvement detected** |
+| T0, training mark (secondary) | 10/12 | 12/12 | E1 degradation [−15.4, +49.0] pp at 97.5%, indeterminate; E2 +5.3 px [−7.3, +30.8], indeterminate | **INSUFFICIENT_EVIDENCE** |
+
+- **Reading (§10 and §12 tables)**:
+  - T1 detected and T0 INSUFFICIENT_EVIDENCE: **"Position improved; whether nominal performance is maintained is
+    undetermined."**
+  - With T2 also detected: **the fine-tune improved held-out positions on both sides of the trained start.**
+  - At the training mark the fine-tune failed twice (T0 trials 18 and 22: pushed off the coaster, knocked over while
+    setting down) and OLD did not fail. The interval cannot separate this from noise at 12 vs 12.
+- **Failure modes by arm**, from the operator notes plus the unsealed cells:
+  - The repeated "set half on the coaster" failures in T1 (2, 3, 6, 8) were all OLD.
+  - The T2 failures the operator saw were trial 12 (FT: set down, then knocked over by the gripper moving nearby)
+    and trial 14 (OLD: never grasped).
+- **Live Cosmos C1 judge**, prospective on new data (`artifacts/reports/ft_cosmos_live_judge.json`):
+  - It caught **21/23 failures** (Wilson 95% 0.73–0.98) with **1/49 false alarms** (0.004–0.107) and no
+    abstains. Median latency was 392 ms.
+  - By block: T1 caught 8/9, T0 1/2, T2 12/12. The only false alarm was in T0.
+  - The prompt chosen on the dev split and checked on eval held on live trials.
+- **Gripper chatter** (§13, exploratory; `artifacts/reports/ft_chatter.json`). Values are the median mean
+  |Δ²| of the commanded gripper, in degrees per step²:
+
+  | | FT | OLD | MWU p |
+  |---|---|---|---|
+  | T1 (+3 cm) | 0.134 | 0.588 | 0.012 |
+  | T2 (−3 cm) | 0.147 | 0.662 | 0.0004 |
+  | T0 (training mark) | 0.167 | 0.106 | 0.0003 |
+
+  - Off the training position, OLD chatters about 4× more than FT, consistent with the hesitation and regrasping
+    seen in stress S1.
+  - At the training mark, FT chatters more than OLD.
+  - OLD today does not differ from the same VC-025 engine in the FP16 block (p = 0.13), so the session itself did
+    not change chatter.
+  - **Post hoc, not in §13**: in the FP16 block the INT8 cell VC-002 has a median of 0.314, against 0.134 for
+    VC-025 FP16 and 0.162 for VC-000 FP32. In G6, VC-002 has 0.288 against 0.113 for VC-000. This is about twice
+    the chatter at a similar success rate. It is reported as a hypothesis for a pre-registered check: INT8 can
+    change motion smoothness without changing success.
+- **Limitations**:
+  - The operator reported that the two policies' motions were visibly distinguishable (T1 and T2), so operator
+    blinding was partial. Outcomes come from the automatic judge and the video re-judge, which agree block by block.
+  - The −3 cm mark was added during the session (§12).
+  - One task, one object, 12 trials per arm per position.

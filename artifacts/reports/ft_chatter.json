@@ -1,0 +1,115 @@
+{
+ "note": "exploratory (\u00a713); no decision attached",
+ "groups": {
+  "FP16 block | VC-000": {
+   "n": 10,
+   "chatter_median": 0.16225523555903745,
+   "chatter_hold_median": 0.12305027685259458
+  },
+  "FP16 block | VC-002": {
+   "n": 10,
+   "chatter_median": 0.31389200625763514,
+   "chatter_hold_median": 0.2794573745765779
+  },
+  "FP16 block | VC-025": {
+   "n": 20,
+   "chatter_median": 0.13370614429580724,
+   "chatter_hold_median": 0.09156188701240556
+  },
+  "G6 | VC-000": {
+   "n": 25,
+   "chatter_median": 0.11260320472865713,
+   "chatter_hold_median": 0.06385219178168602
+  },
+  "G6 | VC-002": {
+   "n": 45,
+   "chatter_median": 0.2879731635551654,
+   "chatter_hold_median": 0.24908169976091857
+  },
+  "G6 | VC-005": {
+   "n": 15,
+   "chatter_median": 0.3004386069754848,
+   "chatter_hold_median": 0.26202261885451045
+  },
+  "G6 | VC-007": {
+   "n": 15,
+   "chatter_median": 0.30191038229327266,
+   "chatter_hold_median": 0.2664329535992274
+  },
+  "G6 | VC-010": {
+   "n": 25,
+   "chatter_median": 0.2881345311612472,
+   "chatter_hold_median": 0.2512815671157236
+  },
+  "G6 | VC-011": {
+   "n": 25,
+   "chatter_median": 0.2938648300630815,
+   "chatter_hold_median": 0.2582243870571493
+  },
+  "G6 | VC-012": {
+   "n": 25,
+   "chatter_median": 0.2939322659088897,
+   "chatter_hold_median": 0.2546004930026755
+  },
+  "G6 | VC-015": {
+   "n": 25,
+   "chatter_median": 0.2936071371935815,
+   "chatter_hold_median": 0.2604768287126586
+  },
+  "G6 | VC-020": {
+   "n": 25,
+   "chatter_median": 0.3059740554105279,
+   "chatter_hold_median": 0.259046285422185
+  },
+  "G6 | VC-022": {
+   "n": 10,
+   "chatter_median": 0.3138115103577408,
+   "chatter_hold_median": 0.268307528357396
+  },
+  "G6 | VC-024": {
+   "n": 10,
+   "chatter_median": 0.3112921139564141,
+   "chatter_hold_median": 0.27356042868720604
+  },
+  "T0 | FT-FP16": {
+   "n": 12,
+   "chatter_median": 0.16698315675176237,
+   "chatter_hold_median": 0.10585848351491475
+  },
+  "T0 | VC-025": {
+   "n": 12,
+   "chatter_median": 0.10557123913951667,
+   "chatter_hold_median": 0.05695425464361581
+  },
+  "T1 | FT-FP16": {
+   "n": 12,
+   "chatter_median": 0.13411592020457072,
+   "chatter_hold_median": 0.08232624774669255
+  },
+  "T1 | VC-025": {
+   "n": 12,
+   "chatter_median": 0.5878066916935212,
+   "chatter_hold_median": 0.5198395704590841
+  },
+  "T2 | FT-FP16": {
+   "n": 12,
+   "chatter_median": 0.14715497113577364,
+   "chatter_hold_median": 0.09268743750572514
+  },
+  "T2 | VC-025": {
+   "n": 12,
+   "chatter_median": 0.661960903097456,
+   "chatter_hold_median": 0.5691306894229059
+  }
+ },
+ "mann_whitney_p": {
+  "T1: FT vs OLD (chatter)": 0.01202282540761744,
+  "T1: FT vs OLD (chatter_hold)": 0.04040411958822371,
+  "T0: FT vs OLD (chatter)": 0.0003080447056277469,
+  "T0: FT vs OLD (chatter_hold)": 0.0011061781840807244,
+  "T2: FT vs OLD (chatter)": 0.0003842020270349709,
+  "T2: FT vs OLD (chatter_hold)": 0.0003080447056277469,
+  "OLD today vs VC-025 in FP16 block (chatter)": 0.12591336841800213,
+  "OLD today vs VC-025 in FP16 block (chatter_hold)": 0.18509751796151663
+ }
+}
