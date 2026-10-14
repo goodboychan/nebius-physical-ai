@@ -21,6 +21,10 @@ jobs:
       - name: 테스트
         run: pytest -q
 
+      - name: 러너 하네스 (중단·시간 초과·정규화 매니페스트)
+        # 하드웨어 없이 so101_trial.py의 run_one·resolve_norm을 가짜 로봇과 서버로 돌린다
+        run: python tests/runner_abort_harness.py
+
       - name: 그리드 무결성 (§4.1)
         # configs/variant_grid.yaml이 정준 생성기와 어긋나면 여기서 실패한다.
         run: python -m edgeqgate.grid

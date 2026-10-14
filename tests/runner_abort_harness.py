@@ -6,7 +6,7 @@ import numpy as np
 src = open(os.path.join(os.path.dirname(__file__), "..", "scripts", "so101_trial.py")).read()
 tree = ast.parse(src)
 keep = [n for n in tree.body if isinstance(n, (ast.FunctionDef, ast.ClassDef)) and n.name in
-        ("grab_latest", "Prefetch", "state_of", "send", "go_home", "run_one")]
+        ("grab_latest", "Prefetch", "state_of", "send", "go_home", "run_one", "resolve_norm")]
 NAMES = ["shoulder_pan", "shoulder_lift", "elbow_flex", "wrist_flex", "wrist_roll", "gripper"]
 
 class FakeWriter:
@@ -60,4 +60,22 @@ for name, robot, delay, interrupt in cases:
 print(json.dumps(results, indent=1))
 assert all(r["aborted"] and r["saved_traj"] for r in results.values())
 assert results["policy_server_timeout"]["runtime_error"].startswith("RuntimeError: policy server reply timeout") and results["policy_server_timeout"]["server_restart_flag"]
+# resolve_norm (external review 4, 2026-10-14): the fine-tune block must refuse a missing or mismatched manifest
+import hashlib, shutil
+d = "/tmp/runner_harness/norm"; shutil.rmtree(d, ignore_errors=True); os.makedirs(d)
+for f in ("A.engine", "B.engine"): open(f"{d}/{f}", "w").write("x")
+open(f"{d}/A.norm_stats.npz", "wb").write(b"ft"); open(f"{d}/norm_stats.npz", "wb").write(b"g2")
+g = make_env(Robot(fail_at=0)); g["sys"] = sys
+def refuses(eng, req):
+    try: g["resolve_norm"](eng, require_manifest=req); return False
+    except SystemExit: return True
+norm_res = {"no_manifest_ft_refused": refuses(f"{d}/A.engine", True),
+            "no_manifest_other_uses_per_engine": g["resolve_norm"](f"{d}/A.engine") == f"{d}/A.norm_stats.npz"}
+sha = lambda p: hashlib.sha256(open(p, "rb").read()).hexdigest()
+json.dump({"A": {"file": "A.norm_stats.npz", "sha256": sha(f"{d}/A.norm_stats.npz")}, "B": {"file": "norm_stats.npz", "sha256": sha(f"{d}/norm_stats.npz")}}, open(f"{d}/norm_manifest.json", "w"))
+norm_res["manifest_ok_A"] = g["resolve_norm"](f"{d}/A.engine", True) == f"{d}/A.norm_stats.npz"
+norm_res["manifest_ok_B"] = g["resolve_norm"](f"{d}/B.engine", True) == f"{d}/norm_stats.npz"
+open(f"{d}/A.norm_stats.npz", "wb").write(b"tampered"); norm_res["hash_mismatch_refused"] = refuses(f"{d}/A.engine", True)
+open(f"{d}/C.engine", "w").write("x"); norm_res["engine_not_in_manifest_refused"] = refuses(f"{d}/C.engine", True)
+print(json.dumps(norm_res)); assert all(norm_res.values()), norm_res
 print("HARNESS OK")

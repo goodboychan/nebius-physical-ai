@@ -112,3 +112,24 @@ configuration was restored on the Orin.
   server is restarted before the next trial. The runner no longer waits forever.
 - Procedure, sample sizes and the primary rule are unchanged.
 - Runner `so101_trial.py` `ee80efe4…`; sealed normalization manifest `stress_ft/engines/norm_manifest.json` sha256 `6ecf919d95ac79a5…` (one token → FT normalization, one → G2). Verified with `tests/runner_abort_harness.py`, which now includes a policy-server timeout case.
+
+## 11. Amendment 3 (2026-10-14, before any T1/T0 trial): a missing manifest also refuses the run
+
+- External review 4 found a gap in the §10 guard. The manifest was checked only if `norm_manifest.json` existed. If
+  the file itself was missing, the runner fell back to the folder default without a check.
+- **Change**:
+  - The normalization choice moved into `resolve_norm()`. In the fine-tune blocks (`--blind T1|T0 ft`), a missing
+    manifest now **refuses the run**. So do a mismatched hash and an engine absent from the manifest.
+  - Other modes are unchanged.
+- **Tests**: `tests/runner_abort_harness.py` gained six `resolve_norm` cases:
+  - a missing manifest is refused;
+  - the per-engine file is used when no manifest is required;
+  - both mapped engines resolve;
+  - a tampered file is refused;
+  - an unmapped engine is refused.
+  The harness now runs in CI.
+- **On the Orin**, both sealed engines resolve under the new guard. Only pass/fail was printed, not the
+  token-to-file mapping.
+- Runner `so101_trial.py` `a3e6fd7f61752406…`, deployed to the Orin; the previous `ee80efe4` is kept as a backup.
+  The sealed schedule `996d4a9a…`, the engines and the manifest `6ecf919d…` are unchanged.
+- The procedure, sample sizes and primary rule are unchanged.

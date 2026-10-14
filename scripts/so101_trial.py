@@ -114,23 +114,29 @@ OUT = os.path.expanduser(f"~/so101_trials/{session}"); os.makedirs(OUT, exist_ok
 SOCK = "/tmp/so101_policy.sock"
 
 srv = sk = rf = None; cur_engine = None
+def resolve_norm(eng, require_manifest=False):
+    """엔진에 쓸 정규화 통계 파일을 정한다. <token>.norm_stats.npz가 있으면 그것을, 없으면 폴더의 norm_stats.npz를 쓴다
+    (2026-10-14: 파인튜닝 평가는 정규화가 다른 두 정책을 한 블록에 섞는다). 봉인 매니페스트가 있으면 엔진마다 정해진 파일과
+    해시가 맞아야 한다. require_manifest(파인튜닝 평가)이면 매니페스트가 없을 때도 실행을 거부한다(외부 검토 4차, 2026-10-14)."""
+    per = eng[:-len(".engine")] + ".norm_stats.npz"
+    norm = per if os.path.exists(per) else os.path.join(os.path.dirname(eng), "norm_stats.npz")
+    man = os.path.join(os.path.dirname(eng), "norm_manifest.json")
+    if not os.path.exists(man):
+        if require_manifest: print("실행 거부: 정규화 매니페스트가 없다"); sys.exit(1)
+        return norm
+    import hashlib
+    ent = json.load(open(man)).get(os.path.basename(eng)[:-len(".engine")])
+    want = os.path.join(os.path.dirname(eng), ent["file"]) if ent else None
+    if not ent or not os.path.exists(want) or hashlib.sha256(open(want, "rb").read()).hexdigest() != ent["sha256"]:
+        print("실행 거부: 엔진의 정규화 파일이 매니페스트와 맞지 않는다"); sys.exit(1)
+    return want
+
 def start_server(eng):
     """엔진이 바뀔 때만 서버를 다시 띄운다. 출력에 엔진 이름이 나오지 않게 한다(블라인드)."""
     global srv, sk, rf, cur_engine
     if eng == cur_engine: return
     if srv is not None: sk.close(); srv.terminate(); srv.wait()
-    # 엔진별 정규화 통계: <token>.norm_stats.npz가 있으면 그것을, 없으면 폴더의 norm_stats.npz를 쓴다
-    # (2026-10-14: 파인튜닝 평가는 정규화가 다른 두 정책을 한 블록에 섞는다)
-    per = eng[:-len(".engine")] + ".norm_stats.npz"
-    norm = per if os.path.exists(per) else os.path.join(os.path.dirname(eng), "norm_stats.npz")
-    man = os.path.join(os.path.dirname(eng), "norm_manifest.json")
-    if os.path.exists(man):   # 봉인 매니페스트가 있으면 엔진마다 정해진 정규화 파일과 해시가 맞아야 한다. 아니면 실행 거부
-        import hashlib
-        ent = json.load(open(man)).get(os.path.basename(eng)[:-len(".engine")])
-        want = os.path.join(os.path.dirname(eng), ent["file"]) if ent else None
-        if not ent or not os.path.exists(want) or hashlib.sha256(open(want, "rb").read()).hexdigest() != ent["sha256"]:
-            print("실행 거부: 엔진의 정규화 파일이 매니페스트와 맞지 않는다"); sys.exit(1)
-        norm = want
+    norm = resolve_norm(eng, require_manifest=BLIND and STRESS and SV == "ft")
     srv = subprocess.Popen(["/usr/bin/python3", os.path.join(HERE, "trt_policy_server.py"), eng, norm, SOCK],
                            stdout=subprocess.PIPE, stderr=subprocess.STDOUT, text=True)
     for line in srv.stdout:
