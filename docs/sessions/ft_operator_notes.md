@@ -11,3 +11,4 @@ Outcomes are decided by the locked criterion (automatic judge and §11 consensus
 ## 2026-10-14, T1
 
 - Trial 2: the can ended **half on the coaster**. The operator would read it as a failure; the locked criterion decides.
+- Trial 3: the same as trial 2 (the can ended half on the coaster).
