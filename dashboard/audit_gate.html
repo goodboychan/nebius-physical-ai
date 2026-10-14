@@ -112,6 +112,29 @@ svg{display:block; width:100%; height:auto}
 .clip .ct strong{font-size:14px}
 .clip p{font-size:13px; color:var(--ink-2)}
 .clip .src{font-family:var(--mono); font-size:11px; color:var(--ink-3)}
+.setup{display:grid; grid-template-columns:minmax(0,5fr) minmax(0,7fr); gap:28px; align-items:start}
+@media (max-width:760px){.setup{grid-template-columns:1fr}}
+.anno{position:relative; margin:0; max-width:100%}
+.anno img{width:100%; height:auto; display:block; border:1px solid var(--rule)}
+.pin{position:absolute; transform:translate(-50%,-50%); width:24px; height:24px; border-radius:50%; background:var(--signal); color:var(--paper);
+  font-family:var(--mono); font-size:12px; font-weight:600; display:grid; place-items:center; box-shadow:0 0 0 2px var(--paper)}
+.pins{margin:0; padding:0; list-style:none; display:flex; flex-direction:column; gap:6px; font-size:13px; color:var(--ink-2)}
+.pins li{display:grid; grid-template-columns:24px 1fr; gap:10px; align-items:baseline}
+.pins .n{font-family:var(--mono); font-weight:600; color:var(--signal)}
+.frames{display:grid; grid-template-columns:repeat(auto-fit,minmax(150px,1fr)); gap:12px}
+.frames figure img{width:100%; height:auto; border:1px solid var(--rule); display:block}
+.pos{display:grid; grid-template-columns:repeat(6,minmax(0,1fr)); gap:8px}
+@media (max-width:560px){.pos{grid-template-columns:repeat(3,minmax(0,1fr))}}
+.pos figure img{width:100%; aspect-ratio:380/230; object-fit:cover; border:1px solid var(--rule); display:block}
+.pos .held{aspect-ratio:380/230; border:1px dashed var(--ember); display:grid; place-items:center; text-align:center; color:var(--ember);
+  font-family:var(--mono); font-size:11.5px; padding:6px; background:var(--plate)}
+.pos figcaption{font-family:var(--mono); font-size:11.5px; text-align:center}
+.res{width:100%; min-width:680px; border-collapse:collapse; font-size:13.5px}
+.res th,.res td{text-align:left; padding:8px 10px 8px 0; border-bottom:1px solid var(--rule-2); vertical-align:top}
+.res th{font-family:var(--cond); font-size:11.5px; letter-spacing:.08em; text-transform:uppercase; color:var(--ink-3); font-weight:600}
+.res td:first-child{font-weight:600; white-space:nowrap}
+.res .num{white-space:nowrap}
+.tbl-scroll{overflow-x:auto}
 footer{border-top:1px solid var(--rule); padding-top:18px; color:var(--ink-3); font-size:12.5px; display:flex; flex-direction:column; gap:6px}
 @media (prefers-reduced-motion:reduce){*{transition:none!important}}
 @media (max-width:560px){
@@ -163,7 +186,7 @@ footer{border-top:1px solid var(--rule); padding-top:18px; color:var(--ink-3); f
       <div class="row"><span class="k">Verified for</span><span class="d">The 268 g cola can at the trained start mark, the fixed coaster, locked camera exposure and indoor desk light, with anti-slip pads (G6) and with rubber bands (stress v2: nominal 23/24, unseen 190 g yellow can 48/48 with every engine 12/12).</span><span class="v">scope</span></div>
       <div class="row"><span class="k">Weak spots</span><span class="d">Grip friction: 8/24 with no pads. Start position: 0/3 in a small test with the start moved 3 cm (stopped after 3); the arm first reached toward the trained start spot, and the cause was not isolated. A new object of a different size succeeded 48/48.</span><span class="v"><span class="chip halt">observed</span></span></div>
       <div class="row"><span class="k">AI judge</span><span class="d">First setup (final frame, one-word answer): 1 of 21 held-out failures caught. Re-evaluated with a dev/eval split: an explicit-criterion prompt caught <b>20/21</b> (95% 0.77–0.99) with 5/252 false alarms, concentrated on the unseen yellow can (4/33). It is wording-sensitive and judges the end state only, so re-validate before use. It is re-checked live in the fine-tune evaluation.</span><span class="v"><span class="chip seal">conditional</span></span></div>
-      <div class="row"><span class="k">Next</span><span class="d"> 1. To settle FP16 against FP32 on success at 10 pp, plan about 110–120 trials per arm (a planning estimate assuming equal true rates near 96–97%, not a guarantee). 2. Validate start-position changes with more trials and varied demonstrations. 3. Validate the AI judge on held-out trials, for example with video input. 4. Put a calibration-input check first in the pipeline.</span><span class="v">actions</span></div>
+      <div class="row"><span class="k">Next</span><span class="d"> 1. To settle FP16 against FP32 on success at 10 pp, plan about 110–120 trials per arm (a planning estimate assuming equal true rates near 96–97%, not a guarantee). 2. Validate start-position changes with more trials and varied demonstrations. 3. Re-check the validated judge prompt live (it is re-checked in the fine-tune evaluation). 4. Put a calibration-input check first in the pipeline.</span><span class="v">actions</span></div>
     </div>
   </section>
 
@@ -195,6 +218,70 @@ footer{border-top:1px solid var(--rule); padding-top:18px; color:var(--ink-3); f
 <img class="rep-fig" src="report/figures/fig_frames.png" alt="The frames behind two verdicts: a success, and a failure that Cosmos called a success.">
 <p><i>The frames behind two verdicts: a success, and a failure that Cosmos called a success.</i></p></div>
 <!--REPORT:END-->
+  </section>
+
+  <section class="panel" id="setup">
+    <div class="plate"><h2>Setup &amp; resources</h2><span class="ref">one task · one arm · cloud for training, audit and AI layers</span></div>
+    <p class="note">The task is to pick up an unopened 268 g cola can from a marked start spot and stand it upright on a
+      fixed coaster. A person teleoperates the SO-101 leader arm to record demonstrations. The policy then drives the
+      follower arm from a Jetson Orin Nano Super, seeing what the two cameras see.</p>
+    <div class="setup">
+      <figure>
+        <div class="anno">
+          <img src="setup/setup_photo.jpg" alt="Desk with the SO-101 leader arm in front, the follower arm at the far corner and the overhead camera on a pole" loading="lazy">
+          <span class="pin" style="left:31%;top:3%" aria-hidden="true">1</span>
+          <span class="pin" style="left:59%;top:39%" aria-hidden="true">2</span>
+          <span class="pin" style="left:20%;top:64%" aria-hidden="true">3</span>
+        </div>
+        <ol class="pins">
+          <li><span class="n">1</span><span>Overhead camera, Logitech C922, 640×480, exposure and white balance locked</span></li>
+          <li><span class="n">2</span><span>SO-101 follower arm (Feetech STS3215), driven by the policy. OpenMV AE3 wrist camera, 320×200; rubber-band grip since stress v2</span></li>
+          <li><span class="n">3</span><span>SO-101 leader arm, used only to teleoperate the demonstrations</span></li>
+        </ol>
+        <figcaption>The rig. An annotated close-up of the work area and the Jetson will replace this photo.</figcaption>
+      </figure>
+      <div class="panel" style="gap:14px">
+        <div class="frames">
+          <figure><img src="setup/task_start_top.jpg" alt="Overhead view at the start of a demonstration: can at the start mark, coaster to the right" loading="lazy"><figcaption>Start: the policy's overhead view</figcaption></figure>
+          <figure><img src="setup/task_end_top.jpg" alt="Overhead view at the end: can standing on the coaster" loading="lazy"><figcaption>Success: the can stands on the coaster</figcaption></figure>
+          <figure><img src="setup/task_start_wrist.jpg" alt="Wrist camera view at the start" loading="lazy"><figcaption>Wrist view at the start</figcaption></figure>
+        </div>
+        <p class="note"><b>Data.</b> 120 teleoperated demonstrations (65,424 frames at 30 fps). They were split 80 / 20 / 20
+          into train, validation and audit before training (LOCK-1). Audit episodes are never trained or calibrated on.
+          <span class="num">chans/quantgate-so101-coaster</span> on the Hugging Face Hub.</p>
+      </div>
+    </div>
+    <figure>
+      <div class="pos">
+        <figure><img src="setup/pos_m4.jpg" alt="Can start shifted −4 cm" loading="lazy"><figcaption>−4 cm</figcaption></figure>
+        <figure><img src="setup/pos_m2.jpg" alt="Can start shifted −2 cm" loading="lazy"><figcaption>−2 cm</figcaption></figure>
+        <figure><img src="setup/pos_0.jpg" alt="Can at the original start mark" loading="lazy"><figcaption>0 cm</figcaption></figure>
+        <figure><img src="setup/pos_p2.jpg" alt="Can start shifted +2 cm" loading="lazy"><figcaption>+2 cm</figcaption></figure>
+        <figure><div class="held">+3 cm<br>held out<br>for evaluation</div><figcaption>+3 cm</figcaption></figure>
+        <figure><img src="setup/pos_p4.jpg" alt="Can start shifted +4 cm" loading="lazy"><figcaption>+4 cm</figcaption></figure>
+      </div>
+      <figcaption><b>Fine-tune task: start-position shift.</b> A 3 cm shift dropped success to 0/3, so we recorded 50
+        new demonstrations at −4, −2, 0, +2 and +4 cm (10 each; <span class="num">chans/quantgate-so101-coaster-positions</span>).
+        We fine-tuned 20k steps from the G2 checkpoint on them, mixed with the 80 training demos. The model is
+        evaluated blinded at the unseen +3 cm and at the original mark, against the old model, under a pre-registered
+        rule.</figcaption>
+    </figure>
+    <div class="tbl-scroll">
+      <table class="res">
+        <thead><tr><th>Step</th><th>What ran</th><th>Where</th><th>Measured</th></tr></thead>
+        <tbody>
+          <tr><td>Train</td><td>LeRobot ACT, 51.6M parameters, 100k steps, one FP32 checkpoint (G2)</td><td>Nebius Jobs · L40S</td><td class="num">1 h 57 min</td></tr>
+          <tr><td>Fine-tune</td><td>ACT from G2, 20k steps on 50 position demos + 80 train demos, seed 1001</td><td>Nebius Jobs · L40S</td><td class="num">1,489 s</td></tr>
+          <tr><td>Quantize</td><td>24 INT8 calibration variants (TensorRT Model Optimizer) + FP16 + FP32</td><td>NGC PyTorch container</td><td class="num">26 builds</td></tr>
+          <tr><td>Engines</td><td>TensorRT 10.3 with a frozen timing cache; latency and energy with trtexec and tegrastats</td><td>Jetson Orin Nano Super · 15 W</td><td class="num">FP16 11.6 ms · 82 mJ</td></tr>
+          <tr><td>Audit</td><td>25 cells scored on 2,000 held-out states, with bootstrap</td><td>Nebius Jobs · CPU fan-out</td><td class="num">25 jobs</td></tr>
+          <tr><td>Supervisor, judge</td><td>Cosmos-Reason2-2B (vLLM), 2 Hz shadow supervisor and an end-of-trial question</td><td>Nebius AI Endpoint · L40S</td><td class="num">≈330 ms round trip</td></tr>
+          <tr><td>Report, errata</td><td>Nemotron 3 Super explains code-decided verdicts and checks Tavily field reports against our facts</td><td>Nebius Token Factory</td><td class="num">4.2 s per errata call</td></tr>
+          <tr><td>Record</td><td>5 experiments, 73 runs, filled from committed artifacts</td><td>Nebius Managed MLflow</td><td class="num">short-lived</td></tr>
+          <tr><td>Portability</td><td>Same checkpoint on another INT8 target: backbones on Hailo-8, transformer on CPU</td><td>Raspberry Pi 5 + Hailo-8</td><td class="num">239 ms total</td></tr>
+        </tbody>
+      </table>
+    </div>
   </section>
 
   <section class="panel">
