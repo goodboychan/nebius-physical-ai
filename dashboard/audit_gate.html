@@ -278,7 +278,7 @@ footer{border-top:1px solid var(--rule); padding-top:18px; color:var(--ink-3); f
           <tr><td>Supervisor, judge</td><td>Cosmos-Reason2-2B (vLLM), 2 Hz shadow supervisor and an end-of-trial question</td><td>Nebius AI Endpoint · L40S</td><td class="num">≈330 ms round trip</td></tr>
           <tr><td>Report, errata</td><td>Nemotron 3 Super explains code-decided verdicts and checks Tavily field reports against our facts</td><td>Nebius Token Factory</td><td class="num">4.2 s per errata call</td></tr>
           <tr><td>Record</td><td>5 experiments, 73 runs, filled from committed artifacts</td><td>Nebius Managed MLflow</td><td class="num">short-lived</td></tr>
-          <tr><td>Portability</td><td>Same checkpoint on another INT8 target: backbones on Hailo-8, transformer on CPU</td><td>Raspberry Pi 5 + Hailo-8</td><td class="num">239 ms total</td></tr>
+          <tr><td>Portability</td><td>Same checkpoint on another INT8 target: backbones on Hailo-8, transformer on CPU</td><td>Raspberry Pi 5 + Hailo-8</td><td class="num">239 ms total · over the 200 ms chunk deadline</td></tr>
         </tbody>
       </table>
     </div>

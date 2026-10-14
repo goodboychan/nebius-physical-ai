@@ -55,7 +55,7 @@ Scope throughout: one pick-and-place task, one ACT policy, a Jetson Orin Nano Su
 
 | Finding | Evidence | What it means for the developer |
 |---|---|---|
-| On this device FP16 has the lowest latency and energy per inference | trtexec: FP16 11.6 ms and 82 mJ; INT8 16.8–17.1 ms and 101 mJ; FP32 53.4 ms and 403 mJ (`power_bench/SUMMARY.md`) | Don't pick an engine by its precision label. Measure on the target. FP16 is the cost-favored candidate. On the arm: FP16 19/20, FP32 10/10, INT8 10/10; placement within tolerance of FP32; success undecided at this sample size; end to end 24.7 ms against 34.3 and 79.0 ms (`fp16_analysis.json`). The field agrees: Nemotron, reading Tavily results, tied an NVIDIA forum report of ModelOpt INT8 running slower than FP16 on Orin NX to this measurement, with a code-checked verbatim quote. It also labelled the 2.7× Orin Nano INT8 regression thread correctly, but the validator rejected that answer for rounding the thread's numbers (`errata_grounded.md`) |
+| On this device FP16 has the lowest latency and energy per inference | trtexec: FP16 11.6 ms and 82 mJ; INT8 16.8–17.1 ms and 101 mJ; FP32 53.4 ms and 403 mJ (`power_bench/SUMMARY.md`) | Don't pick an engine by its precision label. Measure on the target. FP16 is the cost-favored candidate. On the arm: FP16 19/20, FP32 10/10, INT8 10/10; placement within tolerance of FP32; success undecided at this sample size; end to end 24.7 ms against 34.3 and 79.0 ms (`fp16_analysis.json`). Field reports point the same way: Nemotron, reading Tavily results, tied an NVIDIA forum report of ModelOpt INT8 running slower than FP16 on Orin NX to this measurement, with a code-checked verbatim quote. It also labelled the 2.7× Orin Nano INT8 regression thread correctly, but the validator rejected that answer for rounding the thread's numbers (`errata_grounded.md`) |
 | Audit-picked INT8 cells did not beat random ones | 73/75 against 73/75, 95% CI [−6.8, +6.8] pp; offline rank against placement, Spearman 0.02–0.08 (`g6_analysis.json`) | In this setting, the offline ranking is not evidence that one calibration is better |
 | Against FP32 the evidence is insufficient for every INT8 cell | 194/200 against 24/25. At a 10 pp tolerance the Newcombe intervals span about ±23–53 pp, so all 10 cells are "insufficient evidence" (`g6_q2_sensitivity.json`) | "No failures seen" is not "safe". Showing a cell is within 10 pp would take about 110–120 trials per arm (a planning estimate that assumes both true success rates are equal at about 96–97%; it is not a guarantee) |
 | Deployment conditions moved success far more | No anti-slip pads 8/24; rubber bands 23/24; start moved 3 cm 0/3 in a small, early-stopped test (observational, cause not isolated); unseen yellow can 48/48, every engine 12/12 (`stress_v2_analysis.json`) | Validate the grip, positions and objects you will actually face |
@@ -92,7 +92,7 @@ failure.
 | Real arm | 30 Hz TensorRT policy server with chunk prefetch and blending, so all engines have identical timing; blinded schedule | SO-101 + Jetson |
 | AI supervisor and judge | **Cosmos-Reason2-2B**, 2 Hz shadow mode, plus an end-of-trial question | **Nebius AI Endpoint** (L40S, vLLM), started per session |
 | Deployment report | Code decides the verdicts; **Nemotron 3 Super** explains them; a structured validator checks each candidate's verdict, fractions and latency in the prose (`d3_report_v2.md`) | **Nebius Token Factory** |
-| Errata, grounded | **Tavily** search with queries derived from the real build (snapshot hashed). **Nemotron 3 Super** labels each of the 25 results against our measured facts (matches / contrasts / applies but unverified / not applicable), with structured output; code checks that every quote is verbatim and every number is real (`errata_grounding_preregistration.md`) | Tavily API + **Nebius Token Factory** |
+| Errata, grounded | **Tavily** search with queries derived from the real build (snapshot hashed). **Nemotron 3 Super** labels each of the 25 results against our measured facts (matches / contrasts / applies but unverified / not applicable), with structured output; code checks that every quote is verbatim, and the report shows only those quotes and our own facts (`errata_grounding_preregistration.md`) | Tavily API + **Nebius Token Factory** |
 | Experiment record | 5 experiments, 73 runs, filled from committed artifacts by a script; each run tagged with its source file and commit | **Nebius Managed MLflow**, run only for publishing and capture |
 | Portability probe | The same checkpoint and calibration frames on a Hailo-8 (Raspberry Pi 5); backbones INT8 on Hailo, transformer FP32 on the CPU | Hailo DFC on a GPU workstation, measured on the device |
 
@@ -145,9 +145,11 @@ suggested fix.
 - Validate the judge, both the AI one and your own.
 - **Constrain the format, then verify the content.**
   - Structured output took Nemotron's parseable answers from 11/25 to 25/25.
-  - Its labels then agreed with ours on 5 of the 6 field reports that bear on our measurements.
-  - The validator still rejected answers that rounded a source's numbers. We would rather lose recall than accept
-    an unverified number in a deployment report.
+  - With every rule satisfied, 2 of the 6 reference matches and contrasts were recovered. Ignoring the validator,
+    the labels agreed on 5 of 6, from five distinct sources, against reference labels we wrote ourselves.
+  - The number check in the validator is weak, since swapped values can pass it. So the report shows only verbatim
+    quotes, which are strictly checked, and our own facts, never a model-written number. It is an early-stage
+    review assistant, not an oracle.
 - **A verdict belongs to a target, not to "INT8".**
   - We used the same checkpoint and the same calibration frames on a Hailo-8.
   - Going from 16 to 1024 calibration frames *raised* the Orin INT8 error (0.054 → 0.062) and *lowered* the Hailo

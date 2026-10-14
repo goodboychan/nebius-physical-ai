@@ -116,4 +116,28 @@ Output: `artifacts/reports/errata_grounded.{json,md}`.
     regression thread. It is arguably a match through the title. The reference labelled it NOT_APPLICABLE.
 - **What a developer gets**: a table of field reports, each tied to one of our measured facts by a verbatim quote that
   code has checked. Here that means two accepted rows linking the Orin INT8 slowdown to independent reports, plus
-  a contrast row, with no fabricated quote or number accepted.
+  a contrast row. No fabricated quote was accepted. The number check is weak; see §9.
+
+## 9. Correction after external review 4 (2026-10-14): what the validator does and does not check
+
+- **R3 (quote) is strong.** The quote must occur verbatim in the result's content, so a fabricated quote cannot be
+  accepted.
+- **R4 (numbers in the explanation) is weak.** It checks only that each number occurs somewhere in the content,
+  the quote or the cited fact. It does not catch any of the following, all reproduced in
+  `tests/test_errata_grounding.py`:
+  - Swapped values, e.g. FP16 and INT8 QPS exchanged.
+  - Numbers with a unit attached, e.g. "999ms". The pattern skips them.
+  - Single-digit claims, e.g. "7x".
+- **Consequence for the report.**
+  - The earlier wording "every number is real" overstated the check and is withdrawn.
+  - What holds: the rendered report shows no model-written numbers at all. It shows the label, the fact id, the
+    verbatim quote (R3) and our own fact text from the config. A test now pins this.
+  - The explanations stay in the JSON for audit only.
+- **Further caveats on §8.**
+  - Two of the six reference positives, R11 and R18, are the same forum thread (same URL, different excerpts). The
+    six cover five distinct sources.
+  - The reference labels were written by the assistant, not by an independent expert.
+  - The headline result remains **2/6 with every rule satisfied**. The 5/6 figure ignores the validator.
+- **For a next version (to be pre-registered)**: structured claims in place of free text.
+  - Each claim gives subject, metric, value and unit, and code checks it against the quote.
+  - The report sentence is generated from those fields.

@@ -65,7 +65,7 @@ Stress tests were unsealed on 2026-10-13. The stress protocol is
 | `D4` runtime supervisor | **`nvidia/Cosmos-Reason2-2B`** watches the overhead camera at 2 Hz (CONTINUE / FALLBACK / ABORT, shadow mode) and is asked at trial end whether the task succeeded | **Nebius AI Endpoint** (L40S, vLLM 0.29), about 330 ms round trip from the robot |
 | `D3` deployment report agent | **`nvidia/nemotron-3-super-120b-a12b`** explains verdicts that code has already decided; a structured validator checks each candidate's verdict, success fractions and latency in the prose (report v2) | **Nebius Token Factory** |
 | `D5` errata collector | **Tavily** search for TensorRT / Jetson / INT8 known issues, with queries derived from the real build environment and snapshot-hashed | Tavily API |
-| `D5` errata grounding | **Nemotron 3 Super** labels each of the 25 field reports against our measured facts (matches / contrasts / applies but unverified / not applicable) with structured output; code checks every quote is verbatim and every number is real ([`errata_grounded.md`](artifacts/reports/errata_grounded.md), [pre-registration](docs/errata_grounding_preregistration.md)) | **Nebius Token Factory** |
+| `D5` errata grounding | **Nemotron 3 Super** labels each of the 25 field reports against our measured facts (matches / contrasts / applies but unverified / not applicable) with structured output; code checks that every quote is verbatim, and the report shows only those quotes and our own facts, never the model's numbers ([`errata_grounded.md`](artifacts/reports/errata_grounded.md), [pre-registration](docs/errata_grounding_preregistration.md)) | **Nebius Token Factory** |
 | Policy training | LeRobot 0.6.1 ACT, 100k steps | **Nebius Jobs** (L40S, 1 h 57 min) |
 | Audit fan-out | 25 cells × bootstrap scoring on 2,000 held-out states | **Nebius Jobs** (CPU) |
 | Data and weights | demos, checkpoints, Cosmos weights | **Nebius Object Storage** (S3) |
@@ -79,10 +79,16 @@ to stay warm. Comparison: [`d3_model_compare.json`](artifacts/reports/d3_model_c
 **Where Nemotron met Tavily.** Tavily finds field reports and Nemotron reads them against what we measured. Code
 keeps only claims it can check.
 - Free-text JSON broke in 14 of 25 answers; structured output fixed all of them.
-- Nemotron's labels then agreed with ours on 5 of the 6 reports that bear on our measurements. These include an
-  Orin NX report of ModelOpt INT8 running slower than FP16, which matches our Orin measurement (16.8 vs 11.6 ms).
-- The validator accepted 2 of those 5 and rejected 3: two answers rounded a source's numbers, and in the third the
-  number in the source had a unit attached. No fabricated quote or number was accepted.
+- **With every rule satisfied, 2 of the 6** reference matches and contrasts were recovered. One is an Orin NX report
+  of ModelOpt INT8 running slower than FP16, matching our Orin measurement (16.8 vs 11.6 ms).
+- Ignoring the validator, the labels agreed on 5 of 6. The six come from five distinct sources, and the reference
+  labels were written by us, not by an independent expert.
+- Three of those answers were rejected for numbers in their explanations.
+  - That number check is weak: swapped or unit-attached values can pass it.
+  - So the report never shows model-written numbers. It shows only verbatim quotes, which are strictly checked,
+    and our own facts.
+- This is an assistant for reviewing field reports, at an early stage.
+  ([§9](docs/errata_grounding_preregistration.md))
 
 **Tool feedback.** Every problem we hit with TensorRT, Model Optimizer, Nebius AI Cloud and Token Factory is logged
 with its cause and a suggested fix in [`docs/tool_feedback.md`](docs/tool_feedback.md).
@@ -150,7 +156,8 @@ Every reported number can be recomputed from the committed sealed logs:
 
 ```bash
 uv venv .venv && uv pip install --python .venv/bin/python -e ".[dev]"
-.venv/bin/python -m pytest -q                                   # 176 tests
+.venv/bin/python -m pytest -q                                   # 184 tests
+python tests/runner_abort_harness.py                            # runner abort/timeout/manifest harness
 .venv/bin/python -m edgeqgate.grid                              # 26-cell grid and hash
 .venv/bin/python scripts/g6_analysis.py --sealed-dir artifacts/trials/g6_unsealed --out /tmp/g6.json
 .venv/bin/python scripts/g6_supplement.py --sealed-dir artifacts/trials/g6_unsealed \
@@ -221,7 +228,7 @@ plugins/         LeRobot camera plugin for the OpenMV AE3
 artifacts/       manifests, freeze records, unsealed trial logs, reports
 dashboard/       audit_gate.html (D7)
 docs/            pre-registration, decision log, protocols, session notes, related work
-tests/           176 unit tests
+tests/           184 unit tests, plus the hardware-free runner harness
 ```
 
 ## Positive control
@@ -250,7 +257,7 @@ Error is the mean action error against FP32 on the 2,000 audit states, in normal
 - **The calibration-size effect reverses between targets.** A plausible cause, not tested: the Hailo compiler uses
   the frames for quantization-aware fine-tuning, while TensorRT uses them only for activation ranges.
 - **The vendor emulator differs from the device** by about half the quantization error (0.020–0.026).
-- **Latency on the Pi 5 is 239 ms.** The Hailo backbones take 13 ms; the CPU transformer takes the rest.
+- **Latency on the Pi 5 is 239 ms (p95 264 ms).** The Hailo backbones take 13 ms; the CPU transformer takes the rest. That is over the runner's 200 ms chunk deadline: a new chunk must arrive before blending starts, 6 steps after the request at 30 Hz. As deployed today, the split pipeline would make every chunk late.
 - **Scope**: Hailo quantizes less of the graph, so this is not a claim that it quantizes better. No real-arm result
   follows from it.
 - A verdict belongs to a deployment target, not to the label "INT8".

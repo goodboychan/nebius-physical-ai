@@ -87,7 +87,7 @@ Reference points: Orin VC-002 34.3 ms, VC-025 FP16 25.4 ms, runner prefetch budg
   quantization error itself. A gate built on the vendor emulator alone would audit a different model from the
   one that ships.
 - **Latency is dominated by the CPU half of the split.** The accelerator part is 13 ms. The FP32 transformer on
-  the Pi CPU takes 226 ms. The total fits the 333 ms prefetch budget with a thin margin.
+  the Pi CPU takes 226 ms. (Corrected in §7: the real deadline is 200 ms, which the total exceeds.)
 - The Pi reported a past under-voltage and throttling event (`vcgencmd get_throttled` = 0x50000) when it was checked
   after the runs. Latency may therefore be pessimistic. Error numbers are unaffected.
 - **Scope, as stated in §2**: Hailo quantizes only the backbones and Orin quantizes the whole graph. The lower
@@ -96,3 +96,18 @@ Reference points: Orin VC-002 34.3 ms, VC-025 FP16 25.4 ms, runner prefetch budg
 - Note: `level_notes` in `*_compile.json` matched stale lines from an older shared DFC log (August) and should be
   ignored. The run logs show no level reduction, and quantization-aware fine-tuning ran in both cells.
 - Output SNR reported by the DFC: HL-16 20.7 / 20.6 dB, HL-1024 23.2 / 22.9 dB (top / wrist).
+
+## 7. Correction (external review 4, 2026-10-14): the latency budget is 200 ms, not 333 ms
+
+- §4 and §6 compared the Pi's 239 ms to "10 steps at 30 Hz = 333 ms". That is the wrong deadline.
+- The runner requests the next chunk when 10 steps remain. It must have the result **before blending starts**, at the
+  last 4 steps. So the deadline is (10 − 4) / 30 Hz = **200 ms**; a later chunk counts as late and the loop waits.
+  See the `so101_trial.py` docstring.
+- The split pipeline's median 239 ms and p95 264 ms are **over** this deadline. With today's runner, every chunk
+  would be late.
+- "Fits the budget with a thin margin" is therefore withdrawn. The arm was not run on this target, so this is a
+  timing statement, not an observed failure.
+- Real-arm use would need one of the following, each to be pre-registered:
+  - an earlier request (a larger prefetch);
+  - a faster CPU tail, e.g. a quantized transformer;
+  - running the tail elsewhere.
