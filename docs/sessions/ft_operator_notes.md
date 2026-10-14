@@ -14,3 +14,11 @@ Outcomes are decided by the locked criterion (automatic judge and §11 consensus
 - Trial 3: the same as trial 2 (the can ended half on the coaster).
 - Trial 6: the can was set half on the coaster, then the gripper moved and knocked it over.
 - Trial 8: the same pattern (set half on the coaster).
+- After trial 8: the operator reports that **the two policies' motions look visibly different**. So the operator may
+  be able to tell the arms apart by motion, though not which one is FT. This is a partial-unblinding risk for the
+  operator's inputs, recorded as it arose.
+  - Outcomes do not depend on the operator: success comes from the automatic judge and the video consensus
+    re-judge.
+  - The operator's inputs are the release and contact answers and the can placement.
+  - The operator was asked to keep the placement and answers identical regardless of the motion seen.
+  - Side-view recording may stop mid-block. A non-blind demonstration of both policies is planned after T0.
