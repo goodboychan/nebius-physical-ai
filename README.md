@@ -1,6 +1,6 @@
 <p align="center"><img src="docs/assets/quantgate_logo.png" alt="QuantGate" width="420"></p>
 
-# QuantGate
+# QuantGate — a robot deployment review
 
 **Evidence before deployment.** QuantGate helps robot developers decide which precision of a policy to ship on an
 edge device. It shows the engine's measured cost, its real-arm behavior and how strong the evidence is.
@@ -13,7 +13,8 @@ edge device. It shows the engine's measured cost, its real-arm behavior and how 
 `edgeqgate`
 
 The logo's Q stands for QuantGate and quantization. The open passage at the lower right is the gate, and the small
-square leaving it is the one INT8 policy that passed.
+square leaving it is a candidate that has cleared review for its next test. Passing the gate means "worth
+validating next", not "approved": in this study no INT8 build was approved against FP32 (insufficient evidence).
 
 ## Results at a glance
 
@@ -257,7 +258,7 @@ Error is the mean action error against FP32 on the 2,000 audit states, in normal
 - **The calibration-size effect reverses between targets.** A plausible cause, not tested: the Hailo compiler uses
   the frames for quantization-aware fine-tuning, while TensorRT uses them only for activation ranges.
 - **The vendor emulator differs from the device** by about half the quantization error (0.020–0.026).
-- **Latency on the Pi 5 is 239 ms (p95 264 ms).** The Hailo backbones take 13 ms; the CPU transformer takes the rest. That is over the runner's 200 ms chunk deadline: a new chunk must arrive before blending starts, 6 steps after the request at 30 Hz. As deployed today, the split pipeline would make every chunk late.
+- **Latency on the Pi 5 is 239 ms (p95 264 ms).** The Hailo backbones take 13 ms; the CPU transformer takes the rest. That is over the runner's 200 ms chunk deadline: a new chunk must arrive before blending starts, 6 steps after the request at 30 Hz. The measured median and p95 both exceed that deadline. The arm was not run on this target.
 - **Scope**: Hailo quantizes less of the graph, so this is not a claim that it quantizes better. No real-arm result
   follows from it.
 - A verdict belongs to a deployment target, not to the label "INT8".

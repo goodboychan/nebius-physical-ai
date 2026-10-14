@@ -103,8 +103,7 @@ Reference points: Orin VC-002 34.3 ms, VC-025 FP16 25.4 ms, runner prefetch budg
 - The runner requests the next chunk when 10 steps remain. It must have the result **before blending starts**, at the
   last 4 steps. So the deadline is (10 − 4) / 30 Hz = **200 ms**; a later chunk counts as late and the loop waits.
   See the `so101_trial.py` docstring.
-- The split pipeline's median 239 ms and p95 264 ms are **over** this deadline. With today's runner, every chunk
-  would be late.
+- The split pipeline's measured median (239 ms) and p95 (264 ms) are both **over** this deadline.
 - "Fits the budget with a thin margin" is therefore withdrawn. The arm was not run on this target, so this is a
   timing statement, not an observed failure.
 - Real-arm use would need one of the following, each to be pre-registered:

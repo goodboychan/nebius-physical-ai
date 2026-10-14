@@ -34,7 +34,7 @@ review**: what the evidence supports, what is still missing, and what to test ne
 3. **Real-arm check.** It runs blinded, interleaved trials on the arm to test whether the audit's ranking holds. The
    AI layers are checked against the same evidence: a Cosmos-Reason2 supervisor and judge, and Nemotron 3 Super.
    Nemotron writes the report and checks Tavily field reports against our own measurements. Neither model is
-   trusted on its own word: code checks every quote and number they produce.
+   trusted on its own word: code decides every verdict and number, and checks what the models may add (verbatim quotes, restricted wording); the limits of those checks are stated.
 
 The results were sealed until all trials were logged, so no candidate was picked after seeing its results.
 
