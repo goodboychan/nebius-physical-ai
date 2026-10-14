@@ -35,3 +35,4 @@ Outcomes are decided by the locked criterion (automatic judge and §11 consensus
 - Before T2: a red sticker was placed at the new −3 cm mark. An overhead frame shows the two red dots symmetric about
   the start-mark tape. The sticker is a scene change shared by both arms within T2.
 - T2 trial 12: the can was set down properly, then the gripper kept moving nearby and knocked it over.
+- T2 trial 14: the can was never grasped.
