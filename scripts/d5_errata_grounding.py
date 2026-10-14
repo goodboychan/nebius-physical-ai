@@ -85,6 +85,27 @@ def call(prompt, max_tokens=4096, structured=True):
             err = e; time.sleep(3)
     raise err
 
+def render(cfg, rows, M):
+    F = cfg["facts"]; ref = lambda w: f"{w['reference'][0]} {w['reference'][1] or ''}".strip()
+    L = ["# Field reports checked against our measurements (D5 + Nemotron)", "",
+         f"Snapshot `{cfg['snapshot_hash'][:16]}…` (Tavily, 25 results). Labels by `{MODEL}` (structured output, amendment 1);",
+         "every quote and number checked by code. Our numbers come from the facts file, not from the model.", "",
+         "## Accepted matches and contrasts", "",
+         "| Field report | Nemotron | Reference | Our measurement | Supporting quote (verbatim) |", "|---|---|---|---|---|"]
+    for w in rows:
+        if w["accepted"] and w["answer"]["label"] in ("MATCHES", "CONTRASTS"):
+            f = F[w["answer"]["fact_id"]]
+            L.append(f"| [{w['title'][:70]}]({w['url']}) | {w['answer']['label']} {w['answer']['fact_id']} | {ref(w)} | {f['text']} ([source]({f['source']})) | “{w['answer']['quote'][:200]}” |")
+    L += ["", "## Rejected by the validator", "", "| Result | Nemotron | Reference | Rule |", "|---|---|---|---|"]
+    for w in rows:
+        if not w["accepted"]:
+            a = w["answer"] or {}
+            L.append(f"| [{w['title'][:60]}]({w['url']}) | {a.get('label')} {a.get('fact_id') or ''} | {ref(w)} | {'; '.join(w['violations'])} |")
+    L += ["", f"Primary: {M['primary_recall'][0]}/{M['primary_recall'][1]} reference matches/contrasts recovered and accepted; extra positives: "
+          f"{M['extra_positive'] or 'none'}; accepted {M['accepted']}/25; rejected by rule: {M['violations_by_rule'] or 'none'}; "
+          f"median latency {M['latency_s_median']} s. Details: docs/errata_grounding_preregistration.md."]
+    return "\n".join(L) + "\n"
+
 def selftest(cfg, R):
     r = R[10]  # R11, the 2.7x regression thread
     good = {"label": "MATCHES", "fact_id": "F1", "quote": r["content"][r["content"].find("$ /usr/src"):][:60], "explanation": "INT8 is slower here too."}
@@ -98,10 +119,12 @@ def selftest(cfg, R):
 
 if __name__ == "__main__":
     ap = argparse.ArgumentParser(); ap.add_argument("--config", default="configs/errata_grounding_v1.json")
-    ap.add_argument("--out", default="artifacts/reports"); ap.add_argument("--selftest", action="store_true"); ap.add_argument("--v1-format", action="store_true"); a = ap.parse_args()
+    ap.add_argument("--out", default="artifacts/reports"); ap.add_argument("--selftest", action="store_true"); ap.add_argument("--v1-format", action="store_true"); ap.add_argument("--render", action="store_true"); a = ap.parse_args()
     cfg = json.load(open(a.config)); R = results(cfg); assert len(R) == 25 and set(cfg["reference_labels"]) == {r["id"] for r in R}
     st = selftest(cfg, R); print("selftest", st)
     if a.selftest: sys.exit(0)
+    if a.render:   # rebuild the markdown from a saved run, no model call
+        D = json.load(open(f"{a.out}/errata_grounded.json")); open(f"{a.out}/errata_grounded.md", "w").write(render(cfg, D["rows"], D["metrics"])); sys.exit(0)
     facts = "\n".join(f"{k}: {v['text']}" for k, v in cfg["facts"].items()); labels = "\n".join(f"{k}: {v}" for k, v in cfg["labels"].items())
     rows = []
     for r in R:
@@ -126,15 +149,5 @@ if __name__ == "__main__":
          "violations_by_rule": viol, "confusion_ref_x_model": conf, "latency_s_median": lat[len(lat) // 2],
          "tokens_total": {k: sum((w["usage"] or {}).get(k, 0) or 0 for w in rows) for k in ("prompt_tokens", "completion_tokens")}, "selftest": st}
     json.dump({"metrics": M, "rows": rows, "config": a.config, "snapshot_hash": cfg["snapshot_hash"]}, open(f"{a.out}/errata_grounded.json", "w"), indent=1)
-    F = cfg["facts"]; L = ["# Field reports checked against our measurements (D5 + Nemotron)", "",
-         f"Snapshot `{cfg['snapshot_hash'][:16]}…` (Tavily, 25 results). Labels by `{MODEL}`; every quote and number checked by code.",
-         "Our numbers in the table come from the facts file, not from the model.", "",
-         "| Field report | Label | Our measurement | Supporting quote (verbatim) |", "|---|---|---|---|"]
-    for w in rows:
-        if w["accepted"] and w["answer"]["label"] in ("MATCHES", "CONTRASTS"):
-            f = F[w["answer"]["fact_id"]]
-            L.append(f"| [{w['title'][:70]}]({w['url']}) | {w['answer']['label']} {w['answer']['fact_id']} | {f['text']} ([source]({f['source']})) | “{w['answer']['quote'][:200]}” |")
-    L += ["", f"Primary: {len(hit)}/{len(refpos)} reference matches/contrasts recovered; extra positives: {extra or 'none'}; "
-          f"accepted {M['accepted']}/25; rejected by rule: {viol or 'none'}; median latency {M['latency_s_median']} s."]
-    open(f"{a.out}/errata_grounded.md", "w").write("\n".join(L) + "\n")
+    open(f"{a.out}/errata_grounded.md", "w").write(render(cfg, rows, M))
     print(json.dumps({k: M[k] for k in ("primary_recall", "extra_positive", "accepted", "violations_by_rule", "latency_s_median", "tokens_total")}))

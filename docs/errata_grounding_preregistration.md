@@ -78,3 +78,42 @@ Output: `artifacts/reports/errata_grounded_v1.{json,md}`.
 - Structured output was checked only on an unrelated dummy text (a banana-bread recipe), never on a snapshot
   result.
 - v1.1 runs once and is reported next to v1. The format change is disclosed wherever v1.1 is cited.
+
+## 8. Run v1.1 (structured output, amendment 1), 2026-10-14
+
+Output: `artifacts/reports/errata_grounded.{json,md}`.
+
+| | v1 (free text) | v1.1 (structured output) |
+|---|---|---|
+| Valid JSON | 11/25 | **25/25** |
+| Accepted by the validator | 10/25 | 20/25 |
+| **Primary**: reference MATCHES/CONTRASTS recovered and accepted | 1/6 | **2/6** (R13 MATCHES F1, R15 CONTRASTS F1) |
+| Reference positives with the right label and fact, ignoring the validator | — | **5/6** (all except R09) |
+| Extra positives (accepted) | none | R12 |
+| Label agreement on all 25, ignoring the validator | — | 18/25 |
+| Rejections | R1 ×14, R3 ×1 | R4 ×4 (in 3 results), R3 ×2 |
+| Median latency per call | 4.2 s | 4.2 s |
+
+**Reading**
+
+- **Structured output fixed the format completely.** Once the answer is valid JSON, Nemotron's labels agree with
+  the reference on 5 of the 6 field reports that match or contrast with our measurements.
+  - It found the ModelOpt INT8 regression thread on Orin Nano (R11, R18), DEIMv2 on Orin NX (R13), and the YOLO
+    reports where INT8 is faster (R14, R15).
+  - It linked R09 (SqueezeBits) to F3 instead of F1. Both facts are about INT8 being slow, but F3 is the
+    `--int8`-only build.
+- **The validator is strict by design, and that strictness costs recall here.**
+  - R11 and R18 were rejected because the explanation rounded numbers from the content: 23.97 → "24",
+    114.5 → "114", 41.8 → "42".
+  - R14 was rejected because the validator does not read numbers with a unit attached in the content ("15W").
+    This is a validator limitation, found after the run. It is not fixed for this result.
+  - Sensitivity, stated now and not used as the primary result: with unit-attached numbers recognised, R14 would
+    pass (3/6). The rounded numbers would still fail. Exact numbers only is the rule we want for a deployment
+    report.
+- **Disagreements are mostly at the APPLIES_UNVERIFIED / NOT_APPLICABLE boundary**: 5 reference NOT_APPLICABLE
+  results were labelled APPLIES_UNVERIFIED. Nemotron is more inclusive than the reference.
+  - The one accepted extra positive, R12, is a forum index page whose only relevant text is the title of the 2.7×
+    regression thread. It is arguably a match through the title. The reference labelled it NOT_APPLICABLE.
+- **What a developer gets**: a table of field reports, each tied to one of our measured facts by a verbatim quote that
+  code has checked. Here that means two accepted rows linking the Orin INT8 slowdown to independent reports, plus
+  a contrast row, with no fabricated quote or number accepted.

@@ -1,0 +1,1027 @@
+{
+ "metrics": {
+  "model": "nvidia/nemotron-3-super-120b-a12b",
+  "n": 25,
+  "primary_recall": [
+   2,
+   6
+  ],
+  "extra_positive": [
+   "R12"
+  ],
+  "accepted": 20,
+  "violations_by_rule": {
+   "R4": 4,
+   "R3": 2
+  },
+  "confusion_ref_x_model": {
+   "MATCHES": {
+    "MATCHES": 2,
+    "CONTRASTS": 0,
+    "APPLIES_UNVERIFIED": 0,
+    "NOT_APPLICABLE": 0,
+    "REJECTED": 2
+   },
+   "CONTRASTS": {
+    "MATCHES": 0,
+    "CONTRASTS": 1,
+    "APPLIES_UNVERIFIED": 0,
+    "NOT_APPLICABLE": 0,
+    "REJECTED": 1
+   },
+   "APPLIES_UNVERIFIED": {
+    "MATCHES": 0,
+    "CONTRASTS": 0,
+    "APPLIES_UNVERIFIED": 6,
+    "NOT_APPLICABLE": 0,
+    "REJECTED": 1
+   },
+   "NOT_APPLICABLE": {
+    "MATCHES": 1,
+    "CONTRASTS": 0,
+    "APPLIES_UNVERIFIED": 5,
+    "NOT_APPLICABLE": 5,
+    "REJECTED": 1
+   }
+  },
+  "latency_s_median": 4.23,
+  "tokens_total": {
+   "prompt_tokens": 26997,
+   "completion_tokens": 18655
+  },
+  "selftest": {
+   "good": [],
+   "bad_caught": [
+    true,
+    true,
+    true,
+    true
+   ]
+  }
+ },
+ "rows": [
+  {
+   "id": "R01",
+   "title": "TensorRT 10.3.0 Release Notes \u2014 NVIDIA TensorRT",
+   "url": "https://docs.nvidia.com/deeplearning/tensorrt/10.x.x/getting-started/release-notes-10/10.3.0.html",
+   "answer": {
+    "label": "APPLIES_UNVERIFIED",
+    "fact_id": null,
+    "quote": "There was an up to 10% performance regression for ConvNext on NVIDIA Orin compared to TensorRT 9.3.",
+    "explanation": "The release note discusses TensorRT 10.3.0 on Orin hardware, which matches our build profile, but none of our measured facts (F1\u2011F5) address ConvNext performance regression."
+   },
+   "violations": [],
+   "accepted": true,
+   "reference": [
+    "NOT_APPLICABLE",
+    null
+   ],
+   "latency_s": 7.0,
+   "usage": {
+    "completion_tokens": 1199,
+    "prompt_tokens": 1082,
+    "total_tokens": 2281,
+    "completion_tokens_details": {
+     "accepted_prediction_tokens": null,
+     "audio_tokens": null,
+     "reasoning_tokens": 1098,
+     "rejected_prediction_tokens": null
+    },
+    "prompt_tokens_details": {
+     "audio_tokens": null,
+     "cached_tokens": 0,
+     "created_cache_tokens": 0,
+     "multimodal_tokens": null
+    },
+    "prompt_cache_hit_tokens": 0,
+    "prompt_cache_miss_tokens": 1082
+   },
+   "raw_tail": "{\"label\": \"APPLIES_UNVERIFIED\", \"fact_id\": null, \"quote\": \"There was an up to 10% performance regression for ConvNext on NVIDIA Orin compared to TensorRT 9.3.\", \"explanation\": \"The release note discusses TensorRT 10.3.0 on Orin hardware, which matches our build profile, but none of our measured facts (F1\u2011F5) address ConvNext performance regression.\"}"
+  },
+  {
+   "id": "R02",
+   "title": "Release Notes \u2014 TensorRT LLM",
+   "url": "https://nvidia.github.io/TensorRT-LLM/release-notes.html",
+   "answer": {
+    "label": "NOT_APPLICABLE",
+    "fact_id": null,
+    "quote": "+ Fixed OOM issues in fused MoE kernels by optimizing workspace pre-allocation.",
+    "explanation": "The field report discusses TensorRT LLM fixes for MoE kernels and other LLM-specific issues, which are unrelated to the measured INT8 vs FP16 performance, energy usage, calibration, or determinism facts for the Jetson Orin Nano Super build profile."
+   },
+   "violations": [],
+   "accepted": true,
+   "reference": [
+    "NOT_APPLICABLE",
+    null
+   ],
+   "latency_s": 3.22,
+   "usage": {
+    "completion_tokens": 330,
+    "prompt_tokens": 1000,
+    "total_tokens": 1330,
+    "completion_tokens_details": {
+     "accepted_prediction_tokens": null,
+     "audio_tokens": null,
+     "reasoning_tokens": 232,
+     "rejected_prediction_tokens": null
+    },
+    "prompt_tokens_details": {
+     "audio_tokens": null,
+     "cached_tokens": 0,
+     "created_cache_tokens": 0,
+     "multimodal_tokens": null
+    },
+    "prompt_cache_hit_tokens": 0,
+    "prompt_cache_miss_tokens": 1000
+   },
+   "raw_tail": "abel\": \"NOT_APPLICABLE\", \"fact_id\": null, \"quote\": \"+ Fixed OOM issues in fused MoE kernels by optimizing workspace pre-allocation.\", \"explanation\": \"The field report discusses TensorRT LLM fixes for MoE kernels and other LLM-specific issues, which are unrelated to the measured INT8 vs FP16 performance, energy usage, calibration, or determinism facts for the Jetson Orin Nano Super build profile.\"}"
+  },
+  {
+   "id": "R03",
+   "title": "Release Notes \u2014 TensorRT-LLM",
+   "url": "https://nvidia.github.io/TensorRT-LLM/0.19.0/release-notes.html",
+   "answer": {
+    "label": "NOT_APPLICABLE",
+    "fact_id": null,
+    "quote": "Base Docker image for TensorRT-LLM is updated to `nvcr.io/nvidia/pytorch:24.07-py3`. Base Docker image for TensorRT-LLM Backend is updated to `nvcr.io/nvidia/tritonserver:24.07-py3`. The dependent TensorRT version is updated to 10.3.0.",
+    "explanation": "The field report discusses TensorRT-LLM release notes and infrastructure changes, which pertains to a different product (LLM inference) and does not address any of the measured INT8 vs FP16 performance, energy, build time, calibration, or determinism facts for our LeRobot ACT model."
+   },
+   "violations": [],
+   "accepted": true,
+   "reference": [
+    "NOT_APPLICABLE",
+    null
+   ],
+   "latency_s": 4.03,
+   "usage": {
+    "completion_tokens": 642,
+    "prompt_tokens": 1068,
+    "total_tokens": 1710,
+    "completion_tokens_details": {
+     "accepted_prediction_tokens": null,
+     "audio_tokens": null,
+     "reasoning_tokens": 475,
+     "rejected_prediction_tokens": null
+    },
+    "prompt_tokens_details": {
+     "audio_tokens": null,
+     "cached_tokens": 0,
+     "created_cache_tokens": 0,
+     "multimodal_tokens": null
+    },
+    "prompt_cache_hit_tokens": 0,
+    "prompt_cache_miss_tokens": 1068
+   },
+   "raw_tail": "to `nvcr.io/nvidia/tritonserver:24.07-py3`. The dependent TensorRT version is updated to 10.3.0.\", \"explanation\": \"The field report discusses TensorRT-LLM release notes and infrastructure changes, which pertains to a different product (LLM inference) and does not address any of the measured INT8 vs FP16 performance, energy, build time, calibration, or determinism facts for our LeRobot ACT model.\"}"
+  },
+  {
+   "id": "R04",
+   "title": "TensorRT-Release-Notes.pdf",
+   "url": "https://www.collegesidekick.com/study-docs/14518341",
+   "answer": {
+    "label": "NOT_APPLICABLE",
+    "fact_id": null,
+    "quote": "There is a known issue with DLA clocks that requires users to reboot the system after changing the nvpmodel power mode or otherwise experience",
+    "explanation": "The report discusses a DLA\u2011clock issue, but our build explicitly does not use DLA, so it is not relevant to the measured facts."
+   },
+   "violations": [],
+   "accepted": true,
+   "reference": [
+    "NOT_APPLICABLE",
+    null
+   ],
+   "latency_s": 2.16,
+   "usage": {
+    "completion_tokens": 219,
+    "prompt_tokens": 763,
+    "total_tokens": 982,
+    "completion_tokens_details": {
+     "accepted_prediction_tokens": null,
+     "audio_tokens": null,
+     "reasoning_tokens": 132,
+     "rejected_prediction_tokens": null
+    },
+    "prompt_tokens_details": {
+     "audio_tokens": null,
+     "cached_tokens": 0,
+     "created_cache_tokens": 0,
+     "multimodal_tokens": null
+    },
+    "prompt_cache_hit_tokens": 0,
+    "prompt_cache_miss_tokens": 763
+   },
+   "raw_tail": "{\"label\": \"NOT_APPLICABLE\", \"fact_id\": null, \"quote\": \"There is a known issue with DLA clocks that requires users to reboot the system after changing the nvpmodel power mode or otherwise experience\", \"explanation\": \"The report discusses a DLA\u2011clock issue, but our build explicitly does not use DLA, so it is not relevant to the measured facts.\"}"
+  },
+  {
+   "id": "R05",
+   "title": "Releases \u00b7 NVIDIA/TensorRT \u00b7 GitHub",
+   "url": "https://github.com/NVIDIA/TensorRT/releases",
+   "answer": {
+    "label": "NOT_APPLICABLE",
+    "fact_id": null,
+    "quote": "# Plugin changes\n\nDeprecated bertQKVToContextPlugin and will be removed in a future release.",
+    "explanation": "The release notes discuss plugin deprecations and parser additions unrelated to INT8 vs FP16 performance, energy consumption, calibration, or determinism on Jetson Orin Nano."
+   },
+   "violations": [],
+   "accepted": true,
+   "reference": [
+    "NOT_APPLICABLE",
+    null
+   ],
+   "latency_s": 3.21,
+   "usage": {
+    "completion_tokens": 368,
+    "prompt_tokens": 984,
+    "total_tokens": 1352,
+    "completion_tokens_details": {
+     "accepted_prediction_tokens": null,
+     "audio_tokens": null,
+     "reasoning_tokens": 282,
+     "rejected_prediction_tokens": null
+    },
+    "prompt_tokens_details": {
+     "audio_tokens": null,
+     "cached_tokens": 0,
+     "created_cache_tokens": 0,
+     "multimodal_tokens": null
+    },
+    "prompt_cache_hit_tokens": 0,
+    "prompt_cache_miss_tokens": 984
+   },
+   "raw_tail": "{\"label\": \"NOT_APPLICABLE\", \"fact_id\": null, \"quote\": \"# Plugin changes\\n\\nDeprecated bertQKVToContextPlugin and will be removed in a future release.\", \"explanation\": \"The release notes discuss plugin deprecations and parser additions unrelated to INT8 vs FP16 performance, energy consumption, calibration, or determinism on Jetson Orin Nano.\"}"
+  },
+  {
+   "id": "R06",
+   "title": "Explicit INT8 Quantization Fails to Fuse Concat-Conv Block ...",
+   "url": "https://github.com/NVIDIA/TensorRT/issues/4401",
+   "answer": {
+    "label": "APPLIES_UNVERIFIED",
+    "fact_id": null,
+    "quote": "I've tried all suggested Q/DQ placements from various issues (and more), but TensorRT never fully fuses the operators in that section.",
+    "explanation": "The field report describes a failure to fuse operators when using explicit INT8 quantization/dequantization, which is pertinent to our build profile that uses explicit Q/DQ via Model Optimizer, but none of our measured facts quantify such fusion issues."
+   },
+   "violations": [],
+   "accepted": true,
+   "reference": [
+    "APPLIES_UNVERIFIED",
+    null
+   ],
+   "latency_s": 5.45,
+   "usage": {
+    "completion_tokens": 785,
+    "prompt_tokens": 767,
+    "total_tokens": 1552,
+    "completion_tokens_details": {
+     "accepted_prediction_tokens": null,
+     "audio_tokens": null,
+     "reasoning_tokens": 678,
+     "rejected_prediction_tokens": null
+    },
+    "prompt_tokens_details": {
+     "audio_tokens": null,
+     "cached_tokens": 0,
+     "created_cache_tokens": 0,
+     "multimodal_tokens": null
+    },
+    "prompt_cache_hit_tokens": 0,
+    "prompt_cache_miss_tokens": 767
+   },
+   "raw_tail": "ed all suggested Q/DQ placements from various issues (and more), but TensorRT never fully fuses the operators in that section.\", \"explanation\": \"The field report describes a failure to fuse operators when using explicit INT8 quantization/dequantization, which is pertinent to our build profile that uses explicit Q/DQ via Model Optimizer, but none of our measured facts quantify such fusion issues.\"}"
+  },
+  {
+   "id": "R07",
+   "title": "Explicit Quantization \u2014 NVIDIA TensorRT",
+   "url": "https://docs.nvidia.com/deeplearning/tensorrt/latest/inference-library/quantized-types-explicit-quantization.html",
+   "answer": {
+    "label": "APPLIES_UNVERIFIED",
+    "fact_id": null,
+    "quote": "When :math:`x_{f^{}}^{2}` is quantized to INT8, the output of the fused convolution is also INT8, and the trailing Quantize layer is fused with the convolution.",
+    "explanation": "The document describes explicit quantization and Q/DQ fusion, which is relevant to the build profile that used explicit Q/DQ via modelopt, but none of the measured facts address this fusion behavior."
+   },
+   "violations": [],
+   "accepted": true,
+   "reference": [
+    "APPLIES_UNVERIFIED",
+    null
+   ],
+   "latency_s": 3.62,
+   "usage": {
+    "completion_tokens": 522,
+    "prompt_tokens": 1033,
+    "total_tokens": 1555,
+    "completion_tokens_details": {
+     "accepted_prediction_tokens": null,
+     "audio_tokens": null,
+     "reasoning_tokens": 413,
+     "rejected_prediction_tokens": null
+    },
+    "prompt_tokens_details": {
+     "audio_tokens": null,
+     "cached_tokens": 0,
+     "created_cache_tokens": 0,
+     "multimodal_tokens": null
+    },
+    "prompt_cache_hit_tokens": 0,
+    "prompt_cache_miss_tokens": 1033
+   },
+   "raw_tail": "d\": null, \"quote\": \"When :math:`x_{f^{}}^{2}` is quantized to INT8, the output of the fused convolution is also INT8, and the trailing Quantize layer is fused with the convolution.\", \"explanation\": \"The document describes explicit quantization and Q/DQ fusion, which is relevant to the build profile that used explicit Q/DQ via modelopt, but none of the measured facts address this fusion behavior.\"}"
+  },
+  {
+   "id": "R08",
+   "title": "[question] Myelin: attention fusion and FlashAttention \u00b7 Issue #3243 \u00b7 NVIDIA/TensorRT \u00b7 GitHub",
+   "url": "https://github.com/NVIDIA/TensorRT/issues/3243",
+   "answer": {
+    "label": "APPLIES_UNVERIFIED",
+    "fact_id": null,
+    "quote": "When attention op gets fused in a single op with Myelin, it's not written in trex-tooltip if it's using FlashAttention / proper fusion or not (and if it's using quantization under the hood, especially for the implicit quantization mode).",
+    "explanation": "The field report discusses detecting whether TensorRT's Myelin\u2011fused attention uses FlashAttention, which is relevant to our transformer\u2011based build but none of our measured facts address this topic."
+   },
+   "violations": [],
+   "accepted": true,
+   "reference": [
+    "APPLIES_UNVERIFIED",
+    null
+   ],
+   "latency_s": 4.23,
+   "usage": {
+    "completion_tokens": 504,
+    "prompt_tokens": 1053,
+    "total_tokens": 1557,
+    "completion_tokens_details": {
+     "accepted_prediction_tokens": null,
+     "audio_tokens": null,
+     "reasoning_tokens": 383,
+     "rejected_prediction_tokens": null
+    },
+    "prompt_tokens_details": {
+     "audio_tokens": null,
+     "cached_tokens": 0,
+     "created_cache_tokens": 0,
+     "multimodal_tokens": null
+    },
+    "prompt_cache_hit_tokens": 0,
+    "prompt_cache_miss_tokens": 1053
+   },
+   "raw_tail": "it's not written in trex-tooltip if it's using FlashAttention / proper fusion or not (and if it's using quantization under the hood, especially for the implicit quantization mode).\", \"explanation\": \"The field report discusses detecting whether TensorRT's Myelin\u2011fused attention uses FlashAttention, which is relevant to our transformer\u2011based build but none of our measured facts address this topic.\"}"
+  },
+  {
+   "id": "R09",
+   "title": "How to Quantize Transformer-based model for TensorRT Deployment - The official SqueezeBits Tech blog",
+   "url": "https://blog.squeezebits.com/how-to-quantize-transformerbased-model-for-tensorrt-deployment-55802",
+   "answer": {
+    "label": "MATCHES",
+    "fact_id": "F3",
+    "quote": "brute-force quantization\u2014applying INT8 to all nodes indiscriminately (Figure 2b)\u2014even increased latency by 1.3\u00d7 compared to the recommended setup, due to loss of kernel fusion opportunities.",
+    "explanation": "The field report notes that brute-force INT8 quantization raised latency because of lost kernel fusion, which parallels fact F3 where an INT8\u2011only engine was slower than INT8+FP16 due to layers lacking INT8 kernels falling back to FP32 with reformat nodes."
+   },
+   "violations": [],
+   "accepted": true,
+   "reference": [
+    "MATCHES",
+    "F1"
+   ],
+   "latency_s": 6.11,
+   "usage": {
+    "completion_tokens": 1067,
+    "prompt_tokens": 976,
+    "total_tokens": 2043,
+    "completion_tokens_details": {
+     "accepted_prediction_tokens": null,
+     "audio_tokens": null,
+     "reasoning_tokens": 938,
+     "rejected_prediction_tokens": null
+    },
+    "prompt_tokens_details": {
+     "audio_tokens": null,
+     "cached_tokens": 0,
+     "created_cache_tokens": 0,
+     "multimodal_tokens": null
+    },
+    "prompt_cache_hit_tokens": 0,
+    "prompt_cache_miss_tokens": 976
+   },
+   "raw_tail": "y (Figure 2b)\u2014even increased latency by 1.3\u00d7 compared to the recommended setup, due to loss of kernel fusion opportunities.\", \"explanation\": \"The field report notes that brute-force INT8 quantization raised latency because of lost kernel fusion, which parallels fact F3 where an INT8\u2011only engine was slower than INT8+FP16 due to layers lacking INT8 kernels falling back to FP32 with reformat nodes.\"}"
+  },
+  {
+   "id": "R10",
+   "title": "Practical aspects about neural networks quantization with TensorRT - TensorRT - NVIDIA Developer Forums",
+   "url": "https://forums.developer.nvidia.com/t/practical-aspects-about-neural-networks-quantization-with-tensorrt/248336",
+   "answer": {
+    "label": "APPLIES_UNVERIFIED",
+    "fact_id": null,
+    "quote": "When performing explicit quantization, I provide an ONNX graph with Q/DQ nodes to be converted to a \u2018.trt\u2019 file. Can I assume that all fake quantization nodes (as seen by Netron, for example) will be replaced by real INT8 operations of the associated layers?",
+    "explanation": "The forum post discusses explicit quantization with Q/DQ nodes, which is relevant to our build profile, but it does not report any measured performance, energy, build\u2011time, or calibration outcomes that match facts F1\u2011F5."
+   },
+   "violations": [],
+   "accepted": true,
+   "reference": [
+    "NOT_APPLICABLE",
+    null
+   ],
+   "latency_s": 5.41,
+   "usage": {
+    "completion_tokens": 994,
+    "prompt_tokens": 1117,
+    "total_tokens": 2111,
+    "completion_tokens_details": {
+     "accepted_prediction_tokens": null,
+     "audio_tokens": null,
+     "reasoning_tokens": 858,
+     "rejected_prediction_tokens": null
+    },
+    "prompt_tokens_details": {
+     "audio_tokens": null,
+     "cached_tokens": 0,
+     "created_cache_tokens": 0,
+     "multimodal_tokens": null
+    },
+    "prompt_cache_hit_tokens": 0,
+    "prompt_cache_miss_tokens": 1117
+   },
+   "raw_tail": " \u2018.trt\u2019 file. Can I assume that all fake quantization nodes (as seen by Netron, for example) will be replaced by real INT8 operations of the associated layers?\", \"explanation\": \"The forum post discusses explicit quantization with Q/DQ nodes, which is relevant to our build profile, but it does not report any measured performance, energy, build\u2011time, or calibration outcomes that match facts F1\u2011F5.\"}"
+  },
+  {
+   "id": "R11",
+   "title": "TensorRT Model Optimizer INT8 quantization causes 2.7x performance regression on Jetson Orin Nano 4GB (ViT-S + DPT architecture) - Jetson Orin Nano - NVIDIA Developer Forums",
+   "url": "https://forums.developer.nvidia.com/t/tensorrt-model-optimizer-int8-quantization-causes-2-7x-performance-regression-on-jetson-orin-nano-4gb-vit-s-dpt-architecture/357835",
+   "answer": {
+    "label": "MATCHES",
+    "fact_id": "F1",
+    "quote": "GPU Compute Time: min = 23.949 ms, max = 23.9971 ms, mean = 23.969 ms",
+    "explanation": "The reported INT8 latency (~24 ms) is slower than the FP16 latency (~11.6 ms) observed in our build, matching the fact that INT8 is slower than FP16 (F1)."
+   },
+   "violations": [
+    "R4: number 24 not in the quote, content or fact"
+   ],
+   "accepted": false,
+   "reference": [
+    "MATCHES",
+    "F1"
+   ],
+   "latency_s": 10.67,
+   "usage": {
+    "completion_tokens": 1989,
+    "prompt_tokens": 1502,
+    "total_tokens": 3491,
+    "completion_tokens_details": {
+     "accepted_prediction_tokens": null,
+     "audio_tokens": null,
+     "reasoning_tokens": 1876,
+     "rejected_prediction_tokens": null
+    },
+    "prompt_tokens_details": {
+     "audio_tokens": null,
+     "cached_tokens": 0,
+     "created_cache_tokens": 0,
+     "multimodal_tokens": null
+    },
+    "prompt_cache_hit_tokens": 0,
+    "prompt_cache_miss_tokens": 1502
+   },
+   "raw_tail": "{\"label\": \"MATCHES\", \"fact_id\": \"F1\", \"quote\": \"GPU Compute Time: min = 23.949 ms, max = 23.9971 ms, mean = 23.969 ms\", \"explanation\": \"The reported INT8 latency (~24 ms) is slower than the FP16 latency (~11.6 ms) observed in our build, matching the fact that INT8 is slower than FP16 (F1).\"}"
+  },
+  {
+   "id": "R12",
+   "title": "TensorRT Quantization for Jetson Inference - Jetson Orin Nano - NVIDIA Developer Forums",
+   "url": "https://forums.developer.nvidia.com/t/tensorrt-quantization-for-jetson-inference/347929",
+   "answer": {
+    "label": "MATCHES",
+    "fact_id": "F1",
+    "quote": "TensorRT Model Optimizer INT8 quantization causes 2.7x performance regression on Jetson Orin Nano 4GB (ViT-S + DPT architecture)",
+    "explanation": "The forum post reports that INT8 quantization leads to a performance regression (slower inference) on Jetson Orin Nano, which matches our measured fact F1 where INT8 is slower than FP16."
+   },
+   "violations": [],
+   "accepted": true,
+   "reference": [
+    "NOT_APPLICABLE",
+    null
+   ],
+   "latency_s": 3.91,
+   "usage": {
+    "completion_tokens": 563,
+    "prompt_tokens": 1028,
+    "total_tokens": 1591,
+    "completion_tokens_details": {
+     "accepted_prediction_tokens": null,
+     "audio_tokens": null,
+     "reasoning_tokens": 459,
+     "rejected_prediction_tokens": null
+    },
+    "prompt_tokens_details": {
+     "audio_tokens": null,
+     "cached_tokens": 0,
+     "created_cache_tokens": 0,
+     "multimodal_tokens": null
+    },
+    "prompt_cache_hit_tokens": 0,
+    "prompt_cache_miss_tokens": 1028
+   },
+   "raw_tail": "{\"label\": \"MATCHES\", \"fact_id\": \"F1\", \"quote\": \"TensorRT Model Optimizer INT8 quantization causes 2.7x performance regression on Jetson Orin Nano 4GB (ViT-S + DPT architecture)\", \"explanation\": \"The forum post reports that INT8 quantization leads to a performance regression (slower inference) on Jetson Orin Nano, which matches our measured fact F1 where INT8 is slower than FP16.\"}"
+  },
+  {
+   "id": "R13",
+   "title": "Worse performance after quantization on TensorRT - TensorRT - NVIDIA Developer Forums",
+   "url": "https://forums.developer.nvidia.com/t/worse-performance-after-quantization-on-tensorrt/355549",
+   "answer": {
+    "label": "MATCHES",
+    "fact_id": "F1",
+    "quote": "While my FP16/BF16 baseline achieves 580 QPS, the quantized INT8 version drops to 380 QPS.",
+    "explanation": "The field report observes INT8 quantization causing slower inference (lower QPS) compared to FP16, matching measured fact F1 where INT8 was slower than FP16 on the same hardware family."
+   },
+   "violations": [],
+   "accepted": true,
+   "reference": [
+    "MATCHES",
+    "F1"
+   ],
+   "latency_s": 3.95,
+   "usage": {
+    "completion_tokens": 481,
+    "prompt_tokens": 1118,
+    "total_tokens": 1599,
+    "completion_tokens_details": {
+     "accepted_prediction_tokens": null,
+     "audio_tokens": null,
+     "reasoning_tokens": 379,
+     "rejected_prediction_tokens": null
+    },
+    "prompt_tokens_details": {
+     "audio_tokens": null,
+     "cached_tokens": 0,
+     "created_cache_tokens": 0,
+     "multimodal_tokens": null
+    },
+    "prompt_cache_hit_tokens": 0,
+    "prompt_cache_miss_tokens": 1118
+   },
+   "raw_tail": "{\"label\": \"MATCHES\", \"fact_id\": \"F1\", \"quote\": \"While my FP16/BF16 baseline achieves 580 QPS, the quantized INT8 version drops to 380 QPS.\", \"explanation\": \"The field report observes INT8 quantization causing slower inference (lower QPS) compared to FP16, matching measured fact F1 where INT8 was slower than FP16 on the same hardware family.\"}"
+  },
+  {
+   "id": "R14",
+   "title": "YOLOv8 on Jetson Orin Nano: From PyTorch to TensorRT INT8 -- Hokwang Choi",
+   "url": "https://hokwangchoi.com/blog/vision-benchmarks",
+   "answer": {
+    "label": "CONTRASTS",
+    "fact_id": "F1",
+    "quote": "| TensorRT FP16 | 6.13 ms | 4.43 ms | 1.38x |\n| TensorRT INT8 | 4.90 ms | 3.49 ms | 1.40x |",
+    "explanation": "The field report shows INT8 latency (4.90\u202fms) lower than FP16 latency (6.13\u202fms) on Jetson Orin Nano 15\u202fW mode, which is the opposite outcome of our measured fact F1 where INT8 was slower than FP16."
+   },
+   "violations": [
+    "R4: number 15 not in the quote, content or fact"
+   ],
+   "accepted": false,
+   "reference": [
+    "CONTRASTS",
+    "F1"
+   ],
+   "latency_s": 4.84,
+   "usage": {
+    "completion_tokens": 898,
+    "prompt_tokens": 1167,
+    "total_tokens": 2065,
+    "completion_tokens_details": {
+     "accepted_prediction_tokens": null,
+     "audio_tokens": null,
+     "reasoning_tokens": 750,
+     "rejected_prediction_tokens": null
+    },
+    "prompt_tokens_details": {
+     "audio_tokens": null,
+     "cached_tokens": 0,
+     "created_cache_tokens": 0,
+     "multimodal_tokens": null
+    },
+    "prompt_cache_hit_tokens": 0,
+    "prompt_cache_miss_tokens": 1167
+   },
+   "raw_tail": "{\"label\": \"CONTRASTS\", \"fact_id\": \"F1\", \"quote\": \"| TensorRT FP16 | 6.13 ms | 4.43 ms | 1.38x |\\n| TensorRT INT8 | 4.90 ms | 3.49 ms | 1.40x |\", \"explanation\": \"The field report shows INT8 latency (4.90\u202fms) lower than FP16 latency (6.13\u202fms) on Jetson Orin Nano 15\u202fW mode, which is the opposite outcome of our measured fact F1 where INT8 was slower than FP16.\"}"
+  },
+  {
+   "id": "R15",
+   "title": "Fix YOLO Performance on Jetson Orin Nano: TensorRT ...",
+   "url": "https://industrialmonitordirect.com/es/blogs/knowledgebase/resolving-yolo-model-performance-on-jetson-orin-nano-with-tensorrt-export",
+   "answer": {
+    "label": "CONTRASTS",
+    "fact_id": "F1",
+    "quote": "INT8 quantization can push this to 80-150 FPS on Jetson",
+    "explanation": "The field report states that INT8 quantization achieves higher FPS (i.e., lower latency) than FP16 on Jetson, which is the opposite of our measured fact F1 where INT8 was slower than FP16."
+   },
+   "violations": [],
+   "accepted": true,
+   "reference": [
+    "CONTRASTS",
+    "F1"
+   ],
+   "latency_s": 5.44,
+   "usage": {
+    "completion_tokens": 763,
+    "prompt_tokens": 803,
+    "total_tokens": 1566,
+    "completion_tokens_details": {
+     "accepted_prediction_tokens": null,
+     "audio_tokens": null,
+     "reasoning_tokens": 667,
+     "rejected_prediction_tokens": null
+    },
+    "prompt_tokens_details": {
+     "audio_tokens": null,
+     "cached_tokens": 0,
+     "created_cache_tokens": 0,
+     "multimodal_tokens": null
+    },
+    "prompt_cache_hit_tokens": 0,
+    "prompt_cache_miss_tokens": 803
+   },
+   "raw_tail": "{\"label\": \"CONTRASTS\", \"fact_id\": \"F1\", \"quote\": \"INT8 quantization can push this to 80-150 FPS on Jetson\", \"explanation\": \"The field report states that INT8 quantization achieves higher FPS (i.e., lower latency) than FP16 on Jetson, which is the opposite of our measured fact F1 where INT8 was slower than FP16.\"}"
+  },
+  {
+   "id": "R16",
+   "title": "ONNX model conversion failure of TensorRT 10.3 when running trtexec on GPU Jetson Orin \u00b7 Issue #4494 \u00b7 NVIDIA/TensorRT \u00b7 GitHub",
+   "url": "https://github.com/NVIDIA/TensorRT/issues/4494",
+   "answer": {
+    "label": "APPLIES_UNVERIFIED",
+    "fact_id": null,
+    "quote": "&&&& RUNNING TensorRT.trtexec [TensorRT v100300] # /usr/src/tensorrt/bin/trtexec --int8 --onnx=model_quantized_int8_512x512_iter4.onnx --saveEngine=model_quantized_int8_512x512_iter4.engine [06/20/2025-12:02:56] [I] === Model Options ===",
+    "explanation": "The field report describes an ONNX model conversion failure when running trtexec on a Jetson Orin with TensorRT 10.3, a scenario not addressed by any of the measured facts (F1\u2011F5) which cover performance, energy, build\u2011time differences, calibration issues, and nondeterminism."
+   },
+   "violations": [],
+   "accepted": true,
+   "reference": [
+    "APPLIES_UNVERIFIED",
+    null
+   ],
+   "latency_s": 6.49,
+   "usage": {
+    "completion_tokens": 1154,
+    "prompt_tokens": 1424,
+    "total_tokens": 2578,
+    "completion_tokens_details": {
+     "accepted_prediction_tokens": null,
+     "audio_tokens": null,
+     "reasoning_tokens": 951,
+     "rejected_prediction_tokens": null
+    },
+    "prompt_tokens_details": {
+     "audio_tokens": null,
+     "cached_tokens": 0,
+     "created_cache_tokens": 0,
+     "multimodal_tokens": null
+    },
+    "prompt_cache_hit_tokens": 0,
+    "prompt_cache_miss_tokens": 1424
+   },
+   "raw_tail": " --saveEngine=model_quantized_int8_512x512_iter4.engine [06/20/2025-12:02:56] [I] === Model Options ===\", \"explanation\": \"The field report describes an ONNX model conversion failure when running trtexec on a Jetson Orin with TensorRT 10.3, a scenario not addressed by any of the measured facts (F1\u2011F5) which cover performance, energy, build\u2011time differences, calibration issues, and nondeterminism.\"}"
+  },
+  {
+   "id": "R17",
+   "title": "TensorRT Quantization for Jetson Inference - Jetson Orin Nano - NVIDIA Developer Forums",
+   "url": "https://forums.developer.nvidia.com/t/tensorrt-quantization-for-jetson-inference/347929",
+   "answer": {
+    "label": "APPLIES_UNVERIFIED",
+    "fact_id": null,
+    "quote": "I\u2019m currently working with a Jetson Orin Nano and I\u2019m trying to optimize the model by using TensorRT. Right now the system has Jetpack 6.2 which means TensorRT is version 10.3.",
+    "explanation": "The field report concerns the same Jetson Orin Nano + TensorRT 10.3 setup as our build profile, but it does not report any of the specific measured phenomena (INT8 vs FP16 speed/energy, fallback behavior, uncalibrated quantizer, or nondeterministic builds)."
+   },
+   "violations": [],
+   "accepted": true,
+   "reference": [
+    "APPLIES_UNVERIFIED",
+    null
+   ],
+   "latency_s": 5.51,
+   "usage": {
+    "completion_tokens": 843,
+    "prompt_tokens": 1023,
+    "total_tokens": 1866,
+    "completion_tokens_details": {
+     "accepted_prediction_tokens": null,
+     "audio_tokens": null,
+     "reasoning_tokens": 703,
+     "rejected_prediction_tokens": null
+    },
+    "prompt_tokens_details": {
+     "audio_tokens": null,
+     "cached_tokens": 0,
+     "created_cache_tokens": 0,
+     "multimodal_tokens": null
+    },
+    "prompt_cache_hit_tokens": 0,
+    "prompt_cache_miss_tokens": 1023
+   },
+   "raw_tail": "trying to optimize the model by using TensorRT. Right now the system has Jetpack 6.2 which means TensorRT is version 10.3.\", \"explanation\": \"The field report concerns the same Jetson Orin Nano + TensorRT 10.3 setup as our build profile, but it does not report any of the specific measured phenomena (INT8 vs FP16 speed/energy, fallback behavior, uncalibrated quantizer, or nondeterministic builds).\"}"
+  },
+  {
+   "id": "R18",
+   "title": "TensorRT Model Optimizer INT8 quantization causes 2.7x performance regression on Jetson Orin Nano 4GB (ViT-S + DPT architecture) - Jetson Orin Nano - NVIDIA Developer Forums",
+   "url": "https://forums.developer.nvidia.com/t/tensorrt-model-optimizer-int8-quantization-causes-2-7x-performance-regression-on-jetson-orin-nano-4gb-vit-s-dpt-architecture/357835",
+   "answer": {
+    "label": "MATCHES",
+    "fact_id": "F1",
+    "quote": "| ModelOpt INT8 (`--stronglyTyped`) | 114.5 ms \u274c | 114.1 ms \u274c | FAILS \u274c |",
+    "explanation": "The field report shows INT8 quantization leading to much higher latency (\u2248114\u202fms) compared to FP16 (~42\u202fms), i.e., INT8 slower than FP16, matching the observation in fact F1."
+   },
+   "violations": [
+    "R4: number 114 not in the quote, content or fact",
+    "R4: number 42 not in the quote, content or fact"
+   ],
+   "accepted": false,
+   "reference": [
+    "MATCHES",
+    "F1"
+   ],
+   "latency_s": 5.75,
+   "usage": {
+    "completion_tokens": 939,
+    "prompt_tokens": 1345,
+    "total_tokens": 2284,
+    "completion_tokens_details": {
+     "accepted_prediction_tokens": null,
+     "audio_tokens": null,
+     "reasoning_tokens": 819,
+     "rejected_prediction_tokens": null
+    },
+    "prompt_tokens_details": {
+     "audio_tokens": null,
+     "cached_tokens": 0,
+     "created_cache_tokens": 0,
+     "multimodal_tokens": null
+    },
+    "prompt_cache_hit_tokens": 0,
+    "prompt_cache_miss_tokens": 1345
+   },
+   "raw_tail": "{\"label\": \"MATCHES\", \"fact_id\": \"F1\", \"quote\": \"| ModelOpt INT8 (`--stronglyTyped`) | 114.5 ms \u274c | 114.1 ms \u274c | FAILS \u274c |\", \"explanation\": \"The field report shows INT8 quantization leading to much higher latency (\u2248114\u202fms) compared to FP16 (~42\u202fms), i.e., INT8 slower than FP16, matching the observation in fact F1.\"}"
+  },
+  {
+   "id": "R19",
+   "title": "Unable to build model engine for INT8 yolov8m quantized using tensorrt model optimizer - TensorRT - NVIDIA Developer Forums",
+   "url": "https://forums.developer.nvidia.com/t/unable-to-build-model-engine-for-int8-yolov8m-quantized-using-tensorrt-model-optimizer/304710",
+   "answer": {
+    "label": "APPLIES_UNVERIFIED",
+    "fact_id": null,
+    "quote": "\u2022 Hardware Platform (Jetson / GPU) - Jetson Orin AGX 64 GB Developer Kit \u2022 JetPack Version (valid for Jetson only) - 6.0 \u2022 TensorRT Version - 10.1+",
+    "explanation": "The field report concerns a Jetson Orin device running JetPack 6 and TensorRT 10.1+ while attempting INT8 quantization with the TensorRT Model Optimizer, which matches our build profile. However, none of our measured facts address an inability to build the INT8 engine, so the report is unverified relative to our data."
+   },
+   "violations": [
+    "R3: quote not found in the content"
+   ],
+   "accepted": false,
+   "reference": [
+    "APPLIES_UNVERIFIED",
+    null
+   ],
+   "latency_s": 6.16,
+   "usage": {
+    "completion_tokens": 976,
+    "prompt_tokens": 1186,
+    "total_tokens": 2162,
+    "completion_tokens_details": {
+     "accepted_prediction_tokens": null,
+     "audio_tokens": null,
+     "reasoning_tokens": 826,
+     "rejected_prediction_tokens": null
+    },
+    "prompt_tokens_details": {
+     "audio_tokens": null,
+     "cached_tokens": 0,
+     "created_cache_tokens": 0,
+     "multimodal_tokens": null
+    },
+    "prompt_cache_hit_tokens": 0,
+    "prompt_cache_miss_tokens": 1186
+   },
+   "raw_tail": "ion (valid for Jetson only) - 6.0 \u2022 TensorRT Version - 10.1+\", \"explanation\": \"The field report concerns a Jetson Orin device running JetPack 6 and TensorRT 10.1+ while attempting INT8 quantization with the TensorRT Model Optimizer, which matches our build profile. However, none of our measured facts address an inability to build the INT8 engine, so the report is unverified relative to our data.\"}"
+  },
+  {
+   "id": "R20",
+   "title": "utils.export.engine API Reference | Ultralytics",
+   "url": "https://docs.ultralytics.com/reference/utils/export/engine",
+   "answer": {
+    "label": "APPLIES_UNVERIFIED",
+    "fact_id": null,
+    "quote": "calibration uses an ``IInt8Calibrator`` over ``dataset`` and writes a calibration cache, while FP16/INT8 are enabled with builder flags.",
+    "explanation": "The field report discusses INT8 calibration and builder\u2011flag usage, which is relevant to our TensorRT\u202f10.3 INT8 workflow, but it does not report any of the measured performance, energy, or build\u2011time facts (F1\u2011F5)."
+   },
+   "violations": [],
+   "accepted": true,
+   "reference": [
+    "NOT_APPLICABLE",
+    null
+   ],
+   "latency_s": 5.24,
+   "usage": {
+    "completion_tokens": 858,
+    "prompt_tokens": 1084,
+    "total_tokens": 1942,
+    "completion_tokens_details": {
+     "accepted_prediction_tokens": null,
+     "audio_tokens": null,
+     "reasoning_tokens": 740,
+     "rejected_prediction_tokens": null
+    },
+    "prompt_tokens_details": {
+     "audio_tokens": null,
+     "cached_tokens": 0,
+     "created_cache_tokens": 0,
+     "multimodal_tokens": null
+    },
+    "prompt_cache_hit_tokens": 0,
+    "prompt_cache_miss_tokens": 1084
+   },
+   "raw_tail": ", \"fact_id\": null, \"quote\": \"calibration uses an ``IInt8Calibrator`` over ``dataset`` and writes a calibration cache, while FP16/INT8 are enabled with builder flags.\", \"explanation\": \"The field report discusses INT8 calibration and builder\u2011flag usage, which is relevant to our TensorRT\u202f10.3 INT8 workflow, but it does not report any of the measured performance, energy, or build\u2011time facts (F1\u2011F5).\"}"
+  },
+  {
+   "id": "R21",
+   "title": "Does TensorRT 10.3.0.30-1+cuda12.5 support cuda 12.6 jetpack 6.1 - TensorRT - NVIDIA Developer Forums",
+   "url": "https://forums.developer.nvidia.com/t/does-tensorrt-10-3-0-30-1-cuda12-5-support-cuda-12-6-jetpack-6-1/344194",
+   "answer": {
+    "label": "APPLIES_UNVERIFIED",
+    "fact_id": null,
+    "quote": "There is a decent change TensorRT 10.3 for CUDA 12.5 works with CUDA 12.6 due to good minor version compatibility",
+    "explanation": "The field report discusses TensorRT version compatibility with CUDA 12.6 and JetPack 6.x, which relates to the same build profile but does not address any of the measured performance, energy, build time, quantization, or determinism facts."
+   },
+   "violations": [],
+   "accepted": true,
+   "reference": [
+    "APPLIES_UNVERIFIED",
+    null
+   ],
+   "latency_s": 3.95,
+   "usage": {
+    "completion_tokens": 572,
+    "prompt_tokens": 1244,
+    "total_tokens": 1816,
+    "completion_tokens_details": {
+     "accepted_prediction_tokens": null,
+     "audio_tokens": null,
+     "reasoning_tokens": 455,
+     "rejected_prediction_tokens": null
+    },
+    "prompt_tokens_details": {
+     "audio_tokens": null,
+     "cached_tokens": 0,
+     "created_cache_tokens": 0,
+     "multimodal_tokens": null
+    },
+    "prompt_cache_hit_tokens": 0,
+    "prompt_cache_miss_tokens": 1244
+   },
+   "raw_tail": "\"fact_id\": null, \"quote\": \"There is a decent change TensorRT 10.3 for CUDA 12.5 works with CUDA 12.6 due to good minor version compatibility\", \"explanation\": \"The field report discusses TensorRT version compatibility with CUDA 12.6 and JetPack 6.x, which relates to the same build profile but does not address any of the measured performance, energy, build time, quantization, or determinism facts.\"}"
+  },
+  {
+   "id": "R22",
+   "title": "Erroneous mismatch in TensorRT serializations on JetPack 6 (L4T 36.4.0) - Jetson Orin NX - NVIDIA Developer Forums",
+   "url": "https://forums.developer.nvidia.com/t/erroneous-mismatch-in-tensorrt-serializations-on-jetpack-6-l4t-36-4-0/353515",
+   "answer": {
+    "label": "APPLIES_UNVERIFIED",
+    "fact_id": null,
+    "quote": "[TRT] [E] IRuntime::deserializeCudaEngine: Error Code 1: Serialization (Serialization assertion safeVersionRead == kSAFE_SERIALIZATION_VERSION failed.Version tag does not match. Note: Current Version: 0, Serialized Engine Version: 239)",
+    "explanation": "The field report describes a TensorRT engine serialization/deserialization version mismatch occurring on JetPack\u202f6 with TensorRT\u202f10.3.0 on an Orin device, which relates to our build profile but is not covered by any of the measured facts F1\u2011F5."
+   },
+   "violations": [],
+   "accepted": true,
+   "reference": [
+    "NOT_APPLICABLE",
+    null
+   ],
+   "latency_s": 3.69,
+   "usage": {
+    "completion_tokens": 509,
+    "prompt_tokens": 1135,
+    "total_tokens": 1644,
+    "completion_tokens_details": {
+     "accepted_prediction_tokens": null,
+     "audio_tokens": null,
+     "reasoning_tokens": 358,
+     "rejected_prediction_tokens": null
+    },
+    "prompt_tokens_details": {
+     "audio_tokens": null,
+     "cached_tokens": 0,
+     "created_cache_tokens": 0,
+     "multimodal_tokens": null
+    },
+    "prompt_cache_hit_tokens": 0,
+    "prompt_cache_miss_tokens": 1135
+   },
+   "raw_tail": "VersionRead == kSAFE_SERIALIZATION_VERSION failed.Version tag does not match. Note: Current Version: 0, Serialized Engine Version: 239)\", \"explanation\": \"The field report describes a TensorRT engine serialization/deserialization version mismatch occurring on JetPack\u202f6 with TensorRT\u202f10.3.0 on an Orin device, which relates to our build profile but is not covered by any of the measured facts F1\u2011F5.\"}"
+  },
+  {
+   "id": "R23",
+   "title": "Different version support for TensorRT GA and CUDA between x86_64 and Jetpack - Jetson Nano - NVIDIA Developer Forums",
+   "url": "https://forums.developer.nvidia.com/t/different-version-support-for-tensorrt-ga-and-cuda-between-x86-64-and-jetpack/339821",
+   "answer": {
+    "label": "APPLIES_UNVERIFIED",
+    "fact_id": null,
+    "quote": "The support for Jetpack includes:\n\nAs seen from the downloads provided by NVIDIA, the default TensorRT 10.3 for Jetpack 6 which uses CUDA 12.6 only support up to CUDA 12.5 for the x86_64 equivalent.",
+    "explanation": "The field report discusses TensorRT version compatibility between JetPack 6 (TensorRT 10.3) and x86_64 builds, which relates to our build profile but none of our measured facts address version differences."
+   },
+   "violations": [
+    "R3: quote not found in the content"
+   ],
+   "accepted": false,
+   "reference": [
+    "NOT_APPLICABLE",
+    null
+   ],
+   "latency_s": 3.81,
+   "usage": {
+    "completion_tokens": 549,
+    "prompt_tokens": 1101,
+    "total_tokens": 1650,
+    "completion_tokens_details": {
+     "accepted_prediction_tokens": null,
+     "audio_tokens": null,
+     "reasoning_tokens": 409,
+     "rejected_prediction_tokens": null
+    },
+    "prompt_tokens_details": {
+     "audio_tokens": null,
+     "cached_tokens": 0,
+     "created_cache_tokens": 0,
+     "multimodal_tokens": null
+    },
+    "prompt_cache_hit_tokens": 0,
+    "prompt_cache_miss_tokens": 1101
+   },
+   "raw_tail": "cludes:\\n\\nAs seen from the downloads provided by NVIDIA, the default TensorRT 10.3 for Jetpack 6 which uses CUDA 12.6 only support up to CUDA 12.5 for the x86_64 equivalent.\", \"explanation\": \"The field report discusses TensorRT version compatibility between JetPack 6 (TensorRT 10.3) and x86_64 builds, which relates to our build profile but none of our measured facts address version differences.\"}"
+  },
+  {
+   "id": "R24",
+   "title": "Torch-TensorRT in JetPack \u2014 Torch-TensorRT",
+   "url": "https://docs.pytorch.org/TensorRT/getting_started/jetpack.html",
+   "answer": {
+    "label": "APPLIES_UNVERIFIED",
+    "fact_id": null,
+    "quote": "JetPack 6.2 is the latest production release for Jetson platforms, featuring: - CUDA 12.6 - TensorRT 10.3 - cuDNN 9.3",
+    "explanation": "The report confirms the same JetPack/TensorRT versions used in our build profile, but it does not contain any measurements of INT8 vs FP16 performance, energy use, build times, or quantization issues, so it applies to our setup without being verified by our facts."
+   },
+   "violations": [],
+   "accepted": true,
+   "reference": [
+    "NOT_APPLICABLE",
+    null
+   ],
+   "latency_s": 3.45,
+   "usage": {
+    "completion_tokens": 490,
+    "prompt_tokens": 949,
+    "total_tokens": 1439,
+    "completion_tokens_details": {
+     "accepted_prediction_tokens": null,
+     "audio_tokens": null,
+     "reasoning_tokens": 362,
+     "rejected_prediction_tokens": null
+    },
+    "prompt_tokens_details": {
+     "audio_tokens": null,
+     "cached_tokens": 0,
+     "created_cache_tokens": 0,
+     "multimodal_tokens": null
+    },
+    "prompt_cache_hit_tokens": 0,
+    "prompt_cache_miss_tokens": 949
+   },
+   "raw_tail": "tPack 6.2 is the latest production release for Jetson platforms, featuring: - CUDA 12.6 - TensorRT 10.3 - cuDNN 9.3\", \"explanation\": \"The report confirms the same JetPack/TensorRT versions used in our build profile, but it does not contain any measurements of INT8 vs FP16 performance, energy use, build times, or quantization issues, so it applies to our setup without being verified by our facts.\"}"
+  },
+  {
+   "id": "R25",
+   "title": "NVIDIA Jetson Software Stack: JetPack, CUDA & TensorRT",
+   "url": "https://turingpi.com/nvidia-jetson-software-stack",
+   "answer": {
+    "label": "NOT_APPLICABLE",
+    "fact_id": null,
+    "quote": "TensorRT is NVIDIA\u2019s high-performance deep-learning inference SDK. Its focus is not training a model but preparing and executing a supported trained model efficiently on NVIDIA hardware.",
+    "explanation": "The field report discusses generic JetPack/TensorRT software versions and capabilities, with no performance measurements, INT8/FP16 comparisons, energy usage, build times, quantization calibration, or determinism details that correspond to any of the measured facts."
+   },
+   "violations": [],
+   "accepted": true,
+   "reference": [
+    "NOT_APPLICABLE",
+    null
+   ],
+   "latency_s": 3.66,
+   "usage": {
+    "completion_tokens": 441,
+    "prompt_tokens": 1045,
+    "total_tokens": 1486,
+    "completion_tokens_details": {
+     "accepted_prediction_tokens": null,
+     "audio_tokens": null,
+     "reasoning_tokens": 327,
+     "rejected_prediction_tokens": null
+    },
+    "prompt_tokens_details": {
+     "audio_tokens": null,
+     "cached_tokens": 0,
+     "created_cache_tokens": 0,
+     "multimodal_tokens": null
+    },
+    "prompt_cache_hit_tokens": 0,
+    "prompt_cache_miss_tokens": 1045
+   },
+   "raw_tail": "cus is not training a model but preparing and executing a supported trained model efficiently on NVIDIA hardware.\", \"explanation\": \"The field report discusses generic JetPack/TensorRT software versions and capabilities, with no performance measurements, INT8/FP16 comparisons, energy usage, build times, quantization calibration, or determinism details that correspond to any of the measured facts.\"}"
+  }
+ ],
+ "config": "configs/errata_grounding_v1.json",
+ "snapshot_hash": "ed199938844cf01fac9343221877cf4f5cf509a36113eff926de083e996abc77"
+}
