@@ -10,6 +10,15 @@
 
 ## 장면 구성
 
+> v3 timing (2026-10-14), from the synthesized narration: 1 0:00–0:11 · 2 0:11–1:11 · 3 1:11–1:31 · 4 1:31–2:03 ·
+> 5 2:03–2:29 · 6 2:29–2:53 · 7 2:53–2:58.
+> - Scene 4 now ends on the position fine-tune: the 50 shifted demos, then the blinded +3 cm test. The picture is the
+>   dashboard position strip, then the post-block demonstration clip (labelled "demonstration, not counted"), then
+>   the T1 result.
+> - Scene 6 adds the deployment preflight card (BLOCK / HOLD).
+> - Narration text: `docs/narration/tts_input.json`; audio: `docs/narration/narration_v3_am_michael.m4a`;
+>   subtitles: `docs/narration/narration_v3.srt`.
+
 | # | Time | Picture | Narration (draft) | Material |
 |---|---|---|---|---|
 | 1 | 0:00–0:10 | 3 s success clip → 3 s failure clip (knocked over) → black screen with the question | "Same robot, same task. Can I ship this to a tiny Jetson, and as which model?" | `clips/g6_success.mp4`, `clips/g6_fail_knock.mp4` |

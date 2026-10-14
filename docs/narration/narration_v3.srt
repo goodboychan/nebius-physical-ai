@@ -1,0 +1,135 @@
+1
+00:00:00,000 --> 00:00:00,926
+Same robot.
+
+2
+00:00:00,926 --> 00:00:01,767
+Same task.
+
+3
+00:00:01,767 --> 00:00:04,124
+One run succeeds, one fails.
+
+4
+00:00:04,124 --> 00:00:11,025
+Before I ship this policy to a tiny Jetson, how do I know which model I can trust?
+
+5
+00:00:11,625 --> 00:00:17,085
+This is an S O one oh one arm running an A C T policy on a Jetson Orin Nano Super.
+
+6
+00:00:17,085 --> 00:00:23,411
+We taught it with one hundred and twenty teleoperated demonstrations, and trained it on Nebius.
+
+7
+00:00:23,411 --> 00:00:35,730
+From that one policy, we built twenty-six candidate engines with TensorRT: full precision, half precision, and twenty-four int eight builds that differ only in how they were calibrated.
+
+8
+00:00:35,730 --> 00:00:40,258
+QuantGate scores every candidate offline first, then checks the arm.
+
+9
+00:00:40,258 --> 00:00:42,122
+Every real trial is blinded.
+
+10
+00:00:42,122 --> 00:00:49,447
+The operator never knows which engine is running, and the results stay sealed until all the trials are logged.
+
+11
+00:00:49,447 --> 00:00:53,775
+That way, no candidate gets picked after we have seen how it did.
+
+12
+00:01:11,625 --> 00:01:22,748
+QuantGate puts three things side by side for every candidate: what it costs on the real device, how it scored offline, and what it did on the real arm.
+
+13
+00:01:22,748 --> 00:01:26,431
+Training and the offline audit ran on Nebius Jobs.
+
+14
+00:01:26,431 --> 00:01:29,525
+The engines run as TensorRT on the Jetson.
+
+15
+00:01:31,625 --> 00:01:33,635
+Measuring changed the decision.
+
+16
+00:01:33,635 --> 00:01:41,028
+On this Jetson, half precision was the cheapest engine, not int eight, and on the arm it went nineteen for twenty.
+
+17
+00:01:41,028 --> 00:01:44,530
+The audit's top picks did no better than random picks.
+
+18
+00:01:44,530 --> 00:01:47,643
+A new can worked forty-eight out of forty-eight.
+
+19
+00:01:47,643 --> 00:01:51,469
+But with the start moved three centimeters, the arm failed.
+
+20
+00:01:51,469 --> 00:01:59,900
+So we recorded fifty demonstrations at shifted positions, fine-tuned on Nebius, and tested it blinded, at a position it never saw.
+
+21
+00:02:03,625 --> 00:02:05,847
+The A I layers get checked too.
+
+22
+00:02:05,847 --> 00:02:12,298
+In its first setup, Cosmos Reason, on a Nebius endpoint, caught one failure in twenty-one.
+
+23
+00:02:12,298 --> 00:02:20,612
+We tested it like any other component, on held-out recordings, and a validated question caught twenty of twenty-one.
+
+24
+00:02:20,612 --> 00:02:28,425
+Nemotron Super on Token Factory explains the review in words, while every verdict and number comes from code.
+
+25
+00:02:29,625 --> 00:02:32,229
+So QuantGate answers three questions.
+
+26
+00:02:32,229 --> 00:02:34,763
+Which candidate do I validate first?
+
+27
+00:02:34,763 --> 00:02:35,819
+Half precision.
+
+28
+00:02:35,819 --> 00:02:37,226
+Which do I distrust?
+
+29
+00:02:37,226 --> 00:02:45,461
+Broken calibrations, which a simple input check catches, and any engine whose files no longer match what was audited.
+
+30
+00:02:45,461 --> 00:02:47,221
+Can I approve deployment?
+
+31
+00:02:47,221 --> 00:02:47,784
+Not yet.
+
+32
+00:02:47,784 --> 00:02:51,725
+The review lists exactly which trials are still missing.
+
+33
+00:02:53,625 --> 00:02:54,483
+QuantGate.
+
+34
+00:02:54,483 --> 00:02:56,800
+Evidence before deployment.
