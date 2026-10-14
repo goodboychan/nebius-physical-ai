@@ -1,0 +1,50 @@
+{
+  "schema": "edgeqgate.ft_post.v1",
+  "frozen_at": "2026-10-14T13:40:54+00:00",
+  "git_commit": "6b3d27b6ae5ea021becbf6447bb1b9da680815a6",
+  "status": "position fine-tune T1 and T0 blocks complete: 24/24 trials each, 0 invalid, 0 aborted, 0 runtime errors; unsealing deferred until the T2 block is done (operator blinding for T2)",
+  "sealed_logs": {
+    "stress_ft_T1_sealed.jsonl": {
+      "sha256": "531ae7de0860b408b93a7679589edb2a9e18574159610c818a39fd61ac25ad0b",
+      "trials": 24
+    },
+    "stress_ft_T0_sealed.jsonl": {
+      "sha256": "af6fe88f6a099d1a80b56bf63418a8f997bbf1d16fe7f93ddf093992bf911bcd",
+      "trials": 24
+    }
+  },
+  "sealed_schedule_sha256": "996d4a9a584c20d80ce221add95bec8cb4893b1b0c44a0990634fd113653d053",
+  "public_tally": {
+    "operator_failures": {
+      "T1": [
+        2,
+        3,
+        6,
+        8
+      ],
+      "T0": [
+        18,
+        22
+      ]
+    },
+    "operator_note": "T1: the operator did not see some failures directly",
+    "live_judge_failures": {
+      "T1": [
+        2,
+        3,
+        6,
+        8,
+        10,
+        11,
+        13,
+        15,
+        17
+      ],
+      "T0": [
+        18,
+        22
+      ]
+    }
+  },
+  "record_hash": "d2a40b60c1a80d107fabe07645b62f64850d3dca9a1f9c85493e5752b7af3b79"
+}

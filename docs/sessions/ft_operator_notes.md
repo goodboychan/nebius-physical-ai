@@ -28,3 +28,4 @@ Outcomes are decided by the locked criterion (automatic judge and §11 consensus
 - During T0: the operator reports **much less gripper chatter** than in earlier experiments. No cell information.
 - T0 trial 18: the can did not fall but was pushed far off the coaster.
 - T0 trial 22: the can was knocked over while being set down.
+- T0 complete: 24/24, 0 invalid, 0 aborted, 0 runtime errors, 0 contact. Sealed logs hashed into artifacts/freeze/ft_post.json; unsealing deferred until T2 is done.
