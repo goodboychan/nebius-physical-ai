@@ -38,3 +38,10 @@ Outcomes are decided by the locked criterion (automatic judge and §11 consensus
 - T2 trial 14: the can was never grasped.
 - During T2: the operator reports that the difference between the fine-tuned and non-fine-tuned policies again looks clear. The operator says they can tell the two motion patterns apart, so the operator may also infer which pattern is the fine-tune. No trial-to-cell mapping was stated. Recorded as a blinding limitation; outcomes come from the automatic judge and the video re-judge.
 - T2 complete: 24/24. Sealed log hashed into artifacts/freeze/ft2_post.json before unsealing. The operator did not see some failures directly.
+
+## 2026-10-14, demonstration runs after unsealing (not counted)
+
+- Non-blind runs for the video at the +3 cm mark, saved in their own sessions (`~/so101_trials/demo_shift_old`,
+  `demo_shift_ft`): OLD-FP16 (VC-025) and then FT-FP16. A side-view phone video was recorded. These runs are
+  never added to T1/T0/T2. Any clip from them is captioned "demonstration, not counted", with the counted T1 result
+  shown alongside.
