@@ -54,3 +54,45 @@ On the G4 audit buffer (2,000 audit states, hash d9a52977…), against the GX10 
   between targets in this form", with the scope difference of §2 stated alongside.
 - No real-arm claim follows from this probe. A real-arm block (FP32 vs Hailo, 12 vs 12, sealed) would need its own
   pre-registration and is planned after the submission.
+
+## 6. Results (2026-10-14)
+
+Mean `mag` over the 2,000 audit states (p90 in brackets), normalised action units. Device numbers are from the Hailo-8
+itself. Reports: `artifacts/reports/hailo_probe_v1.json`.
+
+| | Orin TensorRT INT8 (whole graph) | Hailo-8 device (backbones INT8) | Hailo emulator | Hailo / Orin |
+|---|---|---|---|---|
+| 16 calibration frames (VC-002 ↔ HL-16) | 0.0544 [0.088] | **0.0476** [0.081] | 0.0458 | 0.87 |
+| 1024 calibration frames (VC-020 ↔ HL-1024) | 0.0616 [0.101] | **0.0350** [0.058] | 0.0340 | 0.57 |
+| Split check, full-precision emulation (§4.2) | | | 0.0011 (< 0.0028, pass) | |
+| Device vs emulator (§4.3) | | 0.026 (HL-16), 0.020 (HL-1024) | | |
+
+Latency on the Pi 5, batch 1, median [p95]. It is the same for both cells.
+
+| Part | ms |
+|---|---|
+| Hailo-8 backbones | 12.8 [15.6] |
+| CPU FP32 tail (onnxruntime, 4 × A76) | 226 [249] |
+| Total | 239 [264] |
+
+Reference points: Orin VC-002 34.3 ms, VC-025 FP16 25.4 ms, runner prefetch budget 333 ms.
+
+- **Calibration size works in opposite directions on the two targets.**
+  - Going from 16 to 1024 frames *raises* the Orin INT8 error (0.054 → 0.062) and *lowers* the Hailo error
+    (0.048 → 0.035).
+  - A plausible cause, not tested here: the DFC uses the calibration set for quantization-aware fine-tuning, which
+    ran in both cells, so more data helps it. TensorRT/ModelOpt uses the frames only for activation ranges.
+  - Either way, the best calibration choice on one target is not the best on the other.
+- **The emulator is not the device.** The device-vs-emulator difference (0.020–0.026) is about half of the
+  quantization error itself. A gate built on the vendor emulator alone would audit a different model from the
+  one that ships.
+- **Latency is dominated by the CPU half of the split.** The accelerator part is 13 ms. The FP32 transformer on
+  the Pi CPU takes 226 ms. The total fits the 333 ms prefetch budget with a thin margin.
+- The Pi reported a past under-voltage and throttling event (`vcgencmd get_throttled` = 0x50000) when it was checked
+  after the runs. Latency may therefore be pessimistic. Error numbers are unaffected.
+- **Scope, as stated in §2**: Hailo quantizes only the backbones and Orin quantizes the whole graph. The lower
+  Hailo error is therefore not a claim that Hailo quantizes better.
+- No real-arm claim follows from this probe (§5).
+- Note: `level_notes` in `*_compile.json` matched stale lines from an older shared DFC log (August) and should be
+  ignored. The run logs show no level reduction, and quantization-aware fine-tuning ran in both cells.
+- Output SNR reported by the DFC: HL-16 20.7 / 20.6 dB, HL-1024 23.2 / 22.9 dB (top / wrist).

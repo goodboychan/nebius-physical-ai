@@ -26,7 +26,7 @@ with VDevice() as dev:
     ivp = InputVStreamParams.make(ng, format_type=FormatType.UINT8); ovp = OutputVStreamParams.make(ng, format_type=FormatType.FLOAT32)
     with InferVStreams(ng, ivp, ovp) as pipe, ng.activate(ng.create_params()):
         def backbone(lo, hi):
-            o = pipe.infer({n: np.ascontiguousarray((top if c == "top" else wrist)[lo:hi]) for n, c in cam.items()})
+            o = pipe.infer({n: np.array((top if c == "top" else wrist)[lo:hi], copy=True) for n, c in cam.items()})
             o = sorted(o.values(), key=lambda a: -a.shape[1] * a.shape[2])
             return [np.ascontiguousarray(np.transpose(a, (0, 3, 1, 2))).astype(np.float32) for a in o]
         acts = []

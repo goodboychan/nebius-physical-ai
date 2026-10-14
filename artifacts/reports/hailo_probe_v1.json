@@ -1,0 +1,144 @@
+{
+ "reference": {
+  "VC-002": {
+   "mean": 0.0544489089023253,
+   "p90": 0.08842811165521564,
+   "max": 0.37455819753084396,
+   "orin_gpu_ms_median": 34.30147171020508
+  },
+  "VC-020": {
+   "mean": 0.06156766597956224,
+   "p90": 0.10086968078242096,
+   "max": 0.3175115391011171,
+   "orin_gpu_ms_median": 24.622528076171875
+  },
+  "VC-025": {
+   "mean": 0.0028271898993939217,
+   "p90": 0.004670168675732362,
+   "max": 0.017297068431908872,
+   "orin_gpu_ms_median": 25.393024444580078
+  }
+ },
+ "cells": {
+  "HL-16": {
+   "twin": "VC-002",
+   "split_check_fp_optimized": {
+    "mean": 0.0010889571367342827,
+    "p90": 0.0019010003343443358,
+    "max": 0.007013016397280536
+   },
+   "split_check_pass": true,
+   "emulated_int8": {
+    "mean": 0.045755853217814633,
+    "p90": 0.07849601890877196,
+    "max": 0.41291374075940046
+   },
+   "device_int8": {
+    "mean": 0.047615952376749086,
+    "p90": 0.08136518156818605,
+    "max": 0.3886781246664976
+   },
+   "device_vs_emulator": {
+    "mean": 0.026052821065662805,
+    "p90": 0.04510018976515395,
+    "max": 0.15353977785753073
+   },
+   "device_over_twin_mean": 0.8745070073335408,
+   "latency": {
+    "backbone_ms": [
+     12.828962062485516,
+     15.520836145151407
+    ],
+    "tail_ms": [
+     225.70933250244707,
+     246.90402512205765
+    ],
+    "total_ms": [
+     238.68473852053285,
+     260.6939411838539
+    ],
+    "ort_threads": 0,
+    "n_timed": 200
+   },
+   "compile": {
+    "cell": "HL-16",
+    "model_script": "img_norm1 = normalization([123.675004, 116.280000, 103.529997], [58.395001, 57.120002, 57.374998], act_bb_scope1/input_layer1)\nimg_norm2 = normalization([123.675004, 116.280000, 103.529997], [58.395001, 57.120002, 57.374998], act_bb_scope2/input_layer2)\nmodel_optimization_flavor(optimization_level=2, compression_level=0)\n",
+    "optimize_s": 191.3143503665924,
+    "compile_s": 247.73864102363586,
+    "hef_bytes": 17942316,
+    "level_notes": [
+     "2026-08-27 11:08:49,182 - WARNING - mo_config.py:168 - Reducing optimization level to 1 (the accuracy won't be optimized and compression won't be used) because there's less data than the recommended amount (1024)",
+     "2026-08-27 11:09:29,845 - WARNING - mo_config.py:168 - Reducing optimization level to 1 (the accuracy won't be optimized and compression won't be used) because there's less data than the recommended amount (1024)",
+     "2026-08-27 11:15:01,461 - WARNING - mo_config.py:168 - Reducing optimization level to 0 (the accuracy won't be optimized and compression won't be used) because there's less data than the recommended amount (1024), and there's no available GPU",
+     "2026-08-27 11:15:26,123 - WARNING - mo_config.py:168 - Reducing optimization level to 0 (the accuracy won't be optimized and compression won't be used) because there's less data than the recommended amount (1024), and there's no available GPU",
+     "2026-08-27 11:15:50,644 - WARNING - mo_config.py:168 - Reducing optimization level to 0 (the accuracy won't be optimized and compression won't be used) because there's less data than the recommended amount (1024), and there's no available GPU",
+     "2026-08-27 11:16:15,107 - WARNING - mo_config.py:168 - Reducing optimization level to 0 (the accuracy won't be optimized and compression won't be used) because there's less data than the recommended amount (1024), and there's no available GPU",
+     "2026-08-27 11:20:38,448 - WARNING - mo_config.py:168 - Reducing optimization level to 1 (the accuracy won't be optimized and compression won't be used) because there's less data than the recommended amount (1024)",
+     "2026-08-27 11:22:29,452 - WARNING - mo_config.py:168 - Reducing optimization level to 0 (the accuracy won't be optimized and compression won't be used) because there's less data than the recommended amount (1024), and there's no available GPU",
+     "2026-08-27 11:56:19,523 - WARNING - mo_config.py:168 - Reducing optimization level to 1 (the accuracy won't be optimized and compression won't be used) because there's less data than the recommended amount (1024)",
+     "2026-08-27 12:02:49,133 - WARNING - mo_config.py:168 - Reducing optimization level to 1 (the accuracy won't be optimized and compression won't be used) because there's less data than the recommended amount (1024)"
+    ]
+   }
+  },
+  "HL-1024": {
+   "twin": "VC-020",
+   "split_check_fp_optimized": {
+    "mean": 0.001089096854833205,
+    "p90": 0.0019010003343443358,
+    "max": 0.007013016397280536
+   },
+   "split_check_pass": true,
+   "emulated_int8": {
+    "mean": 0.03403294720857387,
+    "p90": 0.05689148053029302,
+    "max": 0.32668012837071153
+   },
+   "device_int8": {
+    "mean": 0.03496909608934568,
+    "p90": 0.05789955096839254,
+    "max": 0.43681822546050864
+   },
+   "device_vs_emulator": {
+    "mean": 0.02034474467329234,
+    "p90": 0.03468580489726673,
+    "max": 0.1373675360853076
+   },
+   "device_over_twin_mean": 0.5679782647754406,
+   "latency": {
+    "backbone_ms": [
+     12.77919311542064,
+     15.599809202831237
+    ],
+    "tail_ms": [
+     226.4298259979114,
+     249.14620823692528
+    ],
+    "total_ms": [
+     239.04140701051801,
+     263.7413478223607
+    ],
+    "ort_threads": 0,
+    "n_timed": 200
+   },
+   "compile": {
+    "cell": "HL-1024",
+    "model_script": "img_norm1 = normalization([123.675004, 116.280000, 103.529997], [58.395001, 57.120002, 57.374998], act_bb_scope1/input_layer1)\nimg_norm2 = normalization([123.675004, 116.280000, 103.529997], [58.395001, 57.120002, 57.374998], act_bb_scope2/input_layer2)\nmodel_optimization_flavor(optimization_level=2, compression_level=0)\n",
+    "optimize_s": 323.3893475532532,
+    "compile_s": 248.18583941459656,
+    "hef_bytes": 17920281,
+    "level_notes": [
+     "2026-08-27 11:08:49,182 - WARNING - mo_config.py:168 - Reducing optimization level to 1 (the accuracy won't be optimized and compression won't be used) because there's less data than the recommended amount (1024)",
+     "2026-08-27 11:09:29,845 - WARNING - mo_config.py:168 - Reducing optimization level to 1 (the accuracy won't be optimized and compression won't be used) because there's less data than the recommended amount (1024)",
+     "2026-08-27 11:15:01,461 - WARNING - mo_config.py:168 - Reducing optimization level to 0 (the accuracy won't be optimized and compression won't be used) because there's less data than the recommended amount (1024), and there's no available GPU",
+     "2026-08-27 11:15:26,123 - WARNING - mo_config.py:168 - Reducing optimization level to 0 (the accuracy won't be optimized and compression won't be used) because there's less data than the recommended amount (1024), and there's no available GPU",
+     "2026-08-27 11:15:50,644 - WARNING - mo_config.py:168 - Reducing optimization level to 0 (the accuracy won't be optimized and compression won't be used) because there's less data than the recommended amount (1024), and there's no available GPU",
+     "2026-08-27 11:16:15,107 - WARNING - mo_config.py:168 - Reducing optimization level to 0 (the accuracy won't be optimized and compression won't be used) because there's less data than the recommended amount (1024), and there's no available GPU",
+     "2026-08-27 11:20:38,448 - WARNING - mo_config.py:168 - Reducing optimization level to 1 (the accuracy won't be optimized and compression won't be used) because there's less data than the recommended amount (1024)",
+     "2026-08-27 11:22:29,452 - WARNING - mo_config.py:168 - Reducing optimization level to 0 (the accuracy won't be optimized and compression won't be used) because there's less data than the recommended amount (1024), and there's no available GPU",
+     "2026-08-27 11:56:19,523 - WARNING - mo_config.py:168 - Reducing optimization level to 1 (the accuracy won't be optimized and compression won't be used) because there's less data than the recommended amount (1024)",
+     "2026-08-27 12:02:49,133 - WARNING - mo_config.py:168 - Reducing optimization level to 1 (the accuracy won't be optimized and compression won't be used) because there's less data than the recommended amount (1024)"
+    ]
+   }
+  }
+ }
+}
