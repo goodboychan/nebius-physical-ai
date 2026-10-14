@@ -36,3 +36,4 @@ Outcomes are decided by the locked criterion (automatic judge and §11 consensus
   the start-mark tape. The sticker is a scene change shared by both arms within T2.
 - T2 trial 12: the can was set down properly, then the gripper kept moving nearby and knocked it over.
 - T2 trial 14: the can was never grasped.
+- During T2: the operator reports that the difference between the fine-tuned and non-fine-tuned policies again looks clear. The operator says they can tell the two motion patterns apart, so the operator may also infer which pattern is the fine-tune. No trial-to-cell mapping was stated. Recorded as a blinding limitation; outcomes come from the automatic judge and the video re-judge.
