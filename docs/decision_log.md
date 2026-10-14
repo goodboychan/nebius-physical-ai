@@ -987,3 +987,22 @@ ACT는 상태마다 100스텝을 내고 실기에서 100스텝을 모두 실행�
   - The auto-created artifact bucket is not visible to the SA, so the user confirms its deletion in the console.
 - Republishing is reproducible: create a cluster, then run `mlflow_publish.py` with the tracking URI and the admin
   credentials from `~/.config/edgeqgate/mlflow_admin`.
+
+---
+
+## 2026-10-14 — Training data on the Hugging Face Hub (private until publication)
+
+- `chans/quantgate-so101-coaster` (dataset): `so101_demo`, 120 episodes and 65,424 frames.
+  - Includes `splits/lock1_split_manifest.yaml` (80/20/20) and `splits/lock1_dataset_files.json`.
+  - All 31 data files match the LOCK-1 SHA-256 before upload.
+- `chans/quantgate-so101-coaster-positions` (dataset): `ftpos`, 50 episodes and 37,329 frames, offsets
+  −4/−2/0/+2/+4 cm.
+  - Includes `start_offsets.csv`, built from `artifacts/finetune/demo_order.txt`. Episode 8 was re-recorded in its
+    slot, so the mapping holds.
+- Not uploaded: `so101_train` (the 80-episode train subset) and `ft_train` (the 130-episode mix). Both are derived
+  and documented in the cards.
+- Each repository has a dataset card (CC BY 4.0, the operator's hand may appear, no faces or audio) and
+  `checksums.sha256`.
+- Uploaded file hashes were verified against the local copies: 35/35 and 15/15.
+- Both repositories are **private**. Make them public together with the code repository on 10/26. A Google Drive
+  mirror stays optional.

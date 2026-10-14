@@ -125,6 +125,15 @@ The hypotheses, endpoints and analysis code were fixed and hashed **before** any
 - [`docs/sessions/`](docs/sessions/): operator observations, which contain no cell information.
 - [`docs/related_work.md`](docs/related_work.md): closest prior work and how this project is positioned.
 
+## Data
+
+- [`chans/quantgate-so101-coaster`](https://huggingface.co/datasets/chans/quantgate-so101-coaster): 120 teleoperated
+  demos with the LOCK-1 split manifest (train 80 / val 20 / audit 20) and file hashes.
+- [`chans/quantgate-so101-coaster-positions`](https://huggingface.co/datasets/chans/quantgate-so101-coaster-positions):
+  50 demos at start offsets −4…+4 cm. The +3 cm position is held out.
+
+Both are LeRobot v3.0 datasets under CC BY 4.0.
+
 ## Hardware
 
 - SO-101 leader and follower arms (Feetech STS3215).
