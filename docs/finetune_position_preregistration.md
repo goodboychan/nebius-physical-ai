@@ -174,3 +174,18 @@ configuration was restored on the Orin.
     judge. T1 and T0 behaviour is unchanged. The runner harness passes.
   - `scripts/ft_analysis.py` gains `--t2 <sealed dir>`, tested on relabelled data.
   - The runner hash at deployment is recorded when it is deployed.
+
+## 13. Amendment 5 (2026-10-14, during T0, before any unsealing): exploratory gripper-chatter metric
+
+- **Trigger**: during T0 the operator reported much less gripper chatter than in earlier experiments.
+- **Metric**, fixed before any unsealing:
+  - **chatter** = mean |second difference| of the commanded gripper action (`action[:, 5]` in each trial's
+    `*_traj.npz`, in degrees per step²), over all steps of a non-aborted trial.
+  - A second version is restricted to steps where the commanded gripper is closed by more than half of its range
+    in that trial (the hold phase).
+- **Comparisons**, all **exploratory** with no decision attached, as medians per arm and Mann–Whitney U:
+  1. FT vs OLD within T1, T0 and T2;
+  2. the OLD FP16 arm here vs the same VC-025 engine in the FP16 block (rubber bands, 2026-10-13), to separate
+     the policy from the session;
+  3. the FP16 blocks vs G6 cells (FP32/INT8, anti-slip pads), descriptive only, since the gripper changed.
+- No result from this metric changes the T1/T0/T2 readings.

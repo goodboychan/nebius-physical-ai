@@ -25,3 +25,4 @@ Outcomes are decided by the locked criterion (automatic judge and §11 consensus
 - T1 complete (22:08 KST): 24/24 trials logged; 0 invalid, 0 aborted, 0 runtime errors, 0 human contact; 24 overhead
   videos. The operator did not see some failures directly; outcomes come from the automatic judge and the §11 video
   consensus re-judge, so this does not change any result.
+- During T0: the operator reports **much less gripper chatter** than in earlier experiments. No cell information.
