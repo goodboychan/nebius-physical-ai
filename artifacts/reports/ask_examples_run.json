@@ -1,0 +1,227 @@
+[
+ {
+  "question": "Can I use the fine-tuned policy where the can's start position varies by a few centimeters?",
+  "tries": [
+   {
+    "answer": {
+     "row_ids": [
+      17,
+      18,
+      19
+     ],
+     "explanation": "Row seventeen and row eighteen both show that the fine\u2011tuned policy achieves higher success than the old policy when the can starts a few centimeters away from the nominal mark. Row nineteen indicates that at the original training start position the fine\u2011tuned policy\u2019s success versus the old policy is still undecided. Together these rows suggest the policy works well for shifted starts but needs more evidence for the nominal start before it can be relied upon across all variations.",
+     "missing_checks": [
+      "Run more trials at the original start position to clarify success rate.",
+      "Test the policy with other objects and different scenes to verify the improvement holds.",
+      "Check the AI judge\u2019s false\u2011alarm rate on those new objects and scenes."
+     ]
+    },
+    "findings": [],
+    "latency_s": 9.9,
+    "usage": {
+     "completion_tokens": 1821,
+     "prompt_tokens": 4864,
+     "total_tokens": 6685,
+     "completion_tokens_details": {
+      "accepted_prediction_tokens": null,
+      "audio_tokens": null,
+      "reasoning_tokens": 1652,
+      "rejected_prediction_tokens": null
+     },
+     "prompt_tokens_details": {
+      "audio_tokens": null,
+      "cached_tokens": 0,
+      "created_cache_tokens": 0,
+      "multimodal_tokens": null
+     },
+     "prompt_cache_hit_tokens": 0,
+     "prompt_cache_miss_tokens": 4864
+    }
+   }
+  ]
+ },
+ {
+  "question": "Should I deploy an INT8 build instead of FP16 to save power?",
+  "tries": [
+   {
+    "answer": {
+     "row_ids": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8,
+      9,
+      10,
+      11,
+      12,
+      13,
+      17,
+      18,
+      19
+     ],
+     "explanation": "The rows show that the half precision build has low energy per inference but the notes indicate it draws more instantaneous power than the eight bit integer version. No rows provide direct measurements for the eight bit integer build, so we cannot compare its power draw or energy use. Therefore we lack sufficient information to decide if switching to the eight bit integer build would save power.",
+     "missing_checks": [
+      "measure instantaneous power draw of the eight bit integer build",
+      "measure energy per inference for the eight bit integer build",
+      "compare success rate against full precision within tolerance for the eight bit integer build"
+     ]
+    },
+    "findings": [
+     "absence claim 'No rows provide direct measurements' (put open items in missing_checks)"
+    ],
+    "latency_s": 13.1,
+    "usage": {
+     "completion_tokens": 2449,
+     "prompt_tokens": 4905,
+     "total_tokens": 7354,
+     "completion_tokens_details": {
+      "accepted_prediction_tokens": null,
+      "audio_tokens": null,
+      "reasoning_tokens": 2263,
+      "rejected_prediction_tokens": null
+     },
+     "prompt_tokens_details": {
+      "audio_tokens": null,
+      "cached_tokens": 0,
+      "created_cache_tokens": 0,
+      "multimodal_tokens": null
+     },
+     "prompt_cache_hit_tokens": 0,
+     "prompt_cache_miss_tokens": 4905
+    }
+   },
+   {
+    "answer": {
+     "row_ids": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8,
+      9,
+      10,
+      11,
+      12,
+      13,
+      17,
+      18,
+      19
+     ],
+     "explanation": "The rows show that the half precision build uses less energy per inference than the full precision baseline and runs faster on the GPU. According to the provided facts the same build draws more instantaneous power while active than the eight bit integer version. The rows also indicate that more trials would be needed to confirm whether any performance difference stays within the accepted tolerance.",
+     "missing_checks": [
+      "measure instantaneous power draw of the eight bit integer build",
+      "measure energy per inference for the eight bit integer build",
+      "compare success rate against full precision within tolerance for the eight bit integer build"
+     ]
+    },
+    "findings": [],
+    "latency_s": 6.6,
+    "usage": {
+     "completion_tokens": 935,
+     "prompt_tokens": 5131,
+     "total_tokens": 6066,
+     "completion_tokens_details": {
+      "accepted_prediction_tokens": null,
+      "audio_tokens": null,
+      "reasoning_tokens": 752,
+      "rejected_prediction_tokens": null
+     },
+     "prompt_tokens_details": {
+      "audio_tokens": null,
+      "cached_tokens": 0,
+      "created_cache_tokens": 0,
+      "multimodal_tokens": null
+     },
+     "prompt_cache_hit_tokens": 0,
+     "prompt_cache_miss_tokens": 5131
+    }
+   }
+  ]
+ },
+ {
+  "question": "Which build should I validate first on the Jetson, and why?",
+  "tries": [
+   {
+    "answer": {
+     "row_ids": [
+      10
+     ],
+     "explanation": "Validate the lower precision build first because it needs less energy for each inference and runs faster on the GPU than the eight bit integer build. This build also shows the smallest end\u2011to\u2011end latency and the smallest GPU execution time in the measurements.",
+     "missing_checks": [
+      "verify that the success rate stays within the allowed tolerance when compared to the full precision build",
+      "confirm that the build works correctly when the starting position is shifted"
+     ]
+    },
+    "findings": [],
+    "latency_s": 16.1,
+    "usage": {
+     "completion_tokens": 3329,
+     "prompt_tokens": 4837,
+     "total_tokens": 8166,
+     "completion_tokens_details": {
+      "accepted_prediction_tokens": null,
+      "audio_tokens": null,
+      "reasoning_tokens": 3226,
+      "rejected_prediction_tokens": null
+     },
+     "prompt_tokens_details": {
+      "audio_tokens": null,
+      "cached_tokens": 0,
+      "created_cache_tokens": 0,
+      "multimodal_tokens": null
+     },
+     "prompt_cache_hit_tokens": 0,
+     "prompt_cache_miss_tokens": 4837
+    }
+   }
+  ]
+ },
+ {
+  "question": "Can I rely on the AI judge's verdict for a new object?",
+  "tries": [
+   {
+    "answer": {
+     "row_ids": [
+      20
+     ],
+     "explanation": "The AI judge was re\u2011checked on fresh live trials and caught most failures while showing a low false\u2011alarm rate on the object that was examined. It has not yet been evaluated on other objects or different scenes, so its behavior for a completely new object remains uncertain.",
+     "missing_checks": [
+      "evaluate the judge on additional objects",
+      "check performance across varied scenes",
+      "verify that the false\u2011alarm rate stays low"
+     ]
+    },
+    "findings": [],
+    "latency_s": 6.7,
+    "usage": {
+     "completion_tokens": 1068,
+     "prompt_tokens": 4849,
+     "total_tokens": 5917,
+     "completion_tokens_details": {
+      "accepted_prediction_tokens": null,
+      "audio_tokens": null,
+      "reasoning_tokens": 964,
+      "rejected_prediction_tokens": null
+     },
+     "prompt_tokens_details": {
+      "audio_tokens": null,
+      "cached_tokens": 0,
+      "created_cache_tokens": 0,
+      "multimodal_tokens": null
+     },
+     "prompt_cache_hit_tokens": 0,
+     "prompt_cache_miss_tokens": 4849
+    }
+   }
+  ]
+ }
+]
