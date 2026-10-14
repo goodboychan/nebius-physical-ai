@@ -32,8 +32,9 @@ review**: what the evidence supports, what is still missing, and what to test ne
 2. **Offline audit.** It scores every candidate on 2,000 held-out robot states, fanned out on Nebius Jobs, and freezes
    the ranking before any real trial.
 3. **Real-arm check.** It runs blinded, interleaved trials on the arm to test whether the audit's ranking holds. The
-   AI layers are checked against the same evidence: a Cosmos-Reason2 supervisor and judge, and a Nemotron 3 Super
-   report writer. Neither is trusted on its own word.
+   AI layers are checked against the same evidence: a Cosmos-Reason2 supervisor and judge, and Nemotron 3 Super.
+   Nemotron writes the report and checks Tavily field reports against our own measurements. Neither model is
+   trusted on its own word: code checks every quote and number they produce.
 
 The results were sealed until all trials were logged, so no candidate was picked after seeing its results.
 
@@ -54,7 +55,7 @@ Scope throughout: one pick-and-place task, one ACT policy, a Jetson Orin Nano Su
 
 | Finding | Evidence | What it means for the developer |
 |---|---|---|
-| On this device FP16 has the lowest latency and energy per inference | trtexec: FP16 11.6 ms and 82 mJ; INT8 16.8–17.1 ms and 101 mJ; FP32 53.4 ms and 403 mJ (`power_bench/SUMMARY.md`) | Don't pick an engine by its precision label. Measure on the target. FP16 is the cost-favored candidate. On the arm: FP16 19/20, FP32 10/10, INT8 10/10; placement within tolerance of FP32; success undecided at this sample size; end to end 24.7 ms against 34.3 and 79.0 ms (`fp16_analysis.json`) |
+| On this device FP16 has the lowest latency and energy per inference | trtexec: FP16 11.6 ms and 82 mJ; INT8 16.8–17.1 ms and 101 mJ; FP32 53.4 ms and 403 mJ (`power_bench/SUMMARY.md`) | Don't pick an engine by its precision label. Measure on the target. FP16 is the cost-favored candidate. On the arm: FP16 19/20, FP32 10/10, INT8 10/10; placement within tolerance of FP32; success undecided at this sample size; end to end 24.7 ms against 34.3 and 79.0 ms (`fp16_analysis.json`). The field agrees: Nemotron, reading Tavily results, tied an NVIDIA forum report of ModelOpt INT8 running slower than FP16 on Orin NX to this measurement, with a code-checked verbatim quote. It also labelled the 2.7× Orin Nano INT8 regression thread correctly, but the validator rejected that answer for rounding the thread's numbers (`errata_grounded.md`) |
 | Audit-picked INT8 cells did not beat random ones | 73/75 against 73/75, 95% CI [−6.8, +6.8] pp; offline rank against placement, Spearman 0.02–0.08 (`g6_analysis.json`) | In this setting, the offline ranking is not evidence that one calibration is better |
 | Against FP32 the evidence is insufficient for every INT8 cell | 194/200 against 24/25. At a 10 pp tolerance the Newcombe intervals span about ±23–53 pp, so all 10 cells are "insufficient evidence" (`g6_q2_sensitivity.json`) | "No failures seen" is not "safe". Showing a cell is within 10 pp would take about 110–120 trials per arm (a planning estimate that assumes both true success rates are equal at about 96–97%; it is not a guarantee) |
 | Deployment conditions moved success far more | No anti-slip pads 8/24; rubber bands 23/24; start moved 3 cm 0/3 in a small, early-stopped test (observational, cause not isolated); unseen yellow can 48/48, every engine 12/12 (`stress_v2_analysis.json`) | Validate the grip, positions and objects you will actually face |
@@ -72,9 +73,10 @@ The dashboard opens with this card (`dashboard/audit_gate.html`, "Deployment rev
 - **Verified for**: the cola can at the trained start mark, a fixed coaster, locked camera exposure and the gripper
   configuration in use.
 - **Weak spots**: grip friction and changes in start position.
-- **AI judge reliability**: not reliable in the current setup.
+- **AI judge reliability**: not reliable in the first setup (1/21). The validated prompt caught 20/21 offline; the live
+  re-check is pending.
 - **Next actions**: plan about 110–120 trials per arm (a planning estimate that assumes both true success rates are equal at about 96–97%; it is not a guarantee) to settle FP16 (or any cell) against FP32, add varied start
-  positions, validate the judge with video input, and check grip friction on the deployed gripper.
+  positions, re-check the validated judge prompt live, and check grip friction on the deployed gripper.
 
 It is a review aid, not an automatic approval. The trial videos sit next to the numbers, so the reader can see each
 failure.
@@ -90,7 +92,7 @@ failure.
 | Real arm | 30 Hz TensorRT policy server with chunk prefetch and blending, so all engines have identical timing; blinded schedule | SO-101 + Jetson |
 | AI supervisor and judge | **Cosmos-Reason2-2B**, 2 Hz shadow mode, plus an end-of-trial question | **Nebius AI Endpoint** (L40S, vLLM), started per session |
 | Deployment report | Code decides the verdicts; **Nemotron 3 Super** explains them; a structured validator checks each candidate's verdict, fractions and latency in the prose (`d3_report_v2.md`) | **Nebius Token Factory** |
-| Errata | Tavily search with queries derived from the real build; the snapshot is hashed | Tavily API |
+| Errata, grounded | **Tavily** search with queries derived from the real build (snapshot hashed). **Nemotron 3 Super** labels each of the 25 results against our measured facts (matches / contrasts / applies but unverified / not applicable), with structured output; code checks that every quote is verbatim and every number is real (`errata_grounding_preregistration.md`) | Tavily API + **Nebius Token Factory** |
 | Experiment record | 5 experiments, 73 runs, filled from committed artifacts by a script; each run tagged with its source file and commit | **Nebius Managed MLflow**, run only for publishing and capture |
 | Portability probe | The same checkpoint and calibration frames on a Hailo-8 (Raspberry Pi 5); backbones INT8 on Hailo, transformer FP32 on the CPU | Hailo DFC on a GPU workstation, measured on the device |
 
@@ -106,6 +108,29 @@ failure.
   - An external review caught that our percentile bootstrap was too optimistic at zero failures. We corrected it with
     Newcombe intervals, both before unsealing the follow-up tests and as a separate sensitivity analysis for G6.
 
+## Feedback to NVIDIA and Nebius
+
+We logged every tool problem as we hit it (`docs/tool_feedback.md`). Each entry has the symptom, the cause and a
+suggested fix.
+
+- **TensorRT Model Optimizer**: PyTorch's fused multi-head-attention fast path bypasses `out_proj`, so a quantizer
+  stays uncalibrated. Export then fails with "Quantizer has not been calibrated", which does not point to the fast
+  path. A hint in the error would save hours on every transformer policy.
+- **trtexec**: `--int8` alone falls back to FP32 with reformat layers. That build ran at 28.57 ms against 16.22 ms
+  with `--int8 --fp16`, with no warning. The builder already knows the fallback count, so it could print it.
+- **TensorRT on Jetson**: builds were nondeterministic in latency until we froze the timing cache. Measured on the
+  Orin, INT8 was slower and used more energy than FP16 (16.8 vs 11.6 ms, 101 vs 82 mJ). Field reports agree.
+- **Nebius AI Cloud**:
+  - Capacity visibility: an AI Endpoint stayed in PROVISIONING for over 20 minutes before `NotEnoughResources`.
+  - The `--platform` default is the most expensive GPU.
+  - `--inject-file` documents its 64 KiB limit per file, but enforces it on the total.
+  - Regional quota combinations are not obvious; eu-north1 had GPU quota but zero CPU quota.
+  - Job overhead (about 4–5 minutes) dominates small jobs.
+  - The Managed MLflow console does not refresh its provisioning status, and `PermissionDenied` does not name the
+    missing permission.
+- **Token Factory**: a Studio key authenticates against the Cloud API but returns empty lists, so "no access" looks
+  like "no resources". Free-text JSON from Nemotron broke in 14 of 25 answers; structured output fixed all of them.
+
 ## Accomplishments
 
 - A complete gate from cloud to real arm. Every number is traceable to a hashed artifact.
@@ -118,6 +143,11 @@ failure.
 - Measure cost on the target device; precision labels mislead.
 - "No failures seen" needs its interval next to it, together with the number of trials it would take to decide.
 - Validate the judge, both the AI one and your own.
+- **Constrain the format, then verify the content.**
+  - Structured output took Nemotron's parseable answers from 11/25 to 25/25.
+  - Its labels then agreed with ours on 5 of the 6 field reports that bear on our measurements.
+  - The validator still rejected answers that rounded a source's numbers. We would rather lose recall than accept
+    an unverified number in a deployment report.
 - **A verdict belongs to a target, not to "INT8".**
   - We used the same checkpoint and the same calibration frames on a Hailo-8.
   - Going from 16 to 1024 calibration frames *raised* the Orin INT8 error (0.054 → 0.062) and *lowered* the Hailo

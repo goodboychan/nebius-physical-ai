@@ -65,6 +65,7 @@ Stress tests were unsealed on 2026-10-13. The stress protocol is
 | `D4` runtime supervisor | **`nvidia/Cosmos-Reason2-2B`** watches the overhead camera at 2 Hz (CONTINUE / FALLBACK / ABORT, shadow mode) and is asked at trial end whether the task succeeded | **Nebius AI Endpoint** (L40S, vLLM 0.29), about 330 ms round trip from the robot |
 | `D3` deployment report agent | **`nvidia/nemotron-3-super-120b-a12b`** explains verdicts that code has already decided; a structured validator checks each candidate's verdict, success fractions and latency in the prose (report v2) | **Nebius Token Factory** |
 | `D5` errata collector | **Tavily** search for TensorRT / Jetson / INT8 known issues, with queries derived from the real build environment and snapshot-hashed | Tavily API |
+| `D5` errata grounding | **Nemotron 3 Super** labels each of the 25 field reports against our measured facts (matches / contrasts / applies but unverified / not applicable) with structured output; code checks every quote is verbatim and every number is real ([`errata_grounded.md`](artifacts/reports/errata_grounded.md), [pre-registration](docs/errata_grounding_preregistration.md)) | **Nebius Token Factory** |
 | Policy training | LeRobot 0.6.1 ACT, 100k steps | **Nebius Jobs** (L40S, 1 h 57 min) |
 | Audit fan-out | 25 cells × bootstrap scoring on 2,000 held-out states | **Nebius Jobs** (CPU) |
 | Data and weights | demos, checkpoints, Cosmos weights | **Nebius Object Storage** (S3) |
@@ -74,6 +75,17 @@ Stress tests were unsealed on 2026-10-13. The stress protocol is
 Factory served Nemotron 3 Super, and the variants we compared, behind one OpenAI-compatible API, so no GPU server had
 to stay warm. Comparison: [`d3_model_compare.json`](artifacts/reports/d3_model_compare.json). Final report:
 [`d3_report_v2.md`](artifacts/reports/d3_report_v2.md) (v1 kept as history: [`d3_final_report.md`](artifacts/reports/d3_final_report.md)).
+
+**Where Nemotron met Tavily.** Tavily finds field reports and Nemotron reads them against what we measured. Code
+keeps only claims it can check.
+- Free-text JSON broke in 14 of 25 answers; structured output fixed all of them.
+- Nemotron's labels then agreed with ours on 5 of the 6 reports that bear on our measurements. These include an
+  Orin NX report of ModelOpt INT8 running slower than FP16, which matches our Orin measurement (16.8 vs 11.6 ms).
+- The validator accepted 2 of those 5 and rejected 3: two answers rounded a source's numbers, and in the third the
+  number in the source had a unit attached. No fabricated quote or number was accepted.
+
+**Tool feedback.** Every problem we hit with TensorRT, Model Optimizer, Nebius AI Cloud and Token Factory is logged
+with its cause and a suggested fix in [`docs/tool_feedback.md`](docs/tool_feedback.md).
 
 **Where Managed MLflow helped.** The same results, as standard tracked runs: code-decided verdicts next to their
 intervals, and the 25 grid cells comparable in one view. The cluster ran only for publishing and capture
