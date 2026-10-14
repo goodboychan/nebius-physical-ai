@@ -967,3 +967,23 @@ ACT는 상태마다 100스텝을 내고 실기에서 100스텝을 모두 실행�
   노란 캔 4/33(12%), 신뢰구간 0.77–0.99, 끝 상태만 판정, 중앙 지연 893 ms, 프롬프트·형식·토큰 예산을 함께 바꾼 조합의 개선(원인 단일화 불가),
   파인튜닝 평가에서 실시간 전향 확인 예정
 - 보고서 검증기: 문장이 실험 조건(G6, S4/처음 보는 캔, FP16 블록, 양성 대조, 오프라인)을 말하면 그 조건의 행만 대조한다. 조건 간 값 빌려 쓰기를 잡는다(테스트 10개)
+
+---
+
+## 2026-10-14 — Nebius Managed MLflow: create → publish → capture → delete
+
+- The user approved plan A: create a short-lived cluster, publish from committed artifacts, capture, delete.
+  - Plan C, running until judging in early December, would have cost about $670.
+  - Price: medium only, $0.48/h, plus $14.2/month internal storage.
+- Cluster `mlflow-e00vptyxqj9vqwdgtc` (MLflow 2.21.2, eu-north1, public + private access).
+  - The user created it in the console. The least-privilege SA got `PermissionDenied`; see tool_feedback.
+  - Provisioning took about 20 minutes.
+- Published by `scripts/mlflow_publish.py` at commit 32a7630: 5 experiments, 73 runs, every run tagged with its
+  source file and commit. Client mlflow-skinny 2.21.2, matching the server.
+- Kept in the repo: CSV exports (`artifacts/mlflow/`) and four cropped captures (`docs/media/mlflow/`).
+  The browser chrome was removed from the captures.
+- The user deleted the cluster on 2026-10-14. The CLI shows no MLflow cluster left in the project, and the Cosmos
+  endpoint is STOPPED.
+  - The auto-created artifact bucket is not visible to the SA, so the user confirms its deletion in the console.
+- Republishing is reproducible: create a cluster, then run `mlflow_publish.py` with the tracking URI and the admin
+  credentials from `~/.config/edgeqgate/mlflow_admin`.
