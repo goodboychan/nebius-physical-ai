@@ -1,0 +1,130 @@
+{
+ "T2001_1014_230223": {
+  "success_geom": false,
+  "reason": "can_top_not_found(fallen_or_occluded)"
+ },
+ "T2002_1014_230336": {
+  "success_geom": true,
+  "reason": "ok",
+  "base_dist_px": 12.6,
+  "n_consensus_frames": 15
+ },
+ "T2003_1014_230449": {
+  "success_geom": false,
+  "reason": "can_top_not_found(fallen_or_occluded)"
+ },
+ "T2004_1014_230610": {
+  "success_geom": true,
+  "reason": "ok",
+  "base_dist_px": 16.2,
+  "n_consensus_frames": 15
+ },
+ "T2005_1014_230723": {
+  "success_geom": false,
+  "reason": "moving_or_not_standing",
+  "n_consensus_frames": 6
+ },
+ "T2006_1014_230838": {
+  "success_geom": true,
+  "reason": "ok",
+  "base_dist_px": 15.0,
+  "n_consensus_frames": 15
+ },
+ "T2007_1014_230959": {
+  "success_geom": true,
+  "reason": "ok",
+  "base_dist_px": 13.8,
+  "n_consensus_frames": 15
+ },
+ "T2008_1014_231113": {
+  "success_geom": true,
+  "reason": "ok",
+  "base_dist_px": 27.0,
+  "n_consensus_frames": 15
+ },
+ "T2009_1014_231228": {
+  "success_geom": false,
+  "reason": "moving_or_not_standing",
+  "n_consensus_frames": 1
+ },
+ "T2010_1014_231339": {
+  "success_geom": false,
+  "reason": "can_top_not_found(fallen_or_occluded)"
+ },
+ "T2011_1014_231456": {
+  "success_geom": false,
+  "reason": "moving_or_not_standing",
+  "n_consensus_frames": 2
+ },
+ "T2012_1014_231614": {
+  "success_geom": false,
+  "reason": "moving_or_not_standing",
+  "n_consensus_frames": 1
+ },
+ "T2013_1014_231730": {
+  "success_geom": true,
+  "reason": "ok",
+  "base_dist_px": 15.0,
+  "n_consensus_frames": 15
+ },
+ "T2014_1014_231845": {
+  "success_geom": false,
+  "reason": "outside",
+  "base_dist_px": 143.4,
+  "n_consensus_frames": 15
+ },
+ "T2015_1014_231956": {
+  "success_geom": true,
+  "reason": "ok",
+  "base_dist_px": 19.8,
+  "n_consensus_frames": 15
+ },
+ "T2016_1014_232146": {
+  "success_geom": false,
+  "reason": "moving_or_not_standing",
+  "n_consensus_frames": 4
+ },
+ "T2017_1014_232259": {
+  "success_geom": false,
+  "reason": "can_top_not_found(fallen_or_occluded)"
+ },
+ "T2018_1014_232411": {
+  "success_geom": true,
+  "reason": "ok",
+  "base_dist_px": 15.0,
+  "n_consensus_frames": 15
+ },
+ "T2019_1014_232522": {
+  "success_geom": false,
+  "reason": "moving_or_not_standing",
+  "n_consensus_frames": 2
+ },
+ "T2020_1014_232632": {
+  "success_geom": true,
+  "reason": "ok",
+  "base_dist_px": 20.2,
+  "n_consensus_frames": 15
+ },
+ "T2021_1014_232800": {
+  "success_geom": true,
+  "reason": "ok",
+  "base_dist_px": 16.5,
+  "n_consensus_frames": 15
+ },
+ "T2022_1014_232911": {
+  "success_geom": false,
+  "reason": "can_top_not_found(fallen_or_occluded)"
+ },
+ "T2023_1014_233024": {
+  "success_geom": true,
+  "reason": "ok",
+  "base_dist_px": 15.2,
+  "n_consensus_frames": 15
+ },
+ "T2024_1014_233144": {
+  "success_geom": true,
+  "reason": "ok",
+  "base_dist_px": 15.2,
+  "n_consensus_frames": 15
+ }
+}
