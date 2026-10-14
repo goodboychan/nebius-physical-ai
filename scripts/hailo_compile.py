@@ -19,7 +19,7 @@ ins = sorted(k for k, v in L.items() if v["type"] == "input_layer")
 assert len(ins) == 2 and ins[0].endswith("input_layer1") and ins[1].endswith("input_layer2"), ins   # 1 = top, 2 = wrist (parser log)
 cam = {ins[0]: "top", ins[1]: "wrist"}
 fmt = lambda a: "[" + ", ".join(f"{x * 255:.6f}" for x in a) + "]"
-script = "".join(f"normalization{i + 1} = normalization({fmt(nz[f'observation_images_{c}_mean'])}, {fmt(nz[f'observation_images_{c}_std'])}, {k})\n"
+script = "".join(f"img_norm{i + 1} = normalization({fmt(nz[f'observation_images_{c}_mean'])}, {fmt(nz[f'observation_images_{c}_std'])}, {k})\n"
                  for i, (k, c) in enumerate(cam.items()))
 script += "model_optimization_flavor(optimization_level=2, compression_level=0)\n"
 r.load_model_script(script)
