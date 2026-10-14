@@ -133,3 +133,44 @@ configuration was restored on the Orin.
 - Runner `so101_trial.py` `a3e6fd7f61752406…`, deployed to the Orin; the previous `ee80efe4` is kept as a backup.
   The sealed schedule `996d4a9a…`, the engines and the manifest `6ecf919d…` are unchanged.
 - The procedure, sample sizes and primary rule are unchanged.
+
+## 12. Amendment 4 (2026-10-14, during T1 and before any unsealing): a −3 cm symmetry block T2
+
+- **Why**: during T1, after trial 8, the user asked whether a −3 cm test is needed to judge the fine-tune's effect.
+  +3 cm tests only the side where the weakness was observed (stress S1, 0/3).
+  - The demonstrations cover −4, −2, 0, +2 and +4 cm, so −3 cm is the mirror held-out position.
+  - This amendment is written while T1 is still running. Nobody has unsealed or analysed any T1 or T0 trial.
+  - The operator has reported failures by trial number only. The operator also reported that the two policies'
+    motions look visibly different; see the operator notes.
+  - The decision to add T2 does not depend on any cell-level outcome.
+- **Design**:
+  - Block **T2**: the cola can at a new **−3 cm** tape mark, on the same axis as the other marks, midway between
+    −2 and −4.
+  - FT-FP16 12 and OLD-FP16 (`VC-025`) 12, interleaved by the (k + U)/n key.
+  - Seed key `FINETUNE/schedule/T2/v1`, with new random tokens.
+  - Sealed schedule `~/.edgeqgate_sealed/stress_ft2/stress_sealed.json`, sha256
+    `13620d947b67cf5cf0bb643e4b0ebcf8ca132f95fe8ce3f3e8c598a5b8be8587`. The public copy is
+    `artifacts/finetune/stress_schedule_T2_public.json`.
+  - The engines are hard links to the same files as T1/T0 (sha256 `4affc06d…` and `3b19f7eb…`).
+  - The normalization manifest is `stress_ft2/engines/norm_manifest.json`, sha256 `4f5f3bcba0ddb980…`.
+  - It was built on the Orin by `scripts/ft2_setup_orin.py`, which prints no token-to-cell mapping. The local
+    copy of the sealed schedule was deleted unread.
+- **Order**:
+  - T2 runs after T0. The runner change below is deployed to the Orin only after T0 ends, never during a block.
+  - T2's sealed log is hashed into `artifacts/freeze/ft2_post.json` before it is opened.
+- **Rule**: the same as the T1 primary. A Newcombe 95% interval for FT − OLD; improvement at −3 cm is detected if the
+  lower bound is > 0.
+  - T1 stays the primary result. T2 is a separately reported symmetry check, with no multiplicity adjustment of T1.
+
+  | T1 (+3 cm) | T2 (−3 cm) | Reading |
+  |---|---|---|
+  | detected | detected | The fine-tune improved held-out positions on both sides of the trained start |
+  | detected | not detected | Improvement shown at +3 cm only; the −3 cm side is not shown |
+  | not detected | detected | No evidence at the observed weakness; the −3 cm improvement is reported, not promoted |
+  | not detected | not detected | No evidence that this fine-tune fixed position shifts |
+
+- **Code**:
+  - The runner accepts `--blind T2 ft2`: the sealed folder `stress_ft2`, the manifest required, the C1 end-of-trial
+    judge. T1 and T0 behaviour is unchanged. The runner harness passes.
+  - `scripts/ft_analysis.py` gains `--t2 <sealed dir>`, tested on relabelled data.
+  - The runner hash at deployment is recorded when it is deployed.

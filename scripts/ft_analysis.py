@@ -2,20 +2,26 @@
 Runs only after artifacts/freeze/ft_post.json exists. Outcome: consensus re-judge (stress §11) ∧ released ∧ no contact ∧ not aborted.
 Primary (T1, +3 cm held out): FT − OLD success difference, Newcombe 95%; improvement detected iff the lower bound > 0.
 Secondary (T0, nominal): stress_analysis.compare(ref=OLD VC-025, test=FT-FP16, conf=97.5%) -> GO / NO-GO / INSUFFICIENT_EVIDENCE.
-Usage: python scripts/ft_analysis.py <sealed dir> <rejudge json ...> --out <json>"""
+T2 (amendment 4, §12; −3 cm, held out): the same rule as T1, reported as the symmetry check (requires ft2_post.json).
+Usage: python scripts/ft_analysis.py <sealed dir> <rejudge json ...> --out <json> [--t2 <sealed dir T2>]"""
 import json, math, os, sys
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 import stress_analysis as sa
 from g6_analysis import newcombe
 if not os.path.exists("artifacts/freeze/ft_post.json"): sys.exit("ft_post.json이 없다")
 args = sys.argv[1:]; out = args[args.index("--out") + 1]; sealed = args[0]
+t2 = args[args.index("--t2") + 1] if "--t2" in args else None
 for f in args[1:args.index("--out")]: sa.REJ.update(json.load(open(f)))
 rep = {}
-for blk in ("T1", "T0"):
-    rows = sa.load(os.path.join(sealed, f"stress_ft_{blk}_sealed.jsonl")); cs = sa.cells_of(rows)
+blocks = [("T1", sealed, "stress_ft"), ("T0", sealed, "stress_ft")]
+if t2:
+    if not os.path.exists("artifacts/freeze/ft2_post.json"): sys.exit("ft2_post.json이 없다")
+    blocks.append(("T2", t2, "stress_ft2"))
+for blk, sdir, pre in blocks:
+    rows = sa.load(os.path.join(sdir, f"{pre}_{blk}_sealed.jsonl")); cs = sa.cells_of(rows)
     rep[blk] = {"cells": {c: {"k": int(sum(v["s"])), "n": len(v["s"])} for c, v in cs.items()},
                 "failures": {c: [r["trial"] for r in rows if r["cell"] == c and not r["success"]] for c in cs}}
-    if blk == "T1" and "FT-FP16" in cs and "VC-025" in cs:
+    if blk in ("T1", "T2") and "FT-FP16" in cs and "VC-025" in cs:
         kf, nf = int(sum(cs["FT-FP16"]["s"])), len(cs["FT-FP16"]["s"]); ko, no = int(sum(cs["VC-025"]["s"])), len(cs["VC-025"]["s"])
         lo, hi = newcombe(kf, nf, ko, no)
         rep[blk]["primary"] = {"ft": [kf, nf], "old": [ko, no], "diff_pp": (kf / nf - ko / no) * 100, "newcombe95_pp": [lo * 100, hi * 100],
