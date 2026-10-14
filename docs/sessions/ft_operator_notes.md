@@ -13,3 +13,4 @@ Outcomes are decided by the locked criterion (automatic judge and §11 consensus
 - Trial 2: the can ended **half on the coaster**. The operator would read it as a failure; the locked criterion decides.
 - Trial 3: the same as trial 2 (the can ended half on the coaster).
 - Trial 6: the can was set half on the coaster, then the gripper moved and knocked it over.
+- Trial 8: the same pattern (set half on the coaster).
