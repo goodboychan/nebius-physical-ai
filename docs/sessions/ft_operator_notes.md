@@ -27,3 +27,4 @@ Outcomes are decided by the locked criterion (automatic judge and §11 consensus
   consensus re-judge, so this does not change any result.
 - During T0: the operator reports **much less gripper chatter** than in earlier experiments. No cell information.
 - T0 trial 18: the can did not fall but was pushed far off the coaster.
+- T0 trial 22: the can was knocked over while being set down.
