@@ -1,0 +1,29 @@
+{
+ "schema": "edgeqgate/errata_grounding/v1",
+ "snapshot": "artifacts/retrieval/errata_g4.json",
+ "snapshot_hash": "ed199938844cf01fac9343221877cf4f5cf509a36113eff926de083e996abc77",
+ "build_profile": "TensorRT 10.3.0 on a Jetson Orin Nano Super (15 W mode, sm_87, CUDA 12.6, JetPack 6). Policy: LeRobot ACT, two ResNet-18 image backbones plus a transformer encoder-decoder (multi-head attention, LayerNorm), 51.6M parameters. INT8 by NVIDIA TensorRT Model Optimizer (modelopt) explicit Q/DQ in PyTorch, ONNX export in an x86 NGC container, engines built on the Orin itself with trtexec --int8 --fp16. Not used: DLA, FP8, GridSample, diffusion models, LLMs, TensorRT-LLM, Torch-TensorRT.",
+ "facts": {
+  "F1": {"text": "On this Orin build, INT8 is slower than FP16: GPU compute 16.8 ms per inference for INT8 against 11.6 ms for FP16 (FP32 53.4 ms), measured with trtexec at batch 1.", "numbers": [16.8, 11.6, 53.4], "source": "artifacts/reports/power_bench/SUMMARY.md"},
+  "F2": {"text": "INT8 uses more energy per inference than FP16: 101 mJ against 82 mJ (FP32 403 mJ), whole-module VDD_IN above idle.", "numbers": [101, 82, 403], "source": "artifacts/reports/power_bench/SUMMARY.md"},
+  "F3": {"text": "Building the INT8 engine with trtexec --int8 alone gave 28.57 ms; with --int8 --fp16 it gave 16.22 ms, because layers without INT8 kernels fell back to FP32 with reformat nodes.", "numbers": [28.57, 16.22], "source": "docs/tool_feedback.md#2"},
+  "F4": {"text": "modelopt left a quantizer uncalibrated ('Quantizer has not been calibrated') because PyTorch's fused multi-head-attention fast path bypassed the out_proj module; disabling the fast path fixed it.", "numbers": [], "source": "docs/tool_feedback.md#1"},
+  "F5": {"text": "TensorRT engine builds were nondeterministic in latency across rebuilds of the same ONNX; a frozen timing cache made them reproducible.", "numbers": [], "source": "docs/decision_log.md#2026-09-15"}
+ },
+ "labels": {
+  "MATCHES": "the result reports the same phenomenon as one of our measured facts (give fact_id)",
+  "CONTRASTS": "the result reports the opposite outcome for a comparable setting, e.g. INT8 faster than FP16 on another model (give fact_id)",
+  "APPLIES_UNVERIFIED": "the result plausibly concerns our build profile, but none of our facts measures it",
+  "NOT_APPLICABLE": "different product, version, operator or hardware feature from our build profile, or no issue content"
+ },
+ "reference_labels_note": "Written by the assistant from the snapshot text before any Nemotron call, committed with this file. Boundaries between APPLIES_UNVERIFIED and NOT_APPLICABLE are judgement calls; the primary metric uses MATCHES/CONTRASTS only.",
+ "reference_labels": {
+  "R01": ["NOT_APPLICABLE", null], "R02": ["NOT_APPLICABLE", null], "R03": ["NOT_APPLICABLE", null], "R04": ["NOT_APPLICABLE", null],
+  "R05": ["NOT_APPLICABLE", null], "R06": ["APPLIES_UNVERIFIED", null], "R07": ["APPLIES_UNVERIFIED", null], "R08": ["APPLIES_UNVERIFIED", null],
+  "R09": ["MATCHES", "F1"], "R10": ["NOT_APPLICABLE", null], "R11": ["MATCHES", "F1"], "R12": ["NOT_APPLICABLE", null],
+  "R13": ["MATCHES", "F1"], "R14": ["CONTRASTS", "F1"], "R15": ["CONTRASTS", "F1"], "R16": ["APPLIES_UNVERIFIED", null],
+  "R17": ["APPLIES_UNVERIFIED", null], "R18": ["MATCHES", "F1"], "R19": ["APPLIES_UNVERIFIED", null], "R20": ["NOT_APPLICABLE", null],
+  "R21": ["APPLIES_UNVERIFIED", null], "R22": ["NOT_APPLICABLE", null], "R23": ["NOT_APPLICABLE", null], "R24": ["NOT_APPLICABLE", null],
+  "R25": ["NOT_APPLICABLE", null]
+ }
+}
