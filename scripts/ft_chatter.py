@@ -1,5 +1,5 @@
 """Exploratory gripper-chatter metric, fixed in docs/finetune_position_preregistration.md §13 before unsealing.
-chatter = mean |second difference| of the commanded gripper action (action[:, 5], degrees per step²) over a trial;
+chatter = mean |second difference| of the commanded gripper action (action[:, 5], gripper units 0–100 per step²) over a trial;
 chatter_hold = the same over steps where the commanded gripper is below the midpoint of its range in that trial (closed side).
 Step 1 (Orin): python ft_chatter.py measure <dir> [<dir> ...] > chatter_raw.json
 Step 2 (repo): python ft_chatter.py compare chatter_raw.json <out.json>"""

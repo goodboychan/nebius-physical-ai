@@ -181,7 +181,7 @@ configuration was restored on the Orin.
 - **Trigger**: during T0 the operator reported much less gripper chatter than in earlier experiments.
 - **Metric**, fixed before any unsealing:
   - **chatter** = mean |second difference| of the commanded gripper action (`action[:, 5]` in each trial's
-    `*_traj.npz`, in degrees per step²), over all steps of a non-aborted trial.
+    `*_traj.npz`, in gripper units per step², where the gripper is 0–100; unit corrected 2026-10-15, values unchanged), over all steps of a non-aborted trial.
   - A second version is restricted to steps where the commanded gripper is closed by more than half of its range
     in that trial (the hold phase).
 - **Comparisons**, all **exploratory** with no decision attached, as medians per arm and Mann–Whitney U:
@@ -224,7 +224,7 @@ Analysis: `scripts/ft_analysis.py`, written to `artifacts/reports/ft_analysis.js
   - By block: T1 caught 8/9, T0 1/2, T2 12/12. The only false alarm was in T0.
   - The prompt chosen on the dev split and checked on eval held on live trials.
 - **Gripper chatter** (§13, exploratory; `artifacts/reports/ft_chatter.json`). Values are the median mean
-  |Δ²| of the commanded gripper, in degrees per step²:
+  |Δ²| of the commanded gripper, in gripper units (0–100) per step²:
 
   | | FT | OLD | MWU p |
   |---|---|---|---|
