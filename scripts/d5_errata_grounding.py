@@ -65,8 +65,14 @@ def parse(text):
         except json.JSONDecodeError: continue
     return None
 
-def call(prompt, max_tokens=4096):
-    body = json.dumps({"model": MODEL, "max_tokens": max_tokens, "temperature": 0,
+SCHEMA = {"type": "object", "additionalProperties": False, "required": ["label", "fact_id", "quote", "explanation"],
+          "properties": {"label": {"type": "string", "enum": ["MATCHES", "CONTRASTS", "APPLIES_UNVERIFIED", "NOT_APPLICABLE"]},
+                         "fact_id": {"type": ["string", "null"]}, "quote": {"type": "string"}, "explanation": {"type": "string"}}}
+
+def call(prompt, max_tokens=4096, structured=True):
+    # amendment 1 (v1.1): structured output, because v1 broke JSON in 14/25 answers (unquoted explanation values)
+    extra = {"response_format": {"type": "json_schema", "json_schema": {"name": "erratum", "schema": SCHEMA, "strict": True}}} if structured else {}
+    body = json.dumps({"model": MODEL, "max_tokens": max_tokens, "temperature": 0, **extra,
                        "messages": [{"role": "system", "content": SYSTEM}, {"role": "user", "content": prompt}]})
     for attempt in range(3):
         try:
@@ -92,7 +98,7 @@ def selftest(cfg, R):
 
 if __name__ == "__main__":
     ap = argparse.ArgumentParser(); ap.add_argument("--config", default="configs/errata_grounding_v1.json")
-    ap.add_argument("--out", default="artifacts/reports"); ap.add_argument("--selftest", action="store_true"); a = ap.parse_args()
+    ap.add_argument("--out", default="artifacts/reports"); ap.add_argument("--selftest", action="store_true"); ap.add_argument("--v1-format", action="store_true"); a = ap.parse_args()
     cfg = json.load(open(a.config)); R = results(cfg); assert len(R) == 25 and set(cfg["reference_labels"]) == {r["id"] for r in R}
     st = selftest(cfg, R); print("selftest", st)
     if a.selftest: sys.exit(0)
@@ -100,7 +106,7 @@ if __name__ == "__main__":
     rows = []
     for r in R:
         prompt = USER.format(profile=cfg["build_profile"], facts=facts, labels=labels, label_names=list(cfg["labels"]), **{k: r[k] for k in ("title", "url", "content")})
-        text, dt, usage = call(prompt); ans = parse(text); bad = validate(ans, r, cfg)
+        text, dt, usage = call(prompt, structured=not a.v1_format); ans = parse(text); bad = validate(ans, r, cfg)
         ref = cfg["reference_labels"][r["id"]]
         rows.append({"id": r["id"], "title": r["title"], "url": r["url"], "answer": ans, "violations": bad, "accepted": not bad,
                      "reference": ref, "latency_s": round(dt, 2), "usage": usage, "raw_tail": (text or "")[-400:]})

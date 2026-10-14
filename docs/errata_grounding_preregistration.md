@@ -54,3 +54,27 @@ from 5 queries). Until now a person had to read them. The question:
   matches what we measured", which a developer can trust because code has checked every quote and number.
 - Disagreements in the APPLIES_UNVERIFIED / NOT_APPLICABLE region are expected and are reported, not tuned away.
   The prompt and inputs are fixed by this commit.
+
+## 6. Run v1 (2026-10-14), as pre-registered
+
+Output: `artifacts/reports/errata_grounded_v1.{json,md}`.
+
+- **Primary recall: 1/6.** Only R15 (CONTRASTS F1) was accepted with the reference label. There were no extra
+  positives, and 10 of 25 answers were accepted.
+- **Rejections**:
+  - 14 under rule R1. The answer was not valid JSON: the model left the `explanation` value unquoted.
+  - 1 under rule R3. The quote was not found in the content (R23).
+- **The rejected raw answers include correct labels**: MATCHES F1 for R11, R13 and R18, with verbatim quotes. The
+  failure is the output format, not the labelling. They stay rejected in v1, as the rule says.
+- **One accepted answer has the wrong fact**: R09 (SqueezeBits) was labelled MATCHES F4 (the attention quantizer)
+  where the reference is F1 (INT8 slower).
+- Median latency 4.2 s per call. Tokens: 27.0k prompt and 17.5k completion in total, mostly reasoning tokens.
+
+## 7. Amendment 1, written after v1 and before v1.1
+
+- **The only change is the output format.** Calls use Token Factory structured output (`response_format` JSON
+  schema): `label` is an enum of the four labels, and `fact_id`, `quote` and `explanation` are strings.
+- The prompt, the inputs, temperature 0, the validator and the reference labels are unchanged.
+- Structured output was checked only on an unrelated dummy text (a banana-bread recipe), never on a snapshot
+  result.
+- v1.1 runs once and is reported next to v1. The format change is disclosed wherever v1.1 is cited.
