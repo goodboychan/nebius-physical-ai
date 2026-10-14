@@ -81,6 +81,22 @@ Numbers come from committed artifacts. The figure's script lists its sources.
 Stress tests were unsealed on 2026-10-13. The stress protocol is
 [`docs/stress_test_protocol.md`](docs/stress_test_protocol.md).
 
+**What the review cost** ([`review_cost.md`](artifacts/reports/review_cost.md), from committed records at list prices):
+
+| | Use | USD |
+|---|---|---|
+| Nebius Jobs | ACT training and fine-tune on L40S (2.5 h); 48 CPU audit jobs | 4.5 |
+| Nebius AI Endpoint | Cosmos-Reason2 on L40S, 11 sessions, 16.5 h up | 25.6 |
+| Nebius Token Factory | Nemotron 3 Super, 68+ calls, 150k in / 86k out tokens (lower bound) | 0.1 |
+| Nebius Managed MLflow | 1.5 h | 0.7 |
+| **Cloud total** | | **≈ 31** |
+
+- The real arm ran 481 trials in about 12 operator-hours.
+- The brute-force route to a decision-grade answer would test all 25 candidates and FP32 at about 115 trials per arm.
+  That is about 2,990 trials and about 74 arm-hours, before any stress or position test.
+- The review did not settle approval. It ranked what to validate first, blocked broken builds, found and fixed a
+  weakness, and listed the trials still missing.
+
 ## How QuantGate uses NVIDIA models and Nebius
 
 | Component | What runs | Where |

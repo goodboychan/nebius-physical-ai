@@ -1,0 +1,562 @@
+[
+ {
+  "name": "act-ft-pos-20k",
+  "region": "eu-north1",
+  "platform": "gpu-l40s-a",
+  "preset": "1gpu-8vcpu-32gb",
+  "state": "COMPLETED",
+  "created_at": "2026-10-13T15:06:38.414986Z",
+  "started_at": "2026-10-13T15:08:23.019590968Z",
+  "finished_at": "2026-10-13T15:35:56.435922556Z"
+ },
+ {
+  "name": "act-g2-fp32",
+  "region": "eu-north1",
+  "platform": "gpu-l40s-a",
+  "preset": "1gpu-8vcpu-32gb",
+  "state": "COMPLETED",
+  "created_at": "2026-10-06T16:14:15.716539Z",
+  "started_at": "2026-10-06T16:15:54.371287418Z",
+  "finished_at": "2026-10-06T18:15:17.189242429Z"
+ },
+ {
+  "name": "act-smoke3",
+  "region": "eu-north1",
+  "platform": "gpu-l40s-a",
+  "preset": "1gpu-8vcpu-32gb",
+  "state": "COMPLETED",
+  "created_at": "2026-10-06T15:43:06.634164Z",
+  "started_at": "2026-10-06T15:44:52.189870492Z",
+  "finished_at": "2026-10-06T15:47:50.622985108Z"
+ },
+ {
+  "name": "act-smoke2",
+  "region": "eu-north1",
+  "platform": "gpu-l40s-a",
+  "preset": "1gpu-8vcpu-32gb",
+  "state": "FAILED",
+  "created_at": "2026-10-06T15:37:54.322798Z",
+  "started_at": "2026-10-06T15:39:31.450443329Z",
+  "finished_at": "2026-10-06T15:41:49.151019592Z"
+ },
+ {
+  "name": "act-smoke",
+  "region": "eu-north1",
+  "platform": "gpu-l40s-a",
+  "preset": "1gpu-8vcpu-32gb",
+  "state": "FAILED",
+  "created_at": "2026-10-06T15:32:58.167149Z",
+  "started_at": "2026-10-06T15:36:57.924074578Z",
+  "finished_at": "2026-10-06T15:36:58.792739126Z"
+ },
+ {
+  "name": "lerobot-pull-check",
+  "region": "eu-north1",
+  "platform": "gpu-l40s-a",
+  "preset": "1gpu-8vcpu-32gb",
+  "state": "COMPLETED",
+  "created_at": "2026-09-15T01:55:59.792564Z",
+  "started_at": "2026-09-15T01:59:47.649504044Z",
+  "finished_at": "2026-09-15T01:59:51.515398944Z"
+ },
+ {
+  "name": "g4-audit-vc-025-r",
+  "region": "eu-west1",
+  "platform": "cpu-d3",
+  "preset": "2vcpu-8gb",
+  "state": "COMPLETED",
+  "created_at": "2026-10-07T08:18:41.676794Z",
+  "started_at": "2026-10-07T08:20:53.377768371Z",
+  "finished_at": "2026-10-07T08:20:58.017033748Z"
+ },
+ {
+  "name": "g4-audit-vc-024-r",
+  "region": "eu-west1",
+  "platform": "cpu-d3",
+  "preset": "2vcpu-8gb",
+  "state": "COMPLETED",
+  "created_at": "2026-10-07T08:18:35.772670Z",
+  "started_at": "2026-10-07T08:20:44.200705518Z",
+  "finished_at": "2026-10-07T08:20:48.697644221Z"
+ },
+ {
+  "name": "g4-audit-vc-023-r",
+  "region": "eu-west1",
+  "platform": "cpu-d3",
+  "preset": "2vcpu-8gb",
+  "state": "COMPLETED",
+  "created_at": "2026-10-07T08:18:29.343357Z",
+  "started_at": "2026-10-07T08:20:36.581235160Z",
+  "finished_at": "2026-10-07T08:20:41.238418809Z"
+ },
+ {
+  "name": "g4-audit-vc-022-r",
+  "region": "eu-west1",
+  "platform": "cpu-d3",
+  "preset": "2vcpu-8gb",
+  "state": "COMPLETED",
+  "created_at": "2026-10-07T08:17:28.908736Z",
+  "started_at": "2026-10-07T08:19:43.261304080Z",
+  "finished_at": "2026-10-07T08:19:47.988998131Z"
+ },
+ {
+  "name": "g4-audit-vc-021-r",
+  "region": "eu-west1",
+  "platform": "cpu-d3",
+  "preset": "2vcpu-8gb",
+  "state": "COMPLETED",
+  "created_at": "2026-10-07T08:17:16.693016Z",
+  "started_at": "2026-10-07T08:19:35.012724285Z",
+  "finished_at": "2026-10-07T08:19:39.545225340Z"
+ },
+ {
+  "name": "g4-audit-vc-020-r",
+  "region": "eu-west1",
+  "platform": "cpu-d3",
+  "preset": "2vcpu-8gb",
+  "state": "COMPLETED",
+  "created_at": "2026-10-07T08:16:21.868331Z",
+  "started_at": "2026-10-07T08:18:31.176946954Z",
+  "finished_at": "2026-10-07T08:18:35.495406591Z"
+ },
+ {
+  "name": "g4-audit-vc-014-r",
+  "region": "eu-west1",
+  "platform": "cpu-d3",
+  "preset": "2vcpu-8gb",
+  "state": "COMPLETED",
+  "created_at": "2026-10-07T08:16:11.932801Z",
+  "started_at": "2026-10-07T08:18:16.579439459Z",
+  "finished_at": "2026-10-07T08:18:20.901231342Z"
+ },
+ {
+  "name": "g4-audit-vc-013-r",
+  "region": "eu-west1",
+  "platform": "cpu-d3",
+  "preset": "2vcpu-8gb",
+  "state": "COMPLETED",
+  "created_at": "2026-10-07T08:15:58.508526Z",
+  "started_at": "2026-10-07T08:18:12.754630565Z",
+  "finished_at": "2026-10-07T08:18:17.160090671Z"
+ },
+ {
+  "name": "g4-audit-vc-019",
+  "region": "eu-west1",
+  "platform": "cpu-d3",
+  "preset": "2vcpu-8gb",
+  "state": "COMPLETED",
+  "created_at": "2026-10-07T08:15:15.354771Z",
+  "started_at": "2026-10-07T08:17:17.809242216Z",
+  "finished_at": "2026-10-07T08:17:22.090182719Z"
+ },
+ {
+  "name": "g4-audit-vc-018",
+  "region": "eu-west1",
+  "platform": "cpu-d3",
+  "preset": "2vcpu-8gb",
+  "state": "COMPLETED",
+  "created_at": "2026-10-07T08:15:09.394251Z",
+  "started_at": "2026-10-07T08:17:08.713345539Z",
+  "finished_at": "2026-10-07T08:17:13.147910392Z"
+ },
+ {
+  "name": "g4-audit-vc-017",
+  "region": "eu-west1",
+  "platform": "cpu-d3",
+  "preset": "2vcpu-8gb",
+  "state": "COMPLETED",
+  "created_at": "2026-10-07T08:15:02.566752Z",
+  "started_at": "2026-10-07T08:17:03.465980846Z",
+  "finished_at": "2026-10-07T08:17:07.886634555Z"
+ },
+ {
+  "name": "g4-audit-vc-016",
+  "region": "eu-west1",
+  "platform": "cpu-d3",
+  "preset": "2vcpu-8gb",
+  "state": "COMPLETED",
+  "created_at": "2026-10-07T08:14:56.834993Z",
+  "started_at": "2026-10-07T08:16:56.091937508Z",
+  "finished_at": "2026-10-07T08:17:00.670808169Z"
+ },
+ {
+  "name": "g4-audit-vc-015",
+  "region": "eu-west1",
+  "platform": "cpu-d3",
+  "preset": "2vcpu-8gb",
+  "state": "COMPLETED",
+  "created_at": "2026-10-07T08:14:50.836018Z",
+  "started_at": "2026-10-07T08:16:55.193334796Z",
+  "finished_at": "2026-10-07T08:16:59.679251340Z"
+ },
+ {
+  "name": "g4-audit-vc-014",
+  "region": "eu-west1",
+  "platform": "cpu-d3",
+  "preset": "2vcpu-8gb",
+  "state": "ERROR",
+  "created_at": "2026-10-07T08:12:49.822878Z",
+  "started_at": null,
+  "finished_at": null
+ },
+ {
+  "name": "g4-audit-vc-013",
+  "region": "eu-west1",
+  "platform": "cpu-d3",
+  "preset": "2vcpu-8gb",
+  "state": "ERROR",
+  "created_at": "2026-10-07T08:12:36.630419Z",
+  "started_at": null,
+  "finished_at": null
+ },
+ {
+  "name": "g4-audit-vc-012",
+  "region": "eu-west1",
+  "platform": "cpu-d3",
+  "preset": "2vcpu-8gb",
+  "state": "COMPLETED",
+  "created_at": "2026-10-07T08:12:22.509039Z",
+  "started_at": "2026-10-07T08:14:47.125973710Z",
+  "finished_at": "2026-10-07T08:14:51.516731974Z"
+ },
+ {
+  "name": "g4-audit-vc-011",
+  "region": "eu-west1",
+  "platform": "cpu-d3",
+  "preset": "2vcpu-8gb",
+  "state": "COMPLETED",
+  "created_at": "2026-10-07T08:12:16.735590Z",
+  "started_at": "2026-10-07T08:14:25.007233782Z",
+  "finished_at": "2026-10-07T08:14:29.644092422Z"
+ },
+ {
+  "name": "g4-audit-vc-010",
+  "region": "eu-west1",
+  "platform": "cpu-d3",
+  "preset": "2vcpu-8gb",
+  "state": "COMPLETED",
+  "created_at": "2026-10-07T08:12:10.601119Z",
+  "started_at": "2026-10-07T08:14:16.977753835Z",
+  "finished_at": "2026-10-07T08:14:21.485476571Z"
+ },
+ {
+  "name": "g4-audit-vc-009",
+  "region": "eu-west1",
+  "platform": "cpu-d3",
+  "preset": "2vcpu-8gb",
+  "state": "COMPLETED",
+  "created_at": "2026-10-07T08:12:03.732091Z",
+  "started_at": "2026-10-07T08:14:11.989175053Z",
+  "finished_at": "2026-10-07T08:14:16.554906882Z"
+ },
+ {
+  "name": "g4-audit-vc-008",
+  "region": "eu-west1",
+  "platform": "cpu-d3",
+  "preset": "2vcpu-8gb",
+  "state": "COMPLETED",
+  "created_at": "2026-10-07T08:11:57.986473Z",
+  "started_at": "2026-10-07T08:14:02.938503478Z",
+  "finished_at": "2026-10-07T08:14:07.250188571Z"
+ },
+ {
+  "name": "g4-audit-vc-007",
+  "region": "eu-west1",
+  "platform": "cpu-d3",
+  "preset": "2vcpu-8gb",
+  "state": "COMPLETED",
+  "created_at": "2026-10-07T08:11:52.148028Z",
+  "started_at": "2026-10-07T08:13:58.144489772Z",
+  "finished_at": "2026-10-07T08:14:02.543109709Z"
+ },
+ {
+  "name": "g4-audit-vc-006",
+  "region": "eu-west1",
+  "platform": "cpu-d3",
+  "preset": "2vcpu-8gb",
+  "state": "COMPLETED",
+  "created_at": "2026-10-07T08:11:46.490763Z",
+  "started_at": "2026-10-07T08:13:47.811573584Z",
+  "finished_at": "2026-10-07T08:13:52.088789587Z"
+ },
+ {
+  "name": "g4-audit-vc-005",
+  "region": "eu-west1",
+  "platform": "cpu-d3",
+  "preset": "2vcpu-8gb",
+  "state": "COMPLETED",
+  "created_at": "2026-10-07T08:11:40.574004Z",
+  "started_at": "2026-10-07T08:13:41.215354682Z",
+  "finished_at": "2026-10-07T08:13:45.670366764Z"
+ },
+ {
+  "name": "g4-audit-vc-004",
+  "region": "eu-west1",
+  "platform": "cpu-d3",
+  "preset": "2vcpu-8gb",
+  "state": "COMPLETED",
+  "created_at": "2026-10-07T08:11:34.942573Z",
+  "started_at": "2026-10-07T08:13:36.973542073Z",
+  "finished_at": "2026-10-07T08:13:41.648971773Z"
+ },
+ {
+  "name": "g4-audit-vc-003",
+  "region": "eu-west1",
+  "platform": "cpu-d3",
+  "preset": "2vcpu-8gb",
+  "state": "COMPLETED",
+  "created_at": "2026-10-07T08:11:28.711265Z",
+  "started_at": "2026-10-07T08:13:32.695496565Z",
+  "finished_at": "2026-10-07T08:13:37.088002736Z"
+ },
+ {
+  "name": "g4-audit-vc-002",
+  "region": "eu-west1",
+  "platform": "cpu-d3",
+  "preset": "2vcpu-8gb",
+  "state": "COMPLETED",
+  "created_at": "2026-10-07T08:11:21.739987Z",
+  "started_at": "2026-10-07T08:13:26.246633648Z",
+  "finished_at": "2026-10-07T08:13:30.727915772Z"
+ },
+ {
+  "name": "g4-audit-vc-001",
+  "region": "eu-west1",
+  "platform": "cpu-d3",
+  "preset": "2vcpu-8gb",
+  "state": "COMPLETED",
+  "created_at": "2026-10-07T08:11:05.820842Z",
+  "started_at": "2026-10-07T08:13:24.566907632Z",
+  "finished_at": "2026-10-07T08:13:29.191303109Z"
+ },
+ {
+  "name": "audit-fp16",
+  "region": "eu-west1",
+  "platform": "cpu-d3",
+  "preset": "2vcpu-8gb",
+  "state": "COMPLETED",
+  "created_at": "2026-09-15T00:28:06.472425Z",
+  "started_at": "2026-09-15T00:29:55.520420015Z",
+  "finished_at": "2026-09-15T00:29:59.549436417Z"
+ },
+ {
+  "name": "audit-int8fp16",
+  "region": "eu-west1",
+  "platform": "cpu-d3",
+  "preset": "2vcpu-8gb",
+  "state": "COMPLETED",
+  "created_at": "2026-09-15T00:27:59.819664Z",
+  "started_at": "2026-09-15T00:29:45.063925591Z",
+  "finished_at": "2026-09-15T00:29:49.250957178Z"
+ },
+ {
+  "name": "g0-fanout-19",
+  "region": "eu-west1",
+  "platform": "cpu-d3",
+  "preset": "2vcpu-8gb",
+  "state": "COMPLETED",
+  "created_at": "2026-09-14T15:28:54.378968Z",
+  "started_at": "2026-09-14T15:36:43.148625705Z",
+  "finished_at": "2026-09-14T15:36:43.345289407Z"
+ },
+ {
+  "name": "g0-fanout-18",
+  "region": "eu-west1",
+  "platform": "cpu-d3",
+  "preset": "2vcpu-8gb",
+  "state": "COMPLETED",
+  "created_at": "2026-09-14T15:28:53.792100Z",
+  "started_at": "2026-09-14T15:36:45.363514656Z",
+  "finished_at": "2026-09-14T15:36:45.567755324Z"
+ },
+ {
+  "name": "g0-fanout-17",
+  "region": "eu-west1",
+  "platform": "cpu-d3",
+  "preset": "2vcpu-8gb",
+  "state": "COMPLETED",
+  "created_at": "2026-09-14T15:28:53.751889Z",
+  "started_at": "2026-09-14T15:36:46.326117691Z",
+  "finished_at": "2026-09-14T15:36:46.672449223Z"
+ },
+ {
+  "name": "g0-fanout-16",
+  "region": "eu-west1",
+  "platform": "cpu-d3",
+  "preset": "2vcpu-8gb",
+  "state": "COMPLETED",
+  "created_at": "2026-09-14T15:28:53.619991Z",
+  "started_at": "2026-09-14T15:36:44.121979026Z",
+  "finished_at": "2026-09-14T15:36:44.458410232Z"
+ },
+ {
+  "name": "g0-fanout-15",
+  "region": "eu-west1",
+  "platform": "cpu-d3",
+  "preset": "2vcpu-8gb",
+  "state": "COMPLETED",
+  "created_at": "2026-09-14T15:28:52.664188Z",
+  "started_at": "2026-09-14T15:33:33.886159528Z",
+  "finished_at": "2026-09-14T15:33:34.076305903Z"
+ },
+ {
+  "name": "g0-fanout-13",
+  "region": "eu-west1",
+  "platform": "cpu-d3",
+  "preset": "2vcpu-8gb",
+  "state": "COMPLETED",
+  "created_at": "2026-09-14T15:28:52.612294Z",
+  "started_at": "2026-09-14T15:33:32.976989211Z",
+  "finished_at": "2026-09-14T15:33:33.163882179Z"
+ },
+ {
+  "name": "g0-fanout-14",
+  "region": "eu-west1",
+  "platform": "cpu-d3",
+  "preset": "2vcpu-8gb",
+  "state": "COMPLETED",
+  "created_at": "2026-09-14T15:28:52.148874Z",
+  "started_at": "2026-09-14T15:35:31.154487553Z",
+  "finished_at": "2026-09-14T15:35:31.358639898Z"
+ },
+ {
+  "name": "g0-fanout-11",
+  "region": "eu-west1",
+  "platform": "cpu-d3",
+  "preset": "2vcpu-8gb",
+  "state": "COMPLETED",
+  "created_at": "2026-09-14T15:28:52.142932Z",
+  "started_at": "2026-09-14T15:33:35.506349873Z",
+  "finished_at": "2026-09-14T15:33:35.852046242Z"
+ },
+ {
+  "name": "g0-fanout-12",
+  "region": "eu-west1",
+  "platform": "cpu-d3",
+  "preset": "2vcpu-8gb",
+  "state": "COMPLETED",
+  "created_at": "2026-09-14T15:28:52.140172Z",
+  "started_at": "2026-09-14T15:36:42.294842740Z",
+  "finished_at": "2026-09-14T15:36:42.600714369Z"
+ },
+ {
+  "name": "g0-fanout-10",
+  "region": "eu-west1",
+  "platform": "cpu-d3",
+  "preset": "2vcpu-8gb",
+  "state": "COMPLETED",
+  "created_at": "2026-09-14T15:28:52.136500Z",
+  "started_at": "2026-09-14T15:33:36.462449337Z",
+  "finished_at": "2026-09-14T15:33:36.857898026Z"
+ },
+ {
+  "name": "g0-fanout-09",
+  "region": "eu-west1",
+  "platform": "cpu-d3",
+  "preset": "2vcpu-8gb",
+  "state": "COMPLETED",
+  "created_at": "2026-09-14T15:28:44.978945Z",
+  "started_at": "2026-09-14T15:32:37.232391670Z",
+  "finished_at": "2026-09-14T15:32:37.428801500Z"
+ },
+ {
+  "name": "g0-fanout-05",
+  "region": "eu-west1",
+  "platform": "cpu-d3",
+  "preset": "2vcpu-8gb",
+  "state": "COMPLETED",
+  "created_at": "2026-09-14T15:28:44.908283Z",
+  "started_at": "2026-09-14T15:33:35.753216133Z",
+  "finished_at": "2026-09-14T15:33:35.926780711Z"
+ },
+ {
+  "name": "g0-fanout-08",
+  "region": "eu-west1",
+  "platform": "cpu-d3",
+  "preset": "2vcpu-8gb",
+  "state": "COMPLETED",
+  "created_at": "2026-09-14T15:28:44.907182Z",
+  "started_at": "2026-09-14T15:30:29.421325736Z",
+  "finished_at": "2026-09-14T15:30:29.603474340Z"
+ },
+ {
+  "name": "g0-fanout-01",
+  "region": "eu-west1",
+  "platform": "cpu-d3",
+  "preset": "2vcpu-8gb",
+  "state": "COMPLETED",
+  "created_at": "2026-09-14T15:28:44.905290Z",
+  "started_at": "2026-09-14T15:35:20.530721751Z",
+  "finished_at": "2026-09-14T15:35:20.839779944Z"
+ },
+ {
+  "name": "g0-fanout-02",
+  "region": "eu-west1",
+  "platform": "cpu-d3",
+  "preset": "2vcpu-8gb",
+  "state": "COMPLETED",
+  "created_at": "2026-09-14T15:28:44.887341Z",
+  "started_at": "2026-09-14T15:30:31.175215870Z",
+  "finished_at": "2026-09-14T15:30:31.345432089Z"
+ },
+ {
+  "name": "g0-fanout-03",
+  "region": "eu-west1",
+  "platform": "cpu-d3",
+  "preset": "2vcpu-8gb",
+  "state": "COMPLETED",
+  "created_at": "2026-09-14T15:28:44.887244Z",
+  "started_at": "2026-09-14T15:30:37.364472631Z",
+  "finished_at": "2026-09-14T15:30:37.620601946Z"
+ },
+ {
+  "name": "g0-fanout-06",
+  "region": "eu-west1",
+  "platform": "cpu-d3",
+  "preset": "2vcpu-8gb",
+  "state": "COMPLETED",
+  "created_at": "2026-09-14T15:28:44.887233Z",
+  "started_at": "2026-09-14T15:33:45.021471715Z",
+  "finished_at": "2026-09-14T15:33:45.338494358Z"
+ },
+ {
+  "name": "g0-fanout-07",
+  "region": "eu-west1",
+  "platform": "cpu-d3",
+  "preset": "2vcpu-8gb",
+  "state": "COMPLETED",
+  "created_at": "2026-09-14T15:28:44.431426Z",
+  "started_at": "2026-09-14T15:30:18.815706039Z",
+  "finished_at": "2026-09-14T15:30:19.036048924Z"
+ },
+ {
+  "name": "g0-fanout-04",
+  "region": "eu-west1",
+  "platform": "cpu-d3",
+  "preset": "2vcpu-8gb",
+  "state": "COMPLETED",
+  "created_at": "2026-09-14T15:28:43.927482Z",
+  "started_at": "2026-09-14T15:30:32.753499911Z",
+  "finished_at": "2026-09-14T15:30:32.934687249Z"
+ },
+ {
+  "name": "g0-fanout-00",
+  "region": "eu-west1",
+  "platform": "cpu-d3",
+  "preset": "2vcpu-8gb",
+  "state": "COMPLETED",
+  "created_at": "2026-09-14T15:28:43.923439Z",
+  "started_at": "2026-09-14T15:30:21.093175401Z",
+  "finished_at": "2026-09-14T15:30:21.415148424Z"
+ },
+ {
+  "name": "g0-probe-1",
+  "region": "eu-west1",
+  "platform": "cpu-d3",
+  "preset": "2vcpu-8gb",
+  "state": "COMPLETED",
+  "created_at": "2026-09-14T15:27:51.288947Z",
+  "started_at": "2026-09-14T15:29:45.878187645Z",
+  "finished_at": "2026-09-14T15:29:46.056738045Z"
+ }
+]

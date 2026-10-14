@@ -96,6 +96,16 @@ A fault-injection demo runs the nominal FP16 card and five broken cases:
 
 The demo copies are labelled as injected faults, not observed failures.
 
+## What one review cost (`review_cost.md`)
+
+About **$31 of Nebius cloud** in total. Most of it is the Cosmos endpoint (16.5 h up, $25.6). Training and the
+fine-tune on Jobs cost $4.5, Token Factory $0.1 (a lower bound) and MLflow $0.7. On the arm it took **481 trials in
+about 12 operator-hours**.
+
+Settling every candidate against FP32 by brute force would take about 2,990 trials and 74 arm-hours, before any
+stress test. QuantGate spends the arm time where it changes the decision: the cheapest candidate first, the
+conditions that moved success, and the fix.
+
 ## The deployment review (what the developer takes away)
 
 The dashboard opens with this card (`dashboard/audit_gate.html`, "Deployment review"):

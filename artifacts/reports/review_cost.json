@@ -1,0 +1,59 @@
+{
+ "prices_usd": {
+  "gpu-l40s-a": 1.55,
+  "cpu-d3": 0.06,
+  "tf_in": 3e-07,
+  "tf_out": 9e-07,
+  "mlflow": 0.48
+ },
+ "nebius_jobs": {
+  "training (L40S)": {
+   "jobs": 2,
+   "run_s": 8816.234287000001,
+   "billed_s": 9019.493639,
+   "usd": 3.8833930945694446
+  },
+  "smoke tests (L40S)": {
+   "jobs": 4,
+   "run_s": 320.86825000000005,
+   "billed_s": 991.165466,
+   "usd": 0.4267517978611111
+  },
+  "offline audit fan-out (CPU)": {
+   "jobs": 48,
+   "run_s": 125.45198699999995,
+   "billed_s": 9362.932841,
+   "usd": 0.15604888068333325
+  }
+ },
+ "cosmos_endpoint": {
+  "sessions": 11,
+  "hours": 16.509561532777777,
+  "usd": 25.589820375805555
+ },
+ "token_factory": {
+  "in": 149825,
+  "out": 86199,
+  "calls": 68,
+  "estimated_calls": 6,
+  "usd": 0.1225266
+ },
+ "mlflow": {
+  "hours": 1.5,
+  "usd": 0.72
+ },
+ "cloud_total_usd": 30.898540748919444,
+ "real_arm": {
+  "trials": 481,
+  "sessions": 9,
+  "hours": 11.972777777777777,
+  "minutes_per_trial": 1.4934857934857935
+ },
+ "brute_force_settle_all": {
+  "candidates": 25,
+  "trials_per_arm": 115,
+  "trials": 2990,
+  "arm_hours": 74.42537537537537
+ },
+ "note": "Job cost assumes billing from creation to finish (an upper bound). Token Factory D3 calls are estimated from text length."
+}
