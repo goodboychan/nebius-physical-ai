@@ -16,6 +16,19 @@ The logo's Q stands for QuantGate and quantization. The open passage at the lowe
 square leaving it is a candidate that has cleared review for its next test. Passing the gate means "worth
 validating next", not "approved": in this study no INT8 build was approved against FP32 (insufficient evidence).
 
+## Quickstart: one command for the review
+
+```bash
+uv venv .venv && uv pip install --python .venv/bin/python -e ".[dev]"
+.venv/bin/python scripts/quantgate.py verify          # tests, runner harness, 12 sealed logs vs their post-lock hashes
+.venv/bin/python scripts/quantgate.py review --no-llm # verdict table, preflight demo, review cost (no network)
+NEBIUS_API_KEY=... .venv/bin/python scripts/quantgate.py review   # + D3 report v3 by Nemotron on Token Factory, dashboard
+NEBIUS_API_KEY=... .venv/bin/python scripts/quantgate.py ask "Can I use the fine-tuned policy where the start varies?"
+.venv/bin/python scripts/quantgate.py stages          # the robot and cloud stages that produce the evidence
+```
+
+The review layer is deterministic: re-running it on the committed evidence reproduces the committed outputs.
+
 ## Results at a glance
 
 <p align="center"><img src="docs/assets/risk_magnitude.png" alt="What moved the success rate" width="760"></p>
