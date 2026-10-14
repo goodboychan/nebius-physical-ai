@@ -10,13 +10,13 @@ words per second, with short pauses. Every number is taken from the dashboard, t
 | # | Time | Words (target) | Narration |
 |---|---|---|---|
 | 1 | 0:00–0:11 | ~27 | Same robot. Same task. One run succeeds, one fails. Before I ship this policy to a tiny Jetson, how do I know which model I can trust? |
-| 2 | 0:11–1:11 | ~111 | This is an SO-101 arm running an ACT policy on a Jetson Orin Nano Super. We taught it with one hundred and twenty teleoperated demonstrations, and trained it on Nebius. From that one policy, we built twenty-six candidate engines with TensorRT: full precision, half precision, and twenty-four int eight builds that differ only in how they were calibrated. QuantGate scores every candidate offline first, then checks the arm. Every real trial is blinded. The operator never knows which engine is running, and the results stay sealed until all the trials are logged. That way, no candidate gets picked after we have seen how it did. |
-| 3 | 1:11–1:31 | ~46 | QuantGate puts three things side by side for every candidate: what it costs on the real device, how it scored offline, and what it did on the real arm. Training and the offline audit ran on Nebius Jobs. The engines run as TensorRT on the Jetson. |
-| 4 | 1:31–2:03 | ~74 | Measuring changed the decision. On this Jetson, half precision was the cheapest engine, not int eight, and on the arm it went nineteen for twenty. The audit's top picks did no better than random picks. A new can worked forty-eight out of forty-eight. But with the start moved three centimeters, the arm failed. So we recorded fifty demonstrations at shifted positions, fine-tuned on Nebius, and tested it blinded, at a position it never saw. |
-| 5 | 2:03–2:29 | ~58 | The AI layers get checked too. In its first setup, Cosmos Reason, on a Nebius endpoint, caught one failure in twenty-one. We tested it like any other component, on held-out recordings, and a validated question caught twenty of twenty-one. Nemotron Super on Token Factory explains the review in words, while every verdict and number comes from code. |
+| 2 | 0:11–1:07 | ~105 | This is an SO-101 arm running an ACT policy on a Jetson Orin Nano Super. We taught it with one hundred and twenty teleoperated demonstrations, and trained it on Nebius. From that one policy, we built twenty-six candidate engines with TensorRT: full precision, half precision, and twenty-four int eight builds that differ only in how they were calibrated. QuantGate scores every candidate offline first, then checks the arm. Every real trial is blinded. The operator never knows which engine is running, and the results stay sealed until all the trials are logged. That way, no candidate gets picked after we have seen how it did. |
+| 3 | 1:07–1:26 | ~46 | QuantGate puts three things side by side for every candidate: what it costs on the real device, how it scored offline, and what it did on the real arm. Training and the offline audit ran on Nebius Jobs. The engines run as TensorRT on the Jetson. |
+| 4 | 1:26–2:06 | ~105 | Measuring changed the decision. On this Jetson, half precision was the cheapest engine, not int eight, and on the arm it went nineteen for twenty. The audit's top picks did no better than random picks. A new can worked forty-eight out of forty-eight. But with the start moved three centimeters, the arm failed. So we recorded fifty demonstrations at shifted positions, fine-tuned on Nebius, and tested it blinded, at a position it never saw. There, it went twelve for twelve, where the old policy went three for twelve, and ten for twelve on the other side. At the trained spot, more trials are still needed. |
+| 5 | 2:06–2:31 | ~57 | The AI layers get checked too. In its first setup, Cosmos Reason, on a Nebius endpoint, caught one failure in twenty-one. We tested it like any other component, on held-out recordings, and a validated question caught twenty of twenty-one. Nemotron Super on Token Factory explains the review in words, while every verdict and number comes from code. |
 | 5b | — | — | Dropped in v3 to keep the video under 3 minutes. The positive-control result (PC-B 11/12 vs FP32 10/12, warning unresolved) stays on the dashboard and in the submission. |
-| 6 | 2:29–2:53 | ~51 | So QuantGate answers three questions. Which candidate do I validate first? Half precision. Which do I distrust? Broken calibrations, which a simple input check catches, and any engine whose files no longer match what was audited. Can I approve deployment? Not yet. The review lists exactly which trials are still missing. |
-| 7 | 2:53–2:58 | ~4 | QuantGate. Evidence before deployment. |
+| 6 | 2:31–2:53 | ~51 | So QuantGate answers three questions. Which candidate do I validate first? Half precision. Which do I distrust? Broken calibrations, which a simple input check catches, and any engine whose files no longer match what was audited. Can I approve deployment? Not yet. The review lists exactly which trials are still missing. |
+| 7 | 2:53–2:57 | ~4 | QuantGate. Evidence before deployment. |
 
 ## 읽기 메모
 
@@ -40,12 +40,11 @@ words per second, with short pauses. Every number is taken from the dashboard, t
 
 ## 음성 합성 v3 (2026-10-14)
 
-- Voice `am_michael`, speed 1.0. Speech totals 149 s; with the scene slots below, the track runs **2:58**.
+- Voice `am_michael`, speed 1.0. v3.1 (2026-10-15): scene 4 now has the fine-tune result. Speech totals 161 s, and the track runs **2:57** (`scripts/make_narration_track.py`). Scene 2's slot is 56 s; the real-hardware footage passes 1 minute together with the scene 4 clips.
 - Files:
   - `docs/narration/narration_v3_am_michael.m4a` is the full track, with each scene at its slot start.
   - `docs/narration/narration_v3.srt` holds the subtitles, timed by sentence.
-- Scene 4 gets one outcome sentence about the position fine-tune after unsealing (10/15). The track is then
-  regenerated.
+- Scene 4's outcome sentence was added after unsealing (10/15) and the track regenerated.
 
 ## 음성 합성 (2026-10-13)
 

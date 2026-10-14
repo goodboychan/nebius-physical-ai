@@ -26,13 +26,14 @@ from d3_report_v2 import verdict_table, R
 
 SYSTEM = """You explain a robot deployment review to a robot developer. Code has already decided every verdict, number and status
 and prints them above your text. Your text must contain NO digits at all, NO verdict labels (GO, NO-GO, INSUFFICIENT_EVIDENCE,
-FLAGGED), and none of these words: approve, approved, approval, safe, pass, passed, ready, guarantee, proven, equivalent, harmless,
+FLAGGED, IMPROVEMENT_DETECTED, NOT_DETECTED), and none of these words: approve, approved, approval, safe, pass, passed, ready, guarantee, proven, equivalent, harmless,
 certify, ship. Refer to candidates by role ("the FP16 candidate", "the INT8 builds", "the black-frame build"), not by numbers.
 Plain English, concise, no marketing words.
 Facts you must not misstate: the FP16 engine has the lowest ENERGY PER INFERENCE and latency, but it draws more power while running
 than the INT8 builds, so never say it uses the least power. More trials aim to show a candidate is within a tolerance of full
 precision, not that it is better. The AI judge's record is conditional: it is wording-sensitive, judges only the end state and has
-more false alarms on a new object, so it must be re-validated before anyone relies on it; never say it can be trusted or is reliable.
+more false alarms on a new object, so it must be re-validated before anyone relies on it; never say it can be trusted or is reliable. It WAS already re-checked on
+new live trials in the fine-tune evaluation and held up there; what remains open is other objects and other scenes.
 Do not describe which end of an interval must do what; say "enough trials to show the difference stays within the tolerance"."""
 USER = """The decided review (for your understanding only; do not repeat its numbers):
 ```json
@@ -40,13 +41,13 @@ USER = """The decided review (for your understanding only; do not repeat its num
 ```
 Write exactly two sections, in words only:
 ## Why the review looks like this
-(three to five sentences: why the cheapest candidate is the one to validate first, why the success comparisons cannot be decided
-yet, why the deliberately miscalibrated builds are rejected at the input check, and what the AI judge's record means for trusting it)
+(three to six sentences: why the cheapest candidate is the one to validate first, what the position fine-tune changed and what it has not
+shown yet at the training position, why the success comparisons with full precision cannot be decided yet, why the deliberately miscalibrated builds are rejected at the input check, and what the AI judge's record means for trusting it)
 ## Questions to resolve before deployment
 (three to five bullet points, each a concrete question the developer must answer with more trials or checks)"""
 
 FORBIDDEN = [("digit", re.compile(r"\d")),
-             ("verdict label", re.compile(r"\bNO-GO\b|\bGO\b|(?i:\bno-go\b|insufficient[ _]evidence|\bflagged\b)")),
+             ("verdict label", re.compile(r"\bNO-GO\b|\bGO\b|(?i:\bno-go\b|insufficient[ _]evidence|\bflagged\b|improvement[ _]detected|not[ _]detected)")),
              ("approval or safety word", re.compile(r"\b(approv\w*|safe\w*|pass(?:es|ed|ing)?|ready|guarantee\w*|prove[nd]?|equivalen\w*|harmless|certif\w*|ship(?:s|ped|ping)?)\b", re.I)),
              # claim patterns the first v3 run got wrong (2026-10-14): least power, a trustworthy judge, "better than", interval bounds
              ("misreading pattern", re.compile(r"\b(?:least|lowest|less|lower)\s+power\b|\bcan\s+be\s+trusted\b|\btrustworthy\b|\breliable\b|\bbetter\s+than\b|\b(?:upper|lower)\s+(?:bound|end|limit)\b", re.I))]
@@ -88,7 +89,7 @@ def code_sections(T):
     for r in rows:
         if r["verdict"] == "FLAGGED": continue
         parts = [f"**{r['candidate']}** · {r['context']} · `{r['verdict']}`"]
-        if r.get("success"): parts.append(f"success {r['success'][0]}/{r['success'][1]} against reference {r['reference'][0]}/{r['reference'][1]}")
+        if r.get("success"): parts.append(f"success {r['success'][0]}/{r['success'][1]} against {r.get('reference_name', 'reference')} {r['reference'][0]}/{r['reference'][1]}")
         parts.append(f"success interval {fmt_pp(r.get('e1_ci_pp'))}")
         if r.get("e2"): parts.append(f"placement: {r['e2'].replace('_', ' ')}")
         if r.get("e2e_ms") is not None: parts.append(f"end-to-end {r['e2e_ms']} ms")
@@ -143,7 +144,8 @@ if __name__ == "__main__":
     figs = d3_figures.make_all(T, f"{a.out}/figures")
     caps = {"fig_e1_forest.png": "Success vs FP32 per candidate: every Newcombe interval crosses the 10 pp tolerance, so no GO yet.",
             "fig_cost_evidence.png": "GPU time on the device vs real-arm success: FP16 is cheapest; success intervals overlap.",
-            "fig_frames.png": "The frames behind two verdicts: a success, and a failure that Cosmos's first setup called a success."}
+            "fig_frames.png": "The frames behind two verdicts: a success, and a failure that Cosmos's first setup called a success.",
+            "fig_ft_position.png": "Position fine-tune: fine-tuned vs old policy at -3, 0 and +3 cm, blinded, 12 vs 12 each."}
     figmd = "\n\n## Figures (drawn by code from the verdict table)\n\n" + "".join(f"![{caps[f]}](figures/{f})\n\n*{caps[f]}*\n\n" for f in figs)
     open(f"{a.out}/d3_report_v3.md", "w").write(head + codes + "\n" + expl + "\n" + figmd)
     json.dump({"verdict_hash": h, "issues": final["issues"], "latency_sec": round(sum(x['latency_sec'] for x in attempts), 1), "selftest": st,

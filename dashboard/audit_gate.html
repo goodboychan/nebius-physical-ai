@@ -153,7 +153,7 @@ footer{border-top:1px solid var(--rule); padding-top:18px; color:var(--ink-3); f
       by side. Everything below was measured: 245 completed blinded real-arm trials, engine costs on the Jetson, and how
       well the offline audit and the AI supervisor predicted what happened.</p>
     <div class="mast-meta">
-      <span>status 2026-10-12</span><span>SO-101 · ACT 51.6M</span><span>Jetson Orin Nano Super · 15 W · TRT 10.3</span>
+      <span>status 2026-10-15</span><span>SO-101 · ACT 51.6M</span><span>Jetson Orin Nano Super · 15 W · TRT 10.3</span>
       <span>G6 245 / 245 trials</span>
     </div>
   </header>
@@ -161,14 +161,14 @@ footer{border-top:1px solid var(--rule); padding-top:18px; color:var(--ink-3); f
   <section class="banner" role="status">
     <div class="bar"></div>
     <div class="body">
-      <div class="t"><span class="code">LOCK-3</span><span>passed. G6 is unsealed and analyzed.</span></div>
+      <div class="t"><span class="code">LOCK-3</span><span>passed. G6, the stress tests, FP16, the positive control and the position fine-tune are unsealed and analyzed.</span></div>
       <p>The cell-to-engine map was opened only after all 245 trials were logged and hashed. The stress tests and the FP16
-        run were unsealed on 10-13, each after its post-run hash was committed.</p>
+        run were unsealed on 10-13, the position fine-tune (T1, T0 and T2) on 10-14 after all three blocks were hashed, each after its post-run hash was committed.</p>
     </div>
   </section>
 
   <section class="panel" id="review">
-    <div class="plate"><h2>Deployment review</h2><span class="ref">ACT pick-and-place policy · Jetson Orin Nano Super 15 W · as of 2026-10-12</span></div>
+    <div class="plate"><h2>Deployment review</h2><span class="ref">ACT pick-and-place policy · Jetson Orin Nano Super 15 W · as of 2026-10-15</span></div>
     <p class="note">A review aid, not an automatic approval. It answers the developer's three questions, keeping the
       cost <b>recommendation</b> separate from the deployment <b>approval</b>. The lines below give the evidence.</p>
     <div class="decisions">
@@ -177,7 +177,7 @@ footer{border-top:1px solid var(--rule); padding-top:18px; color:var(--ink-3); f
       <div class="dec"><span class="q">Which candidates do I distrust?</span><strong>Calibration anomalies</strong>
         <span class="a">Black-frame and noise calibrations are flagged offline: by a simple input check, and by action MSE and both audit scores (thresholds set on the 24 normal cells). On the arm, PC-B went 11/12 against FP32 10/12, so the warning is <b>not confirmed</b> (unresolved). Reject such builds at the input check anyway.</span><span class="chip halt">flagged</span></div>
       <div class="dec"><span class="q">Can I approve deployment?</span><strong>Not yet</strong>
-        <span class="a">Success against FP32 is undecided for every candidate at these sample sizes, and start-position changes are not validated.</span><span class="chip seal">on hold</span></div>
+        <span class="a">Success against FP32 is undecided for every candidate at these sample sizes. The position fine-tune fixed the start-shift weakness, but whether it keeps nominal performance is still undecided.</span><span class="chip seal">on hold</span></div>
     </div>
     <div class="tbl-scroll">
       <table class="res" aria-label="What QuantGate adds over simpler selection rules">
@@ -196,9 +196,10 @@ footer{border-top:1px solid var(--rule); padding-top:18px; color:var(--ink-3); f
       <div class="row"><span class="k">Real arm</span><span class="d"><b>FP16 on the real arm: 19/20</b> against FP32 10/10 and INT8 10/10, in one interleaved blinded session with the current gripper. Placement is within the 5 px tolerance of FP32 (−0.63 px, CI [−2.64, +1.37]). The success difference cannot be decided at this sample size (CI ±28 pp), so the verdict is <b>insufficient evidence</b>, not falsified. End to end in the runner, FP16 takes 24.7 ms per chunk against 34.3 ms for INT8 and 79.0 ms for FP32. In G6, against FP32 at 10 pp, every one of the 10 INT8 cells is also insufficient evidence.</span><span class="v"><span class="chip seal">insufficient</span></span></div>
       <div class="row"><span class="k">Placement</span><span class="d">Mean placement error stays within the 5 px tolerance of FP32 for 8 of 10 INT8 cells. The other 2 are indeterminate. Best vs worst audit fidelity: −0.84 px, CI [−2.53, +0.88].</span><span class="v"><span class="chip ok">8 / 10 ok</span></span></div>
       <div class="row"><span class="k">Verified for</span><span class="d">The 268 g cola can at the trained start mark, the fixed coaster, locked camera exposure and indoor desk light, with anti-slip pads (G6) and with rubber bands (stress v2: nominal 23/24, unseen 190 g yellow can 48/48 with every engine 12/12).</span><span class="v">scope</span></div>
-      <div class="row"><span class="k">Weak spots</span><span class="d">Grip friction: 8/24 with no pads. Start position: 0/3 in a small test with the start moved 3 cm (stopped after 3); the arm first reached toward the trained start spot, and the cause was not isolated. A new object of a different size succeeded 48/48.</span><span class="v"><span class="chip halt">observed</span></span></div>
-      <div class="row"><span class="k">AI judge</span><span class="d">First setup (final frame, one-word answer): 1 of 21 held-out failures caught. Re-evaluated with a dev/eval split: an explicit-criterion prompt caught <b>20/21</b> (95% 0.77–0.99) with 5/252 false alarms, concentrated on the unseen yellow can (4/33). It is wording-sensitive and judges the end state only, so re-validate before use. It is re-checked live in the fine-tune evaluation.</span><span class="v"><span class="chip seal">conditional</span></span></div>
-      <div class="row"><span class="k">Next</span><span class="d"> 1. To settle FP16 against FP32 on success at 10 pp, plan about 110–120 trials per arm (a planning estimate assuming equal true rates near 96–97%, not a guarantee). 2. Validate start-position changes with more trials and varied demonstrations. 3. Re-check the validated judge prompt live (it is re-checked in the fine-tune evaluation). 4. Put a calibration-input check first in the pipeline.</span><span class="v">actions</span></div>
+      <div class="row"><span class="k">Weak spots</span><span class="d">Grip friction: 8/24 with no pads. Start position: 0/3 in a small test with the start moved 3 cm, and the old policy went 3/12 at +3 cm and 2/12 at −3 cm in the blinded fine-tune evaluation. A new object of a different size succeeded 48/48.</span><span class="v"><span class="chip halt">observed</span></span></div>
+      <div class="row"><span class="k">Fine-tune</span><span class="d"><b>The position fine-tune fixed the shift</b>: 50 new demos at −4…+4 cm, 20k steps on Nebius Jobs. Blinded and interleaved, at positions not in training: <b>12/12 vs 3/12 at +3 cm</b> (+75 pp, Newcombe 95% [+38, +91]) and <b>10/12 vs 2/12 at −3 cm</b> (+67 pp [+27, +84]); improvement detected on both sides. At the training mark 10/12 vs 12/12, insufficient evidence. Operator blinding was partial: the two motions looked different.</span><span class="v"><span class="chip ok">improved</span></span></div>
+      <div class="row"><span class="k">AI judge</span><span class="d">First setup (final frame, one-word answer): 1 of 21 held-out failures caught. Re-evaluated with a dev/eval split: an explicit-criterion prompt caught <b>20/21</b> (95% 0.77–0.99) with 5/252 false alarms, concentrated on the unseen yellow can (4/33). It is wording-sensitive and judges the end state only, so re-validate before use. <b>Live and prospective check on 72 new fine-tune trials: 21/23 failures caught, 1/49 false alarms</b> (392 ms median). Other objects and scenes are still open.</span><span class="v"><span class="chip seal">conditional</span></span></div>
+      <div class="row"><span class="k">Next</span><span class="d"> 1. To settle FP16 against FP32 on success at 10 pp, plan about 110–120 trials per arm (a planning estimate assuming equal true rates near 96–97%, not a guarantee). 2. Check that the position fine-tune keeps nominal performance (10/12 vs 12/12 at the training mark is undecided), then test more positions and objects. 3. Re-validate the judge prompt on other objects and scenes. 4. Put a calibration-input check first in the pipeline.</span><span class="v">actions</span></div>
     </div>
   </section>
 
@@ -220,9 +221,9 @@ footer{border-top:1px solid var(--rule); padding-top:18px; color:var(--ink-3); f
   <section class="panel" id="report">
     <div class="plate"><h2>Deployment report</h2><span class="ref">D3 v3 · code writes verdicts and numbers, Nemotron explains in words</span></div>
 <!--REPORT:BEGIN-->
-<p class="note">Generated by <span class="num">scripts/d3_report_v3.py</span>: sections 1–4 (verdicts, numbers, status, next actions) are written by code from the verdict table (hash <span class="num">b55dda59ebf5878e</span>). Sections 5–6 are written by Nemotron 3 Super on Token Factory (14.0 s) and checked by code for digits, verdict labels, approval words and known misreadings: <b>0</b> findings. They are never a source of verdicts or numbers. Figures are drawn by code.</p>
+<p class="note">Generated by <span class="num">scripts/d3_report_v3.py</span>: sections 1–4 (verdicts, numbers, status, next actions) are written by code from the verdict table (hash <span class="num">f9797c7025fbc880</span>). Sections 5–6 are written by Nemotron 3 Super on Token Factory (12.1 s) and checked by code for digits, verdict labels, approval words and known misreadings: <b>0</b> findings. They are never a source of verdicts or numbers. Figures are drawn by code.</p>
 <div class="report"><h3>1. Recommendation (written by code)</h3>
-<p>FP16 (VC-025) is the recommended candidate to validate first (cheapest on the device). Approval is a separate status: on hold while every success comparison is INSUFFICIENT_EVIDENCE.</p>
+<p>FP16 is the recommended precision to validate first (cheapest on the device). The position fine-tune (FT-FP16, same FP16 engine cost) fixed the start-position weakness at both held-out shifts (IMPROVEMENT_DETECTED at +3 cm and -3 cm), so FT-FP16 is the candidate to validate next where start positions vary. Approval is a separate status: on hold, because every comparison against full precision is INSUFFICIENT_EVIDENCE and the fine-tune's nominal performance is undecided.</p>
 <h3>2. Verdict per candidate (written by code)</h3>
 <p>Success intervals are Newcombe intervals for candidate minus reference, in percentage points, against a 10 pp tolerance. End-to-end latency is the runner's per-chunk time on the arm; GPU time is trtexec on the device (15 W).</p>
 <ul>
@@ -241,6 +242,9 @@ footer{border-top:1px solid var(--rule); padding-top:18px; color:var(--ink-3); f
 <li><b>VC-005</b> · stress S4 unseen can · <span class="num">INSUFFICIENT_EVIDENCE</span> · success 12/12 against reference 12/12 · success interval [-40.6, +40.6] pp · placement: tolerance compatible · GPU time on device 17.1 ms (<span class="num">artifacts/reports/stress_v2_analysis.json#S4.secondary_vs_fp32.VC-005</span>)</li>
 <li><b>VC-020</b> · stress S4 unseen can · <span class="num">INSUFFICIENT_EVIDENCE</span> · success 12/12 against reference 12/12 · success interval [-40.6, +40.6] pp · placement: tolerance compatible · GPU time on device 16.8 ms (<span class="num">artifacts/reports/stress_v2_analysis.json#S4.secondary_vs_fp32.VC-020</span>)</li>
 <li><b>PC-B</b> · positive control real arm · <span class="num">INSUFFICIENT_EVIDENCE</span> · success 11/12 against reference 10/12 · success interval [-41.5, +25.8] pp · placement: tolerance compatible · end-to-end 34.5 ms (<span class="num">artifacts/reports/positive_control_analysis.json#comparison</span>)</li>
+<li><b>FT-FP16</b> · fine-tune vs old, start +3 cm (held out, primary) · <span class="num">IMPROVEMENT_DETECTED</span> · success 12/12 against VC-025 (old policy) 3/12 · success interval [+37.8, +91.1] pp · GPU time on device 11.6 ms (<span class="num">artifacts/reports/ft_analysis.json#T1.primary</span>)</li>
+<li><b>FT-FP16</b> · fine-tune vs old, start -3 cm (held out, symmetry) · <span class="num">IMPROVEMENT_DETECTED</span> · success 10/12 against VC-025 (old policy) 2/12 · success interval [+26.9, +83.6] pp · GPU time on device 11.6 ms (<span class="num">artifacts/reports/ft_analysis.json#T2.primary</span>)</li>
+<li><b>FT-FP16</b> · fine-tune vs old, training start mark (secondary) · <span class="num">INSUFFICIENT_EVIDENCE</span> · success 10/12 against VC-025 (old policy) 12/12 · success interval [-15.4, +49.0] pp · placement: indeterminate · GPU time on device 11.6 ms (<span class="num">artifacts/reports/ft_analysis.json#T0.secondary</span>)</li>
 </ul>
 <h3>3. Flagged builds (written by code)</h3>
 <ul>
@@ -248,26 +252,29 @@ footer{border-top:1px solid var(--rule); padding-top:18px; color:var(--ink-3); f
 <li><b>PC-B</b> · offline, deliberately miscalibrated · <span class="num">FLAGGED</span> by simple input check, action error (MSE), audit score (magnitude), audit score (alignment) (<span class="num">artifacts/reports/simple_checks_vs_audit.json#cells.PC-B</span>)</li>
 </ul>
 <p>The action-MSE and audit-score thresholds were set on the same 24 normal cells, so '0 normal cells flagged' holds by construction; only the input check is independent of that set.</p>
-<p>AI judge: Cosmos-Reason2 end-of-trial judge, held-out eval of 273 recorded trials (artifacts/cosmos_judge/eval_scores.jsonl): first setup 1/21 failures caught; validated prompt C1 p1 20/21 caught, 5/252 false alarms, 4 of them on the unseen yellow can (4/33). Wording-sensitive; end state only; re-checked live in the fine-tune evaluation.</p>
+<p>AI judge: Cosmos-Reason2 end-of-trial judge, held-out eval of 273 recorded trials (artifacts/cosmos_judge/eval_scores.jsonl): first setup 1/21 failures caught; validated prompt C1 p1 20/21 caught, 5/252 false alarms, 4 of them on the unseen yellow can (4/33). Wording-sensitive; end state only. Re-checked live and prospectively in the fine-tune evaluation (72 new trials): 21/23 failures caught, 1/49 false alarms (artifacts/reports/ft_cosmos_live_judge.json).</p>
 <h3>4. Next actions (written by code)</h3>
 <ul>
 <li><b>Settle success against FP32 at 10 pp: plan about 110-120 trials per arm (planning estimate, assumes equal true rates near 96-97 percent; not a guarantee)</b> — VC-002 (G6 nominal, pads), VC-020 (G6 nominal, pads), VC-010 (G6 nominal, pads), VC-011 (G6 nominal, pads), VC-012 (G6 nominal, pads), VC-015 (G6 nominal, pads), VC-005 (G6 nominal, pads), VC-007 (G6 nominal, pads), VC-022 (G6 nominal, pads), VC-024 (G6 nominal, pads), VC-002 (stress S4 unseen can), VC-005 (stress S4 unseen can), VC-020 (stress S4 unseen can)</li>
 <li><b>Settle success against FP32 at 10 pp: plan about 110-120 trials per arm (planning estimate, assumes equal true rates near 96-97 percent; not a guarantee); also validate start-position changes before deployment</b> — VC-025 (FP16 run, rubber bands)</li>
 <li><b>Do not deploy; fix the calibration input (a simple input check catches it); see the real-arm check of PC-B</b> — PC-N (offline, deliberately miscalibrated), PC-B (offline, deliberately miscalibrated)</li>
 <li><b>Offline warning not confirmed on the arm in 12 trials (unresolved, not 'tolerated'); keep rejecting this build at the calibration-input check; do not read the offline audit as a predictor of closed-loop failure</b> — PC-B (positive control real arm)</li>
+<li><b>Use the fine-tuned policy where the start position varies; confirm at more positions and objects before relying on it</b> — FT-FP16 (fine-tune vs old, start +3 cm (held out, primary)), FT-FP16 (fine-tune vs old, start -3 cm (held out, symmetry))</li>
+<li><b>Check that the fine-tune keeps nominal performance: 10/12 vs 12/12 at the training mark is undecided; plan more trials at the training mark before replacing the old policy there</b> — FT-FP16 (fine-tune vs old, training start mark (secondary))</li>
 </ul>
 <h3>5. Why the review looks like this</h3>
-<p>The half precision candidate has the lowest energy per inference and latency but draws more power while running than the eight bit integer builds.</p>
-<p>The success comparisons cannot be decided yet because the confidence intervals are wide and the number of trials so far does not show that the difference stays within the tolerance.</p>
-<p>The deliberately miscalibrated builds are rejected at the input check because a simple input check detects the calibration error independently of the other thresholds.</p>
-<p>The AI judge’s record means it cannot be trusted outright; it is wording sensitive, judges only the end state, and produces more false alarms on novel objects, so it must be re‑validated before anyone relies on it.</p>
+<p>The sixteen‑bit floating point candidate uses the least energy per inference and runs fastest, so it is the natural starting point for validation even though it draws more power while active than the eight‑bit integer builds.</p>
+<p>The position fine‑tune moved the success rate away from failure at both held‑out start shifts, showing improvement, but it has not yet demonstrated enough evidence at the training start mark to replace the old policy there.</p>
+<p>Success versus full precision remains undecided because the confidence intervals are still wide enough that the true difference could lie outside the tolerance, so more trials are needed to show the difference stays within the tolerance.</p>
+<p>The deliberately miscalibrated builds fail a simple input check that flags any deviation in the calibration signal, therefore they are rejected before any further testing.</p>
+<p>The AI judge’s record shows it catches most failures but also produces false alarms on novel objects, so its verdict must be re‑validated before it can be relied upon for decisions.</p>
 <h3>6. Questions to resolve before deployment</h3>
 <ul>
-<li>Does the half precision candidate stay within ten percentage points of full precision when tested with enough trials?</li>
-<li>Do the eight bit integer builds meet the latency and energy targets under nominal conditions?</li>
-<li>Does the simple input check reliably catch calibration drift across all expected operating ranges?</li>
-<li>Have we collected sufficient data to confirm the AI judge’s false alarm rate on unseen objects is low enough for deployment?</li>
-<li>Is the black frame build’s performance stable when subjected to stress scenarios with unseen objects?</li>
+<li>How many trials are needed to narrow the confidence interval for the sixteen‑bit candidate versus full precision to within ten percentage points?</li>
+<li>Does the position fine‑tune achieve sufficient success at the training start mark after additional trials?</li>
+<li>Can the eight‑bit integer builds meet latency and energy targets when tested under nominal pad conditions?</li>
+<li>Does the AI judge maintain low false‑alarm rates when evaluated on a broader set of objects and scenes?</li>
+<li>Are the calibration input checks robust enough to catch all miscalibrated variants before deployment?</li>
 </ul>
 <h3>Figures (drawn by code from the verdict table)</h3>
 <img class="rep-fig" src="report/figures/fig_e1_forest.png" alt="Success vs FP32 per candidate: every Newcombe interval crosses the 10 pp tolerance, so no GO yet.">
@@ -275,7 +282,9 @@ footer{border-top:1px solid var(--rule); padding-top:18px; color:var(--ink-3); f
 <img class="rep-fig" src="report/figures/fig_cost_evidence.png" alt="GPU time on the device vs real-arm success: FP16 is cheapest; success intervals overlap.">
 <p><i>GPU time on the device vs real-arm success: FP16 is cheapest; success intervals overlap.</i></p>
 <img class="rep-fig" src="report/figures/fig_frames.png" alt="The frames behind two verdicts: a success, and a failure that Cosmos&#x27;s first setup called a success.">
-<p><i>The frames behind two verdicts: a success, and a failure that Cosmos's first setup called a success.</i></p></div>
+<p><i>The frames behind two verdicts: a success, and a failure that Cosmos's first setup called a success.</i></p>
+<img class="rep-fig" src="report/figures/fig_ft_position.png" alt="Position fine-tune: fine-tuned vs old policy at -3, 0 and +3 cm, blinded, 12 vs 12 each.">
+<p><i>Position fine-tune: fine-tuned vs old policy at -3, 0 and +3 cm, blinded, 12 vs 12 each.</i></p></div>
 <!--REPORT:END-->
   </section>
 
@@ -446,6 +455,9 @@ footer{border-top:1px solid var(--rule); padding-top:18px; color:var(--ink-3); f
         <div class="ct"><strong>Rubber-band gripper</strong><span class="chip ok">success</span></div>
         <p>The same scene with rubber bands on the fingers. The can sits about 20 px off center, inside the 35 px target.
           The block finished 23/24.</p><span class="src">stress v2 S0 trial 1</span></figure>
+      <figure class="clip"><video src="clips/t1_old_vs_ft.mp4" controls muted playsinline preload="metadata"></video>
+        <div class="ct"><strong>Position fine-tune at +3 cm</strong><span class="chip ok">counted trials</span></div>
+        <p>Side view of two consecutive counted trials in the blinded T1 block. The old policy (left) leaves the can tilted on the coaster edge and keeps moving. The fine-tuned policy (right) stands it upright in about 17 s. Block result: 12/12 vs 3/12.</p><span class="src">T1 trials 2 (old) and 1 (fine-tuned) · phone side view · 1×</span></figure>
       <figure class="clip"><video src="clips/v2_shift_regrasp.mp4" controls muted playsinline preload="metadata"></video>
         <div class="ct"><strong>Start moved 3 cm</strong><span class="chip halt">failure</span></div>
         <p>The policy first closes on empty air at the trained start spot, then knocks the can over while re-grasping.</p><span class="src">stress v2 S1 trial 1</span></figure>

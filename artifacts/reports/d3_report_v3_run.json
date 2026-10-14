@@ -1,7 +1,7 @@
 {
- "verdict_hash": "b55dda59ebf5878e3493f73d75109a97ea65a621bf3fe7f6fcc62bf085a85c98",
+ "verdict_hash": "f9797c7025fbc880cb43d2eb7c32fc4cd023f7836931aff4b9111decdb08896d",
  "issues": [],
- "latency_sec": 14.0,
+ "latency_sec": 12.1,
  "selftest": {
   "good_issues": [],
   "bad_caught": {
@@ -21,9 +21,9 @@
  },
  "attempts": [
   {
-   "text": "\n\n## Why the review looks like this\nThe half precision candidate has the lowest energy per inference and latency but draws more power while running than the eight bit integer builds.  \nThe success comparisons cannot be decided yet because the confidence intervals are wide and the number of trials so far does not show that the difference stays within the tolerance.  \nThe deliberately miscalibrated builds are rejected at the input check because a simple input check detects the calibration error independently of the other thresholds.  \nThe AI judge\u2019s record means it cannot be trusted outright; it is wording sensitive, judges only the end state, and produces more false alarms on novel objects, so it must be re\u2011validated before anyone relies on it.  \n\n## Questions to resolve before deployment\n- Does the half precision candidate stay within ten percentage points of full precision when tested with enough trials?  \n- Do the eight bit integer builds meet the latency and energy targets under nominal conditions?  \n- Does the simple input check reliably catch calibration drift across all expected operating ranges?  \n- Have we collected sufficient data to confirm the AI judge\u2019s false alarm rate on unseen objects is low enough for deployment?  \n- Is the black frame build\u2019s performance stable when subjected to stress scenarios with unseen objects?",
+   "text": "\n\n## Why the review looks like this\nThe sixteen\u2011bit floating point candidate uses the least energy per inference and runs fastest, so it is the natural starting point for validation even though it draws more power while active than the eight\u2011bit integer builds.  \nThe position fine\u2011tune moved the success rate away from failure at both held\u2011out start shifts, showing improvement, but it has not yet demonstrated enough evidence at the training start mark to replace the old policy there.  \nSuccess versus full precision remains undecided because the confidence intervals are still wide enough that the true difference could lie outside the tolerance, so more trials are needed to show the difference stays within the tolerance.  \nThe deliberately miscalibrated builds fail a simple input check that flags any deviation in the calibration signal, therefore they are rejected before any further testing.  \nThe AI judge\u2019s record shows it catches most failures but also produces false alarms on novel objects, so its verdict must be re\u2011validated before it can be relied upon for decisions.  \n\n## Questions to resolve before deployment\n- How many trials are needed to narrow the confidence interval for the sixteen\u2011bit candidate versus full precision to within ten percentage points?  \n- Does the position fine\u2011tune achieve sufficient success at the training start mark after additional trials?  \n- Can the eight\u2011bit integer builds meet latency and energy targets when tested under nominal pad conditions?  \n- Does the AI judge maintain low false\u2011alarm rates when evaluated on a broader set of objects and scenes?  \n- Are the calibration input checks robust enough to catch all miscalibrated variants before deployment?",
    "issues": [],
-   "latency_sec": 14.0
+   "latency_sec": 12.1
   }
  ]
 }

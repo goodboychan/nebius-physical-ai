@@ -44,7 +44,7 @@ The results were sealed until all trials were logged, so no candidate was picked
 |---|---|---|
 | Which candidate do I validate first? | FP16 is cheapest on this Jetson (11.6 ms, 82 mJ per inference), and went 19/20 on the arm with placement within tolerance of FP32 | **FP16**: the recommended candidate to validate |
 | Which candidates do I distrust? | Black-frame and noise calibrations: flagged by a simple input check, and by action MSE and both audit scores. The last three use thresholds set on the same 24 normal cells, so "no normal cell flagged" holds by construction (`simple_checks_vs_audit.json`) | **Calibration anomalies**: flagged offline. On the arm, PC-B went 11/12 against FP32 10/12, so the warning was not confirmed (insufficient evidence). Reject such builds at the input check anyway (`positive_control_analysis.json`) |
-| Can I approve deployment? | Success against FP32 is undecided for every candidate at these sample sizes, and position changes are not validated | **Not yet**: on hold, with the missing checks listed |
+| Can I approve deployment? | Success against FP32 is undecided for every candidate at these sample sizes. The position fine-tune fixed the ±3 cm weakness (12/12 vs 3/12, 10/12 vs 2/12), but its nominal performance is undecided (10/12 vs 12/12) | **Not yet**: on hold, with the missing checks listed |
 
 The recommendation (what to test first) and the approval (whether to ship) are shown separately. A candidate can be
 recommended while its approval is on hold.
@@ -58,6 +58,7 @@ Scope throughout: one pick-and-place task, one ACT policy, a Jetson Orin Nano Su
 | On this device FP16 has the lowest latency and energy per inference | trtexec: FP16 11.6 ms and 82 mJ; INT8 16.8–17.1 ms and 101 mJ; FP32 53.4 ms and 403 mJ (`power_bench/SUMMARY.md`) | Don't pick an engine by its precision label. Measure on the target. FP16 is the cost-favored candidate. On the arm: FP16 19/20, FP32 10/10, INT8 10/10; placement within tolerance of FP32; success undecided at this sample size; end to end 24.7 ms against 34.3 and 79.0 ms (`fp16_analysis.json`). Field reports point the same way: Nemotron, reading Tavily results, tied an NVIDIA forum report of ModelOpt INT8 running slower than FP16 on Orin NX to this measurement, with a code-checked verbatim quote. It also labelled the 2.7× Orin Nano INT8 regression thread correctly, but the validator rejected that answer for rounding the thread's numbers (`errata_grounded.md`) |
 | Audit-picked INT8 cells did not beat random ones | 73/75 against 73/75, 95% CI [−6.8, +6.8] pp; offline rank against placement, Spearman 0.02–0.08 (`g6_analysis.json`) | In this setting, the offline ranking is not evidence that one calibration is better |
 | Against FP32 the evidence is insufficient for every INT8 cell | 194/200 against 24/25. At a 10 pp tolerance the Newcombe intervals span about ±23–53 pp, so all 10 cells are "insufficient evidence" (`g6_q2_sensitivity.json`) | "No failures seen" is not "safe". Showing a cell is within 10 pp would take about 110–120 trials per arm (a planning estimate that assumes both true success rates are equal at about 96–97%; it is not a guarantee) |
+| The position weakness was fixed and re-tested | 50 shifted demos and a 20k-step fine-tune on Nebius Jobs. Blinded, interleaved, at positions not in training: 12/12 vs 3/12 at +3 cm (+75 pp [+38, +91]) and 10/12 vs 2/12 at −3 cm (+67 pp [+27, +84]), improvement detected on both sides. At the training mark 10/12 vs 12/12, insufficient evidence (`ft_analysis.json`) | A weakness found by the review was fixed with data, not by changing precision, and the fix was checked under a rule fixed in advance. Before replacing the old policy at the trained spot, settle nominal performance |
 | Deployment conditions moved success far more | No anti-slip pads 8/24; rubber bands 23/24; start moved 3 cm 0/3 in a small, early-stopped test (observational, cause not isolated); unseen yellow can 48/48, every engine 12/12 (`stress_v2_analysis.json`) | Validate the grip, positions and objects you will actually face |
 | The AI judge needed validation, and validation fixed its setup | First setup: 1/21 held-out failures caught. After a dev/eval re-evaluation (409 recorded trials), an explicit-criterion prompt caught 20/21 [0.77, 0.99] with 5/252 false alarms, 4 of them on the unseen yellow can (4/33) (`cosmos_judge_eval_preregistration.md`) | Treat an AI judge as a component under test: validate the exact prompt on labelled held-out trials, and watch per-object error rates |
 
@@ -103,11 +104,12 @@ The dashboard opens with this card (`dashboard/audit_gate.html`, "Deployment rev
 - **Real-arm status**: FP16 19/20, placement within tolerance of FP32, success insufficient evidence. INT8: all 10 cells insufficient evidence against FP32.
 - **Verified for**: the cola can at the trained start mark, a fixed coaster, locked camera exposure and the gripper
   configuration in use.
-- **Weak spots**: grip friction and changes in start position.
-- **AI judge reliability**: not reliable in the first setup (1/21). The validated prompt caught 20/21 offline; the live
-  re-check is pending.
-- **Next actions**: plan about 110–120 trials per arm (a planning estimate that assumes both true success rates are equal at about 96–97%; it is not a guarantee) to settle FP16 (or any cell) against FP32, add varied start
-  positions, re-check the validated judge prompt live, and check grip friction on the deployed gripper.
+- **Weak spots**: grip friction. Start position was the second weak spot; the position fine-tune fixed it at ±3 cm, and its nominal performance is still to settle.
+- **AI judge reliability**: not reliable in the first setup (1/21). The validated prompt caught 20/21 offline, and then
+  21/23 with 1/49 false alarms live on 72 new trials. Other objects and scenes are still open.
+- **Next actions**: plan about 110–120 trials per arm (a planning estimate that assumes both true success rates are equal at about 96–97%; it is not a guarantee) to settle FP16 (or any cell) against FP32, settle the
+  fine-tuned policy at the training mark, test more positions and objects, and check grip friction on the deployed
+  gripper.
 
 It is a review aid, not an automatic approval. The trial videos sit next to the numbers, so the reader can see each
 failure.
@@ -193,8 +195,11 @@ suggested fix.
 - Settle FP16 against FP32 on success: about 110–120 trials per arm (a planning estimate that assumes both true success rates are equal at about 96–97%; it is not a guarantee).
 - Shorter replanning intervals (10 / 30 / about 90 steps) crossed with start-position shifts, to separate trajectory
   memorization from slow reaction.
-- Re-check the validated Cosmos judge prompt live, on new trials. The offline re-evaluation is done: 1/21 → 20/21
-  failures caught on held-out videos.
+- Re-validate the Cosmos judge prompt on other objects and scenes. The offline re-evaluation (1/21 → 20/21) and the live
+  re-check on 72 fine-tune trials (21/23, 1/49 false alarms) are done.
+- Settle the fine-tuned policy at the training mark (10/12 vs 12/12, undecided). Then test more positions and objects.
+- A pre-registered check of the post hoc observation that the INT8 build's gripper chatters about twice as much as
+  FP16 at a similar success rate.
 - A sealed real-arm block on the Hailo-8 target (FP32 vs Hailo, 12 vs 12), pre-registered separately.
 - Structured verdicts (done; report v3 moves every number into code): next, link each verdict to its trials and videos on the dashboard.
 - **On-policy audit and distillation.** Build the audit buffer from the states the deployed engine actually visits:

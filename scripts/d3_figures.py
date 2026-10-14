@@ -4,6 +4,7 @@ always match the verdicts. The model never draws or edits them.
   fig_cost_evidence.png on-device GPU time (trtexec) vs real-arm success with a Wilson 95% CI, coloured by verdict
   fig_frames.png       the final overhead frames behind two verdict examples (one success, one failure), with the
                        criterion outcome and Cosmos's answer
+  fig_ft_position.png  position fine-tune: success of FT vs OLD at -3, 0 and +3 cm with Wilson 95% intervals (§14)
 Usage: python scripts/d3_figures.py <verdicts.json> <out dir>"""
 import json, math, os, sys
 import matplotlib; matplotlib.use("Agg")
@@ -15,7 +16,7 @@ def wilson(k, n, z=1.96):
     p = k / n; d = 1 + z * z / n; c = p + z * z / (2 * n); h = z * math.sqrt(p * (1 - p) / n + z * z / (4 * n * n)); return (c - h) / d, (c + h) / d
 
 def forest(T, out):
-    rows = [r for r in T["rows"] if r.get("e1_ci_pp")]
+    rows = [r for r in T["rows"] if r.get("e1_ci_pp") and r["candidate"] != "FT-FP16"]   # FT rows are FT-vs-OLD improvements: own figure
     fig, ax = plt.subplots(figsize=(8, 0.34 * len(rows) + 1.3), dpi=150)
     for i, r in enumerate(rows):
         lo, hi = r["e1_ci_pp"]; y = len(rows) - 1 - i; c = COL[r["verdict"]]
@@ -63,9 +64,33 @@ def frames(out, clips="dashboard/clips"):
         ax.imshow(last(os.path.join(clips, f))); ax.set_title(t, fontsize=8); ax.axis("off")
     fig.tight_layout(); fig.savefig(f"{out}/fig_frames.png"); plt.close(fig)
 
+def ft_position(T, out):
+    by = {}
+    for r in T["rows"]:
+        if r["candidate"] != "FT-FP16": continue
+        pos = "+3 cm" if "+3" in r["context"] else ("-3 cm" if "-3" in r["context"] else "0 cm (training mark)")
+        by[pos] = r
+    if not by: return False
+    order = [k for k in ("-3 cm", "0 cm (training mark)", "+3 cm") if k in by]
+    fig, ax = plt.subplots(figsize=(7.2, 3.4), dpi=150)
+    for i, k in enumerate(order):
+        r = by[k]
+        for j, (lab, (kk, nn), col) in enumerate((("old policy", r["reference"], "#8A9492"), ("fine-tuned", r["success"], "#00909B"))):
+            x = i + (j - 0.5) * 0.34; p = kk / nn; lo, hi = wilson(kk, nn)
+            ax.bar(x, p, width=0.32, color=col, label=lab if i == 0 else None)
+            ax.errorbar(x, p, yerr=[[max(p - lo, 0)], [max(hi - p, 0)]], color="#14181C", capsize=3, lw=1)
+            ax.text(x, hi + 0.03, f"{kk}/{nn}", ha="center", fontsize=8)
+        ax.text(i, -0.2, r["verdict"].replace("_", " ").lower(), ha="center", fontsize=7.5, color="#3C464E")
+    ax.set_xticks(range(len(order))); ax.set_xticklabels([f"start {k}" for k in order], fontsize=8.5)
+    ax.set_ylim(-0.25, 1.18); ax.set_yticks([0, 0.5, 1]); ax.set_yticklabels(["0%", "50%", "100%"], fontsize=8)
+    ax.set_ylabel("real-arm success", fontsize=8.5); ax.legend(fontsize=8, frameon=False, loc="upper center", ncol=2)
+    ax.set_title("Position fine-tune, blinded and interleaved, 12 vs 12 per position (Wilson 95%)", fontsize=9)
+    for sp in ("top", "right"): ax.spines[sp].set_visible(False)
+    fig.tight_layout(); fig.savefig(f"{out}/fig_ft_position.png"); plt.close(fig); return True
+
 def make_all(T, out):
     os.makedirs(out, exist_ok=True); forest(T, out); cost_evidence(T, out); frames(out)
-    return ["fig_e1_forest.png", "fig_cost_evidence.png", "fig_frames.png"]
+    return ["fig_e1_forest.png", "fig_cost_evidence.png", "fig_frames.png"] + (["fig_ft_position.png"] if ft_position(T, out) else [])
 
 if __name__ == "__main__":
     print(make_all(json.load(open(sys.argv[1])), sys.argv[2]))

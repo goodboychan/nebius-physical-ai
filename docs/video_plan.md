@@ -10,11 +10,13 @@
 
 ## 장면 구성
 
-> v3 timing (2026-10-14), from the synthesized narration: 1 0:00–0:11 · 2 0:11–1:11 · 3 1:11–1:31 · 4 1:31–2:03 ·
-> 5 2:03–2:29 · 6 2:29–2:53 · 7 2:53–2:58.
+> v3.1 timing (2026-10-15), from the synthesized narration: 1 0:00–0:11 · 2 0:11–1:07 · 3 1:07–1:26 · 4 1:26–2:06 ·
+> 5 2:06–2:31 · 6 2:31–2:53 · 7 2:53–2:57.
+> - Scene 4 clips: `video/edit/t1_old_vs_ft_counted.mp4` (counted T1 trials 2 and 1), then the dashboard
+>   `fig_ft_position.png`. Scene 2: `video/edit/demo_ft.mp4`, the 60 s continuous take, cut to 56 s.
 > - Scene 4 now ends on the position fine-tune: the 50 shifted demos, then the blinded +3 cm test. The picture is the
 >   dashboard position strip, then the post-block demonstration clip (labelled "demonstration, not counted"), then
->   the T1 result.
+>   the T1 result (now: the counted T1 pair clip replaces the demonstration clip, since both demos succeeded).
 > - Scene 6 adds the deployment preflight card (BLOCK / HOLD).
 > - Narration text: `docs/narration/tts_input.json`; audio: `docs/narration/narration_v3_am_michael.m4a`;
 >   subtitles: `docs/narration/narration_v3.srt`.

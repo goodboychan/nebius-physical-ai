@@ -43,7 +43,7 @@ Numbers come from committed artifacts. The figure's script lists its sources.
 3. **Deployment margins mattered more than precision** (observational).
    - Without the gripper pads: 8/24. With rubber bands: 23/24.
    - In a small test with the start spot moved 3 cm: 0/3 (stopped after 3 trials). The arm first reached toward the trained
-     start spot. Position changes need more validation; the cause was not isolated.
+     start spot. Item 5 follows this up.
    - An unseen yellow can: 48/48, all four engines 12/12. Placement was within the 5 px tolerance of FP32 for every
      INT8 cell ([`stress_v2_analysis.json`](artifacts/reports/stress_v2_analysis.json)).
    - Source: [`stress_operator_notes.md`](docs/sessions/stress_operator_notes.md).
@@ -51,8 +51,32 @@ Numbers come from committed artifacts. The figure's script lists its sources.
    - In its first setup (final frame, one-word answer) Cosmos-Reason2 caught 1 of 21 failures on a held-out set.
    - After a dev/eval-split re-evaluation, a final-frame prompt with an explicit success criterion and an `Answer:` format caught **20/21** failures (Wilson 95% 0.77–0.99) with **5/252** false alarms on the same held-out set.
    - The false alarms concentrate on the unseen yellow can (4/33, 12%).
-   - The setup is very sensitive to wording, the change combined prompt, format and token budget, and it judges only the end state (median 893 ms). It is being re-checked live, unchanged, in the fine-tune evaluation.
+   - The setup is very sensitive to wording, the change combined prompt, format and token budget, and it judges only the end state (median 893 ms).
+   - **Live, prospective re-check**: the same prompt, unchanged, ran on 72 new fine-tune trials. It caught **21/23**
+     failures (0.73–0.98) with **1/49** false alarms ([`ft_cosmos_live_judge.json`](artifacts/reports/ft_cosmos_live_judge.json)).
+     Other objects and scenes are still open.
    - Source: [`cosmos_judge_eval_preregistration.md`](docs/cosmos_judge_eval_preregistration.md), [`eval_scores.jsonl`](artifacts/cosmos_judge/eval_scores.jsonl).
+
+5. **The position weakness was found, fixed and re-tested under a pre-registered rule.**
+   - Data and training: 50 new teleoperated demos at −4, −2, 0, +2 and +4 cm. A 20k-step fine-tune from the same
+     checkpoint on Nebius Jobs (L40S, 1,489 s). The FP16 engine cost is unchanged.
+   - Evaluation: blinded and interleaved, 12 vs 12 per position, against the old policy, at positions not in
+     training.
+
+     | Start position | Fine-tuned | Old | FT − old, Newcombe 95% | Pre-registered reading |
+     |---|---|---|---|---|
+     | **+3 cm** (primary) | **12/12** | 3/12 | +75 pp [+38, +91] | improvement detected |
+     | **−3 cm** (symmetry, added during the session and registered before any unsealing) | **10/12** | 2/12 | +67 pp [+27, +84] | improvement detected |
+     | 0 cm (training mark) | 10/12 | 12/12 | — | insufficient evidence |
+
+   - Reading: position improved on both sides of the trained start. Whether nominal performance is maintained is
+     undetermined.
+   - Off the training position, the old policy's commanded gripper also chatters about 4× more (exploratory,
+     pre-specified metric).
+   - Caveat: the operator could see that the two policies moved differently, so operator blinding was partial.
+     Outcomes come from the automatic judge and the video re-judge, which agree block by block.
+   - Sources: [`finetune_position_preregistration.md`](docs/finetune_position_preregistration.md) §14,
+     [`ft_analysis.json`](artifacts/reports/ft_analysis.json).
 
 Stress tests were unsealed on 2026-10-13. The stress protocol is
 [`docs/stress_test_protocol.md`](docs/stress_test_protocol.md).
@@ -276,7 +300,11 @@ Error is the mean action error against FP32 on the 2,000 audit states, in normal
   recover a broken build such as PC-B. It closes the student-teacher gap only; weaknesses the teacher shares, such as
   the start-position shift, need new demonstrations.
 - A sealed real-arm block on the Hailo-8 target (FP32 vs Hailo, 12 vs 12), pre-registered separately.
-- The position fine-tune, pre-registered in [`docs/finetune_position_preregistration.md`](docs/finetune_position_preregistration.md).
+- After the position fine-tune (done, item 5):
+  - settle its nominal performance at the training mark (10/12 vs 12/12, undecided);
+  - test more positions and objects;
+  - check the post hoc observation that INT8 roughly doubles gripper chatter at a similar success rate, as its own
+    pre-registered block.
 
 ## Limitations
 

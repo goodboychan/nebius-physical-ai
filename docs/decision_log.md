@@ -1006,3 +1006,32 @@ ACT는 상태마다 100스텝을 내고 실기에서 100스텝을 모두 실행�
 - Uploaded file hashes were verified against the local copies: 35/35 and 15/15.
 - Both repositories are **private**. Make them public together with the code repository on 10/26. A Google Drive
   mirror stays optional.
+
+---
+
+## 2026-10-14/15 — Position fine-tune evaluated (T1, T0, T2) and reported everywhere
+
+- **Pre-registered result** (finetune_position_preregistration.md §14):
+  - At +3 cm: 12/12 vs 3/12, +75 pp [+38, +91].
+  - At −3 cm: 10/12 vs 2/12, +67 pp [+27, +84].
+  - Improvement detected on both sides.
+  - At the training mark: 10/12 vs 12/12, INSUFFICIENT_EVIDENCE.
+- **Live Cosmos C1 judge** (prospective): 21/23 failures caught, 1/49 false alarms.
+- **Gripper chatter** (exploratory, §13): about 4× higher for the old policy off the training position. Post hoc,
+  INT8 VC-002 shows about 2× the chatter of FP16 at a similar success rate. This is a hypothesis for a
+  pre-registered check.
+- **Order**:
+  - T2 (−3 cm) was registered during T1 (amendment 4), before any unsealing.
+  - T1/T0 were hashed, then T2 was run and hashed.
+  - The re-judge was run blind to cells, and only then was the data unsealed.
+  - The runner was deployed only between blocks.
+- **Limitation**: the operator could tell the two motions apart, so operator blinding was partial. Outcomes come from
+  the automatic judge and the video re-judge.
+- **Synced**:
+  - verdict table (+3 FT rows) and D3 v3 report (0 findings, with the new figure `fig_ft_position.png`);
+  - dashboard v18 (review, banner, footage clip of counted T1 trials 2 and 1);
+  - README (result item 5, judge live re-check, next steps);
+  - submission draft;
+  - narration v3.1 (scene 4 result sentence, track 2:57).
+- **Demonstration takes after unsealing** (not counted): both the OLD and FT demos succeeded. The video uses the
+  counted T1 pair instead.

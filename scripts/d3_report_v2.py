@@ -17,7 +17,7 @@ sys.path.insert(0, "src")
 from edgeqgate.hashing import hash_obj
 
 R = "artifacts/reports"
-VERDICTS = ("GO", "NO-GO", "INSUFFICIENT_EVIDENCE", "FLAGGED")
+VERDICTS = ("GO", "NO-GO", "INSUFFICIENT_EVIDENCE", "FLAGGED", "IMPROVEMENT_DETECTED", "NOT_DETECTED")
 
 
 def _ld(p):
@@ -58,11 +58,28 @@ def verdict_table():
                      "e1_ci_pp": [round(x, 1) for x in p["E1"]["ci_pp"]], "e2": p["E2"]["decision"], "verdict": p["verdict"],
                      "e2e_ms": P["e2e_ms"].get("PC-B"), "offline_verdict": "NO-GO",
                      "evidence_path": f"{R}/positive_control_analysis.json#comparison"})
-    cost = {"VC-025": 11.6, "VC-002": 16.8, "VC-020": 16.8, "VC-005": 17.1, "VC-000": 53.4}
+    FT = _ld(f"{R}/ft_analysis.json")   # position fine-tune (finetune_position_preregistration.md §14)
+    if FT:
+        for blk, ctx in (("T1", "fine-tune vs old, start +3 cm (held out, primary)"), ("T2", "fine-tune vs old, start -3 cm (held out, symmetry)")):
+            p = FT[blk]["primary"]
+            rows.append({"candidate": "FT-FP16", "context": ctx, "success": p["ft"], "reference": p["old"], "reference_name": "VC-025 (old policy)",
+                         "e1_ci_pp": [round(x, 1) for x in p["newcombe95_pp"]], "comparison": "improvement (lower bound > 0)",
+                         "verdict": "IMPROVEMENT_DETECTED" if p["improvement_detected"] else "NOT_DETECTED", "e2e_ms": None,
+                         "evidence_path": f"{R}/ft_analysis.json#{blk}.primary"})
+        q = FT["T0"]["secondary"]
+        rows.append({"candidate": "FT-FP16", "context": "fine-tune vs old, training start mark (secondary)", "success": q["test_k_n"], "reference": q["ref_k_n"],
+                     "reference_name": "VC-025 (old policy)", "e1_ci_pp": [round(x, 1) for x in q["E1"]["ci_pp"]], "e2": q["E2"]["decision"],
+                     "verdict": q["verdict"], "evidence_path": f"{R}/ft_analysis.json#T0.secondary"})
+    cost = {"VC-025": 11.6, "VC-002": 16.8, "VC-020": 16.8, "VC-005": 17.1, "VC-000": 53.4, "FT-FP16": 11.6}
     for r in rows:   # next actions are decided by code, not by the model
         if r["candidate"] == "PC-B" and r["context"] == "positive control real arm":
             r["next_action"] = ("Offline warning not confirmed on the arm in 12 trials (unresolved, not 'tolerated'); keep rejecting this build at the "
                                 "calibration-input check; do not read the offline audit as a predictor of closed-loop failure")
+        elif r["verdict"] == "IMPROVEMENT_DETECTED":
+            r["next_action"] = "Use the fine-tuned policy where the start position varies; confirm at more positions and objects before relying on it"
+        elif r["candidate"] == "FT-FP16" and r["verdict"] == "INSUFFICIENT_EVIDENCE":
+            r["next_action"] = ("Check that the fine-tune keeps nominal performance: 10/12 vs 12/12 at the training mark is undecided; plan more trials at the "
+                                "training mark before replacing the old policy there")
         elif r["verdict"] == "INSUFFICIENT_EVIDENCE":
             r["next_action"] = ("Settle success against FP32 at 10 pp: plan about 110-120 trials per arm (planning estimate, assumes equal true rates near 96-97 percent; not a guarantee)"
                                 + ("; also validate start-position changes before deployment" if r["candidate"] == "VC-025" else ""))
@@ -75,12 +92,16 @@ def verdict_table():
     for r in rows:
         if r["candidate"] in cost: r["gpu_ms_trtexec"] = cost[r["candidate"]]
     return {"rows": rows, "notes": {
-        "recommendation_vs_approval": "FP16 (VC-025) is the recommended candidate to validate first (cheapest on the device). Approval is a separate status: on hold while every success comparison is INSUFFICIENT_EVIDENCE.",
+        "recommendation_vs_approval": ("FP16 is the recommended precision to validate first (cheapest on the device). The position fine-tune (FT-FP16, same FP16 engine "
+                                       "cost) fixed the start-position weakness at both held-out shifts (IMPROVEMENT_DETECTED at +3 cm and -3 cm), so FT-FP16 is the "
+                                       "candidate to validate next where start positions vary. Approval is a separate status: on hold, because every comparison "
+                                       "against full precision is INSUFFICIENT_EVIDENCE and the fine-tune's nominal performance is undecided."),
         "gpu_ms_source": f"{R}/power_bench/SUMMARY.md (trtexec, 15 W)",
         "simple_checks_scope": "The action-MSE and audit-score thresholds were set on the same 24 normal cells, so '0 normal cells flagged' holds by construction; only the input check is independent of that set.",
         "ai_judge": ("Cosmos-Reason2 end-of-trial judge, held-out eval of 273 recorded trials (artifacts/cosmos_judge/eval_scores.jsonl): "
                      "first setup 1/21 failures caught; validated prompt C1 p1 20/21 caught, 5/252 false alarms, 4 of them on the unseen yellow can (4/33). "
-                     "Wording-sensitive; end state only; re-checked live in the fine-tune evaluation.")}}
+                     "Wording-sensitive; end state only. Re-checked live and prospectively in the fine-tune evaluation (72 new trials): 21/23 failures caught, "
+                     "1/49 false alarms (artifacts/reports/ft_cosmos_live_judge.json).")}}
 
 
 SYSTEM = """You explain a robotics deployment review. The verdicts and numbers are already decided by code.

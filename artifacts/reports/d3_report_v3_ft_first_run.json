@@ -1,0 +1,29 @@
+{
+ "verdict_hash": "f9797c7025fbc880cb43d2eb7c32fc4cd023f7836931aff4b9111decdb08896d",
+ "issues": [],
+ "latency_sec": 24.7,
+ "selftest": {
+  "good_issues": [],
+  "bad_caught": {
+   "VC-025 is GO and VC-002 is GO.": true,
+   "VC-025 succeeded 10/10.": true,
+   "VC-025 took 11.6 ms end-to-end.": true,
+   "The FP16 candidate is approved.": true,
+   "The INT8 builds are safe to ship.": true,
+   "It passes the gate.": true,
+   "The FP16 candidate is GO.": true,
+   "FP16 went 19 of 20.": true,
+   "The AI judge can be trusted.": true,
+   "FP16 uses the least power.": true,
+   "Is it clearly better than the reference?": true,
+   "The upper bound stays within ten points.": true
+  }
+ },
+ "attempts": [
+  {
+   "text": "\n\n## Why the review looks like this\nThe half\u2011precision candidate uses the least energy per inference and runs fastest, so it is the cheapest option to test first on the device.\nThe position fine\u2011tune moved the success rate away from zero shift at both plus and minus three centimeters, showing a clear benefit when the start position varies.\nIt has not yet demonstrated stable performance at the original training mark, where the outcome remains undecided after the current trials.\nSuccess rates compared with full precision are still too uncertain because the confidence intervals overlap the tolerance limits, so more data are needed to decide.\nThe deliberately miscalibrated builds fail the simple input check, which catches bad calibration before any further testing, so they are ruled out immediately.\nThe AI judge\u2019s record shows it catches most failures but also raises false alarms on new objects, meaning its verdict cannot be trusted until it is re\u2011validated on fresh data.\n\n## Questions to resolve before deployment\n- How many additional trials per arm are required to narrow the confidence interval for the success difference between the half\u2011precision build and full precision to stay inside the ten\u2011percentage\u2011point tolerance?\n- After more trials at the original training mark, does the position fine\u2011tune reach the same success level as the reference policy?\n- Can the input check be adjusted to detect any remaining calibration error in the deliberately miscalibrated builds before any further testing?\n- Does re\u2011validating the AI judge on a larger, diverse set of objects reduce its false\u2011alarm rate to a level that allows reliance on its verdict?\n- What is the measured power consumption of the half\u2011precision build during continuous operation, and does it remain within the thermal envelope of the device?",
+   "issues": [],
+   "latency_sec": 24.7
+  }
+ ]
+}
