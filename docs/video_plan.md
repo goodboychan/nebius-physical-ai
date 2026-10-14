@@ -10,6 +10,11 @@
 
 ## 장면 구성
 
+> **v3.2 (2026-10-15)**: scene 0 (logo and its meaning, 0:00–0:12) added; scene 2 cut to 43 s in three takes; still images
+> without zoom. Built by `scripts/make_video.py` (→ `video/final/`), editable deck by `scripts/make_deck.py`
+> (→ `video/deck/quantgate_video_deck.pptx`, one slide per segment, auto-advance = segment length, narration in the notes).
+> Scene starts: `docs/narration/narration_v3_timing.json`.
+>
 > v3.1 timing (2026-10-15), from the synthesized narration: 1 0:00–0:11 · 2 0:11–1:07 · 3 1:07–1:26 · 4 1:26–2:06 ·
 > 5 2:06–2:31 · 6 2:31–2:53 · 7 2:53–2:57.
 > - Scene 4 clips: `video/edit/t1_old_vs_ft_counted.mp4` (counted T1 trials 2 and 1), then the dashboard

@@ -1,8 +1,9 @@
 {
- "note": "TTS input for docs/video_narration.md. Numbers are spelled out. [word](/phonemes/) fixes words missing from the Kokoro (misaki) dictionary: Jetson, Orin, Nebius, Nemotron, int. Scene 5b is held until the positive-control result. v2 (2026-10-13): scenes 4 and 6 restructured around the developer's three decisions; position wording softened. v3 (2026-10-14): scene 4 adds the position fine-tune (outcome sentence added after unsealing), scene 5 states that code writes every verdict and number (report v3), scene 6 adds the deployment preflight. v3.1 (2026-10-15): scene 4 adds the fine-tune result (T1 12/12 vs 3/12, T2 10/12 vs 2/12, T0 undecided).",
+ "note": "TTS input for docs/video_narration.md. Numbers are spelled out. [word](/phonemes/) fixes words missing from the Kokoro (misaki) dictionary: Jetson, Orin, Nebius, Nemotron, int. Scene 5b is held until the positive-control result. v2 (2026-10-13): scenes 4 and 6 restructured around the developer's three decisions; position wording softened. v3 (2026-10-14): scene 4 adds the position fine-tune (outcome sentence added after unsealing), scene 5 states that code writes every verdict and number (report v3), scene 6 adds the deployment preflight. v3.1 (2026-10-15): scene 4 adds the fine-tune result (T1 12/12 vs 3/12, T2 10/12 vs 2/12, T0 undecided). v3.2 (2026-10-15): scene 0 introduces the logo and its meaning; scene 2's slot is 43 s (the picture is split into three takes).",
  "targets_s": {
+  "0": 10,
   "1": 10,
-  "2": 56,
+  "2": 43,
   "3": 18.5,
   "4": 40,
   "5": 25.2,
@@ -10,6 +11,7 @@
   "7": 4
  },
  "scenes": {
+  "0": "Quant Gate. The Q stands for quantization. The gap at its corner is the gate, and the small square passing through is a candidate that has earned its next test, not an approval.",
   "1": "Same robot. Same task. One run succeeds, one fails. Before I ship this policy to a tiny [Jetson](/dʒˈɛtsən/), how do I know which model I can trust?",
   "2": "This is an S O one oh one arm running an A C T policy on a [Jetson](/dʒˈɛtsən/) [Orin](/ˈɔɹɪn/) Nano Super. We taught it with one hundred and twenty teleoperated demonstrations, and trained it on [Nebius](/nˈɛbiəs/). From that one policy, we built twenty-six candidate engines with TensorRT: full precision, half precision, and twenty-four [int](/ˈɪnt/) eight builds that differ only in how they were calibrated. QuantGate scores every candidate offline first, then checks the arm. Every real trial is blinded. The operator never knows which engine is running, and the results stay sealed until all the trials are logged. That way, no candidate gets picked after we have seen how it did.",
   "3": "QuantGate puts three things side by side for every candidate: what it costs on the real device, how it scored offline, and what it did on the real arm. Training and the offline audit ran on [Nebius](/nˈɛbiəs/) Jobs. The engines run as TensorRT on the [Jetson](/dʒˈɛtsən/).",
