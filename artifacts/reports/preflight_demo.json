@@ -1,0 +1,132 @@
+{
+ "deadline_ms": 200.0,
+ "runner_constants": {
+  "PREF": 10,
+  "BLEND": 4,
+  "FPS": 30
+ },
+ "cases": [
+  {
+   "case": "nominal",
+   "note": "FP16 (VC-025) as measured",
+   "outcome": "HOLD",
+   "steps": [
+    {
+     "check": "engine integrity",
+     "pass": true,
+     "detail": "hash matches the recorded build"
+    },
+    {
+     "check": "normalization",
+     "pass": true,
+     "detail": "manifest and hash match"
+    },
+    {
+     "check": "timing contract",
+     "pass": true,
+     "detail": "max round trip over 20 FP16 trials 74.5 ms vs chunk deadline 200 ms"
+    },
+    {
+     "check": "evidence",
+     "pass": true,
+     "detail": "INSUFFICIENT_EVIDENCE: Settle success against FP32 at 10 pp: plan about 110-120 trials per arm (planning estimate, assumes equal true rates near 96-97 percent; not a guarantee); also validate start-position changes before deployment"
+    }
+   ]
+  },
+  {
+   "case": "fault: normalization file swapped",
+   "note": "FAULT INJECTION",
+   "outcome": "BLOCK",
+   "steps": [
+    {
+     "check": "engine integrity",
+     "pass": true,
+     "detail": "hash matches the recorded build"
+    },
+    {
+     "check": "normalization",
+     "pass": false,
+     "detail": "runner refuses: manifest missing or normalization file mismatched"
+    }
+   ]
+  },
+  {
+   "case": "fault: manifest missing",
+   "note": "FAULT INJECTION",
+   "outcome": "BLOCK",
+   "steps": [
+    {
+     "check": "engine integrity",
+     "pass": true,
+     "detail": "hash matches the recorded build"
+    },
+    {
+     "check": "normalization",
+     "pass": false,
+     "detail": "runner refuses: manifest missing or normalization file mismatched"
+    }
+   ]
+  },
+  {
+   "case": "fault: engine replaced after the audit",
+   "note": "FAULT INJECTION",
+   "outcome": "BLOCK",
+   "steps": [
+    {
+     "check": "engine integrity",
+     "pass": false,
+     "detail": "engine file differs from the recorded build"
+    }
+   ]
+  },
+  {
+   "case": "timing: Hailo-8 split pipeline",
+   "note": "measured offline (hailo_probe_v1.json, p95 264 ms)",
+   "outcome": "BLOCK",
+   "steps": [
+    {
+     "check": "engine integrity",
+     "pass": true,
+     "detail": "hash matches the recorded build"
+    },
+    {
+     "check": "normalization",
+     "pass": true,
+     "detail": "manifest and hash match"
+    },
+    {
+     "check": "timing contract",
+     "pass": false,
+     "detail": "p95 on the Pi 5 264 ms vs chunk deadline 200 ms"
+    }
+   ]
+  },
+  {
+   "case": "evidence: black-frame calibration",
+   "note": "PC-B, flagged offline",
+   "outcome": "BLOCK",
+   "steps": [
+    {
+     "check": "engine integrity",
+     "pass": true,
+     "detail": "hash matches the recorded build"
+    },
+    {
+     "check": "normalization",
+     "pass": true,
+     "detail": "manifest and hash match"
+    },
+    {
+     "check": "timing contract",
+     "pass": true,
+     "detail": "max round trip over 20 FP16 trials 74.5 ms vs chunk deadline 200 ms"
+    },
+    {
+     "check": "evidence",
+     "pass": false,
+     "detail": "FLAGGED: Do not deploy; fix the calibration input (a simple input check catches it); see the real-arm check of PC-B"
+    }
+   ]
+  }
+ ]
+}

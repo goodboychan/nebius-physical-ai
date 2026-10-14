@@ -64,6 +64,37 @@ Scope throughout: one pick-and-place task, one ACT policy, a Jetson Orin Nano Su
 These results are about this task, this device and this experimental range. They do not show that INT8 is harmless
 in general, or that calibration never matters.
 
+## What QuantGate adds over simpler rules (post-hoc, from this study's records)
+
+| If you choose by… | You would pick | What that misses |
+|---|---|---|
+| Latency only | FP16 (11.6 ms, 82 mJ) | Success is undecided against FP32 (19/20 vs 10/10), and the start-position weakness (0/3 at +3 cm) is invisible |
+| Offline audit score | The top-ranked INT8 cells | No measurable gain over random selection (73/75 vs 73/75; Spearman 0.02–0.08 against placement) |
+| "No failures seen" | Any cell at 24/25 or 25/25 | About ±28 pp of uncertainty at 25 trials, against a 10 pp tolerance. Settling it takes about 110–120 trials per arm |
+| **QuantGate review** | FP16 to validate first, approval on hold | The trials still needed, the weak conditions, the builds to block at the input check, the runtime timing contract, and how far to rely on the AI judge |
+
+QuantGate does not pick a better candidate than latency does. Its value is in stating what the evidence supports so
+far, and what it does not support yet.
+
+**Deployment preflight** (`scripts/deploy_preflight.py`). Every candidate card runs four checks in order:
+1. the engine hash against the recorded build;
+2. the runner's own normalization guard;
+3. the runner's 200 ms chunk deadline;
+4. the code-decided verdict.
+
+A fault-injection demo runs the nominal FP16 card and five broken cases:
+
+| Case | Outcome |
+|---|---|
+| Nominal FP16 card | **HOLD**: run the listed trials |
+| Swapped normalization file | **BLOCK** |
+| Missing manifest | **BLOCK** |
+| Replaced engine | **BLOCK** |
+| Hailo-8 split pipeline (p95 264 ms) | **BLOCK** |
+| Black-frame calibration build | **BLOCK** |
+
+The demo copies are labelled as injected faults, not observed failures.
+
 ## The deployment review (what the developer takes away)
 
 The dashboard opens with this card (`dashboard/audit_gate.html`, "Deployment review"):

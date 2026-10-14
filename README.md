@@ -91,6 +91,11 @@ keeps only claims it can check.
 - This is an assistant for reviewing field reports, at an early stage.
   ([§9](docs/errata_grounding_preregistration.md))
 
+**Deployment preflight.** [`scripts/deploy_preflight.py`](scripts/deploy_preflight.py) checks a candidate card in order:
+the engine hash, the runner's normalization guard, the runner's 200 ms chunk deadline and the code-decided verdict.
+A fault-injection demo ([`preflight_demo.json`](artifacts/reports/preflight_demo.json)) shows the nominal FP16 card on
+HOLD and five broken cases blocked.
+
 **Tool feedback.** Every problem we hit with TensorRT, Model Optimizer, Nebius AI Cloud and Token Factory is logged
 with its cause and a suggested fix in [`docs/tool_feedback.md`](docs/tool_feedback.md).
 
@@ -157,7 +162,7 @@ Every reported number can be recomputed from the committed sealed logs:
 
 ```bash
 uv venv .venv && uv pip install --python .venv/bin/python -e ".[dev]"
-.venv/bin/python -m pytest -q                                   # 186 tests
+.venv/bin/python -m pytest -q                                   # 187 tests
 python tests/runner_abort_harness.py                            # runner abort/timeout/manifest harness
 .venv/bin/python -m edgeqgate.grid                              # 26-cell grid and hash
 .venv/bin/python scripts/g6_analysis.py --sealed-dir artifacts/trials/g6_unsealed --out /tmp/g6.json
@@ -229,7 +234,7 @@ plugins/         LeRobot camera plugin for the OpenMV AE3
 artifacts/       manifests, freeze records, unsealed trial logs, reports
 dashboard/       audit_gate.html (D7)
 docs/            pre-registration, decision log, protocols, session notes, related work
-tests/           186 unit tests, plus the hardware-free runner harness
+tests/           187 unit tests, plus the hardware-free runner harness
 ```
 
 ## Positive control

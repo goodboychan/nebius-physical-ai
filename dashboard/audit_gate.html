@@ -179,6 +179,18 @@ footer{border-top:1px solid var(--rule); padding-top:18px; color:var(--ink-3); f
       <div class="dec"><span class="q">Can I approve deployment?</span><strong>Not yet</strong>
         <span class="a">Success against FP32 is undecided for every candidate at these sample sizes, and start-position changes are not validated.</span><span class="chip seal">on hold</span></div>
     </div>
+    <div class="tbl-scroll">
+      <table class="res" aria-label="What QuantGate adds over simpler selection rules">
+        <thead><tr><th>If you choose by…</th><th>You would pick</th><th>What that misses (from this study's records)</th></tr></thead>
+        <tbody>
+          <tr><td>Latency only</td><td>FP16 (11.6 ms, 82 mJ)</td><td>Nothing about success: the FP16 comparison with FP32 is undecided (19/20 vs 10/10), and the start-position weakness (0/3 at +3 cm) is invisible.</td></tr>
+          <tr><td>Offline audit score</td><td>The top-ranked INT8 cells</td><td>No measurable gain: audit-picked cells went 73/75, random cells 73/75. The rank did not predict placement either (Spearman 0.02–0.08).</td></tr>
+          <tr><td>"No failures seen"</td><td>Any cell at 24/25 or 25/25</td><td>About ±28 pp of uncertainty at 25 trials against a 10 pp tolerance. Settling it takes about 110–120 trials per arm.</td></tr>
+          <tr><td><b>QuantGate review</b></td><td>FP16 to <b>validate first</b>, approval <b>on hold</b></td><td>It adds what remains: the trials still needed, the weak conditions (grip friction, start position), the builds to block at the input check, the runtime's 200 ms timing contract, and how far to rely on the AI judge.</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p class="note">This is a post-hoc reading of records already in this study, not a new experiment. The point is not that QuantGate picks a different candidate than latency does. It is that QuantGate says what the evidence does and does not support yet.</p>
     <div class="rows">
       <div class="row"><span class="k">Cost</span><span class="d"><b>FP16 (VC-025) is the cheapest engine on this device</b>: 11.6 ms and 82 mJ per inference, against 16.8–17.1 ms and 101 mJ for INT8 and 53.4 ms and 403 mJ for FP32 (trtexec, back-to-back). At the deployed rate, one chunk about every 3 s, inference energy is a small part of system power.</span><span class="v"><span class="chip ok">measured</span></span></div>
       <div class="row"><span class="k">Real arm</span><span class="d"><b>FP16 on the real arm: 19/20</b> against FP32 10/10 and INT8 10/10, in one interleaved blinded session with the current gripper. Placement is within the 5 px tolerance of FP32 (−0.63 px, CI [−2.64, +1.37]). The success difference cannot be decided at this sample size (CI ±28 pp), so the verdict is <b>insufficient evidence</b>, not falsified. End to end in the runner, FP16 takes 24.7 ms per chunk against 34.3 ms for INT8 and 79.0 ms for FP32. In G6, against FP32 at 10 pp, every one of the 10 INT8 cells is also insufficient evidence.</span><span class="v"><span class="chip seal">insufficient</span></span></div>
@@ -188,6 +200,21 @@ footer{border-top:1px solid var(--rule); padding-top:18px; color:var(--ink-3); f
       <div class="row"><span class="k">AI judge</span><span class="d">First setup (final frame, one-word answer): 1 of 21 held-out failures caught. Re-evaluated with a dev/eval split: an explicit-criterion prompt caught <b>20/21</b> (95% 0.77–0.99) with 5/252 false alarms, concentrated on the unseen yellow can (4/33). It is wording-sensitive and judges the end state only, so re-validate before use. It is re-checked live in the fine-tune evaluation.</span><span class="v"><span class="chip seal">conditional</span></span></div>
       <div class="row"><span class="k">Next</span><span class="d"> 1. To settle FP16 against FP32 on success at 10 pp, plan about 110–120 trials per arm (a planning estimate assuming equal true rates near 96–97%, not a guarantee). 2. Validate start-position changes with more trials and varied demonstrations. 3. Re-check the validated judge prompt live (it is re-checked in the fine-tune evaluation). 4. Put a calibration-input check first in the pipeline.</span><span class="v">actions</span></div>
     </div>
+  </section>
+
+  <section class="panel" id="preflight">
+    <div class="plate"><h2>Deployment preflight</h2><span class="ref">scripts/deploy_preflight.py · fault-injection demo</span></div>
+    <p class="note">One candidate card, four checks in order: the engine hash against the recorded build, the runner's own
+      normalization guard, the runner's chunk deadline (10−4 steps at 30 Hz = <b>200 ms</b>), and the
+      code-decided evidence verdict. <b>BLOCK</b> stops the deployment. <b>HOLD</b> means "run the trials listed". Rows marked FAULT INJECTION are deliberately broken copies, not observed failures.</p>
+    <div class="tbl-scroll"><table class="res"><thead><tr><th>Case</th><th>Outcome</th><th>Checks</th></tr></thead><tbody>
+<tr><td>nominal<br><span class="lbl-s" style="font-size:12px;color:var(--ink-3)">FP16 (VC-025) as measured</span></td><td><span class="chip seal">HOLD</span></td><td>✓ engine integrity → ✓ normalization → ✓ timing contract → ✓ evidence<br><span style="color:var(--ink-2);font-size:12.5px">INSUFFICIENT_EVIDENCE: Settle success against FP32 at 10 pp: plan about 110-120 trials per arm (planning estimate, assumes equal true rates near 96-97 percent; not a guarantee); also validate start-position changes before deployment</span></td></tr>
+<tr><td>fault: normalization file swapped<br><span class="lbl-s" style="font-size:12px;color:var(--ink-3)">FAULT INJECTION</span></td><td><span class="chip halt">BLOCK</span></td><td>✓ engine integrity → ✗ normalization<br><span style="color:var(--ink-2);font-size:12.5px">runner refuses: manifest missing or normalization file mismatched</span></td></tr>
+<tr><td>fault: manifest missing<br><span class="lbl-s" style="font-size:12px;color:var(--ink-3)">FAULT INJECTION</span></td><td><span class="chip halt">BLOCK</span></td><td>✓ engine integrity → ✗ normalization<br><span style="color:var(--ink-2);font-size:12.5px">runner refuses: manifest missing or normalization file mismatched</span></td></tr>
+<tr><td>fault: engine replaced after the audit<br><span class="lbl-s" style="font-size:12px;color:var(--ink-3)">FAULT INJECTION</span></td><td><span class="chip halt">BLOCK</span></td><td>✗ engine integrity<br><span style="color:var(--ink-2);font-size:12.5px">engine file differs from the recorded build</span></td></tr>
+<tr><td>timing: Hailo-8 split pipeline<br><span class="lbl-s" style="font-size:12px;color:var(--ink-3)">measured offline (hailo_probe_v1.json, p95 264 ms)</span></td><td><span class="chip halt">BLOCK</span></td><td>✓ engine integrity → ✓ normalization → ✗ timing contract<br><span style="color:var(--ink-2);font-size:12.5px">p95 on the Pi 5 264 ms vs chunk deadline 200 ms</span></td></tr>
+<tr><td>evidence: black-frame calibration<br><span class="lbl-s" style="font-size:12px;color:var(--ink-3)">PC-B, flagged offline</span></td><td><span class="chip halt">BLOCK</span></td><td>✓ engine integrity → ✓ normalization → ✓ timing contract → ✗ evidence<br><span style="color:var(--ink-2);font-size:12.5px">FLAGGED: Do not deploy; fix the calibration input (a simple input check catches it); see the real-arm check of PC-B</span></td></tr>
+    </tbody></table></div>
   </section>
 
   <section class="panel" id="report">
