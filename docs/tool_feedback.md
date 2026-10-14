@@ -150,3 +150,25 @@ ResourceExhausted: Quota limit exceeded ... compute.instance.non-gpu.vcpu (limit
   3. Suggest fallback regions or platforms, or offer an opt-in automatic fallback.
   4. Notify the user, or queue the start, when capacity frees up.
   The goal is fewer blind retries and fewer VMs started in the wrong region.
+
+## 2026-10-14 — Nebius Managed MLflow: slow provisioning with no live status in the console (user's suggestion)
+
+- **Observed**:
+  - Created cluster `mlflow-e00vptyxqj9vqwdgtc` (medium, eu-north1, public + private access) in the console at
+    06:38Z.
+  - It was still `PHASE_PROVISIONING / STATE_IN_PROGRESS` at 06:56Z.
+  - The console page did not refresh on its own. The user had no way to tell from the console whether the cluster
+    had been created at all.
+  - The CLI (`nebius msp mlflow v1alpha1 cluster list`) showed it already existed, with its tracking endpoints
+    assigned.
+- **Also**:
+  - Creating it from the CLI with the project's least-privilege service account failed with a bare
+    `PermissionDenied: you do not have permission to access the requested object`. The message does not name the
+    missing permission or the object.
+  - New clusters can only be `medium` ($0.48/h, plus $14.2/month internal storage). There is no small size for a
+    short-lived demo.
+- **Suggestions**:
+  1. Auto-refresh the cluster page, or push status changes to it.
+  2. Show the provisioning step and an estimated time to ready.
+  3. Name the missing permission in `PermissionDenied`, e.g. `msp.mlflow.clusters.create on project-…`.
+  4. Offer a small or ephemeral size, or a pause that stops storage billing, for demo and evaluation use.
