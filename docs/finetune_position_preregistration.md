@@ -173,7 +173,8 @@ configuration was restored on the Orin.
   - The runner accepts `--blind T2 ft2`: the sealed folder `stress_ft2`, the manifest required, the C1 end-of-trial
     judge. T1 and T0 behaviour is unchanged. The runner harness passes.
   - `scripts/ft_analysis.py` gains `--t2 <sealed dir>`, tested on relabelled data.
-  - The runner hash at deployment is recorded when it is deployed.
+  - The runner hash at deployment is recorded when it is deployed: `so101_trial.py` `514bfee22a436821…`, deployed
+    to the Orin after T0 ended (2026-10-14). The previous `a3e6fd7f` is kept as a backup.
 
 ## 13. Amendment 5 (2026-10-14, during T0, before any unsealing): exploratory gripper-chatter metric
 
