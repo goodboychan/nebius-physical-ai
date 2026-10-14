@@ -1035,3 +1035,24 @@ ACT는 상태마다 100스텝을 내고 실기에서 100스텝을 모두 실행�
   - narration v3.1 (scene 4 result sentence, track 2:57).
 - **Demonstration takes after unsealing** (not counted): both the OLD and FT demos succeeded. The video uses the
   counted T1 pair instead.
+
+---
+
+## 2026-10-15 — Remaining schedule (after the fine-tune evaluation)
+
+All experiments in the plan are done and synced. Nebius resources: the Cosmos endpoint is STOPPED, no MLflow cluster
+exists, and no VM or Job is running.
+
+| Date | Work | Arm | Nebius |
+|---|---|---|---|
+| 10/15–18 | Video and PPTX review by the user; adjust timing in the deck; optional new setup photos | — | — |
+| (optional) 10/17–19 | One pre-registered arm block, if wanted. Either settle FT at the training mark (24 vs 24), or check INT8 gripper chatter. Register before running | ✓ | endpoint only if the live judge is wanted |
+| 10/20–21 | Final video edit and export (≤ 3 min); update the D3 report only if a number changes | — | Token Factory (one call) if the report is regenerated |
+| 10/22 | Nemotron survey ratings (user); final read of the submission draft | — | — |
+| 10/23 | **LOCK-4**: narrative and numbers frozen | — | — |
+| 10/24–25 | Secret check 2 (`prepublish_check`), README and dashboard final pass | — | — |
+| 10/26 | **Make public**: code repository (Apache 2.0), dashboard, HF datasets `chans/quantgate-so101-coaster` and `-positions` | — | — |
+| 10/27–28 | Devpost entry: video, links, survey answers | — | — |
+| 10/29 | Buffer | — | — |
+| 10/30 | **Submit**, then rotate the Nebius service-account key, the Token Factory key and the Cosmos endpoint token | — | key rotation |
+| Early Dec | Judging: keep the repository, dashboard and datasets public; nothing needs to run | — | — |
