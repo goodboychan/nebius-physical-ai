@@ -1,0 +1,32 @@
+{
+ "quantgate/hailo-probe": {
+  "experiment_id": "5",
+  "runs": 5,
+  "artifacts": [
+   "hailo_portability_probe.md",
+   "hailo_portability_probe.md"
+  ]
+ },
+ "quantgate/cosmos-judge": {
+  "experiment_id": "4",
+  "runs": 3,
+  "artifacts": []
+ },
+ "quantgate/real-arm": {
+  "experiment_id": "3",
+  "runs": 23,
+  "artifacts": []
+ },
+ "quantgate/deployment-verdicts": {
+  "experiment_id": "2",
+  "runs": 17,
+  "artifacts": [
+   "d3_report_v2.md"
+  ]
+ },
+ "quantgate/grid-offline": {
+  "experiment_id": "1",
+  "runs": 25,
+  "artifacts": []
+ }
+}

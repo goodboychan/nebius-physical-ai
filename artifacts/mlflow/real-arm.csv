@@ -1,0 +1,24 @@
+run_name,param.block,param.cell,metric.aborted,metric.not_detected,metric.place_mean_px,metric.success_k,metric.success_n,metric.success_rate,metric.wilson95_high,metric.wilson95_low,tag.verdict,tag.source,tag.git_commit
+FP16 block | VC-000,FP16 block,VC-000,,,18.799999999999997,10.0,10.0,1.0,,,,artifacts/reports/fp16_analysis.json#cells.VC-000,32a7630bfe9a9a8cd0870fb29c1256ccb5d6021a
+FP16 block | VC-002,FP16 block,VC-002,,,17.12,10.0,10.0,1.0,,,,artifacts/reports/fp16_analysis.json#cells.VC-002,32a7630bfe9a9a8cd0870fb29c1256ccb5d6021a
+FP16 block | VC-025,FP16 block,VC-025,,,18.173684210526314,19.0,20.0,0.95,,,,artifacts/reports/fp16_analysis.json#cells.VC-025,32a7630bfe9a9a8cd0870fb29c1256ccb5d6021a
+G6 | VC-000,G6 nominal (pads),VC-000,0.0,1.0,7.045833333333333,24.0,25.0,0.96,0.9929037664980126,0.8045593626380625,,artifacts/reports/g6_analysis.json#cells.VC-000,32a7630bfe9a9a8cd0870fb29c1256ccb5d6021a
+G6 | VC-002,G6 nominal (pads),VC-002,0.0,1.0,6.520833333333333,24.0,25.0,0.96,0.9929037664980126,0.8045593626380625,,artifacts/reports/g6_analysis.json#cells.VC-002,32a7630bfe9a9a8cd0870fb29c1256ccb5d6021a
+G6 | VC-005,G6 nominal (pads),VC-005,0.0,1.0,7.635714285714287,14.0,15.0,0.9333333333333333,0.9881331045067316,0.7018347012621998,,artifacts/reports/g6_analysis.json#cells.VC-005,32a7630bfe9a9a8cd0870fb29c1256ccb5d6021a
+G6 | VC-007,G6 nominal (pads),VC-007,0.0,0.0,5.506666666666667,15.0,15.0,1.0,1.0000000000000002,0.7961166989641514,,artifacts/reports/g6_analysis.json#cells.VC-007,32a7630bfe9a9a8cd0870fb29c1256ccb5d6021a
+G6 | VC-010,G6 nominal (pads),VC-010,0.0,0.0,8.068,25.0,25.0,1.0,0.9999999999999998,0.8668077490609514,,artifacts/reports/g6_analysis.json#cells.VC-010,32a7630bfe9a9a8cd0870fb29c1256ccb5d6021a
+G6 | VC-011,G6 nominal (pads),VC-011,0.0,1.0,6.9375,24.0,25.0,0.96,0.9929037664980126,0.8045593626380625,,artifacts/reports/g6_analysis.json#cells.VC-011,32a7630bfe9a9a8cd0870fb29c1256ccb5d6021a
+G6 | VC-012,G6 nominal (pads),VC-012,0.0,1.0,7.195833333333333,24.0,25.0,0.96,0.9929037664980126,0.8045593626380625,,artifacts/reports/g6_analysis.json#cells.VC-012,32a7630bfe9a9a8cd0870fb29c1256ccb5d6021a
+G6 | VC-015,G6 nominal (pads),VC-015,0.0,0.0,8.283999999999999,25.0,25.0,1.0,0.9999999999999998,0.8668077490609514,,artifacts/reports/g6_analysis.json#cells.VC-015,32a7630bfe9a9a8cd0870fb29c1256ccb5d6021a
+G6 | VC-020,G6 nominal (pads),VC-020,0.0,1.0,7.5041666666666655,24.0,25.0,0.96,0.9929037664980126,0.8045593626380625,,artifacts/reports/g6_analysis.json#cells.VC-020,32a7630bfe9a9a8cd0870fb29c1256ccb5d6021a
+G6 | VC-022,G6 nominal (pads),VC-022,0.0,0.0,8.51,10.0,10.0,1.0,0.9999999999999999,0.7224672001371106,,artifacts/reports/g6_analysis.json#cells.VC-022,32a7630bfe9a9a8cd0870fb29c1256ccb5d6021a
+G6 | VC-024,G6 nominal (pads),VC-024,0.0,1.0,6.888888888888888,9.0,10.0,0.9,0.9821237869049271,0.5958499732047616,,artifacts/reports/g6_analysis.json#cells.VC-024,32a7630bfe9a9a8cd0870fb29c1256ccb5d6021a
+positive control (PC-B) | PC-B,positive control (PC-B),PC-B,,,19.59090909090909,11.0,12.0,0.9166666666666666,,,,artifacts/reports/positive_control_analysis.json#cells.PC-B,32a7630bfe9a9a8cd0870fb29c1256ccb5d6021a
+positive control (PC-B) | VC-000,positive control (PC-B),VC-000,,,18.48,10.0,12.0,0.8333333333333334,,,,artifacts/reports/positive_control_analysis.json#cells.VC-000,32a7630bfe9a9a8cd0870fb29c1256ccb5d6021a
+stress v2 S1 | VC-000,stress v2 S1,VC-000,0.0,,,0.0,1.0,0.0,0.7934506856227626,0.0,,artifacts/reports/stress_v2_analysis.json#S1.cells.VC-000,32a7630bfe9a9a8cd0870fb29c1256ccb5d6021a
+stress v2 S1 | VC-002,stress v2 S1,VC-002,0.0,,,0.0,1.0,0.0,0.7934506856227626,0.0,,artifacts/reports/stress_v2_analysis.json#S1.cells.VC-002,32a7630bfe9a9a8cd0870fb29c1256ccb5d6021a
+stress v2 S1 | VC-020,stress v2 S1,VC-020,0.0,,,0.0,1.0,0.0,0.7934506856227626,0.0,,artifacts/reports/stress_v2_analysis.json#S1.cells.VC-020,32a7630bfe9a9a8cd0870fb29c1256ccb5d6021a
+stress v2 S4 | VC-000,stress v2 S4,VC-000,0.0,,19.258333333333333,12.0,12.0,1.0,1.0,0.7575059933447591,,artifacts/reports/stress_v2_analysis.json#S4.cells.VC-000,32a7630bfe9a9a8cd0870fb29c1256ccb5d6021a
+stress v2 S4 | VC-002,stress v2 S4,VC-002,0.0,,20.283333333333335,12.0,12.0,1.0,1.0,0.7575059933447591,,artifacts/reports/stress_v2_analysis.json#S4.cells.VC-002,32a7630bfe9a9a8cd0870fb29c1256ccb5d6021a
+stress v2 S4 | VC-005,stress v2 S4,VC-005,0.0,,18.883333333333333,12.0,12.0,1.0,1.0,0.7575059933447591,,artifacts/reports/stress_v2_analysis.json#S4.cells.VC-005,32a7630bfe9a9a8cd0870fb29c1256ccb5d6021a
+stress v2 S4 | VC-020,stress v2 S4,VC-020,0.0,,18.625,12.0,12.0,1.0,1.0,0.7575059933447591,,artifacts/reports/stress_v2_analysis.json#S4.cells.VC-020,32a7630bfe9a9a8cd0870fb29c1256ccb5d6021a
