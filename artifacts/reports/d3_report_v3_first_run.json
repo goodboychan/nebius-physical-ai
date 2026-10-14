@@ -1,0 +1,25 @@
+{
+ "verdict_hash": "b55dda59ebf5878e3493f73d75109a97ea65a621bf3fe7f6fcc62bf085a85c98",
+ "issues": [],
+ "latency_sec": 13.7,
+ "selftest": {
+  "good_issues": [],
+  "bad_caught": {
+   "VC-025 is GO and VC-002 is GO.": true,
+   "VC-025 succeeded 10/10.": true,
+   "VC-025 took 11.6 ms end-to-end.": true,
+   "The FP16 candidate is approved.": true,
+   "The INT8 builds are safe to ship.": true,
+   "It passes the gate.": true,
+   "The FP16 candidate is GO.": true,
+   "FP16 went 19 of 20.": true
+  }
+ },
+ "attempts": [
+  {
+   "text": "\n\n## Why the review looks like this\nThe half\u2011precision candidate runs fastest on the hardware and uses the least power so it is the natural first build to test.  \nThe success comparisons still show wide overlapping intervals and too few trials so a clear decision cannot yet be made.  \nA simple input sanity check catches the deliberately miscalibrated builds before any further analysis leading to their rejection.  \nIn held\u2011out trials the AI judge found most problematic cases while raising only a small number of false alerts indicating it can be trusted to flag issues.  \n\n## Questions to resolve before deployment\n- Does the half\u2011precision candidate achieve a success rate that is clearly better than the reference when more trials are run?  \n- Do the stress tests on unseen configurations show any deviation beyond the tolerance threshold after additional runs?  \n- Can the simple input check be strengthened to catch any future miscalibration without relying on offline audits?  \n- Does the AI judge maintain low false alarm rates when evaluated on newer data sets from different lighting conditions?  \n- Is the power consumption of the half\u2011precision build within the expected budget for long missions?",
+   "issues": [],
+   "latency_sec": 13.7
+  }
+ ]
+}

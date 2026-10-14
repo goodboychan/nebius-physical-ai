@@ -64,7 +64,7 @@ Stress tests were unsealed on 2026-10-13. The stress protocol is
 | Deployment target | LeRobot ACT policy (51.6M) as **TensorRT** FP32 / FP16 / INT8 engines | **Jetson Orin Nano Super** (TensorRT 10.3) next to a real SO-101 arm |
 | Quantization | NVIDIA **TensorRT Model Optimizer** (modelopt) INT8 Q/DQ, 24 calibration variants | NGC PyTorch 25.11 container, local GPU |
 | `D4` runtime supervisor | **`nvidia/Cosmos-Reason2-2B`** watches the overhead camera at 2 Hz (CONTINUE / FALLBACK / ABORT, shadow mode) and is asked at trial end whether the task succeeded | **Nebius AI Endpoint** (L40S, vLLM 0.29), about 330 ms round trip from the robot |
-| `D3` deployment report agent | **`nvidia/nemotron-3-super-120b-a12b`** explains verdicts that code has already decided; a structured validator checks each candidate's verdict, success fractions and latency in the prose (report v2) | **Nebius Token Factory** |
+| `D3` deployment report agent | **`nvidia/nemotron-3-super-120b-a12b`** writes only the explanation and open questions of a report whose verdicts, numbers and status are all written by code; code rejects digits, verdict labels, approval words and known misreadings in the model text (report v3; v2 kept as history) | **Nebius Token Factory** |
 | `D5` errata collector | **Tavily** search for TensorRT / Jetson / INT8 known issues, with queries derived from the real build environment and snapshot-hashed | Tavily API |
 | `D5` errata grounding | **Nemotron 3 Super** labels each of the 25 field reports against our measured facts (matches / contrasts / applies but unverified / not applicable) with structured output; code checks that every quote is verbatim, and the report shows only those quotes and our own facts, never the model's numbers ([`errata_grounded.md`](artifacts/reports/errata_grounded.md), [pre-registration](docs/errata_grounding_preregistration.md)) | **Nebius Token Factory** |
 | Policy training | LeRobot 0.6.1 ACT, 100k steps | **Nebius Jobs** (L40S, 1 h 57 min) |
@@ -75,7 +75,7 @@ Stress tests were unsealed on 2026-10-13. The stress protocol is
 **Where Token Factory helped.** The report agent needs a large reasoning model for about a minute per report. Token
 Factory served Nemotron 3 Super, and the variants we compared, behind one OpenAI-compatible API, so no GPU server had
 to stay warm. Comparison: [`d3_model_compare.json`](artifacts/reports/d3_model_compare.json). Final report:
-[`d3_report_v2.md`](artifacts/reports/d3_report_v2.md) (v1 kept as history: [`d3_final_report.md`](artifacts/reports/d3_final_report.md)).
+[`d3_report_v3.md`](artifacts/reports/d3_report_v3.md) (history: [`d3_report_v2.md`](artifacts/reports/d3_report_v2.md), whose sentence-level validator let three wrong sentences through, and v1 [`d3_final_report.md`](artifacts/reports/d3_final_report.md)).
 
 **Where Nemotron met Tavily.** Tavily finds field reports and Nemotron reads them against what we measured. Code
 keeps only claims it can check.
@@ -157,7 +157,7 @@ Every reported number can be recomputed from the committed sealed logs:
 
 ```bash
 uv venv .venv && uv pip install --python .venv/bin/python -e ".[dev]"
-.venv/bin/python -m pytest -q                                   # 184 tests
+.venv/bin/python -m pytest -q                                   # 186 tests
 python tests/runner_abort_harness.py                            # runner abort/timeout/manifest harness
 .venv/bin/python -m edgeqgate.grid                              # 26-cell grid and hash
 .venv/bin/python scripts/g6_analysis.py --sealed-dir artifacts/trials/g6_unsealed --out /tmp/g6.json
@@ -229,7 +229,7 @@ plugins/         LeRobot camera plugin for the OpenMV AE3
 artifacts/       manifests, freeze records, unsealed trial logs, reports
 dashboard/       audit_gate.html (D7)
 docs/            pre-registration, decision log, protocols, session notes, related work
-tests/           184 unit tests, plus the hardware-free runner harness
+tests/           186 unit tests, plus the hardware-free runner harness
 ```
 
 ## Positive control

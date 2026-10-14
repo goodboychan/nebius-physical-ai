@@ -91,7 +91,7 @@ failure.
 | Offline audit | 25 cells × bootstrap scoring on 2,000 held-out states | **Nebius Jobs** fan-out with a quota-aware controller |
 | Real arm | 30 Hz TensorRT policy server with chunk prefetch and blending, so all engines have identical timing; blinded schedule | SO-101 + Jetson |
 | AI supervisor and judge | **Cosmos-Reason2-2B**, 2 Hz shadow mode, plus an end-of-trial question | **Nebius AI Endpoint** (L40S, vLLM), started per session |
-| Deployment report | Code decides the verdicts; **Nemotron 3 Super** explains them; a structured validator checks each candidate's verdict, fractions and latency in the prose (`d3_report_v2.md`) | **Nebius Token Factory** |
+| Deployment report | Code writes every verdict, number, status and next action. **Nemotron 3 Super** writes only the explanation and the open questions, in words; code rejects that text if it contains digits, verdict labels, approval words or known misreadings (`d3_report_v3.md`) | **Nebius Token Factory** |
 | Errata, grounded | **Tavily** search with queries derived from the real build (snapshot hashed). **Nemotron 3 Super** labels each of the 25 results against our measured facts (matches / contrasts / applies but unverified / not applicable), with structured output; code checks that every quote is verbatim, and the report shows only those quotes and our own facts (`errata_grounding_preregistration.md`) | Tavily API + **Nebius Token Factory** |
 | Experiment record | 5 experiments, 73 runs, filled from committed artifacts by a script; each run tagged with its source file and commit | **Nebius Managed MLflow**, run only for publishing and capture |
 | Portability probe | The same checkpoint and calibration frames on a Hailo-8 (Raspberry Pi 5); backbones INT8 on Hailo, transformer FP32 on the CPU | Hailo DFC on a GPU workstation, measured on the device |
@@ -165,7 +165,7 @@ suggested fix.
 - Re-check the validated Cosmos judge prompt live, on new trials. The offline re-evaluation is done: 1/21 → 20/21
   failures caught on held-out videos.
 - A sealed real-arm block on the Hailo-8 target (FP32 vs Hailo, 12 vs 12), pre-registered separately.
-- Structured verdicts (done in report v2): next, link each verdict to its trials and videos on the dashboard.
+- Structured verdicts (done; report v3 moves every number into code): next, link each verdict to its trials and videos on the dashboard.
 - **On-policy audit and distillation.** Build the audit buffer from the states the deployed engine actually visits:
   the 385 logged real-arm rollouts already have states and both camera videos. Label those states offline with the
   FP32 teacher, then use them in two ways:
@@ -204,8 +204,18 @@ PyTorch · Hailo-8 (portability probe)
   stray Polish fragment ("znacz…") into Korean text.
 
 **Fine-tune, prompt-engineer or out of the box?** Out of the box, with prompt engineering. A fixed system prompt
-defines the four-section format and the forbidden claims, and the evidence is passed as JSON. A post-hoc validator
-checks numbers and, in report v2, each candidate's verdict, success fractions and latency against a code-decided table, so a report is checked rather than trusted. (The v1 validator only checked that each number existed somewhere in the evidence; an external review showed it missed swapped values, which v2 catches: `tests/test_d3_structured.py`.)
+defines the four-section format and the forbidden claims, and the evidence is passed as JSON. The report has gone through three versions.
+- **v1**: the validator only checked that each number existed somewhere in the evidence.
+- **v2**: the validator checked each candidate's sentences. An external review then showed three wrong sentences
+  passing it: two candidates both called GO, a reference's 10/10 attached to the candidate, and GPU time called
+  end-to-end latency.
+- **v3**: every verdict, number and status is written by code. Nemotron writes only "why the review looks like this"
+  and "questions to resolve", and code rejects any digit, verdict label, approval word or known misreading
+  (`tests/test_d3_v3.py`).
+  - The first v3 runs still misread two facts in plain words. FP16 was said to use "the least power"; it has the
+    least energy per inference but draws more power while running. The AI judge was called trustworthy. Both
+    patterns are now rejected, and the earlier runs are kept (`d3_report_v3_first*.json`).
+  - A plain-words misreading of a new kind cannot be excluded by rules, so section 5 is labelled model-written.
 
 **Compared with other models**: In the same Token Factory harness, Super was the only variant with zero unmatched
 numbers and a complete format in every repeat. Ultra and the smaller variants leaked reasoning or truncated.

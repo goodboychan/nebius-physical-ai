@@ -1,0 +1,29 @@
+{
+ "verdict_hash": "b55dda59ebf5878e3493f73d75109a97ea65a621bf3fe7f6fcc62bf085a85c98",
+ "issues": [],
+ "latency_sec": 14.0,
+ "selftest": {
+  "good_issues": [],
+  "bad_caught": {
+   "VC-025 is GO and VC-002 is GO.": true,
+   "VC-025 succeeded 10/10.": true,
+   "VC-025 took 11.6 ms end-to-end.": true,
+   "The FP16 candidate is approved.": true,
+   "The INT8 builds are safe to ship.": true,
+   "It passes the gate.": true,
+   "The FP16 candidate is GO.": true,
+   "FP16 went 19 of 20.": true,
+   "The AI judge can be trusted.": true,
+   "FP16 uses the least power.": true,
+   "Is it clearly better than the reference?": true,
+   "The upper bound stays within ten points.": true
+  }
+ },
+ "attempts": [
+  {
+   "text": "\n\n## Why the review looks like this\nThe half precision candidate has the lowest energy per inference and latency but draws more power while running than the eight bit integer builds.  \nThe success comparisons cannot be decided yet because the confidence intervals are wide and the number of trials so far does not show that the difference stays within the tolerance.  \nThe deliberately miscalibrated builds are rejected at the input check because a simple input check detects the calibration error independently of the other thresholds.  \nThe AI judge\u2019s record means it cannot be trusted outright; it is wording sensitive, judges only the end state, and produces more false alarms on novel objects, so it must be re\u2011validated before anyone relies on it.  \n\n## Questions to resolve before deployment\n- Does the half precision candidate stay within ten percentage points of full precision when tested with enough trials?  \n- Do the eight bit integer builds meet the latency and energy targets under nominal conditions?  \n- Does the simple input check reliably catch calibration drift across all expected operating ranges?  \n- Have we collected sufficient data to confirm the AI judge\u2019s false alarm rate on unseen objects is low enough for deployment?  \n- Is the black frame build\u2019s performance stable when subjected to stress scenarios with unseen objects?",
+   "issues": [],
+   "latency_sec": 14.0
+  }
+ ]
+}

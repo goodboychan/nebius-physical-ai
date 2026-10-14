@@ -1,0 +1,40 @@
+{
+ "verdict_hash": "b55dda59ebf5878e3493f73d75109a97ea65a621bf3fe7f6fcc62bf085a85c98",
+ "issues": [
+  "approval or safety word 'trust' \u2014 \"The AI judge\u2019s record shows it reacts to wording, judges only the final state and produces\""
+ ],
+ "latency_sec": 27.8,
+ "selftest": {
+  "good_issues": [],
+  "bad_caught": {
+   "VC-025 is GO and VC-002 is GO.": true,
+   "VC-025 succeeded 10/10.": true,
+   "VC-025 took 11.6 ms end-to-end.": true,
+   "The FP16 candidate is approved.": true,
+   "The INT8 builds are safe to ship.": true,
+   "It passes the gate.": true,
+   "The FP16 candidate is GO.": true,
+   "FP16 went 19 of 20.": true,
+   "The AI judge can be trusted.": true,
+   "FP16 uses the least power.": true,
+   "Is it clearly better than the reference?": true
+  }
+ },
+ "attempts": [
+  {
+   "text": "\n\n## Why the review looks like this\nThe sixteen-bit floating point candidate is chosen for initial validation because it needs the least energy per inference and has the lowest latency even though it draws more power while running than the eight-bit integer builds. Success comparisons remain undecided because the confidence intervals for each candidate overlap the tolerance band and the current number of trials is too small to rule out a meaningful difference. The deliberately miscalibrated builds are stopped at the simple input check because that check detects the calibration error independently of the other audit scores. The AI judge\u2019s record shows it is sensitive to wording, judges only the end state and produces more false alarms on novel objects, so it must be re\u2011validated before any reliance is placed on its output.\n\n## Questions to resolve before deployment\n- How many additional trials are needed to shrink the confidence interval around the success rate so that the upper bound stays within ten percentage points of the full-precision reference?\n- Does the sixteen-bit floating point candidate keep its latency advantage when the device operates under sustained power limits?\n- Can the simple input check be made robust enough to catch calibration drift across temperature variations without increasing false rejects on nominal units?\n- What wording changes to the AI judge prompt reduce false alarms on unseen objects while preserving detection of genuine failures?",
+   "issues": [
+    "approval or safety word 'power' \u2014 \"- Does the sixteen-bit floating point candidate keep its latency advantage when the device\"",
+    "approval or safety word 'power' \u2014 \"The sixteen-bit floating point candidate is chosen for initial validation because it needs\""
+   ],
+   "latency_sec": 14.4
+  },
+  {
+   "text": "\n\n## Why the review looks like this\nThe sixteen-bit floating point build is selected for early validation because it needs the least energy per inference and shows the lowest latency among the options considered.  \nSuccess comparisons stay undecided because the confidence intervals for each candidate overlap the tolerance band and the current trial count is too small to exclude a meaningful difference.  \nThe deliberately miscalibrated units are stopped at the simple input check because that check detects the calibration error without relying on the other audit scores.  \nThe AI judge\u2019s record shows it reacts to wording, judges only the final state and produces more false alarms on novel objects, so it must be re\u2011checked before any trust is placed in its output.  \n\n## Questions to resolve before deployment\n- How many additional trials are needed to narrow the confidence interval around the success rate so that the upper bound stays within ten percentage points of the full\u2011precision reference?  \n- Does the sixteen\u2011bit floating point build keep its latency advantage when the device runs under sustained load?  \n- Can the simple input check be made robust enough to catch calibration drift across temperature changes without increasing false rejects on nominal units?",
+   "issues": [
+    "approval or safety word 'trust' \u2014 \"The AI judge\u2019s record shows it reacts to wording, judges only the final state and produces\""
+   ],
+   "latency_sec": 13.4
+  }
+ ]
+}
