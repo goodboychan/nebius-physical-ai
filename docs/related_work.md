@@ -129,6 +129,38 @@ arXiv 2609.03611, 2026-09-03). alphaXiv report read, not the full PDF.
   validated prompt 20/21 on held-out trials, false alarms concentrated on the unseen can) is a small, setup-specific
   instance of the same lesson. It is not a new idea. Their success bias matches our first setup's "Yes" answers.
 
+## Continual RL post-training and "no forgetting" claims (added 2026-10-15)
+
+**"ACCRUE: Continual Off-Policy Reinforcement Learning for Robot Foundation Models"** (Kim, Lee, Narang, Guo; NVIDIA and
+KAIST; arXiv 2610.18596, 2026-10-14; https://accrue-rl.github.io/). Full text read via alphaXiv.
+- **Method**:
+  - A lightweight actor and critic over action chunks (H = 16 in sim, 10 on the robot), on frozen DINOv3 features.
+  - Both are inherited across tasks. Prior behaviour is kept by distilling the actor toward cached targets on 20–100
+    retained episodes per task.
+  - Simulation uses GR00T N1.7 with FastSAC on the Isaac-based FORGE and AutoMate assembly tasks.
+  - On the real robot, a LoRA fine-tune on 5–10 SpaceMouse demonstrations per task comes first. Then FastTD3, chosen
+    because explicit exploration-noise control "avoids erratic contact behavior". The sparse reward is labelled by an
+    operator.
+- **Results**:
+  - 31.0–68.5% less real-robot interaction than single-task RL (AutoMate), 38.7–42.9% on NIST.
+  - Retention: 18–20/20 per earlier task (118/120 pooled).
+  - A stage stops once the running success over 20 episodes reaches 19/20. Code: "coming soon".
+- **Relation to us**:
+  - Same question as our position fine-tune: fix a weakness, then check that the old condition holds (T0, T0R).
+    They fix it with RL, we did it with 50 new demonstrations.
+  - Read with our rule (Newcombe, 10 pp tolerance):
+    - 19/20 against 20/20 per task is undecided: degradation [−11.6, +23.6] pp at 95%.
+    - Pooled, 118/120 sits within tolerance: [−1.7, +5.9] pp, if the reference is near 100%. But pooling hides
+      per-task drops.
+    - The stop rule ends a stage at a high running estimate, so the stage-end rate is biased upward.
+  - Safety: no safety filter, interventions or hazard counts are reported for real-robot exploration.
+  - An automatic reward labeller (for example our Cosmos judge, 21/23 caught and 1/49 false alarms prospectively)
+    would need the same validation, because a false "success" becomes a wrong reward.
+  - A quantized base policy is another base-policy change under the inherited critic, so the same deployment check
+    applies.
+- **Use**: cite as the RL alternative to our demonstration fine-tune and as an example of retention evidence. It is
+  not prior art for the quantization gate.
+
 ## What QuantGate can and cannot claim as new (after external review 5)
 
 - **Cannot claim**:
