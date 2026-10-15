@@ -16,3 +16,4 @@ secrets/
 *.key
 data/
 video/
+seminar/*.pptx
