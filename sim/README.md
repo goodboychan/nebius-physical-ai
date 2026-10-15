@@ -28,3 +28,25 @@ Exploratory and not part of the hackathon evidence. Nothing here changes a Quant
   tip touches 6–8 table points whose positions are measured with a ruler from the base, and record the joint states.
   Then fit the joint offsets (table height known, xy known), and solve the overhead camera pose by PnP from the same
   points in the overhead frame.
+
+## Status 2026-10-15, late (after the T0R block)
+
+- **Calibrated**:
+  - Stage 1, table touches: 2.9 mm, with the held-out START and COASTER at table height within 1–2 mm.
+  - Overhead camera: PnP with the focal fixed to the C922's nominal value, the grid, the coaster and two can tops;
+    4.2 px.
+  - The calibrated FK projected onto the real T0 trial 18 video lands on the real gripper.
+  - Isaac Sim kinematics match the URDF FK within 1–2 cm (gravity sag). The camera matches the photo within about 3 px.
+- **Stage 2** (`fit_grasp_calib.py`, `twin_calibration_v2.json`):
+  - It adds 111 demo grasp moments, with the can position back-projected from the overhead frame. Touch residual
+    3.2 mm, grasp residual 9.4 mm median, grasp height 5.9 cm.
+  - Bug found and fixed: "tightest grip" picked the empty closed gripper (≈1), so the first stable hold after
+    opening is used now.
+- **Physics, not yet working**: in a replay of a successful trial (T0 trial 1), the arm reaches the can, but the
+  jaws close without being blocked and the can stays.
+  - Done: commanded joints replayed instead of measured ones, an STS3215-like gripper torque (2.9 N m), rubber
+    friction 1.0, convex decomposition on the gripper colliders. None of these changed the outcome.
+  - A close-up render shows the jaws arriving above the can top. The fitted jaw-centre point (lateral 6.7 cm in the
+    gripper_link frame) absorbs the remaining kinematic error instead of locating the real gap between the jaws.
+  - Next: compute the jaw gap from the gripper meshes at the measured hold angle (≈0.45 rad), fix that point, and
+    refit only the joint offsets. Then tune contact.
