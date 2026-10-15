@@ -13,8 +13,10 @@ separately.
 
 ## Elevator pitch (≤ 200 chars)
 
-QuantGate helps robot developers decide which precision of a policy to ship to a Jetson, showing engine cost,
-real-arm behavior and how strong the evidence is, before the robot leaves the lab.
+QuantGate reviews quantized robot policies before they ship to a Jetson: cost on the device, blinded real-arm
+trials, and an honest verdict. Earn the next test, not the approval.
+
+(178 characters; chosen by the user 2026-10-16. It ends on the video's kick line.)
 
 ## The problem
 
