@@ -235,8 +235,8 @@ Analysis: `scripts/ft_analysis.py`, written to `artifacts/reports/ft_analysis.js
   - Off the training position, OLD chatters about 4× more than FT, consistent with the hesitation and regrasping
     seen in stress S1.
   - At the training mark, FT chatters more than OLD.
-  - OLD today does not differ from the same VC-025 engine in the FP16 block (p = 0.13), so the session itself did
-    not change chatter.
+  - No difference was detected between OLD today and the same VC-025 engine in the FP16 block (p = 0.13). This does
+    not show that the session had no effect (correction, external review 6).
   - **Post hoc, not in §13**: in the FP16 block the INT8 cell VC-002 has a median of 0.314, against 0.134 for
     VC-025 FP16 and 0.162 for VC-000 FP32. In G6, VC-002 has 0.288 against 0.113 for VC-000. This is about twice
     the chatter at a similar success rate. It is reported as a hypothesis for a pre-registered check: INT8 can

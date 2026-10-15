@@ -76,11 +76,11 @@ Numbers come from committed artifacts. The figure's script lists its sources.
    - Evaluation: blinded and interleaved, 12 vs 12 per position, against the old policy, at positions not in
      training.
 
-     | Start position | Fine-tuned | Old | FT − old, Newcombe 95% | Pre-registered reading |
+     | Start position | Fine-tuned | Old | FT − old, Newcombe interval | Pre-registered reading |
      |---|---|---|---|---|
-     | **+3 cm** (primary) | **12/12** | 3/12 | +75 pp [+38, +91] | improvement detected |
-     | **−3 cm** (symmetry, added during the session and registered before any unsealing) | **10/12** | 2/12 | +67 pp [+27, +84] | improvement detected |
-     | 0 cm (training mark) | 10/12 | 12/12 | — | insufficient evidence |
+     | **+3 cm** (primary) | **12/12** | 3/12 | +75 pp [+38, +91] at 95% (improvement: lower bound > 0) | improvement detected |
+     | **−3 cm** (symmetry, added during the session and registered before any unsealing) | **10/12** | 2/12 | +67 pp [+27, +84] at 95% | improvement detected |
+     | 0 cm (training mark) | 10/12 | 12/12 | −17 pp [−49, +15] at 97.5% (non-inferiority, 10 pp tolerance) | insufficient evidence |
 
    - Reading: position improved on both sides of the trained start. Whether nominal performance is maintained is
      undetermined.
@@ -105,8 +105,8 @@ Stress tests were unsealed on 2026-10-13. The stress protocol is
 | **Cloud total** | | **≈ 31** |
 
 - The real arm ran 481 trials in about 12 operator-hours.
-- The brute-force route to a decision-grade answer would test all 25 candidates and FP32 at about 115 trials per arm.
-  That is about 2,990 trials and about 74 arm-hours, before any stress or position test.
+- For scale, not as a saving: settling approval for all 25 candidates and FP32 at about 115 trials per arm would be
+  about 2,990 trials and about 74 arm-hours, before any stress or position test. The two numbers answer different goals.
 - The review did not settle approval. It ranked what to validate first, blocked broken builds, found and fixed a
   weakness, and listed the trials still missing.
 
@@ -148,7 +148,8 @@ keeps only claims it can check.
 **Deployment preflight.** [`scripts/deploy_preflight.py`](scripts/deploy_preflight.py) checks a candidate card in order:
 the engine hash, the runner's normalization guard, the runner's 200 ms chunk deadline and the code-decided verdict.
 A fault-injection demo ([`preflight_demo.json`](artifacts/reports/preflight_demo.json)) shows the nominal FP16 card on
-HOLD and five broken cases blocked.
+HOLD, the fine-tuned policy on HOLD (an improvement is not approval) and five broken cases blocked. Only an explicit
+GO passes the evidence check; an unknown verdict label blocks.
 
 **Tool feedback.** Every problem we hit with TensorRT, Model Optimizer, Nebius AI Cloud and Token Factory is logged
 with its cause and a suggested fix in [`docs/tool_feedback.md`](docs/tool_feedback.md).
@@ -344,4 +345,4 @@ Error is the mean action error against FP32 on the 2,000 audit states, in normal
   against each other.
 - The stress S1 block stopped after 3 trials.
 - FP16 was tested on the real arm in one block (19/20 against FP32 10/10); the success comparison is still insufficient evidence.
-- Integrity caveats: the main study (G6) was pre-registered and blinded end to end. In the follow-ups the operator stayed blind to cells throughout, but some rules were set after aggregate outcomes were seen and before cells were unsealed: the stress re-judge rules (§9, §11) and the stress v2 design after v1 stopped. S1 was stopped early by the user after 3 trials. All are logged.
+- Integrity caveats: the main study (G6) was pre-registered and blinded end to end. In the stress, FP16 and positive-control follow-ups the operator stayed blind to cells throughout. In the position fine-tune the operator could tell the two policies apart by how they moved, so blinding there was partial, and the −3 cm block was added during the session (registered before any unsealing). In the follow-ups some rules were set after aggregate outcomes were seen and before cells were unsealed: the stress re-judge rules (§9, §11) and the stress v2 design after v1 stopped. S1 was stopped early by the user after 3 trials. All are logged.

@@ -29,7 +29,7 @@
     {
      "check": "evidence",
      "pass": true,
-     "detail": "INSUFFICIENT_EVIDENCE: Settle success against FP32 at 10 pp: plan about 110-120 trials per arm (planning estimate, assumes equal true rates near 96-97 percent; not a guarantee); also validate start-position changes before deployment"
+     "detail": "INSUFFICIENT_EVIDENCE is not approval: Settle success against FP32 at 10 pp: plan about 110-120 trials per arm (planning estimate, assumes equal true rates near 96-97 percent; not a guarantee); also validate start-position changes before deployment"
     }
    ]
   },
@@ -98,6 +98,33 @@
      "check": "timing contract",
      "pass": false,
      "detail": "p95 on the Pi 5 264 ms vs chunk deadline 200 ms"
+    }
+   ]
+  },
+  {
+   "case": "evidence: fine-tuned policy, improvement at +3 cm",
+   "note": "FT-FP16, improvement detected; training mark undecided",
+   "outcome": "HOLD",
+   "steps": [
+    {
+     "check": "engine integrity",
+     "pass": true,
+     "detail": "hash matches the recorded build"
+    },
+    {
+     "check": "normalization",
+     "pass": true,
+     "detail": "manifest and hash match"
+    },
+    {
+     "check": "timing contract",
+     "pass": true,
+     "detail": "max round trip over 20 FP16 trials 74.5 ms vs chunk deadline 200 ms"
+    },
+    {
+     "check": "evidence",
+     "pass": true,
+     "detail": "IMPROVEMENT_DETECTED is not approval: Use the fine-tuned policy where the start position varies; confirm at more positions and objects before relying on it"
     }
    ]
   },

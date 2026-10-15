@@ -74,9 +74,10 @@ L += [f"| Nebius AI Endpoint · Cosmos-Reason2 (L40S) | {EP['sessions']} session
       f"| Nebius Token Factory · Nemotron 3 Super | {TF['calls']} calls · {TF['in'] / 1e3:.0f}k in / {TF['out'] / 1e3:.0f}k out tokens ({TF['estimated_calls']} estimated; a lower bound, since early report runs did not log usage) | {TF['usd']:.2f} |",
       f"| Nebius Managed MLflow | {MLF['hours']} h | {MLF['usd']:.2f} |", f"| **Cloud total** | | **{cloud:.2f}** |", "",
       f"Real arm: **{n_trials} trials** in {len(spans)} sessions, **{arm_h:.1f} h** of operator time (about {per_trial_min:.1f} min per trial).", "",
-      f"Brute force to a decision-grade answer for every candidate: {n_cand} candidates and FP32 at about {per_arm} trials per arm is "
-      f"**{bf_trials:,} trials, about {bf_h:.0f} arm-hours**, before any stress or position test.", "",
-      "What the review bought instead: a cost-favoured candidate to validate first (FP16), two miscalibrated builds blocked at the input "
+      f"For scale, not as a saving: settling approval for every candidate ({n_cand} candidates and FP32 at about {per_arm} trials per arm) "
+      f"would be **{bf_trials:,} trials, about {bf_h:.0f} arm-hours**, before any stress or position test. The two numbers answer different "
+      "goals, because this review did not settle approval.", "",
+      "What the 481 trials produced: a cost-favoured candidate to validate first (FP16), two miscalibrated builds blocked at the input "
       "check, two weak conditions found (grip, start position), the position weakness fixed and re-tested (+75 pp and +67 pp at ±3 cm), "
       "an AI judge validated live (21/23), and a list of the trials still missing before approval. It did not settle approval; that still "
       "needs the trials it lists."]

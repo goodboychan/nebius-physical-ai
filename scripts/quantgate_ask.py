@@ -32,7 +32,9 @@ they show and what they do not settle. Cite every row the question names. Do not
 untested or unmeasured; put open items only in missing_checks."""
 
 
-ENERGY_MJ = {"VC-025": 82, "FT-FP16": 82, "VC-000": 403, **{f"VC-{i:03d}": 101 for i in range(1, 25)}}   # power_bench/SUMMARY.md (INT8 cells measured 101 mJ)
+# measured engines only: power_bench/SUMMARY.md (VC-000, VC-025, VC-002, VC-005, VC-020) and power_bench_ft/SUMMARY.md (FT-FP16).
+# The other INT8 cells share the architecture but were never benched, so they get no number.
+ENERGY_MJ = {"VC-025": 82, "FT-FP16": 82, "VC-000": 403, "VC-002": 101, "VC-005": 101, "VC-020": 101}
 KEYWORDS = {"int8": lambda r: r["candidate"].startswith("VC-0") and r["candidate"] not in ("VC-025", "VC-000"),
             "fp16": lambda r: r["candidate"] in ("VC-025", "FT-FP16"), "fine-tun": lambda r: r["candidate"] == "FT-FP16",
             "position": lambda r: r["candidate"] == "FT-FP16", "judge": lambda r: r["candidate"] == "AI-JUDGE", "cosmos": lambda r: r["candidate"] == "AI-JUDGE",
@@ -54,7 +56,7 @@ def rows_text(R):
     out = []
     for i, r in enumerate(R):
         out.append({"id": i, "candidate": r["candidate"], "context": r["context"], "verdict": r["verdict"],
-                    **{k: r[k] for k in ("success", "reference", "e1_ci_pp", "e2", "e2e_ms", "gpu_ms_trtexec", "energy_mj_per_inference", "flagged_by", "reference_name", "record") if r.get(k) is not None},
+                    **{k: r[k] for k in ("success", "reference", "interval", "e2", "e2e_ms", "gpu_ms_trtexec", "energy_mj_per_inference", "flagged_by", "reference_name", "record") if r.get(k) is not None},
                     "next_action": r["next_action"]})
     return out
 
@@ -87,7 +89,8 @@ def check(ans, n_rows, forced=()):
 def render_row(i, r):
     p = [f"[{i}] {r['candidate']} · {r['context']} · `{r['verdict']}`"]
     if r.get("success"): p.append(f"{r['success'][0]}/{r['success'][1]} against {r.get('reference_name', 'reference')} {r['reference'][0]}/{r['reference'][1]}")
-    if r.get("e1_ci_pp"): p.append(f"interval {fmt_pp(r['e1_ci_pp'])}")
+    iv = r.get("interval")
+    if iv: p.append(f"candidate − reference {iv['candidate_minus_reference_pp']:+.1f} pp, {iv['level_pct']:g}% interval {fmt_pp(iv['ci_pp'])} ({iv['rule']})")
     if r.get("e2e_ms") is not None: p.append(f"end-to-end {r['e2e_ms']} ms")
     if r.get("gpu_ms_trtexec") is not None: p.append(f"GPU time {r['gpu_ms_trtexec']} ms")
     if r.get("energy_mj_per_inference"): p.append(f"{r['energy_mj_per_inference']} mJ per inference")

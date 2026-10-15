@@ -15,12 +15,23 @@
     -28.5,
     28.5
    ],
+   "e1_level_pct": 99.75,
    "e2": "tolerance_compatible",
    "verdict": "INSUFFICIENT_EVIDENCE",
    "e2e_ms": 34.3,
    "evidence_path": "artifacts/reports/g6_q2_sensitivity.json#Q2.VC-002",
    "next_action": "Settle success against FP32 at 10 pp: plan about 110-120 trials per arm (planning estimate, assumes equal true rates near 96-97 percent; not a guarantee)",
-   "gpu_ms_trtexec": 16.8
+   "gpu_ms_trtexec": 16.8,
+   "cost_source": "artifacts/reports/power_bench/SUMMARY.md",
+   "interval": {
+    "candidate_minus_reference_pp": 0.0,
+    "ci_pp": [
+     -28.5,
+     28.5
+    ],
+    "level_pct": 99.75,
+    "rule": "non-inferiority at a 10 pp tolerance: within tolerance if the lower bound is above -10 pp, degraded if the upper bound is below -10 pp, else undecided (the verdict also uses placement)"
+   }
   },
   {
    "candidate": "VC-020",
@@ -37,12 +48,23 @@
     -28.5,
     28.5
    ],
+   "e1_level_pct": 99.75,
    "e2": "tolerance_compatible",
    "verdict": "INSUFFICIENT_EVIDENCE",
    "e2e_ms": 34.3,
    "evidence_path": "artifacts/reports/g6_q2_sensitivity.json#Q2.VC-020",
    "next_action": "Settle success against FP32 at 10 pp: plan about 110-120 trials per arm (planning estimate, assumes equal true rates near 96-97 percent; not a guarantee)",
-   "gpu_ms_trtexec": 16.8
+   "gpu_ms_trtexec": 16.8,
+   "cost_source": "artifacts/reports/power_bench/SUMMARY.md",
+   "interval": {
+    "candidate_minus_reference_pp": 0.0,
+    "ci_pp": [
+     -28.5,
+     28.5
+    ],
+    "level_pct": 99.75,
+    "rule": "non-inferiority at a 10 pp tolerance: within tolerance if the lower bound is above -10 pp, degraded if the upper bound is below -10 pp, else undecided (the verdict also uses placement)"
+   }
   },
   {
    "candidate": "VC-010",
@@ -59,11 +81,21 @@
     -32.3,
     23.0
    ],
+   "e1_level_pct": 99.75,
    "e2": "tolerance_compatible",
    "verdict": "INSUFFICIENT_EVIDENCE",
    "e2e_ms": 34.3,
    "evidence_path": "artifacts/reports/g6_q2_sensitivity.json#Q2.VC-010",
-   "next_action": "Settle success against FP32 at 10 pp: plan about 110-120 trials per arm (planning estimate, assumes equal true rates near 96-97 percent; not a guarantee)"
+   "next_action": "Settle success against FP32 at 10 pp: plan about 110-120 trials per arm (planning estimate, assumes equal true rates near 96-97 percent; not a guarantee)",
+   "interval": {
+    "candidate_minus_reference_pp": 4.0,
+    "ci_pp": [
+     -23.0,
+     32.3
+    ],
+    "level_pct": 99.75,
+    "rule": "non-inferiority at a 10 pp tolerance: within tolerance if the lower bound is above -10 pp, degraded if the upper bound is below -10 pp, else undecided (the verdict also uses placement)"
+   }
   },
   {
    "candidate": "VC-011",
@@ -80,11 +112,21 @@
     -28.5,
     28.5
    ],
+   "e1_level_pct": 99.75,
    "e2": "tolerance_compatible",
    "verdict": "INSUFFICIENT_EVIDENCE",
    "e2e_ms": 34.6,
    "evidence_path": "artifacts/reports/g6_q2_sensitivity.json#Q2.VC-011",
-   "next_action": "Settle success against FP32 at 10 pp: plan about 110-120 trials per arm (planning estimate, assumes equal true rates near 96-97 percent; not a guarantee)"
+   "next_action": "Settle success against FP32 at 10 pp: plan about 110-120 trials per arm (planning estimate, assumes equal true rates near 96-97 percent; not a guarantee)",
+   "interval": {
+    "candidate_minus_reference_pp": 0.0,
+    "ci_pp": [
+     -28.5,
+     28.5
+    ],
+    "level_pct": 99.75,
+    "rule": "non-inferiority at a 10 pp tolerance: within tolerance if the lower bound is above -10 pp, degraded if the upper bound is below -10 pp, else undecided (the verdict also uses placement)"
+   }
   },
   {
    "candidate": "VC-012",
@@ -101,11 +143,21 @@
     -28.5,
     28.5
    ],
+   "e1_level_pct": 99.75,
    "e2": "tolerance_compatible",
    "verdict": "INSUFFICIENT_EVIDENCE",
    "e2e_ms": 34.3,
    "evidence_path": "artifacts/reports/g6_q2_sensitivity.json#Q2.VC-012",
-   "next_action": "Settle success against FP32 at 10 pp: plan about 110-120 trials per arm (planning estimate, assumes equal true rates near 96-97 percent; not a guarantee)"
+   "next_action": "Settle success against FP32 at 10 pp: plan about 110-120 trials per arm (planning estimate, assumes equal true rates near 96-97 percent; not a guarantee)",
+   "interval": {
+    "candidate_minus_reference_pp": 0.0,
+    "ci_pp": [
+     -28.5,
+     28.5
+    ],
+    "level_pct": 99.75,
+    "rule": "non-inferiority at a 10 pp tolerance: within tolerance if the lower bound is above -10 pp, degraded if the upper bound is below -10 pp, else undecided (the verdict also uses placement)"
+   }
   },
   {
    "candidate": "VC-015",
@@ -122,11 +174,21 @@
     -32.3,
     23.0
    ],
+   "e1_level_pct": 99.75,
    "e2": "indeterminate",
    "verdict": "INSUFFICIENT_EVIDENCE",
    "e2e_ms": 34.6,
    "evidence_path": "artifacts/reports/g6_q2_sensitivity.json#Q2.VC-015",
-   "next_action": "Settle success against FP32 at 10 pp: plan about 110-120 trials per arm (planning estimate, assumes equal true rates near 96-97 percent; not a guarantee)"
+   "next_action": "Settle success against FP32 at 10 pp: plan about 110-120 trials per arm (planning estimate, assumes equal true rates near 96-97 percent; not a guarantee)",
+   "interval": {
+    "candidate_minus_reference_pp": 4.0,
+    "ci_pp": [
+     -23.0,
+     32.3
+    ],
+    "level_pct": 99.75,
+    "rule": "non-inferiority at a 10 pp tolerance: within tolerance if the lower bound is above -10 pp, degraded if the upper bound is below -10 pp, else undecided (the verdict also uses placement)"
+   }
   },
   {
    "candidate": "VC-005",
@@ -143,12 +205,23 @@
     -26.2,
     41.7
    ],
+   "e1_level_pct": 99.75,
    "e2": "tolerance_compatible",
    "verdict": "INSUFFICIENT_EVIDENCE",
    "e2e_ms": 34.5,
    "evidence_path": "artifacts/reports/g6_q2_sensitivity.json#Q2.VC-005",
    "next_action": "Settle success against FP32 at 10 pp: plan about 110-120 trials per arm (planning estimate, assumes equal true rates near 96-97 percent; not a guarantee)",
-   "gpu_ms_trtexec": 17.1
+   "gpu_ms_trtexec": 17.1,
+   "cost_source": "artifacts/reports/power_bench/SUMMARY.md",
+   "interval": {
+    "candidate_minus_reference_pp": -2.7,
+    "ci_pp": [
+     -41.7,
+     26.2
+    ],
+    "level_pct": 99.75,
+    "rule": "non-inferiority at a 10 pp tolerance: within tolerance if the lower bound is above -10 pp, degraded if the upper bound is below -10 pp, else undecided (the verdict also uses placement)"
+   }
   },
   {
    "candidate": "VC-007",
@@ -165,11 +238,21 @@
     -32.3,
     34.0
    ],
+   "e1_level_pct": 99.75,
    "e2": "tolerance_compatible",
    "verdict": "INSUFFICIENT_EVIDENCE",
    "e2e_ms": 34.6,
    "evidence_path": "artifacts/reports/g6_q2_sensitivity.json#Q2.VC-007",
-   "next_action": "Settle success against FP32 at 10 pp: plan about 110-120 trials per arm (planning estimate, assumes equal true rates near 96-97 percent; not a guarantee)"
+   "next_action": "Settle success against FP32 at 10 pp: plan about 110-120 trials per arm (planning estimate, assumes equal true rates near 96-97 percent; not a guarantee)",
+   "interval": {
+    "candidate_minus_reference_pp": 4.0,
+    "ci_pp": [
+     -34.0,
+     32.3
+    ],
+    "level_pct": 99.75,
+    "rule": "non-inferiority at a 10 pp tolerance: within tolerance if the lower bound is above -10 pp, degraded if the upper bound is below -10 pp, else undecided (the verdict also uses placement)"
+   }
   },
   {
    "candidate": "VC-022",
@@ -186,11 +269,21 @@
     -32.3,
     43.9
    ],
+   "e1_level_pct": 99.75,
    "e2": "indeterminate",
    "verdict": "INSUFFICIENT_EVIDENCE",
    "e2e_ms": 34.3,
    "evidence_path": "artifacts/reports/g6_q2_sensitivity.json#Q2.VC-022",
-   "next_action": "Settle success against FP32 at 10 pp: plan about 110-120 trials per arm (planning estimate, assumes equal true rates near 96-97 percent; not a guarantee)"
+   "next_action": "Settle success against FP32 at 10 pp: plan about 110-120 trials per arm (planning estimate, assumes equal true rates near 96-97 percent; not a guarantee)",
+   "interval": {
+    "candidate_minus_reference_pp": 4.0,
+    "ci_pp": [
+     -43.9,
+     32.3
+    ],
+    "level_pct": 99.75,
+    "rule": "non-inferiority at a 10 pp tolerance: within tolerance if the lower bound is above -10 pp, degraded if the upper bound is below -10 pp, else undecided (the verdict also uses placement)"
+   }
   },
   {
    "candidate": "VC-024",
@@ -207,11 +300,21 @@
     -23.7,
     53.4
    ],
+   "e1_level_pct": 99.75,
    "e2": "tolerance_compatible",
    "verdict": "INSUFFICIENT_EVIDENCE",
    "e2e_ms": 34.1,
    "evidence_path": "artifacts/reports/g6_q2_sensitivity.json#Q2.VC-024",
-   "next_action": "Settle success against FP32 at 10 pp: plan about 110-120 trials per arm (planning estimate, assumes equal true rates near 96-97 percent; not a guarantee)"
+   "next_action": "Settle success against FP32 at 10 pp: plan about 110-120 trials per arm (planning estimate, assumes equal true rates near 96-97 percent; not a guarantee)",
+   "interval": {
+    "candidate_minus_reference_pp": -6.0,
+    "ci_pp": [
+     -53.4,
+     23.7
+    ],
+    "level_pct": 99.75,
+    "rule": "non-inferiority at a 10 pp tolerance: within tolerance if the lower bound is above -10 pp, degraded if the upper bound is below -10 pp, else undecided (the verdict also uses placement)"
+   }
   },
   {
    "candidate": "VC-025",
@@ -228,6 +331,7 @@
     -28.7,
     27.3
    ],
+   "e1_level_pct": 97.5,
    "e2_px": -0.63,
    "e2_ci_px": [
     -2.64,
@@ -238,7 +342,17 @@
    "e2e_ms": 24.7,
    "evidence_path": "artifacts/reports/fp16_analysis.json#primary_fp16_vs_fp32",
    "next_action": "Settle success against FP32 at 10 pp: plan about 110-120 trials per arm (planning estimate, assumes equal true rates near 96-97 percent; not a guarantee); also validate start-position changes before deployment",
-   "gpu_ms_trtexec": 11.6
+   "gpu_ms_trtexec": 11.6,
+   "cost_source": "artifacts/reports/power_bench/SUMMARY.md",
+   "interval": {
+    "candidate_minus_reference_pp": -5.0,
+    "ci_pp": [
+     -27.3,
+     28.7
+    ],
+    "level_pct": 97.5,
+    "rule": "non-inferiority at a 10 pp tolerance: within tolerance if the lower bound is above -10 pp, degraded if the upper bound is below -10 pp, else undecided (the verdict also uses placement)"
+   }
   },
   {
    "candidate": "VC-002",
@@ -255,11 +369,22 @@
     -40.6,
     40.6
    ],
+   "e1_level_pct": 99.58,
    "e2": "tolerance_compatible",
    "verdict": "INSUFFICIENT_EVIDENCE",
    "evidence_path": "artifacts/reports/stress_v2_analysis.json#S4.secondary_vs_fp32.VC-002",
    "next_action": "Settle success against FP32 at 10 pp: plan about 110-120 trials per arm (planning estimate, assumes equal true rates near 96-97 percent; not a guarantee)",
-   "gpu_ms_trtexec": 16.8
+   "gpu_ms_trtexec": 16.8,
+   "cost_source": "artifacts/reports/power_bench/SUMMARY.md",
+   "interval": {
+    "candidate_minus_reference_pp": 0.0,
+    "ci_pp": [
+     -40.6,
+     40.6
+    ],
+    "level_pct": 99.58,
+    "rule": "non-inferiority at a 10 pp tolerance: within tolerance if the lower bound is above -10 pp, degraded if the upper bound is below -10 pp, else undecided (the verdict also uses placement)"
+   }
   },
   {
    "candidate": "VC-005",
@@ -276,11 +401,22 @@
     -40.6,
     40.6
    ],
+   "e1_level_pct": 99.58,
    "e2": "tolerance_compatible",
    "verdict": "INSUFFICIENT_EVIDENCE",
    "evidence_path": "artifacts/reports/stress_v2_analysis.json#S4.secondary_vs_fp32.VC-005",
    "next_action": "Settle success against FP32 at 10 pp: plan about 110-120 trials per arm (planning estimate, assumes equal true rates near 96-97 percent; not a guarantee)",
-   "gpu_ms_trtexec": 17.1
+   "gpu_ms_trtexec": 17.1,
+   "cost_source": "artifacts/reports/power_bench/SUMMARY.md",
+   "interval": {
+    "candidate_minus_reference_pp": 0.0,
+    "ci_pp": [
+     -40.6,
+     40.6
+    ],
+    "level_pct": 99.58,
+    "rule": "non-inferiority at a 10 pp tolerance: within tolerance if the lower bound is above -10 pp, degraded if the upper bound is below -10 pp, else undecided (the verdict also uses placement)"
+   }
   },
   {
    "candidate": "VC-020",
@@ -297,11 +433,22 @@
     -40.6,
     40.6
    ],
+   "e1_level_pct": 99.58,
    "e2": "tolerance_compatible",
    "verdict": "INSUFFICIENT_EVIDENCE",
    "evidence_path": "artifacts/reports/stress_v2_analysis.json#S4.secondary_vs_fp32.VC-020",
    "next_action": "Settle success against FP32 at 10 pp: plan about 110-120 trials per arm (planning estimate, assumes equal true rates near 96-97 percent; not a guarantee)",
-   "gpu_ms_trtexec": 16.8
+   "gpu_ms_trtexec": 16.8,
+   "cost_source": "artifacts/reports/power_bench/SUMMARY.md",
+   "interval": {
+    "candidate_minus_reference_pp": 0.0,
+    "ci_pp": [
+     -40.6,
+     40.6
+    ],
+    "level_pct": 99.58,
+    "rule": "non-inferiority at a 10 pp tolerance: within tolerance if the lower bound is above -10 pp, degraded if the upper bound is below -10 pp, else undecided (the verdict also uses placement)"
+   }
   },
   {
    "candidate": "PC-N",
@@ -314,7 +461,8 @@
     "audit score (alignment)"
    ],
    "evidence_path": "artifacts/reports/simple_checks_vs_audit.json#cells.PC-N",
-   "next_action": "Do not deploy; fix the calibration input (a simple input check catches it); see the real-arm check of PC-B"
+   "next_action": "Do not deploy; fix the calibration input (a simple input check catches it); see the real-arm check of PC-B",
+   "interval": null
   },
   {
    "candidate": "PC-B",
@@ -327,7 +475,8 @@
     "audit score (alignment)"
    ],
    "evidence_path": "artifacts/reports/simple_checks_vs_audit.json#cells.PC-B",
-   "next_action": "Do not deploy; fix the calibration input (a simple input check catches it); see the real-arm check of PC-B"
+   "next_action": "Do not deploy; fix the calibration input (a simple input check catches it); see the real-arm check of PC-B",
+   "interval": null
   },
   {
    "candidate": "PC-B",
@@ -344,12 +493,22 @@
     -41.5,
     25.8
    ],
+   "e1_level_pct": 97.5,
    "e2": "tolerance_compatible",
    "verdict": "INSUFFICIENT_EVIDENCE",
    "e2e_ms": 34.5,
    "offline_verdict": "NO-GO",
    "evidence_path": "artifacts/reports/positive_control_analysis.json#comparison",
-   "next_action": "Offline warning not confirmed on the arm in 12 trials (unresolved, not 'tolerated'); keep rejecting this build at the calibration-input check; do not read the offline audit as a predictor of closed-loop failure"
+   "next_action": "Offline warning not confirmed on the arm in 12 trials (unresolved, not 'tolerated'); keep rejecting this build at the calibration-input check; do not read the offline audit as a predictor of closed-loop failure",
+   "interval": {
+    "candidate_minus_reference_pp": 8.3,
+    "ci_pp": [
+     -25.8,
+     41.5
+    ],
+    "level_pct": 97.5,
+    "rule": "non-inferiority at a 10 pp tolerance: within tolerance if the lower bound is above -10 pp, degraded if the upper bound is below -10 pp, else undecided (the verdict also uses placement)"
+   }
   },
   {
    "candidate": "FT-FP16",
@@ -363,16 +522,27 @@
     12
    ],
    "reference_name": "VC-025 (old policy)",
-   "e1_ci_pp": [
+   "improvement_ci_pp": [
     37.8,
     91.1
    ],
+   "improvement_pp": 75.0,
    "comparison": "improvement (lower bound > 0)",
    "verdict": "IMPROVEMENT_DETECTED",
    "e2e_ms": null,
    "evidence_path": "artifacts/reports/ft_analysis.json#T1.primary",
    "next_action": "Use the fine-tuned policy where the start position varies; confirm at more positions and objects before relying on it",
-   "gpu_ms_trtexec": 11.6
+   "gpu_ms_trtexec": 11.6,
+   "cost_source": "artifacts/reports/power_bench_ft/SUMMARY.md",
+   "interval": {
+    "candidate_minus_reference_pp": 75.0,
+    "ci_pp": [
+     37.8,
+     91.1
+    ],
+    "level_pct": 95.0,
+    "rule": "improvement detected if the lower bound is above 0"
+   }
   },
   {
    "candidate": "FT-FP16",
@@ -386,16 +556,27 @@
     12
    ],
    "reference_name": "VC-025 (old policy)",
-   "e1_ci_pp": [
+   "improvement_ci_pp": [
     26.9,
     83.6
    ],
+   "improvement_pp": 66.7,
    "comparison": "improvement (lower bound > 0)",
    "verdict": "IMPROVEMENT_DETECTED",
    "e2e_ms": null,
    "evidence_path": "artifacts/reports/ft_analysis.json#T2.primary",
    "next_action": "Use the fine-tuned policy where the start position varies; confirm at more positions and objects before relying on it",
-   "gpu_ms_trtexec": 11.6
+   "gpu_ms_trtexec": 11.6,
+   "cost_source": "artifacts/reports/power_bench_ft/SUMMARY.md",
+   "interval": {
+    "candidate_minus_reference_pp": 66.7,
+    "ci_pp": [
+     26.9,
+     83.6
+    ],
+    "level_pct": 95.0,
+    "rule": "improvement detected if the lower bound is above 0"
+   }
   },
   {
    "candidate": "FT-FP16",
@@ -413,11 +594,22 @@
     -15.4,
     49.0
    ],
+   "e1_level_pct": 97.5,
    "e2": "indeterminate",
    "verdict": "INSUFFICIENT_EVIDENCE",
    "evidence_path": "artifacts/reports/ft_analysis.json#T0.secondary",
    "next_action": "Check that the fine-tune keeps nominal performance: 10/12 vs 12/12 at the training mark is undecided; plan more trials at the training mark before replacing the old policy there",
-   "gpu_ms_trtexec": 11.6
+   "gpu_ms_trtexec": 11.6,
+   "cost_source": "artifacts/reports/power_bench_ft/SUMMARY.md",
+   "interval": {
+    "candidate_minus_reference_pp": -16.7,
+    "ci_pp": [
+     -49.0,
+     15.4
+    ],
+    "level_pct": 97.5,
+    "rule": "non-inferiority at a 10 pp tolerance: within tolerance if the lower bound is above -10 pp, degraded if the upper bound is below -10 pp, else undecided (the verdict also uses placement)"
+   }
   }
  ],
  "notes": {

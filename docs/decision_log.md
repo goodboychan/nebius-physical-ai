@@ -1056,3 +1056,33 @@ exists, and no VM or Job is running.
 | 10/29 | Buffer | — | — |
 | 10/30 | **Submit**, then rotate the Nebius service-account key, the Token Factory key and the Cosmos endpoint token | — | key rotation |
 | Early Dec | Judging: keep the repository, dashboard and datasets public; nothing needs to run | — | — |
+
+## 2026-10-15 — External review 6: three code and display fixes
+
+The reviewer reproduced the CI, the three new sealed-log hashes and the FT and Cosmos re-analyses, then found three
+defects where code-written numbers carried the wrong evidence or meaning.
+
+1. **Preflight approved every non-blocking label.** `preflight()` returned OK for anything other than FLAGGED, NO-GO
+   and INSUFFICIENT_EVIDENCE, including IMPROVEMENT_DETECTED, NOT_DETECTED, CONDITIONAL and typos. Now only an explicit
+   `GO` is OK. INSUFFICIENT_EVIDENCE, IMPROVEMENT_DETECTED and NOT_DETECTED hold, and any other label blocks.
+   - The demo has a new case: the fine-tuned policy is on HOLD.
+   - `tests/test_deploy_preflight.py` covers ten labels.
+   - Neither shipped demo case changed outcome.
+2. **Mixed interval directions in D3 v3.** Rows against full precision store degradation (reference − candidate), at
+   97.5–99.75%. The FT T1/T2 rows stored FT − OLD at 95%, and the report described every row as "candidate minus
+   reference".
+   - Every comparison row now carries an `interval` object: candidate − reference, its own level, and its rule
+     (non-inferiority at 10 pp, or improvement with lower bound > 0).
+   - The FT improvement intervals moved to `improvement_ci_pp`, so `e1_ci_pp` means degradation in every row.
+   - T0 now reads −16.7 pp, 97.5% interval [−49.0, +15.4]. Its verdict is unchanged (INSUFFICIENT_EVIDENCE).
+3. **FT and INT8 costs were asserted, not measured.**
+   - Re-bench on the Orin (`scripts/orin_power_bench_ft.sh`, `artifacts/reports/power_bench_ft/`). FT-FP16 (`4affc06d…`,
+     the engine used in the trials) measured 11.6 ms and 82 mJ. VC-025, re-run in the same session, measured 83 mJ.
+   - Each cost now cites its source (`cost_source`).
+   - The ask tool no longer gives 101 mJ to the 21 INT8 cells that were never benched.
+
+Wording, also from the review:
+- The chatter note now says "no difference detected" instead of "the session did not change chatter".
+- The cost comparison is labelled "for scale, not as a saving", since 481 trials and 74 h answer different goals.
+- The README and submission caveats now say FT operator blinding was partial and that −3 cm was added during the
+  session. The earlier text said "blind to cells throughout" for every follow-up.

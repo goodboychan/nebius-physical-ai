@@ -5,7 +5,8 @@ For a candidate, four checks run in order. The first failing check decides the o
   2. normalization     : so101_trial.resolve_norm (the runner's own guard, manifest required) -> BLOCK if it refuses
   3. timing contract   : measured worst-case latency (p95 or max) <= the runner's chunk deadline (PREF-BLEND)/FPS -> BLOCK if over
   4. evidence          : the code-decided verdict (d3_v3_verdicts.json)
-                         FLAGGED/NO-GO -> BLOCK, INSUFFICIENT_EVIDENCE -> HOLD (with its next action), GO -> OK
+                         only an explicit GO -> OK; FLAGGED/NO-GO -> BLOCK; INSUFFICIENT_EVIDENCE, IMPROVEMENT_DETECTED and
+                         NOT_DETECTED -> HOLD (with the next action); any other label -> BLOCK (external review 6)
 The demo builds a scratch folder with stand-in engine and normalization files, then runs a nominal case and
 deliberately broken cases. The broken cases are labelled FAULT INJECTION; they are not observed failures.
 Usage: python scripts/deploy_preflight.py [--out artifacts/reports]"""
@@ -28,6 +29,10 @@ DEADLINE_MS = (CONST["PREF"] - CONST["BLEND"]) / CONST["FPS"] * 1000
 sha = lambda p: hashlib.sha256(open(p, "rb").read()).hexdigest()
 
 
+# IMPROVEMENT_DETECTED says a fix worked where it was tested, not that the build may replace the old one
+HOLD_VERDICTS = ("INSUFFICIENT_EVIDENCE", "IMPROVEMENT_DETECTED", "NOT_DETECTED")
+
+
 def preflight(card):
     steps = []
     ok = os.path.exists(card["engine"]) and sha(card["engine"]) == card["engine_sha256"]
@@ -40,16 +45,17 @@ def preflight(card):
     ok = card["latency_ms"] <= DEADLINE_MS
     steps.append(("timing contract", ok, f"{card['latency_label']} {card['latency_ms']} ms vs chunk deadline {DEADLINE_MS:.0f} ms"))
     if not ok: return "BLOCK", steps
-    v = card["verdict"]
+    v = card["verdict"]   # only an explicit GO is approval; every other known label holds, anything unknown blocks
+    if v == "GO": steps.append(("evidence", True, "GO within the validated conditions")); return "OK", steps
     if v in ("FLAGGED", "NO-GO"): steps.append(("evidence", False, f"{v}: {card['next_action']}")); return "BLOCK", steps
-    if v == "INSUFFICIENT_EVIDENCE": steps.append(("evidence", True, f"{v}: {card['next_action']}")); return "HOLD", steps
-    steps.append(("evidence", True, "GO within the validated conditions")); return "OK", steps
+    if v in HOLD_VERDICTS: steps.append(("evidence", True, f"{v} is not approval: {card['next_action']}")); return "HOLD", steps
+    steps.append(("evidence", False, f"unknown verdict {v!r}: refused")); return "BLOCK", steps
 
 
 def demo(out):
     T = json.load(open(os.path.join(out, "d3_v3_verdicts.json")))
     row = lambda c, ctx: next(r for r in T["rows"] if r["candidate"] == c and ctx in r["context"])
-    fp16, pcb = row("VC-025", "FP16 run"), row("PC-B", "offline")
+    fp16, pcb, ft = row("VC-025", "FP16 run"), row("PC-B", "offline"), row("FT-FP16", "+3 cm")
     d = tempfile.mkdtemp(prefix="preflight_")
     def folder(name, manifest=True, tamper=False):
         f = os.path.join(d, name); os.makedirs(f)
@@ -66,6 +72,8 @@ def demo(out):
              ("fault: manifest missing", "FAULT INJECTION", {**base, "engine": folder("nomanifest", manifest=False)}),
              ("fault: engine replaced after the audit", "FAULT INJECTION", {**base, "engine": folder("replaced"), "engine_sha256": "0" * 64}),
              ("timing: Hailo-8 split pipeline", "measured offline (hailo_probe_v1.json, p95 264 ms)", {**base, "engine": folder("hailo"), "latency_ms": 264, "latency_label": "p95 on the Pi 5"}),
+             ("evidence: fine-tuned policy, improvement at +3 cm", "FT-FP16, improvement detected; training mark undecided",
+              {**base, "engine": folder("ft"), "verdict": ft["verdict"], "next_action": ft["next_action"]}),
              ("evidence: black-frame calibration", "PC-B, flagged offline", {**base, "engine": folder("pcb"), "verdict": pcb["verdict"], "next_action": pcb["next_action"]})]
     res = []
     for name, note, card in cases:

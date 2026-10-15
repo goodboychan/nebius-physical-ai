@@ -58,7 +58,7 @@ Scope throughout: one pick-and-place task, one ACT policy, a Jetson Orin Nano Su
 | On this device FP16 has the lowest latency and energy per inference | trtexec: FP16 11.6 ms and 82 mJ; INT8 16.8–17.1 ms and 101 mJ; FP32 53.4 ms and 403 mJ (`power_bench/SUMMARY.md`) | Don't pick an engine by its precision label. Measure on the target. FP16 is the cost-favored candidate. On the arm: FP16 19/20, FP32 10/10, INT8 10/10; placement within tolerance of FP32; success undecided at this sample size; end to end 24.7 ms against 34.3 and 79.0 ms (`fp16_analysis.json`). Field reports point the same way: Nemotron, reading Tavily results, tied an NVIDIA forum report of ModelOpt INT8 running slower than FP16 on Orin NX to this measurement, with a code-checked verbatim quote. It also labelled the 2.7× Orin Nano INT8 regression thread correctly, but the validator rejected that answer for rounding the thread's numbers (`errata_grounded.md`) |
 | Audit-picked INT8 cells did not beat random ones | 73/75 against 73/75, 95% CI [−6.8, +6.8] pp; offline rank against placement, Spearman 0.02–0.08 (`g6_analysis.json`) | In this setting, the offline ranking is not evidence that one calibration is better |
 | Against FP32 the evidence is insufficient for every INT8 cell | 194/200 against 24/25. At a 10 pp tolerance the Newcombe intervals span about ±23–53 pp, so all 10 cells are "insufficient evidence" (`g6_q2_sensitivity.json`) | "No failures seen" is not "safe". Showing a cell is within 10 pp would take about 110–120 trials per arm (a planning estimate that assumes both true success rates are equal at about 96–97%; it is not a guarantee) |
-| The position weakness was fixed and re-tested | 50 shifted demos and a 20k-step fine-tune on Nebius Jobs. Blinded, interleaved, at positions not in training: 12/12 vs 3/12 at +3 cm (+75 pp [+38, +91]) and 10/12 vs 2/12 at −3 cm (+67 pp [+27, +84]), improvement detected on both sides. At the training mark 10/12 vs 12/12, insufficient evidence (`ft_analysis.json`) | A weakness found by the review was fixed with data, not by changing precision, and the fix was checked under a rule fixed in advance. Before replacing the old policy at the trained spot, settle nominal performance |
+| The position weakness was fixed and re-tested | 50 shifted demos and a 20k-step fine-tune on Nebius Jobs. Interleaved under a sealed schedule, at positions not in training (operator blinding partial: the two policies move visibly differently; −3 cm added during the session): 12/12 vs 3/12 at +3 cm (+75 pp [+38, +91]) and 10/12 vs 2/12 at −3 cm (+67 pp [+27, +84]), improvement detected on both sides. At the training mark 10/12 vs 12/12 (−17 pp [−49, +15] at 97.5%), insufficient evidence (`ft_analysis.json`) | A weakness found by the review was fixed with data, not by changing precision, and the fix was checked under a rule fixed in advance. Before replacing the old policy at the trained spot, settle nominal performance |
 | Deployment conditions moved success far more | No anti-slip pads 8/24; rubber bands 23/24; start moved 3 cm 0/3 in a small, early-stopped test (observational, cause not isolated); unseen yellow can 48/48, every engine 12/12 (`stress_v2_analysis.json`) | Validate the grip, positions and objects you will actually face |
 | The AI judge needed validation, and validation fixed its setup | First setup: 1/21 held-out failures caught. After a dev/eval re-evaluation (409 recorded trials), an explicit-criterion prompt caught 20/21 [0.77, 0.99] with 5/252 false alarms, 4 of them on the unseen yellow can (4/33) (`cosmos_judge_eval_preregistration.md`) | Treat an AI judge as a component under test: validate the exact prompt on labelled held-out trials, and watch per-object error rates |
 
@@ -81,13 +81,14 @@ far, and what it does not support yet.
 1. the engine hash against the recorded build;
 2. the runner's own normalization guard;
 3. the runner's 200 ms chunk deadline;
-4. the code-decided verdict.
+4. the code-decided verdict (only an explicit GO passes; an unknown label blocks).
 
-A fault-injection demo runs the nominal FP16 card and five broken cases:
+A fault-injection demo runs the nominal FP16 card, the fine-tuned policy and five broken cases:
 
 | Case | Outcome |
 |---|---|
 | Nominal FP16 card | **HOLD**: run the listed trials |
+| Fine-tuned policy (improvement detected at ±3 cm) | **HOLD**: an improvement is not approval; the training mark is undecided |
 | Swapped normalization file | **BLOCK** |
 | Missing manifest | **BLOCK** |
 | Replaced engine | **BLOCK** |
@@ -102,9 +103,9 @@ About **$31 of Nebius cloud** in total. Most of it is the Cosmos endpoint (16.5 
 fine-tune on Jobs cost $4.5, Token Factory $0.1 (a lower bound) and MLflow $0.7. On the arm it took **481 trials in
 about 12 operator-hours**.
 
-Settling every candidate against FP32 by brute force would take about 2,990 trials and 74 arm-hours, before any
-stress test. QuantGate spends the arm time where it changes the decision: the cheapest candidate first, the
-conditions that moved success, and the fix.
+For scale, not as a saving: settling approval for every candidate against FP32 would take about 2,990 trials and
+74 arm-hours, before any stress test, and this review did not settle approval. QuantGate spent its arm time where it
+changed the next decision: the cheapest candidate first, the conditions that moved success, and the fix.
 
 ## The deployment review (what the developer takes away)
 
@@ -178,7 +179,7 @@ suggested fix.
 ## Accomplishments
 
 - A complete gate from cloud to real arm. Every number is traceable to a hashed artifact.
-- 245 completed blinded real-arm trials in the main study, plus stress and FP16 blocks. Integrity caveats: the main study (G6) was pre-registered and blinded end to end. In the follow-ups the operator stayed blind to cells throughout, but some rules were set after aggregate outcomes were seen and before cells were unsealed: the stress re-judge rules (§9, §11) and the stress v2 design after v1 stopped. S1 was stopped early by the user after 3 trials. All are logged. Stop rules were applied
+- 245 completed blinded real-arm trials in the main study, plus stress and FP16 blocks. Integrity caveats: the main study (G6) was pre-registered and blinded end to end. In the stress, FP16 and positive-control follow-ups the operator stayed blind to cells throughout. In the position fine-tune the operator could tell the two policies apart by how they moved, so blinding there was partial, and the −3 cm block was added during the session (registered before any unsealing). In the follow-ups some rules were set after aggregate outcomes were seen and before cells were unsealed: the stress re-judge rules (§9, §11) and the stress v2 design after v1 stopped. S1 was stopped early by the user after 3 trials. All are logged. Stop rules were applied
   as written.
 - A review that says plainly when the evidence is not enough, including for our own AI components.
 

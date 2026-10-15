@@ -84,13 +84,15 @@ def code_sections(T):
     rows = T["rows"]; n = T["notes"]; L = []
     L += ["## 1. Recommendation (written by code)", "", n["recommendation_vs_approval"], ""]
     L += ["## 2. Verdict per candidate (written by code)", "",
-          "Success intervals are Newcombe intervals for candidate minus reference, in percentage points, against a 10 pp tolerance. "
+          "Each success interval is a Newcombe interval for candidate minus reference, in percentage points; its confidence level and decision "
+          "rule are printed on the row, because comparisons against full precision test non-inferiority (10 pp) and the fine-tune rows test improvement. "
           "End-to-end latency is the runner's per-chunk time on the arm; GPU time is trtexec on the device (15 W).", ""]
     for r in rows:
         if r["verdict"] == "FLAGGED": continue
         parts = [f"**{r['candidate']}** · {r['context']} · `{r['verdict']}`"]
         if r.get("success"): parts.append(f"success {r['success'][0]}/{r['success'][1]} against {r.get('reference_name', 'reference')} {r['reference'][0]}/{r['reference'][1]}")
-        parts.append(f"success interval {fmt_pp(r.get('e1_ci_pp'))}")
+        iv = r.get("interval")
+        if iv: parts.append(f"candidate − reference {iv['candidate_minus_reference_pp']:+.1f} pp, {iv['level_pct']:g}% interval {fmt_pp(iv['ci_pp'])} ({iv['rule']})")
         if r.get("e2"): parts.append(f"placement: {r['e2'].replace('_', ' ')}")
         if r.get("e2e_ms") is not None: parts.append(f"end-to-end {r['e2e_ms']} ms")
         if r.get("gpu_ms_trtexec") is not None: parts.append(f"GPU time on device {r['gpu_ms_trtexec']} ms")

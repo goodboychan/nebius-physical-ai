@@ -24,25 +24,42 @@ def _ld(p):
     return json.load(open(p)) if os.path.exists(p) else None
 
 
+COST_SRC = {**{c: f"{R}/power_bench/SUMMARY.md" for c in ("VC-025", "VC-002", "VC-020", "VC-005", "VC-000")},
+            "FT-FP16": f"{R}/power_bench_ft/SUMMARY.md"}   # measured engines only; other INT8 cells were never benched
+
+
+def success_interval(r):
+    """One display form for every comparison row: candidate minus reference success (pp), with its own level and rule.
+    Non-inferiority rows store degradation (reference - candidate) in e1_ci_pp, so they are negated here."""
+    if r.get("improvement_ci_pp"):
+        return {"candidate_minus_reference_pp": r["improvement_pp"], "ci_pp": r["improvement_ci_pp"], "level_pct": 95.0,
+                "rule": "improvement detected if the lower bound is above 0"}
+    if r.get("e1_ci_pp") and r.get("success"):
+        (k, n), (kr, nr) = r["success"], r["reference"]; lo, hi = r["e1_ci_pp"]
+        return {"candidate_minus_reference_pp": round((k / n - kr / nr) * 100, 1), "ci_pp": [round(-hi, 1), round(-lo, 1)], "level_pct": r["e1_level_pct"],
+                "rule": "non-inferiority at a 10 pp tolerance: within tolerance if the lower bound is above -10 pp, degraded if the upper bound is below -10 pp, else undecided (the verdict also uses placement)"}
+    return None
+
+
 def verdict_table():
     rows = []; S = _ld(f"{R}/g6_q2_sensitivity.json"); A = _ld(f"{R}/g6_analysis.json")
     for c, q in S["Q2"].items():
         rows.append({"candidate": c, "context": "G6 nominal, pads", "success": q["cell"], "reference": q["fp32"],
-                     "e1_ci_pp": q["E1_ci_pp_newcombe99.75"], "e2": q["E2_decision_locked"], "verdict": q["verdict"],
+                     "e1_ci_pp": q["E1_ci_pp_newcombe99.75"], "e1_level_pct": 99.75, "e2": q["E2_decision_locked"], "verdict": q["verdict"],
                      "e2e_ms": round(json.load(open(f"{R}/g6_supplement.json"))["EX-1_EX-2"][c]["infer_ms_mean"], 1),
                      "evidence_path": f"{R}/g6_q2_sensitivity.json#Q2.{c}"})
     F = _ld(f"{R}/fp16_analysis.json")
     if F:
         p = F["primary_fp16_vs_fp32"]
         rows.append({"candidate": "VC-025", "context": "FP16 run, rubber bands", "success": p["test_k_n"], "reference": p["ref_k_n"],
-                     "e1_ci_pp": [round(x, 1) for x in p["E1"]["ci_pp"]], "e2_px": round(p["E2"]["degradation_px"], 2),
+                     "e1_ci_pp": [round(x, 1) for x in p["E1"]["ci_pp"]], "e1_level_pct": round(p["conf"] * 100, 2), "e2_px": round(p["E2"]["degradation_px"], 2),
                      "e2_ci_px": [round(x, 2) for x in p["E2"]["ci_px"]], "e2": p["E2"]["decision"], "verdict": p["verdict"],
                      "e2e_ms": round(F["latency"]["VC-025"]["infer_ms_mean"], 1), "evidence_path": f"{R}/fp16_analysis.json#primary_fp16_vs_fp32"})
     St = _ld(f"{R}/stress_v2_analysis.json")
     if St:
         for c, p in St["S4"]["secondary_vs_fp32"].items():
             rows.append({"candidate": c, "context": "stress S4 unseen can", "success": p["test_k_n"], "reference": p["ref_k_n"],
-                         "e1_ci_pp": [round(x, 1) for x in p["E1"]["ci_pp"]], "e2": p["E2"]["decision"], "verdict": p["verdict"],
+                         "e1_ci_pp": [round(x, 1) for x in p["E1"]["ci_pp"]], "e1_level_pct": round(p["conf"] * 100, 2), "e2": p["E2"]["decision"], "verdict": p["verdict"],
                          "evidence_path": f"{R}/stress_v2_analysis.json#S4.secondary_vs_fp32.{c}"})
     C = _ld(f"{R}/simple_checks_vs_audit.json")
     for c in ("PC-N", "PC-B"):
@@ -55,7 +72,7 @@ def verdict_table():
     if P:
         p = P["comparison"]
         rows.append({"candidate": "PC-B", "context": "positive control real arm", "success": p["test_k_n"], "reference": p["ref_k_n"],
-                     "e1_ci_pp": [round(x, 1) for x in p["E1"]["ci_pp"]], "e2": p["E2"]["decision"], "verdict": p["verdict"],
+                     "e1_ci_pp": [round(x, 1) for x in p["E1"]["ci_pp"]], "e1_level_pct": round(p["conf"] * 100, 2), "e2": p["E2"]["decision"], "verdict": p["verdict"],
                      "e2e_ms": P["e2e_ms"].get("PC-B"), "offline_verdict": "NO-GO",
                      "evidence_path": f"{R}/positive_control_analysis.json#comparison"})
     FT = _ld(f"{R}/ft_analysis.json")   # position fine-tune (finetune_position_preregistration.md §14)
@@ -63,12 +80,12 @@ def verdict_table():
         for blk, ctx in (("T1", "fine-tune vs old, start +3 cm (held out, primary)"), ("T2", "fine-tune vs old, start -3 cm (held out, symmetry)")):
             p = FT[blk]["primary"]
             rows.append({"candidate": "FT-FP16", "context": ctx, "success": p["ft"], "reference": p["old"], "reference_name": "VC-025 (old policy)",
-                         "e1_ci_pp": [round(x, 1) for x in p["newcombe95_pp"]], "comparison": "improvement (lower bound > 0)",
+                         "improvement_ci_pp": [round(x, 1) for x in p["newcombe95_pp"]], "improvement_pp": round(p["diff_pp"], 1), "comparison": "improvement (lower bound > 0)",
                          "verdict": "IMPROVEMENT_DETECTED" if p["improvement_detected"] else "NOT_DETECTED", "e2e_ms": None,
                          "evidence_path": f"{R}/ft_analysis.json#{blk}.primary"})
         q = FT["T0"]["secondary"]
         rows.append({"candidate": "FT-FP16", "context": "fine-tune vs old, training start mark (secondary)", "success": q["test_k_n"], "reference": q["ref_k_n"],
-                     "reference_name": "VC-025 (old policy)", "e1_ci_pp": [round(x, 1) for x in q["E1"]["ci_pp"]], "e2": q["E2"]["decision"],
+                     "reference_name": "VC-025 (old policy)", "e1_ci_pp": [round(x, 1) for x in q["E1"]["ci_pp"]], "e1_level_pct": round(q["conf"] * 100, 2), "e2": q["E2"]["decision"],
                      "verdict": q["verdict"], "evidence_path": f"{R}/ft_analysis.json#T0.secondary"})
     cost = {"VC-025": 11.6, "VC-002": 16.8, "VC-020": 16.8, "VC-005": 17.1, "VC-000": 53.4, "FT-FP16": 11.6}
     for r in rows:   # next actions are decided by code, not by the model
@@ -90,7 +107,8 @@ def verdict_table():
         elif r["verdict"] == "GO":
             r["next_action"] = "Eligible for approval within the validated conditions only"
     for r in rows:
-        if r["candidate"] in cost: r["gpu_ms_trtexec"] = cost[r["candidate"]]
+        if r["candidate"] in cost: r["gpu_ms_trtexec"] = cost[r["candidate"]]; r["cost_source"] = COST_SRC[r["candidate"]]
+        r["interval"] = success_interval(r)
     return {"rows": rows, "notes": {
         "recommendation_vs_approval": ("FP16 is the recommended precision to validate first (cheapest on the device). The position fine-tune (FT-FP16, same FP16 engine "
                                        "cost) fixed the start-position weakness at both held-out shifts (IMPROVEMENT_DETECTED at +3 cm and -3 cm), so FT-FP16 is the "

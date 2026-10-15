@@ -1,7 +1,7 @@
 {
- "verdict_hash": "f9797c7025fbc880cb43d2eb7c32fc4cd023f7836931aff4b9111decdb08896d",
+ "verdict_hash": "e9569ac1cd9bda358004a80425a8148ea041fe75b29605690aa0f969d112e30c",
  "issues": [],
- "latency_sec": 12.1,
+ "latency_sec": 14.7,
  "selftest": {
   "good_issues": [],
   "bad_caught": {
@@ -21,9 +21,9 @@
  },
  "attempts": [
   {
-   "text": "\n\n## Why the review looks like this\nThe sixteen\u2011bit floating point candidate uses the least energy per inference and runs fastest, so it is the natural starting point for validation even though it draws more power while active than the eight\u2011bit integer builds.  \nThe position fine\u2011tune moved the success rate away from failure at both held\u2011out start shifts, showing improvement, but it has not yet demonstrated enough evidence at the training start mark to replace the old policy there.  \nSuccess versus full precision remains undecided because the confidence intervals are still wide enough that the true difference could lie outside the tolerance, so more trials are needed to show the difference stays within the tolerance.  \nThe deliberately miscalibrated builds fail a simple input check that flags any deviation in the calibration signal, therefore they are rejected before any further testing.  \nThe AI judge\u2019s record shows it catches most failures but also produces false alarms on novel objects, so its verdict must be re\u2011validated before it can be relied upon for decisions.  \n\n## Questions to resolve before deployment\n- How many trials are needed to narrow the confidence interval for the sixteen\u2011bit candidate versus full precision to within ten percentage points?  \n- Does the position fine\u2011tune achieve sufficient success at the training start mark after additional trials?  \n- Can the eight\u2011bit integer builds meet latency and energy targets when tested under nominal pad conditions?  \n- Does the AI judge maintain low false\u2011alarm rates when evaluated on a broader set of objects and scenes?  \n- Are the calibration input checks robust enough to catch all miscalibrated variants before deployment?",
+   "text": "\n\n## Why the review looks like this\nThe FP16 candidate uses the least energy for each inference and runs fastest, making it the cheapest option to test first on the hardware.  \nThe fine\u2011tuned FP16 version removed the weakness seen when the start position was shifted away from the nominal mark, but it has not yet demonstrated clear performance at the original training mark.  \nComparisons against full precision remain inconclusive because the current data do not allow us to state whether the difference stays inside the allowed margin.  \nBuilds that were deliberately mis\u2011calibrated are stopped by the simple input check, which flags them before any further testing.  \nThe AI judge\u2019s record shows it catches most failures but raises false alarms on unfamiliar objects, so it must be checked again on new scenes before its output can be relied upon.  \n\n## Questions to resolve before deployment\n- How many trials are needed to show that the success rate of the FP16 candidate stays within the ten\u2011point tolerance compared to full precision?  \n- Does the fine\u2011tuned FP16 build achieve clear success at the original training mark when tested with additional trials?  \n- Can the simple input check be confirmed to catch all mis\u2011calibrated units across different hardware revisions?  \n- What additional scenes and objects must be run through the AI judge to reduce false alarms to an acceptable level?",
    "issues": [],
-   "latency_sec": 12.1
+   "latency_sec": 14.7
   }
  ]
 }
