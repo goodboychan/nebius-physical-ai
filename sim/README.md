@@ -50,3 +50,26 @@ Exploratory and not part of the hackathon evidence. Nothing here changes a Quant
     gripper_link frame) absorbs the remaining kinematic error instead of locating the real gap between the jaws.
   - Next: compute the jaw gap from the gripper meshes at the measured hold angle (≈0.45 rad), fix that point, and
     refit only the joint offsets. Then tune contact.
+
+## Debugging 2026-10-15/16, after the T0R block
+
+- **Grip physics works when the geometry is right** (`check_grip_contact.py`).
+  - Arm still, can placed in the jaw gap computed from the meshes: the jaw stops at 0.778 rad on the can, close to
+    the 0.75 rad the meshes predict for a 66 mm gap.
+  - The can lifts 8.4 cm with the arm (rubber μ = 1.0, an STS3215-like gripper torque of 2.9 N m, convex
+    decomposition on the gripper colliders).
+- **The gripper mapping is off by about 0.3 rad.** The real hold reading (32.8 on the 0–100 scale) maps linearly to
+  0.455 rad. There the jaw gap is about 5.4 cm, too small for the can, while the meshes need about 0.75–0.78 rad.
+  So 0–100 does not map to the URDF limits as assumed.
+- **The replay still misses the can, because the joint offsets are not identified.**
+  - Fitting them with the camera and demo grasps gives non-physical solutions:
+    - a free jaw point 6.7 cm along the hinge, wider than the gripper;
+    - with the mesh jaw point fixed, a 57 mm residual;
+    - with wrist roll added, a 78° roll and a 34 mm residual.
+  - Indirect fitting has reached its limit.
+- **Next (stage 3): measure the offsets directly on the arm** (about 5 minutes).
+  - `POSES=EXTENDED,GRIP_CLOSED,GRIP_CAN python so101_touch_calib.py`.
+  - Arm straight out and level (the SO-ARM100 `so101_old_calib.urdf` zero, known relative to the new-calibration
+    URDF), gripper fully closed, gripper holding the can.
+  - These give each joint's offset and the gripper's 0–100 → angle mapping directly. Then the stage 1–2 data become
+    checks rather than the fit.

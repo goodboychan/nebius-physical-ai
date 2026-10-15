@@ -1,0 +1,77 @@
+{
+ "joint_offsets_deg": {
+  "shoulder_pan": 0.0,
+  "shoulder_lift": -12.01,
+  "elbow_flex": 2.87,
+  "wrist_flex": -20.76,
+  "wrist_roll": 78.24
+ },
+ "tip_offset_m": -0.0029,
+ "grid_pose": {
+  "xy_m": [
+   0.2434,
+   -0.0177
+  ],
+  "yaw_rad": -1.5365
+ },
+ "residual_mm": [
+  3.2,
+  0.5,
+  4.1,
+  4.0,
+  1.1,
+  1.5,
+  2.2,
+  1.5,
+  4.3
+ ],
+ "rms_mm": 2.85,
+ "table_z": -0.0024,
+ "start_xyz": [
+  0.3381,
+  -0.0669,
+  0.0015
+ ],
+ "coaster_xyz": [
+  0.3089,
+  0.1258,
+  0.0021
+ ],
+ "held_out_height_error_mm": {
+  "START": 6.4,
+  "COASTER": 7.1
+ },
+ "can_top_touch_height_m": {
+  "B1F": 0.132,
+  "B1K": 0.292,
+  "B3F": 0.138,
+  "B3K": 0.284,
+  "B7F": 0.14,
+  "B7K": 0.276,
+  "B9F": 0.128,
+  "B9K": 0.276
+ },
+ "fit_points": [
+  "G1",
+  "G2",
+  "G3",
+  "G4",
+  "G5",
+  "G6",
+  "G7",
+  "G8",
+  "G9"
+ ],
+ "note": "stage 2: table touches + 120 demo grasps (can position from the overhead camera)",
+ "jaw_centre_in_gripper_link_m": [
+  0.03,
+  0.0,
+  -0.085
+ ],
+ "jaw_centre_fixed": true,
+ "grasp_height_m": 0.0893,
+ "touch_residual_mm_rms": 8.5,
+ "grasp_residual_mm_median": 34.3,
+ "grasp_residual_mm_p90": 39.1,
+ "demo_grasps": 111
+}

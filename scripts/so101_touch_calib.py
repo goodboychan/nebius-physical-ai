@@ -16,6 +16,10 @@ from lerobot.teleoperators.so_leader import SO101Leader
 from lerobot.teleoperators.so_leader.config_so_leader import SO101LeaderConfig
 
 POINTS = [f"G{i}" for i in range(1, 10)] + [f"B{i}{w}" for i in (1, 3, 7, 9) for w in "FK"] + ["START", "COASTER"]
+# POSES mode (sim/README.md, stage 3): record named physical poses instead of touches, e.g.
+#   POSES=EXTENDED,GRIP_CLOSED,GRIP_CAN  -> arm straight out and level (the SO-ARM100 "old calibration" zero),
+#   gripper fully closed, gripper holding the cola can (66 mm)
+if os.environ.get("POSES"): POINTS = os.environ["POSES"].split(",")
 CAN_H = 0.115   # unopened cola can height, m
 J = ["shoulder_pan", "shoulder_lift", "elbow_flex", "wrist_flex", "wrist_roll", "gripper"]
 out = os.path.expanduser(f"~/edgeqgate/touch_calib/{time.strftime('%m%d_%H%M%S')}"); os.makedirs(out, exist_ok=True)

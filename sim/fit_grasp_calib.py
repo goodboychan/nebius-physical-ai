@@ -6,7 +6,9 @@ grasp height (T0 trial 1, 2026-10-15). Here every teleop demo adds one constrain
   - the grasp state (the first stable hold after the gripper opens).
 Model: the can axis passes through a fixed point between the jaws, at d in the gripper_link frame (3 unknowns), at a
 common grasp height h. Fit jointly with the 9 table touches (the touch point at gripper_frame_link + tz).
-Usage: python sim/fit_grasp_calib.py <urdf> <touch.json> <twin_calibration.json> <twin_camera.json> <dataset dir> <out.json>"""
+--fix-d x,y,z fixes the jaw-gap point (gripper_link frame) from the meshes instead of fitting it: fitted freely it absorbs
+kinematic error (lateral 6.7 cm, 2026-10-15). From the meshes at the hold angle the gap centre is about (0.03, 0, -0.085).
+Usage: python sim/fit_grasp_calib.py <urdf> <touch.json> <twin_calibration.json> <twin_camera.json> <dataset dir> <out.json> [--fix-d x,y,z]"""
 import glob, json, sys
 import av, cv2, numpy as np, pandas as pd
 import xml.etree.ElementTree as ET
@@ -53,9 +55,11 @@ for vf, grp in E.groupby([K + "/chunk_index", K + "/file_index"]):
         QS.append(S[ic, :5]); CANS.append(backproj(u, v, Z0 + 0.115)[:2])
 QS, CANS = np.array(QS), np.array(CANS); print("demo grasps:", len(QS), flush=True)
 
-def T_of(q, off, link): return fk({n: np.deg2rad(q[k]) + (off[k] if k < 4 else 0.0) for k, n in enumerate(J)} | {"gripper": 0.0}, link)
+def T_of(q, off, link): return fk({n: np.deg2rad(q[k]) + (off[k] if k < len(off) else 0.0) for k, n in enumerate(J)} | {"gripper": 0.0}, link)
+ROLL = "--fit-roll" in sys.argv   # wrist_roll offset: it moves the off-axis jaw gap sideways, which table touches cannot see
+FIX_D = np.array([float(v) for v in sys.argv[sys.argv.index("--fix-d") + 1].split(",")]) if "--fix-d" in sys.argv else None
 def res(p):
-    off = np.r_[0.0, p[:3]]; tz, d, h = p[3], p[4:7], p[7]
+    off = np.r_[0.0, p[:3], p[8] if ROLL else 0.0]; tz, d, h = p[3], (FIX_D if FIX_D is not None else p[4:7]), p[7]
     rt = []
     for q, w in zip(QG, GW):
         T_ = T_of(q, off, "gripper_frame_link"); rt.append((T_[:3, 3] + T_[:3, 2] * tz - w) * 1000)
@@ -65,14 +69,15 @@ def res(p):
     return np.r_[np.ravel(rt), np.ravel(rg)]
 dg = np.deg2rad(40); best = None
 for d0 in ([0, 0, -0.06], [0, -0.02, -0.08], [0.02, 0, -0.05]):
-    x0 = np.r_[np.deg2rad(Cal["joint_offsets_deg"]["shoulder_lift"]), np.deg2rad(Cal["joint_offsets_deg"]["elbow_flex"]), np.deg2rad(Cal["joint_offsets_deg"]["wrist_flex"]), Cal["tip_offset_m"], d0, 0.05]
-    r = least_squares(res, x0, bounds=(np.r_[[-dg] * 3, -0.05, -0.15, -0.15, -0.15, 0.0], np.r_[[dg] * 3, 0.05, 0.15, 0.15, 0.15, 0.115]), loss="soft_l1", f_scale=10)
+  for roll0 in ((-0.6, -0.3, 0.0, 0.3, 0.6) if ROLL else (0.0,)):
+    x0 = np.r_[np.deg2rad(Cal["joint_offsets_deg"]["shoulder_lift"]), np.deg2rad(Cal["joint_offsets_deg"]["elbow_flex"]), np.deg2rad(Cal["joint_offsets_deg"]["wrist_flex"]), Cal["tip_offset_m"], d0, 0.05, roll0]
+    r = least_squares(res, x0, bounds=(np.r_[[-dg] * 3, -0.05, -0.15, -0.15, -0.15, 0.0, -1.6], np.r_[[dg] * 3, 0.05, 0.15, 0.15, 0.15, 0.115, 1.6]), loss="soft_l1", f_scale=10)
     if best is None or r.cost < best.cost: best = r
-p = best.x; rr = res(p); tt = np.linalg.norm(rr[:27].reshape(-1, 3), axis=1); gg = np.linalg.norm(rr[27:].reshape(-1, 3) * 3, axis=1)
-off = np.r_[0.0, p[:3]]
+p = best.x; rr = res(p); print("wrist_roll offset deg:", round(float(np.rad2deg(p[8])), 2) if ROLL else 0.0); tt = np.linalg.norm(rr[:27].reshape(-1, 3), axis=1); gg = np.linalg.norm(rr[27:].reshape(-1, 3) * 3, axis=1)
+off = np.r_[0.0, p[:3], p[8] if ROLL else 0.0]
 held = {k: round(float((T_of(pts[k][:5], off, "gripper_frame_link")[:3, 3] + T_of(pts[k][:5], off, "gripper_frame_link")[:3, 2] * p[3])[2] - Z0) * 1000, 1) for k in ("START", "COASTER")}
-out = dict(Cal); out.update({"joint_offsets_deg": dict(zip(J[:4], np.rad2deg(off).round(2).tolist())), "tip_offset_m": round(float(p[3]), 4),
-    "jaw_centre_in_gripper_link_m": p[4:7].round(4).tolist(), "grasp_height_m": round(float(p[7]), 4), "touch_residual_mm_rms": round(float(np.sqrt(np.mean(tt ** 2))), 1),
+out = dict(Cal); out.update({"joint_offsets_deg": dict(zip(J[:len(off)], np.rad2deg(off).round(2).tolist())), "tip_offset_m": round(float(p[3]), 4),
+    "jaw_centre_in_gripper_link_m": (FIX_D if FIX_D is not None else p[4:7]).round(4).tolist(), "jaw_centre_fixed": FIX_D is not None, "grasp_height_m": round(float(p[7]), 4), "touch_residual_mm_rms": round(float(np.sqrt(np.mean(tt ** 2))), 1),
     "grasp_residual_mm_median": round(float(np.median(gg)), 1), "grasp_residual_mm_p90": round(float(np.percentile(gg, 90)), 1), "demo_grasps": len(QS),
     "held_out_height_error_mm": held,
     "start_xyz": (T_of(pts["START"][:5], off, "gripper_frame_link")[:3, 3]).round(4).tolist(), "coaster_xyz": (T_of(pts["COASTER"][:5], off, "gripper_frame_link")[:3, 3]).round(4).tolist(),
