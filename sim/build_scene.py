@@ -6,6 +6,8 @@ and COASTER positions; with --every 1, every control step is rendered (frames fo
 --use-action replays the commanded joints (what the follower was told) instead of the measured ones: when the gripper holds
 the can, the measured angle is where the jaw stopped against it (about 32 on the 0-100 scale), so replaying it gives no
 squeeze; the command is tighter (about 16). --mu sets the rubber-band friction on the jaws and the can (default 1.0).
+--grasp-assist (for a visual replay only, labelled as such): when the jaw is blocked by the can, the can is attached to
+the gripper (moved with it every step, at its relative pose at that moment) until the gripper opens again; then physics resumes.
 Usage: sim/isaac.sh sim/build_scene.py <robot usd> <scene_estimate.json> <episode trajectory.csv> <out dir> [--calib <json>] [--camera <json>] [--every N] [--use-action] [--mu F]"""
 import json, os, sys
 from isaacsim import SimulationApp
@@ -72,10 +74,11 @@ cam = Camera(prim_path="/World/overhead", position=EYE, resolution=(640, 480), f
 close = Camera(prim_path="/World/close", position=np.r_[start + [0.40, 0.34], 0.34], resolution=(640, 480), frequency=30) if "--closeup" in sys.argv else None
 arm = world.scene.add(SingleArticulation(prim_path="/World/so101", name="so101"))
 # contact stability for a fast carry: more solver iterations on the can and the arm (the default 4 lets the can slip out)
-it = int(opt("--iters", 4))
-PhysxSchema.PhysxRigidBodyAPI.Apply(stage.GetPrimAtPath("/World/can")).CreateSolverPositionIterationCountAttr(it)
-for prim in stage.Traverse():
-    if prim.HasAPI(UsdPhysics.ArticulationRootAPI): ar = PhysxSchema.PhysxArticulationAPI.Apply(prim); ar.CreateSolverPositionIterationCountAttr(it); ar.CreateSolverVelocityIterationCountAttr(max(1, it // 4))
+if opt("--iters"):   # only when asked: writing 4 explicitly overrides the articulation default and made the arm knock the can away
+    it = int(opt("--iters"))
+    PhysxSchema.PhysxRigidBodyAPI.Apply(stage.GetPrimAtPath("/World/can")).CreateSolverPositionIterationCountAttr(it)
+    for prim in stage.Traverse():
+        if prim.HasAPI(UsdPhysics.ArticulationRootAPI): ar = PhysxSchema.PhysxArticulationAPI.Apply(prim); ar.CreateSolverPositionIterationCountAttr(it); ar.CreateSolverVelocityIterationCountAttr(max(1, it // 4))
 world.reset(); cam.initialize(); arm.initialize()
 if close is not None:
     close.initialize(); close.set_clipping_range(0.005, 10.0); E2, T2 = np.r_[start + [0.40, 0.34], 0.34], np.r_[start, 0.06]
@@ -102,13 +105,42 @@ def q_of(row):   # LeRobot degrees -> URDF radians (no offsets yet); gripper 0..
 arm.set_joint_positions(q_of(traj[0]))
 for _ in range(60): world.step(render=True)
 log, frames = [], []
+from pxr import UsdGeom, Usd
+GL = [q_.GetPath() for q_ in stage.Traverse() if q_.GetName() == "gripper_link"][0]
+def gripper_T(): return np.array(UsdGeom.Xformable(stage.GetPrimAtPath(GL)).ComputeLocalToWorldTransform(Usd.TimeCode.Default())).T
+from scipy.spatial.transform import Rotation as RotS
+def pose_T(p_, qwxyz): T_ = np.eye(4); T_[:3, :3] = RotS.from_quat([qwxyz[1], qwxyz[2], qwxyz[3], qwxyz[0]]).as_matrix(); T_[:3, 3] = p_; return T_
+ASSIST = "--grasp-assist" in sys.argv; attached, T_gc, events = False, None, []
+def hold_can():   # position follows the gripper; the can stays upright as in the real carry (sim contact can tip it)
+    T_ = gripper_T() @ T_gc; can.set_world_pose(position=T_[:3, 3], orientation=np.array([1.0, 0, 0, 0]))
+    can.set_linear_velocity(np.zeros(3)); can.set_angular_velocity(np.zeros(3))
+rb_can = UsdPhysics.RigidBodyAPI(stage.GetPrimAtPath("/World/can"))
 for i, row in enumerate(traj[: int(opt("--steps", len(traj)))]):
     from isaacsim.core.utils.types import ArticulationAction
     arm.apply_action(ArticulationAction(joint_positions=q_of(row)))
     # real time between control steps: rollouts log t_wall_s (gaps reach 150-200 ms); demos are at 1/30 s
-    dt = (traj[i + 1]["t_wall_s"] - row["t_wall_s"]) if ("t_wall_s" in row and i + 1 < len(traj)) else 1 / 30
-    for _ in range(max(1, int(round(dt * 240))) - 1): world.step(render=False)
+    dt = (traj[i + 1]["t_wall_s"] - row["t_wall_s"]) if ("t_wall_s" in row and i + 1 < len(traj) and "--real-dt" in sys.argv) else 1 / 30
+    for _ in range(max(1, int(round(dt * 240)))):
+        if ASSIST and attached: hold_can()
+        world.step(render=False)
+    if ASSIST and attached: hold_can()
     world.step(render=True)
+    if ASSIST:
+        cmd, got = float(q_of(row)[idx[5]]), float(arm.get_joint_positions()[idx[5]])
+        cp, cq = can.get_world_pose(); G = gripper_T(); gap = G[:3, :3] @ np.array(CAL.get("jaw_centre_in_gripper_link_m", [0.06, 0, -0.04])) + G[:3, 3]
+        near = np.hypot(*(gap[:2] - cp[:2])) < 0.05
+        if not attached and near and got - cmd > 0.03:   # the jaw is pushing on something it cannot close through: the can
+            # (tried 2026-10-16: snapping the can to the fitted jaw-gap point made it land 84 mm off and fall; without the
+            # snap it lands 1 mm from the coaster centre, so the can keeps its position at the attach)
+            T_gc = np.linalg.inv(G) @ pose_T(cp, np.array([1.0, 0, 0, 0])); attached = True; g_hold = got; events.append(("attach", i))
+        elif attached and cmd > g_hold + 0.1:             # the command opens the jaw past where it held the can: release
+            attached = False; can.set_linear_velocity(np.zeros(3)); can.set_angular_velocity(np.zeros(3)); events.append(("release", i))
+        if attached:
+            # a dynamic body moved every step (a kinematic flag change does not reach the renderer in this setup)
+            # position follows the gripper; the can stays upright, as it does in the real carry (contact just before the
+            # attach can tip it in the sim)
+            T_ = G @ T_gc; can.set_world_pose(position=T_[:3, 3], orientation=np.array([1.0, 0, 0, 0]))
+            can.set_linear_velocity(np.zeros(3)); can.set_angular_velocity(np.zeros(3))
     p, _ = can.get_world_pose(); log.append(p.tolist())
     if close is not None and 140 <= i <= 230 and i % 10 == 0:
         close.set_world_pose(position=E2, orientation=look_at(E2, T2), camera_axes="world")
@@ -126,6 +158,6 @@ for i, row in enumerate(traj[: int(opt("--steps", len(traj)))]):
     if i % 200 == 0: print("step", i, "cmd", np.round(q_of(row)[idx], 2).tolist(), "got", np.round(arm.get_joint_positions()[idx], 2).tolist(), flush=True)
     if i % EVERY == 0 or i == len(traj) - 1:
         Image.fromarray(cam.get_rgba()[..., :3]).save(f"{OUT}/replay_{i:04d}.png")
-json.dump({"can_xyz": log, "start": start.tolist(), "coaster": coaster.tolist()}, open(f"{OUT}/replay_log.json", "w"))
+json.dump({"can_xyz": log, "start": start.tolist(), "coaster": coaster.tolist(), "grasp_assist_events": events if ASSIST else None}, open(f"{OUT}/replay_log.json", "w"))
 print("REPLAY DONE", len(traj), "can start", log[0], "can end", log[-1])
 app.close()
