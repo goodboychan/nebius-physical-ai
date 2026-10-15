@@ -1,7 +1,9 @@
 """SO-101 coaster task scene in Isaac Sim 6.2 (sim phase 1), plus a replay of one recorded demo's joint trajectory.
 Geometry is provisional until the twin is calibrated: object positions from the URDF forward kinematics of the demos
 (sim/scene_estimate.json, joint offsets not yet known), the coaster radius assumed 5 cm, the overhead camera placed by eye.
-Usage: sim/isaac.sh sim/build_scene.py <robot usd> <scene_estimate.json> <episode trajectory.csv> <out dir>"""
+With --calib <fit_touch_calib output>, the joint offsets are applied and the can and coaster go to the touched START
+and COASTER positions; with --every 1, every control step is rendered (frames for a side-by-side clip).
+Usage: sim/isaac.sh sim/build_scene.py <robot usd> <scene_estimate.json> <episode trajectory.csv> <out dir> [--calib <json>] [--every N]"""
 import json, os, sys
 from isaacsim import SimulationApp
 app = SimulationApp({"headless": True, "width": 640, "height": 480})
@@ -17,7 +19,13 @@ import isaacsim.core.utils.prims as pu
 from PIL import Image
 
 USD, EST, TRAJ, OUT = sys.argv[1:5]; os.makedirs(OUT, exist_ok=True)
+opt = lambda k, d=None: sys.argv[sys.argv.index(k) + 1] if k in sys.argv else d
 est = json.load(open(EST)); start = np.array(est["start_mark_gripper_xyz_median"][:2]); coaster = np.array(est["coaster_release_gripper_xyz_median"][:2])
+CAL = json.load(open(opt("--calib"))) if opt("--calib") else None; EVERY = int(opt("--every", 60))
+OFF = np.zeros(5)
+if CAL:
+    OFF[:4] = np.deg2rad([CAL["joint_offsets_deg"][j] for j in ("shoulder_pan", "shoulder_lift", "elbow_flex", "wrist_flex")])
+    start, coaster = np.array(CAL["start_xyz"][:2]), np.array(CAL["coaster_xyz"][:2])
 J = ["shoulder_pan", "shoulder_lift", "elbow_flex", "wrist_flex", "wrist_roll", "gripper"]
 BASE_Z = 0.0024   # base bottom sits on the table (z = 0)
 
@@ -54,7 +62,7 @@ import csv
 traj = [{k: float(v) for k, v in r.items()} for r in csv.DictReader(open(TRAJ))]
 def q_of(row):   # LeRobot degrees -> URDF radians (no offsets yet); gripper 0..100 -> its joint range
     q = np.zeros(len(names))
-    for k, j in enumerate(J[:5]): q[idx[k]] = np.deg2rad(row[f"state.{j}"])
+    for k, j in enumerate(J[:5]): q[idx[k]] = np.deg2rad(row[f"state.{j}"]) + OFF[k]
     g = row["state.gripper"]; q[idx[5]] = -0.1745 + (1.745 + 0.1745) * g / 100.0; return q
 arm.set_joint_positions(q_of(traj[0]))
 for _ in range(60): world.step(render=True)
@@ -66,7 +74,7 @@ for i, row in enumerate(traj):
     world.step(render=True)
     p, _ = can.get_world_pose(); log.append(p.tolist())
     if i % 200 == 0: print("step", i, "cmd", np.round(q_of(row)[idx], 2).tolist(), "got", np.round(arm.get_joint_positions()[idx], 2).tolist(), flush=True)
-    if i % 60 == 0 or i == len(traj) - 1:
+    if i % EVERY == 0 or i == len(traj) - 1:
         Image.fromarray(cam.get_rgba()[..., :3]).save(f"{OUT}/replay_{i:04d}.png")
 json.dump({"can_xyz": log, "start": start.tolist(), "coaster": coaster.tolist()}, open(f"{OUT}/replay_log.json", "w"))
 print("REPLAY DONE", len(traj), "can start", log[0], "can end", log[-1])
