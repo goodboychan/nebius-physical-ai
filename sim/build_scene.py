@@ -45,7 +45,7 @@ fj = UsdPhysics.FixedJoint.Define(stage, "/World/so101/base_fixed"); fj.CreateBo
 for j in J:   # position drives, stiff like a hobby servo under LeRobot position control
     p = stage.GetPrimAtPath(f"/World/so101/Physics/{j}"); d = UsdPhysics.DriveAPI.Apply(p, "angular")
     # gripper: an STS3215 stalls near 2.9 N m; stiffness per degree so a 15 deg squeeze gives about 2 N m
-    d.CreateStiffnessAttr(2000.0 if j != "gripper" else float(opt("--grip-k", 0.15))); d.CreateDampingAttr(60.0 if j != "gripper" else 0.01); d.CreateMaxForceAttr(10.0 if j != "gripper" else 2.9)
+    d.CreateStiffnessAttr(2000.0 if j != "gripper" else float(opt("--grip-k", 0.15))); d.CreateDampingAttr(float(opt("--arm-damp", 60.0)) if j != "gripper" else 0.01); d.CreateMaxForceAttr(10.0 if j != "gripper" else 2.9)
 MU = float(opt("--mu", 1.0))
 from isaacsim.core.api.materials import PhysicsMaterial
 from pxr import UsdShade
@@ -111,28 +111,39 @@ def gripper_T(): return np.array(UsdGeom.Xformable(stage.GetPrimAtPath(GL)).Comp
 from scipy.spatial.transform import Rotation as RotS
 def pose_T(p_, qwxyz): T_ = np.eye(4); T_[:3, :3] = RotS.from_quat([qwxyz[1], qwxyz[2], qwxyz[3], qwxyz[0]]).as_matrix(); T_[:3, 3] = p_; return T_
 ASSIST = "--grasp-assist" in sys.argv; attached, T_gc, events = False, None, []
+SMOOTH, q_prev = "--smooth" in sys.argv, None
+NOCOL = "--assist-nocollide" in sys.argv   # the grasp is assisted, so the jaws need not touch the can (no pre-grasp shove)
+if NOCOL:
+    fp = UsdPhysics.FilteredPairsAPI.Apply(stage.GetPrimAtPath("/World/can"))
+    fp.CreateFilteredPairsRel().SetTargets([q_.GetPath() for q_ in stage.Traverse() if q_.GetName() in ("gripper_link", "moving_jaw_so101_v1_link", "wrist_link")])
 def hold_can():   # position follows the gripper; the can stays upright as in the real carry (sim contact can tip it)
     T_ = gripper_T() @ T_gc; can.set_world_pose(position=T_[:3, 3], orientation=np.array([1.0, 0, 0, 0]))
     can.set_linear_velocity(np.zeros(3)); can.set_angular_velocity(np.zeros(3))
 rb_can = UsdPhysics.RigidBodyAPI(stage.GetPrimAtPath("/World/can"))
 for i, row in enumerate(traj[: int(opt("--steps", len(traj)))]):
     from isaacsim.core.utils.types import ArticulationAction
-    arm.apply_action(ArticulationAction(joint_positions=q_of(row)))
     # real time between control steps: rollouts log t_wall_s (gaps reach 150-200 ms); demos are at 1/30 s
     dt = (traj[i + 1]["t_wall_s"] - row["t_wall_s"]) if ("t_wall_s" in row and i + 1 < len(traj) and "--real-dt" in sys.argv) else 1 / 30
-    for _ in range(max(1, int(round(dt * 240)))):
+    nsub = max(1, int(round(dt * 240))); q1 = q_of(row); q0 = q_prev if (SMOOTH and q_prev is not None) else q1
+    for k_ in range(nsub):
+        # --smooth: ramp the target across the substeps (a servo moves to a new set-point; a step target makes the
+        # stiff sim drive jump and ring, which shook the carried can)
+        arm.apply_action(ArticulationAction(joint_positions=q0 + (q1 - q0) * (k_ + 1) / nsub))
         if ASSIST and attached: hold_can()
         world.step(render=False)
+    q_prev = q1
     if ASSIST and attached: hold_can()
     world.step(render=True)
     if ASSIST:
         cmd, got = float(q_of(row)[idx[5]]), float(arm.get_joint_positions()[idx[5]])
         cp, cq = can.get_world_pose(); G = gripper_T(); gap = G[:3, :3] @ np.array(CAL.get("jaw_centre_in_gripper_link_m", [0.06, 0, -0.04])) + G[:3, 3]
         near = np.hypot(*(gap[:2] - cp[:2])) < 0.05
-        if not attached and near and got - cmd > 0.03:   # the jaw is pushing on something it cannot close through: the can
+        hold_rad = float(opt("--hold-rad", 0.778))   # the jaw angle on the 66 mm can (check_grip_contact.py)
+        closing = (got - cmd > 0.03) if not NOCOL else (got <= hold_rad + 0.02)
+        if not attached and near and closing:   # with contact: the jaw is blocked by the can; without: it reached the hold angle
             # (tried 2026-10-16: snapping the can to the fitted jaw-gap point made it land 84 mm off and fall; without the
             # snap it lands 1 mm from the coaster centre, so the can keeps its position at the attach)
-            T_gc = np.linalg.inv(G) @ pose_T(cp, np.array([1.0, 0, 0, 0])); attached = True; g_hold = got; events.append(("attach", i))
+            T_gc = np.linalg.inv(G) @ pose_T(cp, np.array([1.0, 0, 0, 0])); attached = True; g_hold = got if not NOCOL else hold_rad; events.append(("attach", i))
         elif attached and cmd > g_hold + 0.1:             # the command opens the jaw past where it held the can: release
             attached = False; can.set_linear_velocity(np.zeros(3)); can.set_angular_velocity(np.zeros(3)); events.append(("release", i))
         if attached:

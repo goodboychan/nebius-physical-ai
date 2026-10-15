@@ -96,3 +96,20 @@ Exploratory and not part of the hackathon evidence. Nothing here changes a Quant
     the carry; the outcome is sensitive to these settings.
 - **Next**: contact tuning (collider rest and contact offsets, a cylinder collider for the can, finer jaw
   decomposition), or, for a visual replay only, a grasp attachment labelled as such.
+
+## Visual replay with grasp assist (2026-10-16)
+
+- `--grasp-assist`: the can is attached to the gripper from the moment the jaw reaches the hold angle (0.778 rad)
+  near the can until the command opens the jaw. While attached, its position follows the gripper before every
+  physics step, and it is kept upright.
+- The first version looked unnatural. Fixes:
+  - `--assist-nocollide`: no jaw–can contact during the assisted grasp. The pre-grasp shove was 20 mm.
+  - `--smooth`: the joint target ramps across the 8 physics substeps. Step targets made the stiff drives ring: the
+    carried can reversed direction 73 times.
+  - `--arm-damp 200`.
+- Result on T0 trial 1:
+  - Carry jerk, median frame-to-frame acceleration: 16.8 → 0.5 mm. Direction reversals: 73 → 6. Pre-grasp slide:
+    20 → 0 mm.
+  - The can is released standing on the coaster, 17 mm from its centre (the real trial is a success).
+- Clip: `~/edgeqgate_data/sim_out/t0001_twin_side_by_side.mp4`. Its caption says the grasp is assisted. This is a
+  visual replay, not a physics result.
