@@ -73,3 +73,26 @@ Exploratory and not part of the hackathon evidence. Nothing here changes a Quant
     URDF), gripper fully closed, gripper holding the can.
   - These give each joint's offset and the gripper's 0–100 → angle mapping directly. Then the stage 1–2 data become
     checks rather than the fit.
+
+## Stage 3 (2026-10-16): offsets measured directly
+
+- **Poses**: `POSES=EXTENDED,GRIP_CLOSED,GRIP_CAN`.
+  - Matching against `so101_old_calib.urdf` failed: its base and link frames differ beyond joint zeros, with a
+    64 mm residual.
+  - A render of the measured pose with zero offsets showed the arm nearly straight. So "extended" is defined in the
+    new URDF itself: the shoulder→elbow, elbow→wrist and wrist→tip lines are all level.
+- **Result** (`fit_pose_calib.py`, `twin_calibration_v4.json`):
+  - Measured offsets: lift −7.35°, elbow −19.1°, wrist_flex +3.8°.
+  - With no fitting, the 9 table touches fit within 3.4 mm, and the held-out START and COASTER heights within 1 and
+    4 mm.
+  - wrist_roll is not fixed by "level". From the demo grasps it is about +88° (LeRobot's roll zero is about a
+    quarter turn from the URDF's). With the gap point free, the grasp xy error is 5.8 mm.
+  - Gripper map: 1.09 (closed) → −0.1745 rad, 31.93 (on the can) → 0.778 rad.
+- **Replay** of T0 trial 1, commanded joints, gripper stiffness 0.3, μ 1.5:
+  - The jaw closes on the can (stops at about 0.78–0.88 rad), and **the can is lifted to 17 cm** and carried toward
+    the coaster.
+  - It then slips out during the fast swing, at about step 225–240, and falls.
+  - Stiffer grip (0.5) ejects it. More solver iterations (16–32) and real step timing (`t_wall_s`) did not stabilise
+    the carry; the outcome is sensitive to these settings.
+- **Next**: contact tuning (collider rest and contact offsets, a cylinder collider for the can, finer jaw
+  decomposition), or, for a visual replay only, a grasp attachment labelled as such.

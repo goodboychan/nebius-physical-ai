@@ -28,6 +28,7 @@ CAL = json.load(open(opt("--calib"))) if opt("--calib") else None; EVERY = int(o
 OFF = np.zeros(5)
 if CAL:
     OFF[:4] = np.deg2rad([CAL["joint_offsets_deg"][j] for j in ("shoulder_pan", "shoulder_lift", "elbow_flex", "wrist_flex")])
+    OFF[4] = np.deg2rad(CAL["joint_offsets_deg"].get("wrist_roll", 0.0))
     start, coaster = np.array(CAL["start_xyz"][:2]), np.array(CAL["coaster_xyz"][:2])
 J = ["shoulder_pan", "shoulder_lift", "elbow_flex", "wrist_flex", "wrist_roll", "gripper"]
 BASE_Z = 0.0024   # base bottom sits on the table (z = 0)
@@ -42,7 +43,7 @@ fj = UsdPhysics.FixedJoint.Define(stage, "/World/so101/base_fixed"); fj.CreateBo
 for j in J:   # position drives, stiff like a hobby servo under LeRobot position control
     p = stage.GetPrimAtPath(f"/World/so101/Physics/{j}"); d = UsdPhysics.DriveAPI.Apply(p, "angular")
     # gripper: an STS3215 stalls near 2.9 N m; stiffness per degree so a 15 deg squeeze gives about 2 N m
-    d.CreateStiffnessAttr(2000.0 if j != "gripper" else 0.15); d.CreateDampingAttr(60.0 if j != "gripper" else 0.01); d.CreateMaxForceAttr(10.0 if j != "gripper" else 2.9)
+    d.CreateStiffnessAttr(2000.0 if j != "gripper" else float(opt("--grip-k", 0.15))); d.CreateDampingAttr(60.0 if j != "gripper" else 0.01); d.CreateMaxForceAttr(10.0 if j != "gripper" else 2.9)
 MU = float(opt("--mu", 1.0))
 from isaacsim.core.api.materials import PhysicsMaterial
 from pxr import UsdShade
@@ -70,6 +71,11 @@ EYE, TGT = np.r_[mid + [0.10, 0.0], 0.75], np.r_[mid - [0.04, 0.0], 0.0]
 cam = Camera(prim_path="/World/overhead", position=EYE, resolution=(640, 480), frequency=30)
 close = Camera(prim_path="/World/close", position=np.r_[start + [0.40, 0.34], 0.34], resolution=(640, 480), frequency=30) if "--closeup" in sys.argv else None
 arm = world.scene.add(SingleArticulation(prim_path="/World/so101", name="so101"))
+# contact stability for a fast carry: more solver iterations on the can and the arm (the default 4 lets the can slip out)
+it = int(opt("--iters", 4))
+PhysxSchema.PhysxRigidBodyAPI.Apply(stage.GetPrimAtPath("/World/can")).CreateSolverPositionIterationCountAttr(it)
+for prim in stage.Traverse():
+    if prim.HasAPI(UsdPhysics.ArticulationRootAPI): ar = PhysxSchema.PhysxArticulationAPI.Apply(prim); ar.CreateSolverPositionIterationCountAttr(it); ar.CreateSolverVelocityIterationCountAttr(max(1, it // 4))
 world.reset(); cam.initialize(); arm.initialize()
 if close is not None:
     close.initialize(); close.set_clipping_range(0.005, 10.0); E2, T2 = np.r_[start + [0.40, 0.34], 0.34], np.r_[start, 0.06]
@@ -90,14 +96,18 @@ def q_of(row):   # LeRobot degrees -> URDF radians (no offsets yet); gripper 0..
     q = np.zeros(len(names))
     src = "action" if "--use-action" in sys.argv else "state"
     for k, j in enumerate(J[:5]): q[idx[k]] = np.deg2rad(row[f"{src}.{j}"]) + OFF[k]
-    g = row[f"{src}.gripper"]; q[idx[5]] = -0.1745 + (1.745 + 0.1745) * g / 100.0; return q
+    g = row[f"{src}.gripper"]
+    if CAL and "gripper_map" in CAL: q[idx[5]] = CAL["gripper_map"]["rad_at_zero"] + CAL["gripper_map"]["rad_per_unit"] * g; return q   # stage 3: measured closed/can points
+    q[idx[5]] = -0.1745 + (1.745 + 0.1745) * g / 100.0; return q
 arm.set_joint_positions(q_of(traj[0]))
 for _ in range(60): world.step(render=True)
 log, frames = [], []
 for i, row in enumerate(traj[: int(opt("--steps", len(traj)))]):
     from isaacsim.core.utils.types import ArticulationAction
     arm.apply_action(ArticulationAction(joint_positions=q_of(row)))
-    for _ in range(8): world.step(render=False)
+    # real time between control steps: rollouts log t_wall_s (gaps reach 150-200 ms); demos are at 1/30 s
+    dt = (traj[i + 1]["t_wall_s"] - row["t_wall_s"]) if ("t_wall_s" in row and i + 1 < len(traj)) else 1 / 30
+    for _ in range(max(1, int(round(dt * 240))) - 1): world.step(render=False)
     world.step(render=True)
     p, _ = can.get_world_pose(); log.append(p.tolist())
     if close is not None and 140 <= i <= 230 and i % 10 == 0:
