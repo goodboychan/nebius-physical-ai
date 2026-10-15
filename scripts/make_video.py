@@ -51,7 +51,7 @@ REL = [
     ("4", 29.1, 36.7, "clip", (f"{E}/t1_old_vs_ft_counted.mp4", 0.0, 2, 0), "Counted blinded trials at +3 cm (side view, 2×)"),
     ("4", 36.7, 40.0, "image", (f"{R}/fig_ft_position.png",), "+3 cm 12/12 vs 3/12 · −3 cm 10/12 vs 2/12 · training mark undecided"),
     ("5", 0.0, 9.0, "image", (f"{R}/fig_frames.png",), "A failure the first Cosmos setup called a success"),
-    ("5", 9.0, 17.3, "card", ("Cosmos-Reason2 end-of-trial judge\n\nfirst setup                  1/21 failures caught\nvalidated prompt, held out   20/21 · 5/252 false alarms\nsame prompt, live new trials 21/23 · 1/49 false alarms",), None),
+    ("5", 9.0, 17.3, "card", ("Cosmos-Reason2 end-of-trial judge\n\nfirst setup                  1/21 failures caught\nvalidated prompt, held out   20/21 · 5/252 false alarms\nsame prompt, live new trials 22/24 · 2/72 false alarms",), None),
     ("5", 17.3, 25.2, "image", (f"{SHOTS}/report_meta.png", 0, 1100), "Deployment report: code writes verdicts and numbers; Nemotron (Token Factory) explains"),
     ("6", 0.0, 7.9, "image", (f"{SHOTS}/review_decisions.png",), "The deployment review"),
     ("6", 7.9, 16.2, "image", (f"{SHOTS}/preflight.png",), "Deployment preflight: broken builds and timing are blocked"),

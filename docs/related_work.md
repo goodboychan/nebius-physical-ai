@@ -154,7 +154,7 @@ KAIST; arXiv 2610.18596, 2026-10-14; https://accrue-rl.github.io/). Full text re
       per-task drops.
     - The stop rule ends a stage at a high running estimate, so the stage-end rate is biased upward.
   - Safety: no safety filter, interventions or hazard counts are reported for real-robot exploration.
-  - An automatic reward labeller (for example our Cosmos judge, 21/23 caught and 1/49 false alarms prospectively)
+  - An automatic reward labeller (for example our Cosmos judge, 22/24 caught and 2/72 false alarms prospectively)
     would need the same validation, because a false "success" becomes a wrong reward.
   - A quantized base policy is another base-policy change under the inherited critic, so the same deployment check
     applies.

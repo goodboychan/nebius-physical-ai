@@ -299,3 +299,32 @@ Analysis: `scripts/ft_analysis.py`, written to `artifacts/reports/ft_analysis.js
   labels → unseal into `artifacts/trials/ft3_unsealed/` → `ft3_analysis.py`.
 - **Limitations stated now**: operator blinding is partial, as in T1/T2, though the policies' motions differ less at
   the training mark. It is one more session, on another day, at the same scene.
+
+## 16. T0R results (2026-10-15, unsealed after ft3_post.json)
+
+Order kept:
+1. The T0R sealed log was hashed into `artifacts/freeze/ft3_post.json` (pushed).
+2. The video consensus re-judge was run blind to cells: 23/24, equal to the live automatic judge.
+3. The failure-mode label was written blind (`artifacts/finetune/T0R_modes.json`: trial 2 → `grasp`).
+4. Only then was the log unsealed. It matches the post record (`27cedfd6…`).
+
+Analysis: `scripts/ft3_analysis.py`, written to `artifacts/reports/ft3_analysis.json`.
+
+| | FT-FP16 | OLD-FP16 (VC-025) | Reading |
+|---|---|---|---|
+| **T0R, training mark (primary, replication)** | **12/12** | 11/12 (trial 2: pushed the can while approaching, never grasped) | **Not repeated in 12 trials.** The FT failure rate's Wilson 95% upper bound is 24% |
+| T0 + T0R pooled (secondary, chosen after T0) | 22/24 | 23/24 | E1 degradation +4.2 pp [−16.3, +25.3] at 97.5%; E2 −2.0 px [−8.6, +9.8]; **INSUFFICIENT_EVIDENCE**, as stated in advance |
+| Gripper chatter (exploratory) | median 0.141 | 0.131 | MWU p = 1.0: the T0 direction (FT > OLD) **did not repeat** |
+
+- **Reading**:
+  - The two placement-disturbance failures of FT in T0 (trials 18 and 22) did not recur in 12 more trials at the same
+    mark, on another day.
+  - This does not show the failure mode is absent. Non-inferiority at the training mark is still not settled
+    (pooled INSUFFICIENT_EVIDENCE).
+  - FT stays the candidate to validate where the start position varies. It is not yet a replacement at the trained
+    spot.
+- **Live Cosmos C1 judge** (prospective): it caught 1/1 failures with 1/23 false alarms and no abstains.
+  - Over all fine-tune blocks (T1, T0, T2, T0R; 96 trials): 22/24 failures caught, 2/72 false alarms.
+- **Limitations**: operator blinding is partial, as in T1/T2. It is one more session, at the same scene. The touch
+  calibration for the Isaac Sim twin was done just before the block. The grid sheet was then removed, and the wrist
+  check failed until it was.

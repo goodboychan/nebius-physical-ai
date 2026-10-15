@@ -87,6 +87,13 @@ def verdict_table():
         rows.append({"candidate": "FT-FP16", "context": "fine-tune vs old, training start mark (secondary)", "success": q["test_k_n"], "reference": q["ref_k_n"],
                      "reference_name": "VC-025 (old policy)", "e1_ci_pp": [round(x, 1) for x in q["E1"]["ci_pp"]], "e1_level_pct": round(q["conf"] * 100, 2), "e2": q["E2"]["decision"],
                      "verdict": q["verdict"], "evidence_path": f"{R}/ft_analysis.json#T0.secondary"})
+    F3 = _ld(f"{R}/ft3_analysis.json")   # T0R replication (prereg §15/§16): T0 + T0R pooled, pooling chosen after T0
+    if F3:
+        q = F3["pooled_T0_T0R"]
+        rows.append({"candidate": "FT-FP16", "context": "fine-tune vs old, training start mark, T0 + T0R pooled (replication)", "success": q["test_k_n"],
+                     "reference": q["ref_k_n"], "reference_name": "VC-025 (old policy)", "e1_ci_pp": [round(x, 1) for x in q["E1"]["ci_pp"]],
+                     "e1_level_pct": round(q["conf"] * 100, 2), "e2": q["E2"]["decision"], "verdict": q["verdict"],
+                     "replication": F3["T0R"]["primary_reading"], "evidence_path": f"{R}/ft3_analysis.json#pooled_T0_T0R"})
     cost = {"VC-025": 11.6, "VC-002": 16.8, "VC-020": 16.8, "VC-005": 17.1, "VC-000": 53.4, "FT-FP16": 11.6}
     for r in rows:   # next actions are decided by code, not by the model
         if r["candidate"] == "PC-B" and r["context"] == "positive control real arm":
@@ -96,8 +103,8 @@ def verdict_table():
             r["next_action"] = ("The candidate to validate next where the start position varies, not yet a replacement: settle the training mark, "
                                 "then confirm at more positions and objects")
         elif r["candidate"] == "FT-FP16" and r["verdict"] == "INSUFFICIENT_EVIDENCE":
-            r["next_action"] = ("Check that the fine-tune keeps nominal performance: 10/12 vs 12/12 at the training mark is undecided; plan more trials at the "
-                                "training mark before replacing the old policy there")
+            r["next_action"] = ("Nominal performance at the training mark is still undecided (pooled with the T0R replication: 22/24 vs 23/24); the two "
+                                "T0 failures did not repeat in 12 more trials. Plan a larger block at the training mark before replacing the old policy there")
         elif r["verdict"] == "INSUFFICIENT_EVIDENCE":
             r["next_action"] = ("Settle success against FP32 at 10 pp: plan about 110-120 trials per arm (planning estimate, assumes equal true rates near 96-97 percent; not a guarantee)"
                                 + ("; also validate start-position changes before deployment" if r["candidate"] == "VC-025" else ""))
@@ -119,8 +126,8 @@ def verdict_table():
         "simple_checks_scope": "The action-MSE and audit-score thresholds were set on the same 24 normal cells, so '0 normal cells flagged' holds by construction; only the input check is independent of that set.",
         "ai_judge": ("Cosmos-Reason2 end-of-trial judge, held-out eval of 273 recorded trials (artifacts/cosmos_judge/eval_scores.jsonl): "
                      "first setup 1/21 failures caught; validated prompt C1 p1 20/21 caught, 5/252 false alarms, 4 of them on the unseen yellow can (4/33). "
-                     "Wording-sensitive; end state only. Re-checked live and prospectively in the fine-tune evaluation (72 new trials): 21/23 failures caught, "
-                     "1/49 false alarms (artifacts/reports/ft_cosmos_live_judge.json).")}}
+                     "Wording-sensitive; end state only. Re-checked live and prospectively in the fine-tune evaluation (96 new trials, T1/T0/T2/T0R): 22/24 failures caught, "
+                     "2/72 false alarms (artifacts/reports/ft_cosmos_live_judge.json; T0R in ft3_analysis).")}}
 
 
 SYSTEM = """You explain a robotics deployment review. The verdicts and numbers are already decided by code.

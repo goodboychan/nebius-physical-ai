@@ -65,8 +65,8 @@ Numbers come from committed artifacts. The figure's script lists its sources.
    - After a dev/eval-split re-evaluation, a final-frame prompt with an explicit success criterion and an `Answer:` format caught **20/21** failures (Wilson 95% 0.77–0.99) with **5/252** false alarms on the same held-out set.
    - The false alarms concentrate on the unseen yellow can (4/33, 12%).
    - The setup is very sensitive to wording, the change combined prompt, format and token budget, and it judges only the end state (median 893 ms).
-   - **Live, prospective re-check**: the same prompt, unchanged, ran on 72 new fine-tune trials. It caught **21/23**
-     failures (0.73–0.98) with **1/49** false alarms ([`ft_cosmos_live_judge.json`](artifacts/reports/ft_cosmos_live_judge.json)).
+   - **Live, prospective re-check**: the same prompt, unchanged, ran on 96 new fine-tune trials (T1, T0, T2 and the
+     T0R replication). It caught **22/24** failures (0.74–0.98) with **2/72** false alarms ([`ft_cosmos_live_judge.json`](artifacts/reports/ft_cosmos_live_judge.json)).
      Other objects and scenes are still open.
    - Source: [`cosmos_judge_eval_preregistration.md`](docs/cosmos_judge_eval_preregistration.md), [`eval_scores.jsonl`](artifacts/cosmos_judge/eval_scores.jsonl).
 
@@ -81,9 +81,10 @@ Numbers come from committed artifacts. The figure's script lists its sources.
      | **+3 cm** (primary) | **12/12** | 3/12 | +75 pp [+38, +91] at 95% (improvement: lower bound > 0) | improvement detected |
      | **−3 cm** (symmetry, added during the session and registered before any unsealing) | **10/12** | 2/12 | +67 pp [+27, +84] at 95% | improvement detected |
      | 0 cm (training mark) | 10/12 | 12/12 | −17 pp [−49, +15] at 97.5% (non-inferiority, 10 pp tolerance) | insufficient evidence |
+     | 0 cm, replication T0R (registered after T0, §15) | 12/12 | 11/12 | pooled 22/24 vs 23/24: −4 pp [−25, +16] at 97.5% | T0 failures not repeated; still insufficient evidence |
 
    - Reading: position improved on both sides of the trained start. Whether nominal performance is maintained is
-     undetermined.
+     undetermined. A pre-registered replication at the training mark (T0R) did not repeat the two fine-tune failures.
    - Off the training position, the old policy's commanded gripper also chatters about 4× more (exploratory,
      pre-specified metric).
    - Caveat: the operator could see that the two policies moved differently, so operator blinding was partial.
@@ -347,7 +348,7 @@ Error is the mean action error against FP32 on the 2,000 audit states, in normal
   measure on-device action error on real states. A closed-loop Hailo block would need a different deadline and its
   own pre-registration.
 - After the position fine-tune (done, item 5):
-  - settle its nominal performance at the training mark (10/12 vs 12/12, undecided);
+  - settle its nominal performance at the training mark (pooled with the T0R replication 22/24 vs 23/24, undecided) with a larger block;
   - test more positions and objects;
   - check the post hoc observation that INT8 roughly doubles gripper chatter at a similar success rate, as its own
     pre-registered block.

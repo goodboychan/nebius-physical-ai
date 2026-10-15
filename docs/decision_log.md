@@ -1086,3 +1086,16 @@ Wording, also from the review:
 - The cost comparison is labelled "for scale, not as a saving", since 481 trials and 74 h answer different goals.
 - The README and submission caveats now say FT operator blinding was partial and that −3 cm was added during the
   session. The earlier text said "blind to cells throughout" for every follow-up.
+
+## 2026-10-15 — T0R replication done
+
+- **Block**: T0R (prereg §15, amendment 6): 24/24 trials, 0 aborted, 0 invalid. The sealed log was hashed (`ft3_post.json`,
+  pushed) before the blind video re-judge (23/24) and the blind mode label (trial 2 → `grasp`).
+- **Result** (§16):
+  - FT 12/12, OLD 11/12. The two FT placement-disturbance failures of T0 did not repeat.
+  - Pooled T0 + T0R: 22/24 vs 23/24, INSUFFICIENT_EVIDENCE, as stated in advance.
+  - The T0 chatter direction (FT > OLD) did not repeat (p = 1.0).
+- **Live judge**: over all fine-tune blocks, 22/24 failures caught and 2/72 false alarms (`scripts/ft_live_judge.py`).
+- **Synced**: the D3 table (a pooled training-mark row), README, the submission draft, the dashboard, the seminar deck
+  and the video card (v6). The Cosmos endpoint was stopped after the block.
+- **Not changed**: every verdict. Approval of FT at the training mark stays on hold.

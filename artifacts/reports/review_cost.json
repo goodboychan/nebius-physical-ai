@@ -32,28 +32,28 @@
   "usd": 25.589820375805555
  },
  "token_factory": {
-  "in": 163898,
-  "out": 87468,
+  "in": 165824,
+  "out": 87507,
   "calls": 69,
   "estimated_calls": 7,
-  "usd": 0.1278906
+  "usd": 0.1285035
  },
  "mlflow": {
   "hours": 1.5,
   "usd": 0.72
  },
- "cloud_total_usd": 30.903904748919445,
+ "cloud_total_usd": 30.904517648919445,
  "real_arm": {
-  "trials": 481,
-  "sessions": 9,
-  "hours": 11.972777777777777,
-  "minutes_per_trial": 1.4934857934857935
+  "trials": 505,
+  "sessions": 10,
+  "hours": 12.475,
+  "minutes_per_trial": 1.4821782178217822
  },
  "brute_force_settle_all": {
   "candidates": 25,
   "trials_per_arm": 115,
   "trials": 2990,
-  "arm_hours": 74.42537537537537
+  "arm_hours": 73.86188118811882
  },
  "note": "Job cost assumes billing from creation to finish (an upper bound). Token Factory D3 calls are estimated from text length."
 }

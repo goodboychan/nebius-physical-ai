@@ -1,11 +1,11 @@
 # QuantGate — deployment report v3 (auto-generated)
 
-> Sections 1–4 are written by code from the verdict table (`d3_v3_verdicts.json`, hash `3944296ce1ba3409`). Sections 5–6 are written by Nemotron 3 Super (Token Factory) and checked by code: no digits, no verdict labels, no approval or safety words. They are never a source of verdicts or numbers; a qualitative misreading in plain words cannot be excluded by these rules. v2 is kept as history (`d3_report_v2.md`).
+> Sections 1–4 are written by code from the verdict table (`d3_v3_verdicts.json`, hash `d479d31b92f251f4`). Sections 5–6 are written by Nemotron 3 Super (Token Factory) and checked by code: no digits, no verdict labels, no approval or safety words. They are never a source of verdicts or numbers; a qualitative misreading in plain words cannot be excluded by these rules. v2 is kept as history (`d3_report_v2.md`).
 
 | Item | Value |
 |---|---|
 | Model attempts | 2 |
-| Latency | 34.8 s |
+| Latency | 38.0 s |
 | **Wording findings (final attempt)** | **0** |
 
 ---
@@ -36,6 +36,7 @@ Each success interval is a Newcombe interval for candidate minus reference, in p
 - **FT-FP16** · fine-tune vs old, start +3 cm (held out, primary) · `IMPROVEMENT_DETECTED` · success 12/12 against VC-025 (old policy) 3/12 · candidate − reference +75.0 pp, 95% interval [+37.8, +91.1] pp (improvement detected if the lower bound is above 0) · GPU time on device 11.6 ms (`artifacts/reports/ft_analysis.json#T1.primary`)
 - **FT-FP16** · fine-tune vs old, start -3 cm (held out, symmetry) · `IMPROVEMENT_DETECTED` · success 10/12 against VC-025 (old policy) 2/12 · candidate − reference +66.7 pp, 95% interval [+26.9, +83.6] pp (improvement detected if the lower bound is above 0) · GPU time on device 11.6 ms (`artifacts/reports/ft_analysis.json#T2.primary`)
 - **FT-FP16** · fine-tune vs old, training start mark (secondary) · `INSUFFICIENT_EVIDENCE` · success 10/12 against VC-025 (old policy) 12/12 · candidate − reference -16.7 pp, 97.5% interval [-49.0, +15.4] pp (non-inferiority at a 10 pp tolerance: within tolerance if the lower bound is above -10 pp, degraded if the upper bound is below -10 pp, else undecided (the verdict also uses placement)) · placement: indeterminate · GPU time on device 11.6 ms (`artifacts/reports/ft_analysis.json#T0.secondary`)
+- **FT-FP16** · fine-tune vs old, training start mark, T0 + T0R pooled (replication) · `INSUFFICIENT_EVIDENCE` · success 22/24 against VC-025 (old policy) 23/24 · candidate − reference -4.2 pp, 97.5% interval [-25.3, +16.3] pp (non-inferiority at a 10 pp tolerance: within tolerance if the lower bound is above -10 pp, degraded if the upper bound is below -10 pp, else undecided (the verdict also uses placement)) · placement: indeterminate · GPU time on device 11.6 ms (`artifacts/reports/ft3_analysis.json#pooled_T0_T0R`)
 
 ## 3. Flagged builds (written by code)
 
@@ -44,7 +45,7 @@ Each success interval is a Newcombe interval for candidate minus reference, in p
 
 The action-MSE and audit-score thresholds were set on the same 24 normal cells, so '0 normal cells flagged' holds by construction; only the input check is independent of that set.
 
-AI judge: Cosmos-Reason2 end-of-trial judge, held-out eval of 273 recorded trials (artifacts/cosmos_judge/eval_scores.jsonl): first setup 1/21 failures caught; validated prompt C1 p1 20/21 caught, 5/252 false alarms, 4 of them on the unseen yellow can (4/33). Wording-sensitive; end state only. Re-checked live and prospectively in the fine-tune evaluation (72 new trials): 21/23 failures caught, 1/49 false alarms (artifacts/reports/ft_cosmos_live_judge.json).
+AI judge: Cosmos-Reason2 end-of-trial judge, held-out eval of 273 recorded trials (artifacts/cosmos_judge/eval_scores.jsonl): first setup 1/21 failures caught; validated prompt C1 p1 20/21 caught, 5/252 false alarms, 4 of them on the unseen yellow can (4/33). Wording-sensitive; end state only. Re-checked live and prospectively in the fine-tune evaluation (96 new trials, T1/T0/T2/T0R): 22/24 failures caught, 2/72 false alarms (artifacts/reports/ft_cosmos_live_judge.json; T0R in ft3_analysis).
 
 ## 4. Next actions (written by code)
 
@@ -53,21 +54,22 @@ AI judge: Cosmos-Reason2 end-of-trial judge, held-out eval of 273 recorded trial
 - **Do not deploy; fix the calibration input (a simple input check catches it); see the real-arm check of PC-B** — PC-N (offline, deliberately miscalibrated), PC-B (offline, deliberately miscalibrated)
 - **Offline warning not confirmed on the arm in 12 trials (unresolved, not 'tolerated'); keep rejecting this build at the calibration-input check; do not read the offline audit as a predictor of closed-loop failure** — PC-B (positive control real arm)
 - **The candidate to validate next where the start position varies, not yet a replacement: settle the training mark, then confirm at more positions and objects** — FT-FP16 (fine-tune vs old, start +3 cm (held out, primary)), FT-FP16 (fine-tune vs old, start -3 cm (held out, symmetry))
-- **Check that the fine-tune keeps nominal performance: 10/12 vs 12/12 at the training mark is undecided; plan more trials at the training mark before replacing the old policy there** — FT-FP16 (fine-tune vs old, training start mark (secondary))
+- **Nominal performance at the training mark is still undecided (pooled with the T0R replication: 22/24 vs 23/24); the two T0 failures did not repeat in 12 more trials. Plan a larger block at the training mark before replacing the old policy there** — FT-FP16 (fine-tune vs old, training start mark (secondary)), FT-FP16 (fine-tune vs old, training start mark, T0 + T0R pooled (replication))
 
 ## 5. Why the review looks like this
-Explain cheapest candidate is the half‑precision candidate to validate first because it uses least energy per inference and lowest latency although it draws more power while running than the eight‑bit builds.  
-The position fine‑tune (same half‑precision engine cost) removed the start‑position weakness shown at both held‑out shifts giving clear improvement but it has not yet shown nominal performance at the training mark because the comparison there is undecided.  
-Success comparisons against full precision cannot be decided yet because the confidence intervals for each candidate cross the tolerance band leaving the evidence insufficient.  
-The deliberately miscalibrated builds are stopped at the simple input check because that check catches the bad calibration before any other test runs.  
-The AI judge’s record shows it is wording‑sensitive looks only at the final state gives more false alarms on novel objects so it must be re‑validated before reliance it cleared re‑check on fresh live trials in the fine‑tune study but still needs checking on other objects and scenes.  
+The half‑precision candidate uses the least energy per inference and runs fastest, so it is the cheapest option to test first on the device.  
+The fine‑tune version of that candidate removed the start‑position weakness seen when the beginning pose was shifted three centimeters left or right, as shown by clear improvement in those held‑out cases.  
+At the training start mark, however, the fine‑tune version has not yet shown that it stays inside the allowed tolerance compared to the full‑precision baseline.  
+Because the success counts are still low, the confidence interval remains wide and does not allow a decision on whether the candidate is non‑inferior to full precision.  
+The two builds that were deliberately mis‑calibrated fail a simple input sanity check, so they are stopped before any further testing.  
+The AI judge’s record shows it catches most failures but raises false alarms on unfamiliar objects, meaning its output must be re‑checked before it can be relied upon for decisions about operation.
 
 ## 6. Questions to resolve before deployment
-- What number of trials is needed to shrink the confidence interval so the difference stays within the tolerance for each candidate?  
-- Does the half‑precision candidate meet the power budget when measured under sustained load?  
-- Does the position fine‑tune maintain nominal performance at the training mark when tested with more repetitions?  
-- Can the AI judge be relied on for unseen objects after additional validation on varied scenes?  
-- Are there any hidden failure modes in the stress scenarios that require extra probing?
+- How many additional trials are needed to narrow the confidence interval so that the interval’s bottom edge stays above minus ten percent?  
+- Does the fine‑tune version maintain performance across a range of start‑position shifts beyond the two tested offsets?  
+- Can the input sanity check be extended to catch other forms of calibration drift without increasing false rejects?  
+- What is the false‑alarm rate of the AI judge on a broader set of novel objects and backgrounds?  
+- Does the half‑precision candidate consume less average power than the eight‑bit integer builds when measured over a full duty cycle?
 
 
 ## Figures (drawn by code from the verdict table)

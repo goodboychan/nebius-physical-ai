@@ -1,25 +1,25 @@
 {
  "prompt": "C1p1",
- "n": 72,
- "n_fail": 23,
+ "n": 96,
+ "n_fail": 24,
  "failure_recall": [
-  21,
-  23,
+  22,
+  24,
   [
-   0.732,
-   0.976
+   0.742,
+   0.977
   ]
  ],
  "false_alarm": [
-  1,
-  49,
+  2,
+  72,
   [
-   0.004,
-   0.107
+   0.008,
+   0.096
   ]
  ],
  "abstain": 0,
- "latency_ms_median": 392.4,
+ "latency_ms_median": 368.5,
  "by_block": {
   "T1": {
    "fail_caught": [
@@ -49,6 +49,16 @@
    "false_alarm": [
     0,
     12
+   ]
+  },
+  "T0R": {
+   "fail_caught": [
+    1,
+    1
+   ],
+   "false_alarm": [
+    1,
+    23
    ]
   }
  }
