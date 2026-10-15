@@ -1099,3 +1099,10 @@ Wording, also from the review:
 - **Synced**: the D3 table (a pooled training-mark row), README, the submission draft, the dashboard, the seminar deck
   and the video card (v6). The Cosmos endpoint was stopped after the block.
 - **Not changed**: every verdict. Approval of FT at the training mark stays on hold.
+
+## 2026-10-16 — Hugging Face datasets made public (early, for the first submission)
+
+- `chans/quantgate-so101-coaster` and `chans/quantgate-so101-coaster-positions` were switched to public at the user's
+  request. Both were checked as viewable without login. They are linked at the top of the README.
+- Secret check 2 (`scripts/prepublish_check.py`) passed before this: 0 exact secrets in 1,018 blobs.
+- The code repository and the dashboard are switched by the user.

@@ -12,6 +12,11 @@ edge device. It shows the engine's measured cost, its real-arm behavior and how 
 **License: [Apache 2.0](LICENSE)** · Nebius × NVIDIA Global AI Hackathon, Physical AI track · internal code name
 `edgeqgate`
 
+**Links** · Datasets on the Hugging Face Hub (LeRobot v3):
+[`chans/quantgate-so101-coaster`](https://huggingface.co/datasets/chans/quantgate-so101-coaster) (120 teleoperated
+demonstrations) · [`chans/quantgate-so101-coaster-positions`](https://huggingface.co/datasets/chans/quantgate-so101-coaster-positions)
+(50 demonstrations at shifted start positions, used for the position fine-tune)
+
 The logo's Q stands for QuantGate and quantization. The open passage at the lower right is the gate, and the small
 square leaving it is a candidate that has cleared review for its next test. Passing the gate means "worth
 validating next", not "approved": in this study no INT8 build was approved against FP32 (insufficient evidence).
