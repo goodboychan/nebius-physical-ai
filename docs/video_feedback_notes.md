@@ -138,3 +138,10 @@ numbered in the order the user gave them.
     precision label."
 - Follow-up (2026-10-16): the outro uses the user's **logo-only animation** (`video/assets/quantgate_logo_outro.mp4`,
   14.5 s). Its wordmark build (9 s to the end) plays, fitted to the 4.2 s slot, and the kick line fades in under it.
+
+## Note 10 — the question card (2026-10-16, after v7)
+
+- Larger type for "Before I ship this policy…", now 72 pt bold and centred.
+- Each word appears (brightens) as it is spoken. Word times come from the narration sentence's span, split by
+  character position.
+- Applied in v7 (re-rendered).

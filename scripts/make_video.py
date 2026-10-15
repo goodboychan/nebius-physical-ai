@@ -120,9 +120,24 @@ def frames_of(seg):
     elif kind == "card":
         im = card(args[0])
         for i in range(n): yield im.copy()
-    elif kind == "cardfade":   # note 1: centred, fades in by brightness
-        im = card(args[0]); dark = Image.new("RGB", (W, H), BG)
-        for i in range(n): yield Image.blend(dark, im, min(1.0, i / (1.2 * FPS)))
+    elif kind == "cardfade":   # note 1 (+ follow-up): large, centred, each word brightens as it is spoken
+        lines = args[0].split("\n"); f = F(72, True); words = []; y = (H - 120 * len(lines)) / 2 - 40
+        probe = ImageDraw.Draw(Image.new("RGB", (W, H)))
+        for ln in lines:
+            x = (W - probe.textlength(ln, font=f)) / 2
+            for w_ in ln.split(" "):
+                words.append((w_, x, y)); x += probe.textlength(w_ + " ", font=f)
+            y += 120
+        # word timing: the narration sentence that matches this card, split by character position
+        sub = next((x for x in SUBS if x[0] <= t0 + 0.5 < x[1] + 0.5 and x[2].split()[0] == words[0][0]), (t0, t1, ""))
+        total = sum(len(w_) + 1 for w_, _, _ in words); acc = 0; starts = []
+        for w_, _, _ in words: starts.append(sub[0] + (sub[1] - sub[0]) * acc / total); acc += len(w_) + 1
+        for i in range(n):
+            t = t0 + i / FPS; im = Image.new("RGB", (W, H), BG); d = ImageDraw.Draw(im)
+            for (w_, x, yy), st in zip(words, starts):
+                a_ = min(1.0, max(0.0, (t - st + 0.05) / 0.35)); col = tuple(int(BG[k] + (INK[k] - BG[k]) * a_) for k in range(3))
+                if a_ > 0: d.text((x, yy), w_, font=f, fill=col)
+            yield im
     elif kind == "chart":      # notes 3-7
         fn = vchart.CHARTS[args[0]]
         for i in range(n): yield fn(i / FPS, t1 - t0)
