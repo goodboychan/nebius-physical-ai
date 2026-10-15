@@ -1,0 +1,27 @@
+{
+ "urdf": "/home/chanseok/edgeqgate_data/sim_assets/SO-ARM100/Simulation/SO101/so101_new_calib.urdf",
+ "dataset": "/home/chanseok/edgeqgate_data/so101_demo",
+ "episodes": 120,
+ "frame": "robot base_link, metres",
+ "start_mark_gripper_xyz_median": [
+  0.168,
+  -0.165,
+  -0.0525
+ ],
+ "start_mark_iqr": [
+  0.0196,
+  0.0472,
+  0.0181
+ ],
+ "coaster_release_gripper_xyz_median": [
+  0.2179,
+  -0.0696,
+  -0.0166
+ ],
+ "coaster_iqr": [
+  0.0218,
+  0.0116,
+  0.0159
+ ],
+ "start_to_coaster_m": 0.1076515410936494
+}
