@@ -112,7 +112,7 @@ def audit_vs_random(t, dur):
 def ft_position(t, dur):
     R = rows("05_position_finetune.csv"); by = {(r["start"], r["block"]): r for r in R}
     sel = [("+3 cm", by[("+3 cm", "T1")]), ("−3 cm", by[("-3 cm", "T2")]), ("training mark", by[("0 cm (training mark)", "T0 + T0R pooled")])]
-    im, d = frame("Position fine-tune · blinded, interleaved", "Fixed where it failed", "old policy vs fine-tuned, successes / trials per start position")
+    im, d = frame("Position fine-tune · sealed, interleaved", "Fixed where it failed", "old policy vs fine-tuned, successes / trials per start position")
     gx, gw, y1, hmax = 300, 440, 770, 380
     for v in (0, 50, 100): yy = y1 - hmax * v / 100; d.line((240, yy, 1700, yy), fill=GRID, width=2); d.text((180, yy - 14), f"{v}%", font=F(22), fill=INK2)
     for i, (lab, r) in enumerate(sel):

@@ -1,0 +1,26 @@
+{
+ "note": "TTS input for docs/video_narration.md. Numbers are spelled out. [word](/phonemes/) fixes words missing from the Kokoro (misaki) dictionary: Jetson, Orin, Nebius, Nemotron, int. Scene 5b is held until the positive-control result. v2 (2026-10-13): scenes 4 and 6 restructured around the developer's three decisions; position wording softened. v3 (2026-10-14): scene 4 adds the position fine-tune (outcome sentence added after unsealing), scene 5 states that code writes every verdict and number (report v3), scene 6 adds the deployment preflight. v3.1 (2026-10-15): scene 4 adds the fine-tune result (T1 12/12 vs 3/12, T2 10/12 vs 2/12, T0 undecided). v3.2 (2026-10-15): scene 0 introduces the logo and its meaning; scene 2's slot is 43 s (the picture is split into three takes). v4 (2026-10-16, user feedback notes 1-2): the success/failure clips and the question open (scene 0); the logo follows (scene 1) with the user's animation and new lines; scene 2 spells out ACT and says Nebius Jobs on an L40S; scene 5 says Nebius AI Endpoint. [[pause:s]] inserts silence; lead_s delays a scene's speech. v4 length fit: scene 2 drops 'on an L40S GPU' and the 'scores every candidate offline first' sentence (scene 3 says it); speech speed 1.02. v4 note 9: scene 7 kick line 'Earn the next test, not the approval.'",
+ "targets_s": {
+  "0": 11.0,
+  "1": 14.5,
+  "2": 43,
+  "3": 18.5,
+  "4": 40,
+  "5": 25.2,
+  "6": 22.5,
+  "7": 4.2
+ },
+ "scenes": {
+  "0": "Same robot. Same task. One run succeeds, one fails. Before I ship this policy to a tiny [Jetson](/dʒˈɛtsən/), how do I know which model I can trust?",
+  "1": "For quantization, [[pause:0.4]] we need to pick the candidate that has earned its next test, not an approval. [[pause:0.6]] That's why robot researchers need Quant Gate.",
+  "2": "This is an S O one oh one arm running an A C T policy, Action Chunking with Transformers, on a [Jetson](/dʒˈɛtsən/) [Orin](/ˈɔɹɪn/) Nano Super. We taught it with one hundred and twenty teleoperated demonstrations, and trained it with [Nebius](/nˈɛbiəs/) Jobs. From that one policy, we built twenty-six candidate engines with TensorRT: full precision, half precision, and twenty-four [int](/ˈɪnt/) eight builds that differ only in how they were calibrated. Every real trial is blinded. The operator never knows which engine is running, and the results stay sealed until all the trials are logged. That way, no candidate gets picked after we have seen how it did.",
+  "3": "QuantGate puts three things side by side for every candidate: what it costs on the real device, how it scored offline, and what it did on the real arm. Training and the offline audit ran on [Nebius](/nˈɛbiəs/) Jobs. The engines run as TensorRT on the [Jetson](/dʒˈɛtsən/).",
+  "4": "Measuring changed the decision. On this [Jetson](/dʒˈɛtsən/), half precision was the cheapest engine, not [int](/ˈɪnt/) eight, and on the arm it went nineteen for twenty. The audit's top picks did no better than random picks. A new can worked forty-eight out of forty-eight. But with the start moved three centimeters, the arm failed. So we recorded fifty demonstrations at shifted positions, fine-tuned on [Nebius](/nˈɛbiəs/), and tested it blinded, at a position it never saw. There, it went twelve for twelve, where the old policy went three for twelve, and ten for twelve on the other side. At the trained spot, more trials are still needed.",
+  "5": "The A I layers get checked too. In its first setup, Cosmos Reason, on a [Nebius](/nˈɛbiəs/) A I Endpoint, caught one failure in twenty-one. We tested it like any other component, on held-out recordings, and a validated question caught twenty of twenty-one. [Nemotron](/nˈimOtɹˌɑn/) Super on Token Factory explains the review in words, while every verdict and number comes from code.",
+  "6": "So QuantGate answers three questions. Which candidate do I validate first? Half precision. Which do I distrust? Broken calibrations, which a simple input check catches, and any engine whose files no longer match what was audited. Can I approve deployment? Not yet. The review lists exactly which trials are still missing.",
+  "7": "Quant Gate. Earn the next test, not the approval."
+ },
+ "lead_s": {
+  "1": 2.4
+ }
+}

@@ -27,7 +27,7 @@ def srt(path):
         out.append((t(a), t(z), txt))
     return out
 
-NARR = os.environ.get("NARR", "v4")   # v4 (2026-10-16): feedback notes 1-9, docs/video_feedback_notes.md
+NARR = os.environ.get("NARR", "v5")   # v5 (2026-10-16): external review 7 (story first, >= 65 s of robot footage); v4: notes 1-9
 SUBS = srt(f"docs/narration/narration_{NARR}.srt")
 
 # Segments are (scene, start, end) in seconds relative to the scene start (docs/narration/narration_v3_timing.json),
@@ -36,30 +36,31 @@ ST = json.load(open(f"docs/narration/narration_{NARR}_timing.json"))
 T1L = "video/2.T1_long/20261014_213936.mp4"   # phone, upside down: rot 180
 LOGO = "video/assets/quantgate_logo_intro.mp4"   # the user's logo animation (14.5 s, 1536x1024)
 OUTRO = "video/assets/quantgate_logo_outro.mp4"  # the user's logo-only animation for the last scene (14.5 s)
-REL = [   # v4 order (note 1): success/failure clips and the question first, then the logo
-    ("0", 0.0, 1.7, "clip", (f"{C}/g6_success.mp4", 2.0, 4, 0), "Same robot, same task: success (overhead, 4×)"),
-    ("0", 1.7, 4.0, "clip", (f"{C}/g6_fail_knock.mp4", 8.0, 4, 0), "Same robot, same task: failure (overhead, 4×)"),
-    ("0", 4.0, 11.0, "cardfade", ("Before I ship this policy to a tiny Jetson,\nhow do I know which model I can trust?",), None),
-    ("1", 0.0, 14.5, "video", (LOGO,), None),
-    ("2", 0.0, 8.3, "clip", (f"{E}/demo_ft.mp4", 1.0, 1, 0), "Real arm, real time · SO-101 · ACT (Action Chunking with Transformers) · Jetson Orin Nano Super"),
-    ("2", 8.3, 15.3, "clip", (f"{C}/demos_top_wrist.mp4", 0.0, 1, 0), "Teleoperated demonstrations: overhead and wrist camera (training data)"),
-    ("2", 15.3, 27.8, "clip", (f"{E}/demo_ft.mp4", 6.8, 1, 0), "Real arm, real time · fine-tuned policy at +3 cm (demonstration take, not counted)"),
-    ("2", 27.8, 43.0, "clip", (T1L, 209.6, 1, 180), "Counted blinded trial (T1 trial 4) · the operator sees trial numbers only"),
-    ("3", 0.0, 11.2, "chart", ("engine_cost",), None),
-    ("3", 11.2, 18.5, "chart", ("g6_success",), None),
-    ("4", 0.0, 9.8, "chart", ("cost_vs_success",), None),
-    ("4", 9.8, 13.3, "chart", ("audit_vs_random",), None),
-    ("4", 13.3, 16.4, "clip", (f"{E}/yellow_can_2.mp4", 4.0, 1, 0), "Unseen yellow can · block result 48/48 (side view of a demonstration)"),
-    ("4", 16.4, 20.3, "clip", (f"{C}/v2_shift_regrasp.mp4", 8.0, 4, 0), "Start moved 3 cm: 0/3 (overhead, 4×)"),
-    ("4", 20.3, 28.7, "image", (f"{SHOTS}/pos_strip.png",), "50 new demos at −4…+4 cm · fine-tuned 20k steps on Nebius Jobs · ±3 cm held out"),
-    ("4", 28.7, 34.5, "clip", (f"{E}/t1_old_vs_ft_counted.mp4", 0.0, 2, 0), "Counted blinded trials at +3 cm (side view, 2×)"),
-    ("4", 34.5, 40.0, "chart", ("ft_position",), None),
+REL = [   # v8 (external review 7): found -> fixed -> still not approved, in the first 25 s; >= 65 s of real robot footage
+    ("0", 0.0, 1.4, "clip", (f"{C}/g6_success.mp4", 2.0, 4, 0), "Same robot, same task: success (overhead, 4×)"),
+    ("0", 1.4, 3.3, "clip", (f"{C}/g6_fail_knock.mp4", 8.0, 4, 0), "Same robot, same task: failure (overhead, 4×)"),
+    ("0", 3.3, 7.1, "clip", (f"{C}/v2_shift_regrasp.mp4", 8.0, 4, 0), "Start moved 3 cm: 0/3 (overhead, 4×)"),
+    ("0", 7.1, 18.7, "clip", (f"{E}/t1_old_vs_ft_counted.mp4", 0.0, 2, 0), "Counted trials at +3 cm, sealed and interleaved: old 3/12 · fine-tuned 12/12 (side view, 2×)"),
+    ("0", 18.7, 25.025, "chart", ("ft_position",), None),
+    ("1", 0.0, 12.575, "video", (LOGO,), None),
+    ("2", 0.0, 8.2, "clip", (f"{E}/demo_ft.mp4", 1.0, 1, 0), "Real arm, real time · SO-101 · ACT (Action Chunking with Transformers) · Jetson Orin Nano Super"),
+    ("2", 8.2, 15.0, "clip", (f"{C}/demos_top_wrist.mp4", 0.0, 1, 0), "Teleoperated demonstrations: overhead and wrist camera (training data)"),
+    ("2", 15.0, 27.4, "clip", (f"{E}/demo_ft.mp4", 9.2, 1, 0), "Real arm, real time · fine-tuned policy at +3 cm (demonstration take, not counted)"),
+    ("2", 27.4, 37.5, "clip", (T1L, 209.6, 1, 180), "Counted trial (T1 trial 4) · sealed, interleaved schedule · the operator sees trial numbers only"),
+    ("3", 0.0, 9.6, "chart", ("engine_cost",), None),
+    ("3", 9.6, 15.0, "overlay", (f"{C}/v2_rubber_success.mp4", 4.0, 4, "g6_success"), "Real arm (overhead, 4×)"),
+    ("3", 15.0, 22.4, "overlay", (f"{C}/g6_success.mp4", 6.0, 4, "audit_vs_random"), "Real arm (overhead, 4×)"),
+    ("4", 0.0, 4.9, "image", (f"{SHOTS}/moved.png",), "What moved the success rate (G6 and stress blocks)"),
+    ("4", 4.9, 8.1, "clip", (f"{E}/yellow_can_2.mp4", 4.0, 1, 0), "Unseen yellow can · block result 48/48 (side view of a demonstration)"),
+    ("4", 8.1, 12.7, "clip", (f"{C}/v1_nopad_drop.mp4", 4.0, 4, 0), "Gripper pads removed: the block finished 8/24 (overhead, 4×)"),
+    ("4", 12.7, 16.4, "image", (f"{SHOTS}/pos_strip.png",), "50 new demos at −4…+4 cm · fine-tuned 20k steps on Nebius Jobs · ±3 cm held out"),
+    ("4", 16.4, 20.4, "clip", (f"{E}/demo_ft.mp4", 30.0, 1, 0), "Fine-tuned policy, real time (demonstration take, not counted)"),
     ("5", 0.0, 9.2, "image", (f"{R}/fig_frames.png",), "A failure the first Cosmos setup called a success"),
     ("5", 9.2, 17.5, "card", ("Cosmos-Reason2 end-of-trial judge\n\nfirst setup                  1/21 failures caught\nvalidated prompt, held out   20/21 · 5/252 false alarms\nsame prompt, live new trials 22/24 · 2/72 false alarms",), None),
-    ("5", 17.5, 25.4, "scroll", (f"{SHOTS}/report_meta.png",), "Deployment report: code writes verdicts and numbers; Nemotron (Token Factory) explains"),
-    ("6", 0.0, 7.8, "image", (f"{SHOTS}/review_decisions.png",), "The deployment review"),
-    ("6", 7.8, 15.9, "image", (f"{SHOTS}/preflight.png",), "Deployment preflight: broken builds and timing are blocked"),
-    ("6", 15.9, 22.5, "image", (f"{SHOTS}/review_compare.png",), "Not yet: the review lists the trials still missing"),
+    ("5", 17.5, 25.35, "scroll", (f"{SHOTS}/report_meta.png",), "Deployment report: code writes verdicts and numbers; Nemotron (Token Factory) explains"),
+    ("6", 0.0, 7.7, "image", (f"{SHOTS}/review_decisions.png",), "The deployment review"),
+    ("6", 7.7, 15.6, "image", (f"{SHOTS}/preflight.png",), "Deployment preflight: broken builds and timing are blocked"),
+    ("6", 15.6, 23.4, "image", (f"{SHOTS}/review_compare.png",), "Not yet: the review lists the trials and rule changes still missing"),
     ("7", 0.0, 4.2, "endkick", ("Earn the next test, not the approval.",), None),
 ]
 SEG = [(ST[k] + a, ST[k] + b, kind, args, chip) for k, a, b, kind, args, chip in REL]
@@ -138,13 +139,21 @@ def frames_of(seg):
                 a_ = min(1.0, max(0.0, (t - st + 0.05) / 0.35)); col = tuple(int(BG[k] + (INK[k] - BG[k]) * a_) for k in range(3))
                 if a_ > 0: d.text((x, yy), w_, font=f, fill=col)
             yield im
+    elif kind == "overlay":    # review 7: the chart over real robot footage (left part of the frame stays the robot)
+        path, s0, speed, cname = args; gen = pc.frames(path, s0, (t1 - t0) * speed + 0.5, fps=FPS / speed, size=None); last = None; fn = vchart.CHARTS[cname]
+        for i in range(n):
+            try: last = next(gen)[1]
+            except StopIteration: pass
+            base = Image.new("RGB", (W, H), BG); f = fit(last, W, H); base.paste(f, ((W - f.width) // 2, (H - f.height) // 2))
+            panel = fn(i / FPS, t1 - t0).crop((60, 110, 1860, 1010)).resize((1100, 550)); a_ = min(1.0, i / (0.4 * FPS))
+            region = base.crop((770, 120, 1870, 670)); base.paste(Image.blend(region, panel, a_), (770, 120)); yield base
     elif kind == "chart":      # notes 3-7
         fn = vchart.CHARTS[args[0]]
         for i in range(n): yield fn(i / FPS, t1 - t0)
     elif kind == "video":      # the user's logo animation, fitted to 1080 high on its own background
         c_ = av.open(args[0]); fr_ = [f.to_image().convert("RGB") for f in c_.decode(video=0)]; c_.close(); bgc = fr_[0].getpixel((8, 8))
         for i in range(n):
-            f = fit(fr_[min(i, len(fr_) - 1)], W, H); base = Image.new("RGB", (W, H), bgc); base.paste(f, ((W - f.width) // 2, (H - f.height) // 2)); yield base
+            f = fit(fr_[min(len(fr_) - 1, int(i * len(fr_) / n))], W, H); base = Image.new("RGB", (W, H), bgc); base.paste(f, ((W - f.width) // 2, (H - f.height) // 2)); yield base
     elif kind == "scroll":     # note 8: the whole report, sliding from top to bottom
         im = Image.open(args[0]).convert("RGB"); f = fit(im, 1700, 10 ** 6); view = H - 140; travel = max(f.height - view, 0)
         for i in range(n):
