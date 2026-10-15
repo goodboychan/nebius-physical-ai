@@ -123,9 +123,16 @@ Stress tests were unsealed on 2026-10-13. The stress protocol is
 | `D5` errata collector | **Tavily** search for TensorRT / Jetson / INT8 known issues, with queries derived from the real build environment and snapshot-hashed | Tavily API |
 | `D5` errata grounding | **Nemotron 3 Super** labels each of the 25 field reports against our measured facts (matches / contrasts / applies but unverified / not applicable) with structured output; code checks that every quote is verbatim, and the report shows only those quotes and our own facts, never the model's numbers ([`errata_grounded.md`](artifacts/reports/errata_grounded.md), [pre-registration](docs/errata_grounding_preregistration.md)) | **Nebius Token Factory** |
 | Policy training | LeRobot 0.6.1 ACT, 100k steps | **Nebius Jobs** (L40S, 1 h 57 min) |
+| Position fine-tune | 50 shifted demos, 20k steps from the same checkpoint | **Nebius Jobs** (L40S, 25 min) |
 | Audit fan-out | 25 cells × bootstrap scoring on 2,000 held-out states | **Nebius Jobs** (CPU) |
 | Data and weights | demos, checkpoints, Cosmos weights | **Nebius Object Storage** (S3) |
+| Simulation twin (exploratory) | the SO-101 task in **Isaac Sim 6.2**, calibrated to the real arm, replaying real trials ([`sim/README.md`](sim/README.md)) | GB10 desktop (local) |
 | Experiment record | 5 experiments, 73 runs (grid, verdicts, real arm, Cosmos judge, Hailo probe), filled from committed artifacts by [`mlflow_publish.py`](scripts/mlflow_publish.py), each run tagged with its source file and commit | **Nebius Managed MLflow** (short-lived; CSV exports in [`artifacts/mlflow/`](artifacts/mlflow/)) |
+
+**NVIDIA open models used.** `nvidia/Cosmos-Reason2-2B` (open weights, served by us on a Nebius AI Endpoint) and
+`nvidia/nemotron-3-super-120b-a12b` (open model, on Nebius Token Factory). The Cosmos judge was validated before use:
+the first setup caught 1/21 failures, a validated prompt 20/21 on held-out recordings, and the same prompt 22/24 live on
+96 new trials with 2/72 false alarms ([`ft_cosmos_live_judge.json`](artifacts/reports/ft_cosmos_live_judge.json)).
 
 **Where Token Factory helped.** The report agent needs a large reasoning model for about a minute per report. Token
 Factory served Nemotron 3 Super, and the variants we compared, behind one OpenAI-compatible API, so no GPU server had
