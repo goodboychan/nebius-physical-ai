@@ -1,0 +1,145 @@
+{
+ "T0R001_1015_222705": {
+  "success_geom": true,
+  "reason": "ok",
+  "base_dist_px": 23.6,
+  "n_consensus_frames": 15
+ },
+ "T0R002_1015_222815": {
+  "success_geom": false,
+  "reason": "moving_or_not_standing",
+  "n_consensus_frames": 1
+ },
+ "T0R003_1015_222932": {
+  "success_geom": true,
+  "reason": "ok",
+  "base_dist_px": 24.8,
+  "n_consensus_frames": 15
+ },
+ "T0R004_1015_223051": {
+  "success_geom": true,
+  "reason": "ok",
+  "base_dist_px": 11.5,
+  "n_consensus_frames": 15
+ },
+ "T0R005_1015_223339": {
+  "success_geom": true,
+  "reason": "ok",
+  "base_dist_px": 16.2,
+  "n_consensus_frames": 15
+ },
+ "T0R006_1015_223453": {
+  "success_geom": true,
+  "reason": "ok",
+  "base_dist_px": 21.7,
+  "n_consensus_frames": 15
+ },
+ "T0R007_1015_223601": {
+  "success_geom": true,
+  "reason": "ok",
+  "base_dist_px": 12.9,
+  "n_consensus_frames": 15
+ },
+ "T0R008_1015_223720": {
+  "success_geom": true,
+  "reason": "ok",
+  "base_dist_px": 22.7,
+  "n_consensus_frames": 15
+ },
+ "T0R009_1015_223829": {
+  "success_geom": true,
+  "reason": "ok",
+  "base_dist_px": 19.1,
+  "n_consensus_frames": 15
+ },
+ "T0R010_1015_223958": {
+  "success_geom": true,
+  "reason": "ok",
+  "base_dist_px": 16.0,
+  "n_consensus_frames": 15
+ },
+ "T0R011_1015_224109": {
+  "success_geom": true,
+  "reason": "ok",
+  "base_dist_px": 21.7,
+  "n_consensus_frames": 15
+ },
+ "T0R012_1015_224217": {
+  "success_geom": true,
+  "reason": "ok",
+  "base_dist_px": 12.2,
+  "n_consensus_frames": 15
+ },
+ "T0R013_1015_224324": {
+  "success_geom": true,
+  "reason": "ok",
+  "base_dist_px": 11.3,
+  "n_consensus_frames": 15
+ },
+ "T0R014_1015_224432": {
+  "success_geom": true,
+  "reason": "ok",
+  "base_dist_px": 23.5,
+  "n_consensus_frames": 15
+ },
+ "T0R015_1015_224540": {
+  "success_geom": true,
+  "reason": "ok",
+  "base_dist_px": 24.9,
+  "n_consensus_frames": 15
+ },
+ "T0R016_1015_224651": {
+  "success_geom": true,
+  "reason": "ok",
+  "base_dist_px": 10.4,
+  "n_consensus_frames": 15
+ },
+ "T0R017_1015_224759": {
+  "success_geom": true,
+  "reason": "ok",
+  "base_dist_px": 21.1,
+  "n_consensus_frames": 15
+ },
+ "T0R018_1015_224909": {
+  "success_geom": true,
+  "reason": "ok",
+  "base_dist_px": 16.4,
+  "n_consensus_frames": 15
+ },
+ "T0R019_1015_225019": {
+  "success_geom": true,
+  "reason": "ok",
+  "base_dist_px": 22.8,
+  "n_consensus_frames": 15
+ },
+ "T0R020_1015_225128": {
+  "success_geom": true,
+  "reason": "ok",
+  "base_dist_px": 8.0,
+  "n_consensus_frames": 15
+ },
+ "T0R021_1015_225235": {
+  "success_geom": true,
+  "reason": "ok",
+  "base_dist_px": 9.0,
+  "n_consensus_frames": 15
+ },
+ "T0R022_1015_225346": {
+  "success_geom": true,
+  "reason": "ok",
+  "base_dist_px": 24.4,
+  "n_consensus_frames": 15
+ },
+ "T0R023_1015_225454": {
+  "success_geom": true,
+  "reason": "ok",
+  "base_dist_px": 23.9,
+  "n_consensus_frames": 15
+ },
+ "T0R024_1015_225603": {
+  "success_geom": true,
+  "reason": "ok",
+  "base_dist_px": 16.2,
+  "n_consensus_frames": 15
+ }
+}
