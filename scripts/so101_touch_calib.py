@@ -42,7 +42,7 @@ try:
         t = time.time(); fol.send_action(lead.get_action()); time.sleep(max(0, 1 / 30 - (time.time() - t)))
     sys.stdin.readline()
 finally:
-    json.dump({"points": rec, "units": "LeRobot degrees; gripper 0-100", "grid_spacing_m": 0.05, "block_height_m": CAN_H}, open(f"{out}/touch.json", "w"), indent=1)
+    json.dump({"points": rec, "units": "LeRobot degrees; gripper 0-100", "grid_spacing_m": float(os.environ.get("GRID_M", "0.03")), "block_height_m": CAN_H}, open(f"{out}/touch.json", "w"), indent=1)
     for dev in (fol, lead):
         try: dev.disconnect()
         except Exception as e: print("disconnect:", type(e).__name__)

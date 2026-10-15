@@ -1,7 +1,7 @@
 """SO-101 coaster task scene in Isaac Sim 6.2 (sim phase 1), plus a replay of one recorded demo's joint trajectory.
 Geometry is provisional until the twin is calibrated: object positions from the URDF forward kinematics of the demos
 (sim/scene_estimate.json, joint offsets not yet known), the coaster radius assumed 5 cm, the overhead camera placed by eye.
-With --calib <fit_touch_calib output>, the joint offsets are applied and the can and coaster go to the touched START
+With --camera <fit_overhead_camera output>, the overhead camera takes the fitted pose and focal length. With --calib <fit_touch_calib output>, the joint offsets are applied and the can and coaster go to the touched START
 and COASTER positions; with --every 1, every control step is rendered (frames for a side-by-side clip).
 Usage: sim/isaac.sh sim/build_scene.py <robot usd> <scene_estimate.json> <episode trajectory.csv> <out dir> [--calib <json>] [--every N]"""
 import json, os, sys
@@ -54,6 +54,12 @@ cam = Camera(prim_path="/World/overhead", position=EYE, resolution=(640, 480), f
 arm = world.scene.add(SingleArticulation(prim_path="/World/so101", name="so101"))
 world.reset(); cam.initialize(); arm.initialize()
 cam.set_world_pose(position=EYE, orientation=look_at(EYE, TGT), camera_axes="world"); cam.set_clipping_range(0.01, 50.0)
+if opt("--camera"):   # the fitted overhead camera (sim/fit_overhead_camera.py): OpenCV/ROS optical axes, pinhole focal in px
+    from scipy.spatial.transform import Rotation as Rot
+    CC = json.load(open(opt("--camera"))); Rcw = np.array(CC["R_world_to_cam"]); tcw = np.array(CC["t_world_to_cam"])
+    x, y, z_, w = Rot.from_matrix(Rcw.T).as_quat(); AP = 20.955
+    cam.set_world_pose(position=-Rcw.T @ tcw, orientation=np.array([w, x, y, z_]), camera_axes="ros")
+    cam.set_horizontal_aperture(AP); cam.set_focal_length(CC["focal_px"] * AP / CC["image"][0]); cam.set_vertical_aperture(AP * 480 / 640)
 for _ in range(10): world.step(render=True)
 print("cam pose", [np.round(v, 3).tolist() for v in cam.get_world_pose(camera_axes="world")], "img mean", float(cam.get_rgba()[..., :3].mean()))
 names = arm.dof_names; print("dofs", names)

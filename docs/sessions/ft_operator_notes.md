@@ -45,3 +45,11 @@ Outcomes are decided by the locked criterion (automatic judge and §11 consensus
   `demo_shift_ft`): OLD-FP16 (VC-025) and then FT-FP16. A side-view phone video was recorded. These runs are
   never added to T1/T0/T2. Any clip from them is captioned "demonstration, not counted", with the counted T1 result
   shown alongside.
+
+## T0R (2026-10-15, prereg §15; training start mark, rubber-band gripper)
+
+- Before the block: touch calibration for the Isaac Sim twin (`scripts/so101_touch_calib.py`). The first wrist check
+  failed because the A4 grid sheet was still in the wrist camera's view; the sheet was removed and the check re-run.
+  The coaster was re-seated on its mark. The Cosmos endpoint was up (C1 judge recorded, not used for outcomes).
+- Failures reported by the operator, by trial number only (blind to cells):
+  - 22:29 trial 2: the gripper pushed the can while approaching; it slid out of reach and was never grasped.
