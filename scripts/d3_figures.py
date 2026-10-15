@@ -69,6 +69,7 @@ def ft_position(T, out):
     for r in T["rows"]:
         if r["candidate"] != "FT-FP16": continue
         pos = "+3 cm" if "+3" in r["context"] else ("-3 cm" if "-3" in r["context"] else "0 cm (training mark)")
+        if pos in by and "pooled" not in r["context"]: continue   # training mark: the T0 + T0R pooled row wins over T0 alone
         by[pos] = r
     if not by: return False
     order = [k for k in ("-3 cm", "0 cm (training mark)", "+3 cm") if k in by]
@@ -80,11 +81,12 @@ def ft_position(T, out):
             ax.bar(x, p, width=0.32, color=col, label=lab if i == 0 else None)
             ax.errorbar(x, p, yerr=[[max(p - lo, 0)], [max(hi - p, 0)]], color="#14181C", capsize=3, lw=1)
             ax.text(x, hi + 0.03, f"{kk}/{nn}", ha="center", fontsize=8)
-        ax.text(i, -0.2, r["verdict"].replace("_", " ").lower(), ha="center", fontsize=7.5, color="#3C464E")
+        ax.text(i, -0.2, r["verdict"].replace("_", " ").lower() + (" (T0 + T0R pooled)" if "pooled" in r["context"] else ""), ha="center", fontsize=7.5, color="#3C464E")
     ax.set_xticks(range(len(order))); ax.set_xticklabels([f"start {k}" for k in order], fontsize=8.5)
-    ax.set_ylim(-0.25, 1.18); ax.set_yticks([0, 0.5, 1]); ax.set_yticklabels(["0%", "50%", "100%"], fontsize=8)
+    ax.set_ylim(-0.25, 1.32); ax.set_yticks([0, 0.5, 1]); ax.set_yticklabels(["0%", "50%", "100%"], fontsize=8)
     ax.set_ylabel("real-arm success", fontsize=8.5); ax.legend(fontsize=8, frameon=False, loc="upper center", ncol=2)
-    ax.set_title("Position fine-tune, blinded and interleaved, 12 vs 12 per position (Wilson 95%)", fontsize=9)
+    pooled = any("pooled" in r["context"] for r in by.values())
+    ax.set_title("Position fine-tune, interleaved, 12 vs 12 per block" + (" (training mark: T0 + T0R, 24 vs 24)" if pooled else "") + ", Wilson 95%", fontsize=9)
     for sp in ("top", "right"): ax.spines[sp].set_visible(False)
     fig.tight_layout(); fig.savefig(f"{out}/fig_ft_position.png"); plt.close(fig); return True
 
