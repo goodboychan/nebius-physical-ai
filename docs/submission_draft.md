@@ -18,6 +18,14 @@ trials, and an honest verdict. Earn the next test, not the approval.
 
 (178 characters; chosen by the user 2026-10-16. It ends on the video's kick line.)
 
+## Links
+
+- Video: https://youtu.be/6M23akL-29M
+- Code: https://github.com/goodboychan/nebius-physical-ai (Apache 2.0)
+- Dashboard: https://claude.ai/artifact/2tUAoJHBeT8uLU96BmgPNK
+- Datasets: https://huggingface.co/datasets/chans/quantgate-so101-coaster,
+  https://huggingface.co/datasets/chans/quantgate-so101-coaster-positions
+
 ## The problem
 
 You have a working robot policy and a small edge device. You can ship it as FP32, FP16 or one of many INT8 builds.
