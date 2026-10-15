@@ -18,7 +18,13 @@ Exploratory and not part of the hackathon evidence. Nothing here changes a Quant
   - Fitting per-joint offsets and the camera pose from the overhead images alone (`calibrate_twin.py`) is
     under-determined: the images show essentially two point clusters (start mark and coaster). The bounded fit hit its
     bounds, with a 21 px median residual, and was discarded.
-- **Next**: a touch calibration on the real arm (about 5 minutes). Drive the follower with the leader so the gripper
+- **Touch calibration, ready** (`scripts/so101_touch_calib.py` on the Orin, `sim/fit_touch_calib.py` here):
+  - It uses 9 table dots plus the can top on 4 corner dots, each touched with the wrist tilted forward and back.
+  - Table touches alone could not separate the lift, elbow and wrist offsets: the selftest errors reached 25°.
+  - The shoulder-pan offset is a gauge freedom (it is the same as rotating the table), so it is fixed at 0.
+  - Selftest on synthetic touches with 0.3° noise: the offsets are recovered within about 3.5°, the residual is
+    about 4 mm.
+- **Previous plan**: a touch calibration on the real arm (about 5 minutes). Drive the follower with the leader so the gripper
   tip touches 6–8 table points whose positions are measured with a ruler from the base, and record the joint states.
   Then fit the joint offsets (table height known, xy known), and solve the overhead camera pose by PnP from the same
   points in the overhead frame.
