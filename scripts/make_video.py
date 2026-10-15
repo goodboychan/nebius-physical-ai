@@ -50,7 +50,7 @@ REL = [   # v8 (external review 7): found -> fixed -> still not approved, in the
     ("3", 0.0, 9.6, "chart", ("engine_cost",), None),
     ("3", 9.6, 15.0, "overlay", (f"{C}/v2_rubber_success.mp4", 4.0, 4, "g6_success"), "Real arm (overhead, 4×)"),
     ("3", 15.0, 22.4, "overlay", (f"{C}/g6_success.mp4", 6.0, 4, "audit_vs_random"), "Real arm (overhead, 4×)"),
-    ("4", 0.0, 4.9, "image", (f"{SHOTS}/moved.png",), "What moved the success rate (G6 and stress blocks)"),
+    ("4", 0.0, 4.9, "chart", ("what_moved",), None),
     ("4", 4.9, 8.1, "clip", (f"{E}/yellow_can_2.mp4", 4.0, 1, 0), "Unseen yellow can · block result 48/48 (side view of a demonstration)"),
     ("4", 8.1, 12.7, "clip", (f"{C}/v1_nopad_drop.mp4", 4.0, 4, 0), "Gripper pads removed: the block finished 8/24 (overhead, 4×)"),
     ("4", 12.7, 16.4, "image", (f"{SHOTS}/pos_strip.png",), "50 new demos at −4…+4 cm · fine-tuned 20k steps on Nebius Jobs · ±3 cm held out"),
@@ -191,8 +191,12 @@ def frames_of(seg):
         im = logo()
         for i in range(n): yield im.copy()
 
+# UPSCALE=2: frames are drawn at 1920x1080 and encoded at 3840x2160 (Lanczos). YouTube gives 4K uploads a much higher
+# bitrate, so even 1080p playback is sharper than a 1080p upload; CRF and preset can be set from the environment
+SCALE = int(os.environ.get("UPSCALE", "1"))
 o = av.open(OUT, "w", options={"movflags": "+faststart"}); vs = o.add_stream("libx264", rate=FPS)
-vs.width, vs.height, vs.pix_fmt = W, H, "yuv420p"; vs.options = {"crf": os.environ.get("CRF", "21"), "preset": "medium"}
+vs.width, vs.height, vs.pix_fmt = W * SCALE, H * SCALE, "yuv420p"
+vs.options = {"crf": os.environ.get("CRF", "21"), "preset": os.environ.get("PRESET", "medium"), "profile": "high", "tune": "film"}
 a_in = av.open(f"docs/narration/narration_{NARR}_am_michael.m4a"); as_ = o.add_stream_from_template(a_in.streams.audio[0], opaque=True)
 k = 0
 for seg in SEG:
@@ -200,6 +204,7 @@ for seg in SEG:
         t = k / FPS; d = ImageDraw.Draw(im)
         if seg[4]: chip(d, seg[4])
         if seg[2] not in ("cardfade", "endkick"): subtitle(d, t)   # the card and the kick show the spoken line already
+        if SCALE != 1: im = im.resize((W * SCALE, H * SCALE), Image.LANCZOS)
         for p in vs.encode(av.VideoFrame.from_image(im)): o.mux(p)
         k += 1
     print(f"{seg[0]:6.1f}-{seg[1]:6.1f} {seg[2]:5} frames to {k}", flush=True)

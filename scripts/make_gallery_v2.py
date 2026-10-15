@@ -45,7 +45,7 @@ S("05_next_test", "From evidence to the next test", "Pick a candidate: confirmed
   [(Image.open(f"{SHOTS}/nexttest_narrow.png").convert("RGB").crop((0, 0, 1360, 1348)), 56, 180, 690, 760),     # 720 px wide capture, split at
    (Image.open(f"{SHOTS}/nexttest_narrow.png").convert("RGB").crop((0, 1348, 1360, 1956)), 754, 180, 690, 760)])  # the "Next test" heading
 S("12_what_moved", "What moved the success rate", "Not the precision: gripper friction (8/24 without pads) and a 3 cm start shift (0/3)",
-  [(f"{SHOTS}/moved.png", 56, 180, 1388, 760)])
+  [(chart("what_moved", 4.9), 56, 180, 1388, 760)])
 S("03_found_fixed_retested", "Found, fixed, re-tested, still not approved", "+3 cm 12/12 vs 3/12 · −3 cm 10/12 vs 2/12 · the training mark is still undecided, so the review does not approve it",
   [(chart("ft_position", 5.5), 56, 180, 1388, 760)])
 S("13_ai_judge", "AI components are tested too", "Cosmos-Reason2 on a Nebius AI Endpoint: first setup 1/21 → validated 20/21 → live 22/24, 2/72 false alarms",

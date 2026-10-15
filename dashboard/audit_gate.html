@@ -464,7 +464,7 @@ footer{border-top:1px solid var(--rule); padding-top:18px; color:var(--ink-3); f
       a 3 cm shift moved a lot. The gripper and shift blocks are separate sessions, so read them as observations, not
       as a randomized comparison.</p>
     <figure>
-      <div class="fig-scroll"><svg viewBox="0 0 720 270" role="img" aria-label="Success rate by condition" style="min-width:540px"><g id="margin"></g></svg></div>
+      <div class="fig-scroll"><svg viewBox="0 0 720 290" role="img" aria-label="Success rate by condition" style="min-width:540px"><g id="margin"></g></svg></div>
       <figcaption>Wilson 95% CI. Unseen can: a 190 g, 50 mm yellow can never seen in training, at the trained start mark; all four engines 12/12. Outcomes use the consensus re-judge (protocol §11).</figcaption>
     </figure>
   </section>
@@ -631,6 +631,7 @@ bars("mj",[["FP16 VC-025",82,"var(--good)"],["INT8 VC-002",101,"var(--signal)"],
     g.appendChild(mk("line",{x1:x+bw/2,y1:sy(l),x2:x+bw/2,y2:sy(h),stroke:"var(--ink)","stroke-width":1.2}));
     [l,h].forEach(v=>g.appendChild(mk("line",{x1:x+bw/2-6,y1:sy(v),x2:x+bw/2+6,y2:sy(v),stroke:"var(--ink)","stroke-width":1.2})));
     g.appendChild(mk("text",{x:x+bw/2,y:Y0+18,"text-anchor":"middle",class:"lbl"},d[0]));
-    g.appendChild(mk("text",{x:x+bw/2,y:Y0+34,"text-anchor":"middle",class:"ax"},`${d[1]} · ${d[2]}/${d[3]}`));});
+    g.appendChild(mk("text",{x:x+bw/2,y:Y0+34,"text-anchor":"middle",class:"ax"},d[1]));   // two short lines: no overlap between bars
+    g.appendChild(mk("text",{x:x+bw/2,y:Y0+50,"text-anchor":"middle",class:"ax"},`${d[2]}/${d[3]}`));});
 })();
 </script>

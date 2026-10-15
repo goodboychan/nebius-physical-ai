@@ -64,6 +64,12 @@ wcsv("06_ai_judge.csv", ["setup", "failures_caught", "failures", "false_alarms",
       ["same prompt, live new fine-tune trials", L["failure_recall"][0], L["failure_recall"][1], L["false_alarm"][0], L["false_alarm"][1]]],
      "Cosmos-Reason2 end-of-trial judge; artifacts/cosmos_judge/eval_scores.jsonl and artifacts/reports/ft_cosmos_live_judge.json")
 
+# 7. what moved the success rate (the dashboard's tallies: G6 main study and the public stress-block tallies)
+MV = [("FP32", "G6, pads", 24, 25), ("INT8 × 10 cells", "G6, pads", 194, 200), ("No pads", "stress v1 S0", 8, 24), ("Rubber bands", "stress v2 S0", 23, 24),
+      ("Start +3 cm", "stress v2 S1", 0, 3), ("Unseen can", "stress v2 S4", 48, 48)]
+wcsv("07_what_moved.csv", ["condition", "block", "successes", "trials", "success_pct", "wilson95_lo_pct", "wilson95_hi_pct"],
+     [[a, b, k, n, round(k / n * 100, 1), *W(k, n)] for a, b, k, n in MV],
+     "G6 main study (g6_analysis.json) and the stress blocks (stress_v1/v2 analyses, consensus re-judge); separate sessions, observations not a randomized comparison")
 open(f"{D}/README.md", "w").write("# Graph data for the video (from committed artifacts)\n\n" + "\n".join(NOTES) + "\n")
 # scene plan
 src = open("scripts/make_video.py").read(); REL = eval(src[src.index("REL = [") + 6: src.index("]\nSEG")] + "]", {"C": "C", "E": "E", "R": "R", "SHOTS": "SHOTS", "T1L": "T1L", "LOGO": "video/assets/quantgate_logo_intro.mp4"})

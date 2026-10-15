@@ -128,4 +128,22 @@ def ft_position(t, dur):
     pill(im, d, "+3 cm 12/12 vs 3/12 · −3 cm 10/12 vs 2/12", "training mark (24 vs 24): still undecided", ramp(t, 3.0, 3.5))
     return im
 
-CHARTS = {"engine_cost": engine_cost, "g6_success": g6_success, "cost_vs_success": cost_vs_success, "audit_vs_random": audit_vs_random, "ft_position": ft_position}
+def what_moved(t, dur):
+    R = rows("07_what_moved.csv")
+    im, d = frame("Same arm, same policy", "What moved success", "successes / trials per condition · Wilson 95% interval · separate sessions, not randomized")
+    n = len(R); gw = 230; x0, y1, hmax = 250, 800, 420
+    for v in (0, 50, 100): yy = y1 - hmax * v / 100; d.line((200, yy, 1720, yy), fill=GRID, width=2); d.text((140, yy - 14), f"{v}%", font=F(22), fill=INK2)
+    col = {"FP32": GREY, "INT8 × 10 cells": TEAL, "Unseen can": TEAL}
+    for i, r in enumerate(R):
+        p = ramp(t, 0.3 + 0.35 * i, 1.0 + 0.35 * i); k, m = int(r["successes"]), int(r["trials"]); cx = x0 + i * gw + gw / 2
+        c = col.get(r["condition"], (204, 102, 51)); hh = hmax * k / m * p
+        if p > 0: d.rounded_rectangle((cx - 70, y1 - max(hh, 4), cx + 70, y1), 10, fill=c)
+        if p >= 0.98:
+            lo, hi = float(r["wilson95_lo_pct"]), float(r["wilson95_hi_pct"]); d.line((cx, y1 - hmax * lo / 100, cx, y1 - hmax * hi / 100), fill=INK, width=3)
+            lab = f"{k}/{m}"; d.text((cx - d.textlength(lab, font=F(30, True)) / 2, y1 - hmax * hi / 100 - 44), lab, font=F(30, True), fill=INK)
+        for j, (txt, f) in enumerate(((r["condition"], F(26, True)), (r["block"], F(22)))):
+            d.text((cx - d.textlength(txt, font=f) / 2, y1 + 14 + j * 34), txt, font=f, fill=INK if j == 0 else INK2)
+    pill(im, d, "Grip and position moved it", "the precision did not", ramp(t, 0.3 + 0.35 * n + 0.4, 0.3 + 0.35 * n + 0.9))
+    return im
+
+CHARTS = {"what_moved": what_moved, "engine_cost": engine_cost, "g6_success": g6_success, "cost_vs_success": cost_vs_success, "audit_vs_random": audit_vs_random, "ft_position": ft_position}
