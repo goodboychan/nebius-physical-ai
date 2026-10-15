@@ -102,8 +102,8 @@ The demo copies are labelled as injected faults, not observed failures.
 ## What one review cost (`review_cost.md`)
 
 About **$31 of Nebius cloud** in total. Most of it is the Cosmos endpoint (16.5 h up, $25.6). Training and the
-fine-tune on Jobs cost $4.5, Token Factory $0.1 (a lower bound) and MLflow $0.7. On the arm it took **481 trials in
-about 12 operator-hours**.
+fine-tune on Jobs cost $4.5, Token Factory $0.1 (a lower bound) and MLflow $0.7. On the arm it took **505 trials in
+about 12.5 operator-hours**.
 
 For scale, not as a saving: settling approval for every candidate against FP32 would take about 2,990 trials and
 74 arm-hours, before any stress test, and this review did not settle approval. QuantGate spent its arm time where it

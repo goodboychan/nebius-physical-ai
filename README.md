@@ -110,7 +110,7 @@ Stress tests were unsealed on 2026-10-13. The stress protocol is
 | Nebius Managed MLflow | 1.5 h | 0.7 |
 | **Cloud total** | | **≈ 31** |
 
-- The real arm ran 481 trials in about 12 operator-hours.
+- The real arm ran 505 trials in about 12.5 operator-hours.
 - For scale, not as a saving: settling approval for all 25 candidates and FP32 at about 115 trials per arm would be
   about 2,990 trials and about 74 arm-hours, before any stress or position test. The two numbers answer different goals.
 - The review did not settle approval. It ranked what to validate first, blocked broken builds, found and fixed a
