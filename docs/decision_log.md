@@ -1046,7 +1046,7 @@ exists, and no VM or Job is running.
 | Date | Work | Arm | Nebius |
 |---|---|---|---|
 | 10/15–18 | Video and PPTX review by the user; adjust timing in the deck; optional new setup photos | — | — |
-| (optional) 10/17–19 | One pre-registered arm block, if wanted. Either settle FT at the training mark (24 vs 24), or check INT8 gripper chatter. Register before running | ✓ | endpoint only if the live judge is wanted |
+| (optional) 10/17–19 | Block T0R, registered 10/15 (prereg §15): FT 12 vs OLD 12 at the training mark, to see whether the two T0 failures repeat. `--blind T0R ft3` | ✓ | endpoint only if the live judge is wanted |
 | 10/20–21 | Final video edit and export (≤ 3 min); update the D3 report only if a number changes | — | Token Factory (one call) if the report is regenerated |
 | 10/22 | Nemotron survey ratings (user); final read of the submission draft | — | — |
 | 10/23 | **LOCK-4**: narrative and numbers frozen | — | — |

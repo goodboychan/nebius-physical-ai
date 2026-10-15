@@ -124,7 +124,7 @@
     {
      "check": "evidence",
      "pass": true,
-     "detail": "IMPROVEMENT_DETECTED is not approval: Use the fine-tuned policy where the start position varies; confirm at more positions and objects before relying on it"
+     "detail": "IMPROVEMENT_DETECTED is not approval: The candidate to validate next where the start position varies, not yet a replacement: settle the training mark, then confirm at more positions and objects"
     }
    ]
   },

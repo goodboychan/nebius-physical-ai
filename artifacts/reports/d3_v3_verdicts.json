@@ -531,7 +531,7 @@
    "verdict": "IMPROVEMENT_DETECTED",
    "e2e_ms": null,
    "evidence_path": "artifacts/reports/ft_analysis.json#T1.primary",
-   "next_action": "Use the fine-tuned policy where the start position varies; confirm at more positions and objects before relying on it",
+   "next_action": "The candidate to validate next where the start position varies, not yet a replacement: settle the training mark, then confirm at more positions and objects",
    "gpu_ms_trtexec": 11.6,
    "cost_source": "artifacts/reports/power_bench_ft/SUMMARY.md",
    "interval": {
@@ -565,7 +565,7 @@
    "verdict": "IMPROVEMENT_DETECTED",
    "e2e_ms": null,
    "evidence_path": "artifacts/reports/ft_analysis.json#T2.primary",
-   "next_action": "Use the fine-tuned policy where the start position varies; confirm at more positions and objects before relying on it",
+   "next_action": "The candidate to validate next where the start position varies, not yet a replacement: settle the training mark, then confirm at more positions and objects",
    "gpu_ms_trtexec": 11.6,
    "cost_source": "artifacts/reports/power_bench_ft/SUMMARY.md",
    "interval": {

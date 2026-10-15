@@ -93,7 +93,8 @@ def verdict_table():
             r["next_action"] = ("Offline warning not confirmed on the arm in 12 trials (unresolved, not 'tolerated'); keep rejecting this build at the "
                                 "calibration-input check; do not read the offline audit as a predictor of closed-loop failure")
         elif r["verdict"] == "IMPROVEMENT_DETECTED":
-            r["next_action"] = "Use the fine-tuned policy where the start position varies; confirm at more positions and objects before relying on it"
+            r["next_action"] = ("The candidate to validate next where the start position varies, not yet a replacement: settle the training mark, "
+                                "then confirm at more positions and objects")
         elif r["candidate"] == "FT-FP16" and r["verdict"] == "INSUFFICIENT_EVIDENCE":
             r["next_action"] = ("Check that the fine-tune keeps nominal performance: 10/12 vs 12/12 at the training mark is undecided; plan more trials at the "
                                 "training mark before replacing the old policy there")

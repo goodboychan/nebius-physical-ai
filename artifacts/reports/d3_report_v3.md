@@ -1,11 +1,11 @@
 # QuantGate — deployment report v3 (auto-generated)
 
-> Sections 1–4 are written by code from the verdict table (`d3_v3_verdicts.json`, hash `e9569ac1cd9bda35`). Sections 5–6 are written by Nemotron 3 Super (Token Factory) and checked by code: no digits, no verdict labels, no approval or safety words. They are never a source of verdicts or numbers; a qualitative misreading in plain words cannot be excluded by these rules. v2 is kept as history (`d3_report_v2.md`).
+> Sections 1–4 are written by code from the verdict table (`d3_v3_verdicts.json`, hash `3944296ce1ba3409`). Sections 5–6 are written by Nemotron 3 Super (Token Factory) and checked by code: no digits, no verdict labels, no approval or safety words. They are never a source of verdicts or numbers; a qualitative misreading in plain words cannot be excluded by these rules. v2 is kept as history (`d3_report_v2.md`).
 
 | Item | Value |
 |---|---|
-| Model attempts | 1 |
-| Latency | 14.7 s |
+| Model attempts | 2 |
+| Latency | 34.8 s |
 | **Wording findings (final attempt)** | **0** |
 
 ---
@@ -52,21 +52,22 @@ AI judge: Cosmos-Reason2 end-of-trial judge, held-out eval of 273 recorded trial
 - **Settle success against FP32 at 10 pp: plan about 110-120 trials per arm (planning estimate, assumes equal true rates near 96-97 percent; not a guarantee); also validate start-position changes before deployment** — VC-025 (FP16 run, rubber bands)
 - **Do not deploy; fix the calibration input (a simple input check catches it); see the real-arm check of PC-B** — PC-N (offline, deliberately miscalibrated), PC-B (offline, deliberately miscalibrated)
 - **Offline warning not confirmed on the arm in 12 trials (unresolved, not 'tolerated'); keep rejecting this build at the calibration-input check; do not read the offline audit as a predictor of closed-loop failure** — PC-B (positive control real arm)
-- **Use the fine-tuned policy where the start position varies; confirm at more positions and objects before relying on it** — FT-FP16 (fine-tune vs old, start +3 cm (held out, primary)), FT-FP16 (fine-tune vs old, start -3 cm (held out, symmetry))
+- **The candidate to validate next where the start position varies, not yet a replacement: settle the training mark, then confirm at more positions and objects** — FT-FP16 (fine-tune vs old, start +3 cm (held out, primary)), FT-FP16 (fine-tune vs old, start -3 cm (held out, symmetry))
 - **Check that the fine-tune keeps nominal performance: 10/12 vs 12/12 at the training mark is undecided; plan more trials at the training mark before replacing the old policy there** — FT-FP16 (fine-tune vs old, training start mark (secondary))
 
 ## 5. Why the review looks like this
-The FP16 candidate uses the least energy for each inference and runs fastest, making it the cheapest option to test first on the hardware.  
-The fine‑tuned FP16 version removed the weakness seen when the start position was shifted away from the nominal mark, but it has not yet demonstrated clear performance at the original training mark.  
-Comparisons against full precision remain inconclusive because the current data do not allow us to state whether the difference stays inside the allowed margin.  
-Builds that were deliberately mis‑calibrated are stopped by the simple input check, which flags them before any further testing.  
-The AI judge’s record shows it catches most failures but raises false alarms on unfamiliar objects, so it must be checked again on new scenes before its output can be relied upon.  
+Explain cheapest candidate is the half‑precision candidate to validate first because it uses least energy per inference and lowest latency although it draws more power while running than the eight‑bit builds.  
+The position fine‑tune (same half‑precision engine cost) removed the start‑position weakness shown at both held‑out shifts giving clear improvement but it has not yet shown nominal performance at the training mark because the comparison there is undecided.  
+Success comparisons against full precision cannot be decided yet because the confidence intervals for each candidate cross the tolerance band leaving the evidence insufficient.  
+The deliberately miscalibrated builds are stopped at the simple input check because that check catches the bad calibration before any other test runs.  
+The AI judge’s record shows it is wording‑sensitive looks only at the final state gives more false alarms on novel objects so it must be re‑validated before reliance it cleared re‑check on fresh live trials in the fine‑tune study but still needs checking on other objects and scenes.  
 
 ## 6. Questions to resolve before deployment
-- How many trials are needed to show that the success rate of the FP16 candidate stays within the ten‑point tolerance compared to full precision?  
-- Does the fine‑tuned FP16 build achieve clear success at the original training mark when tested with additional trials?  
-- Can the simple input check be confirmed to catch all mis‑calibrated units across different hardware revisions?  
-- What additional scenes and objects must be run through the AI judge to reduce false alarms to an acceptable level?
+- What number of trials is needed to shrink the confidence interval so the difference stays within the tolerance for each candidate?  
+- Does the half‑precision candidate meet the power budget when measured under sustained load?  
+- Does the position fine‑tune maintain nominal performance at the training mark when tested with more repetitions?  
+- Can the AI judge be relied on for unseen objects after additional validation on varied scenes?  
+- Are there any hidden failure modes in the stress scenarios that require extra probing?
 
 
 ## Figures (drawn by code from the verdict table)

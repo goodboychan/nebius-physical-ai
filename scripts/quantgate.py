@@ -33,7 +33,7 @@ def verify():
     run("-m", "pytest", "-q"); run("tests/runner_abort_harness.py")
     bad = 0
     for post, d in (("lock3.json", "g6_unsealed"), ("stress_v1_post.json", "stress_unsealed/v1"), ("stress_v2_post.json", "stress_unsealed/v2"),
-                    ("fp16_post.json", "fp16_unsealed"), ("pc_post.json", "pc_unsealed"), ("ft_post.json", "ft_unsealed"), ("ft2_post.json", "ft2_unsealed")):
+                    ("fp16_post.json", "fp16_unsealed"), ("pc_post.json", "pc_unsealed"), ("ft_post.json", "ft_unsealed"), ("ft2_post.json", "ft2_unsealed"), ("ft3_post.json", "ft3_unsealed")):
         p = os.path.join(ROOT, "artifacts/freeze", post)
         if not os.path.exists(p): continue
         for f, v in json.load(open(p))["sealed_logs"].items():

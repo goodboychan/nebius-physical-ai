@@ -246,3 +246,56 @@ Analysis: `scripts/ft_analysis.py`, written to `artifacts/reports/ft_analysis.js
     blinding was partial. Outcomes come from the automatic judge and the video re-judge, which agree block by block.
   - The −3 cm mark was added during the session (§12).
   - One task, one object, 12 trials per arm per position.
+
+## 15. Amendment 6 (2026-10-15, after §14, before any T0R trial): an independent replication at the training mark
+
+- **Why**: external review 6 suggested one more arm block: an independent replication of T0. It should check whether
+  the two failures of the fine-tune at the training mark repeat, not try to settle non-inferiority.
+  - T0 was FT 10/12 against OLD 12/12. Both FT failures disturbed the can at placement: trial 18 pushed it off the
+    coaster, trial 22 knocked it over while setting it down.
+  - This amendment is written after T0 was unsealed, so the design knows the T0 outcome. That is why the primary
+    question is a descriptive replication question and the pooled test is labelled as chosen after T0.
+- **Design**:
+  - Block **T0R**: the cola can at the training start mark, rubber-band gripper, the same scene as T0.
+  - FT-FP16 12 and OLD-FP16 (`VC-025`) 12, interleaved by the (k + U)/n key.
+  - Seed key `FINETUNE/schedule/T0R/v1`, with new random tokens.
+  - Sealed schedule `~/.edgeqgate_sealed/stress_ft3/stress_sealed.json`, sha256
+    `7b589a8c1b6cca0e96abb2e99597ff527d62006af11e59aa6bece1a9fad516b5`. The public copy is
+    `artifacts/finetune/stress_schedule_T0R_public.json`.
+  - The engines are hard links to the T1/T0 files (sha256 `4affc06d…` and `3b19f7eb…`).
+  - The normalization manifest is `stress_ft3/engines/norm_manifest.json`, sha256 `05055421302ef09d…`.
+  - The engine folder was built by `scripts/ft3_setup_orin.py`, which prints no token-to-cell mapping. The local
+    copy of the sealed schedule was deleted unread.
+- **Runner**:
+  - `so101_trial.py --blind T0R ft3`, sha256 `609ee74ba9bf0802…`, deployed 2026-10-15 with no block running.
+  - The previous `514bfee2` is kept as a backup.
+  - Behaviour is the same as T0: the manifest is required, the C1 end-of-trial judge records if the endpoint is up,
+    and the stop rule is 2 operator aborts.
+- **Outcome**: as §4. The consensus video re-judge is run blind to cells before unsealing.
+- **Failure modes**:
+  - Before unsealing, each failed trial gets one mode label from the operator notes and the overhead video, written
+    blind to cells into `artifacts/finetune/T0R_modes.json`.
+  - Labels: `placement disturbance` (the can is pushed or knocked while or after it is set down), `grasp`,
+    `transport` or `other`.
+- **Analysis** (`scripts/ft3_analysis.py`, written now and dry-run on relabelled T0 data):
+  - **Primary (replication, descriptive)**: the FT failures in T0R and their modes.
+
+    | FT failures in T0R | Reading |
+    |---|---|
+    | 0 | The two T0 failures did not repeat in 12 trials. This does not show the failure is absent: the Wilson 95% upper bound for 0/12 is 24%. |
+    | ≥ 1, at least one `placement disturbance` | The training-mark failure mode repeats. Next: a targeted fix (release-and-retreat demonstrations), not approval. |
+    | ≥ 1, none `placement disturbance` | FT failed at the training mark again, by a different mode. Report as is. |
+
+    OLD failures are reported alongside, descriptively.
+  - **Secondary**: T0 + T0R pooled, 24 vs 24, with the `stress_analysis.compare` semantics (97.5%, tolerances
+    10 pp and 5 px). This pooling was chosen after T0 was seen.
+    - Stated now: **GO is unreachable**. Even 24/24 against 24/24 meets the ceiling rule and is indeterminate.
+    - NO-GO on success needs FT ≤ 15/24 pooled (≤ 5/12 in T0R) if OLD stays 24/24.
+    - The expected verdict is INSUFFICIENT_EVIDENCE. Approval of FT at the training mark stays on hold either way.
+  - **Exploratory**: gripper chatter (§13 metric), FT against OLD in T0R, MWU two-sided.
+    - T0 showed FT > OLD (0.167 against 0.106, p = 0.0003).
+    - The direction counts as repeated if FT > OLD with p < 0.05. Otherwise the reading is "not repeated".
+- **Order**: run T0R → hash the sealed log into `artifacts/freeze/ft3_post.json` → blind consensus re-judge and mode
+  labels → unseal into `artifacts/trials/ft3_unsealed/` → `ft3_analysis.py`.
+- **Limitations stated now**: operator blinding is partial, as in T1/T2, though the policies' motions differ less at
+  the training mark. It is one more session, on another day, at the same scene.
