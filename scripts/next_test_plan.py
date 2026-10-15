@@ -1,0 +1,85 @@
+"""From evidence to the next test (external review 7): for each candidate, what is confirmed, what is open, the evidence
+behind both (rows, sealed logs, trial ids, clips), and an exportable plan for the next test (comparison, conditions,
+measurements, decision rule, trials per arm with simulated power). Everything comes from the code-written verdict table
+(artifacts/reports/d3_v3_verdicts.json) and the committed logs; no model is called.
+Power is simulated (fixed seed) with the same Newcombe interval and 10 pp tolerance as the pre-registered E1 rule:
+power = P(upper bound of the degradation < 10 pp). The pre-registered ceiling rule (both arms >= 95% -> undecided) is
+shown separately: with it, two arms at about 96% stay undecided most of the time at any sample size.
+Usage: python scripts/next_test_plan.py [--out artifacts/reports]     (quantgate.py plan [candidate] prints one)"""
+import argparse, json, os, sys
+import numpy as np
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+from g6_analysis import newcombe
+from scipy.stats import norm
+R = "artifacts/reports"; Z = float(norm.ppf(1 - 0.025 / 2))
+
+def power(n, p_ref, p_c, ceiling, sims=3000, seed=0):
+    rng = np.random.default_rng(seed); ok = 0
+    for _ in range(sims):
+        kr, kc = rng.binomial(n, p_ref), rng.binomial(n, p_c)
+        if ceiling and kr / n >= 0.95 and kc / n >= 0.95: continue
+        ok += newcombe(kr, n, kc, n, Z)[1] * 100 < 10
+    return round(ok / sims, 2)
+
+def n_for(p_ref, p_c, ceiling, target=0.8, grid=(50, 75, 100, 120, 150, 200, 300, 400, 600)):
+    for n in grid:
+        if power(n, p_ref, p_c, ceiling) >= target: return n
+    return None
+
+def plans(T):
+    rows = T["rows"]; by = lambda c, ctx: next((r for r in rows if r["candidate"] == c and ctx in r["context"]), None)
+    P = {}
+    fp16 = by("VC-025", "FP16 run")
+    P["VC-025"] = {
+        "candidate": "VC-025 (FP16, old policy)", "status": "recommended to validate first; approval on hold",
+        "confirmed": ["cheapest engine on the device: 11.6 ms and 82 mJ per inference (power_bench/SUMMARY.md)",
+                      f"real arm {fp16['success'][0]}/{fp16['success'][1]} against FP32 {fp16['reference'][0]}/{fp16['reference'][1]} (fp16_analysis.json)"],
+        "open": ["success against FP32 within 10 pp: INSUFFICIENT_EVIDENCE, and both arms are at or above 95%, so the pre-registered ceiling rule keeps it undecided"],
+        "evidence": [fp16["evidence_path"], "artifacts/freeze/fp16_post.json", "artifacts/trials/fp16_unsealed/stress_fp16_F0_sealed.jsonl"],
+        "next_test": {"compare": "VC-025 (FP16) vs VC-000 (FP32), same old policy", "conditions": "training start mark, rubber-band gripper, cola can",
+                      "measure": "success (consensus re-judge), placement error, gripper chatter", "schedule": "sealed, interleaved, new tokens",
+                      "rule": "pre-register a revised E1 rule without the ceiling clause: GO if the 97.5% Newcombe upper bound of the degradation is below 10 pp",
+                      "trials_per_arm": {"under the revised rule, if equal at 96%": n_for(0.96, 0.96, False), "with the current ceiling rule, power at 200/arm": power(200, 0.96, 0.96, True)}}}
+    t0 = by("FT-FP16", "pooled")
+    P["FT-FP16"] = {
+        "candidate": "FT-FP16 (position fine-tune)", "status": "next candidate where the start varies; not a replacement at the trained spot",
+        "confirmed": [f"{r['context']}: {r['success'][0]}/{r['success'][1]} vs old {r['reference'][0]}/{r['reference'][1]}, {r['verdict']}" for r in rows
+                      if r["candidate"] == "FT-FP16" and r["verdict"] == "IMPROVEMENT_DETECTED"],
+        "open": [f"training mark, T0 + T0R pooled: {t0['success'][0]}/{t0['success'][1]} vs old {t0['reference'][0]}/{t0['reference'][1]}, {t0['verdict']}",
+                 "positions beyond +-3 cm and other objects are untested"],
+        "evidence": [t0["evidence_path"], "artifacts/freeze/ft_post.json", "artifacts/freeze/ft3_post.json", "artifacts/finetune/T0R_modes.json",
+                     "T0 failures: trials 18 and 22 (placement disturbance, docs/sessions/ft_operator_notes.md); clip: dashboard/clips/t1_old_vs_ft.mp4"],
+        "next_test": {"compare": "FT-FP16 vs VC-025 (old FP16 policy)", "conditions": "training start mark; then -4/+4 cm and the yellow can",
+                      "measure": "success, failure mode (placement disturbance), gripper chatter", "schedule": "sealed, interleaved, new tokens (operator blinding stays partial: the motions differ)",
+                      "rule": "non-inferiority at 10 pp (97.5% Newcombe), pre-registered without the ceiling clause: if both arms land at or above 95%, the current ceiling clause would hold the verdict undecided",
+                      "trials_per_arm": {"under the revised rule, if truly equal (95.8%)": n_for(23 / 24, 23 / 24, False),
+                                         "under the revised rule, if the observed 4 pp gap is real": n_for(23 / 24, 22 / 24, False),
+                                         "with the current ceiling rule, power at 120/arm if truly equal": power(120, 23 / 24, 23 / 24, True)}}}
+    P["INT8"] = {
+        "candidate": "INT8 builds (24 calibration variants)", "status": "not first: slower and costlier per inference than FP16 on this device",
+        "confirmed": ["16.8-17.1 ms and 101 mJ per inference for the 3 benched builds", "audit-picked cells 73/75 vs random 73/75: the offline score did not predict the arm"],
+        "open": ["success against FP32: INSUFFICIENT_EVIDENCE for every cell, under the ceiling rule", "post hoc: VC-002 chatters about twice as much as FP16 (hypothesis)"],
+        "evidence": ["artifacts/reports/g6_analysis.json", "artifacts/freeze/lock3.json", "artifacts/reports/ft_chatter.json"],
+        "next_test": {"compare": "one INT8 cell (VC-002) vs FP16 (VC-025), only if memory or power forces INT8", "conditions": "training start mark",
+                      "measure": "success and gripper chatter (pre-registered as the primary)", "schedule": "sealed, interleaved",
+                      "rule": "chatter: two-sided MWU at alpha 0.05, registered before the block; success as for FP16", "trials_per_arm": {"chatter, as in the earlier blocks (block size, not a power calculation)": 24}}}
+    P["PC-B"] = {
+        "candidate": "PC-B (black-frame calibration)", "status": "rejected", "confirmed": ["flagged offline by the input check, action error and audit score"],
+        "open": ["the offline warning was not confirmed on the arm in 12 trials (unresolved)"], "evidence": ["artifacts/reports/simple_checks_vs_audit.json", "artifacts/reports/positive_control_analysis.json"],
+        "next_test": {"compare": "none: block it at the calibration-input check", "conditions": "-", "measure": "-", "schedule": "-", "rule": "preflight BLOCK (FLAGGED)", "trials_per_arm": {}}}
+    return P
+
+def md(P):
+    L = ["# From evidence to the next test (written by code)", ""]
+    for k, p in P.items():
+        L += [f"## {p['candidate']}", f"**Status**: {p['status']}", "", "Confirmed:"] + [f"- {x}" for x in p["confirmed"]] + ["", "Open:"] + [f"- {x}" for x in p["open"]]
+        L += ["", "Evidence:"] + [f"- `{x}`" if "/" in x and " " not in x else f"- {x}" for x in p["evidence"]]
+        nt = p["next_test"]; L += ["", "Next test:"] + [f"- {a}: {nt[a]}" for a in ("compare", "conditions", "measure", "schedule", "rule")]
+        L += [(f"- {a}: {v}" if ("power at" in a or "block size" in a) else f"- trials per arm for 80% power, {a}: {v}") for a, v in nt["trials_per_arm"].items()] + [""]
+    return "\n".join(L)
+
+if __name__ == "__main__":
+    ap = argparse.ArgumentParser(); ap.add_argument("--out", default=R); a = ap.parse_args()
+    T = json.load(open(f"{R}/d3_v3_verdicts.json")); P = plans(T)
+    json.dump(P, open(f"{a.out}/next_test_plans.json", "w"), indent=1); open(f"{a.out}/next_test_plans.md", "w").write(md(P))
+    print(md(P))

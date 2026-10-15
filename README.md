@@ -28,14 +28,18 @@ validating next", not "approved": in this study no INT8 build was approved again
 
 ```bash
 uv venv .venv && uv pip install --python .venv/bin/python -e ".[dev]"
-.venv/bin/python scripts/quantgate.py verify          # tests, runner harness, 12 sealed logs vs their post-lock hashes
-.venv/bin/python scripts/quantgate.py review --no-llm # verdict table, preflight demo, review cost (no network)
+.venv/bin/python scripts/quantgate.py verify          # tests, runner harness, 13 sealed logs vs their post-lock hashes
+.venv/bin/python scripts/quantgate.py review --no-llm # verdict table, next-test plans, the full review as one HTML file
+                                                      # (artifacts/reports/review_report.html), preflight demo, review cost
+.venv/bin/python scripts/quantgate.py plan FT-FP16    # from evidence to the next test: confirmed, open, evidence, plan
 NEBIUS_API_KEY=... .venv/bin/python scripts/quantgate.py review   # + D3 report v3 by Nemotron on Token Factory, dashboard
 NEBIUS_API_KEY=... .venv/bin/python scripts/quantgate.py ask "Can I use the fine-tuned policy where the start varies?"
 .venv/bin/python scripts/quantgate.py stages          # the robot and cloud stages that produce the evidence
 ```
 
-The review layer is deterministic: re-running it on the committed evidence reproduces the committed outputs.
+The review layer is deterministic: re-running it on the committed evidence reproduces the committed outputs. No robot,
+GPU or API key is needed to open the whole review: `review --no-llm` writes `artifacts/reports/review_report.html`, and CI
+rebuilds it on every push. The dashboard's "From evidence to the next test" section shows the same plans per candidate.
 
 ## Results at a glance
 

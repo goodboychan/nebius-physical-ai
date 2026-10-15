@@ -2,7 +2,10 @@
 
   quantgate.py review [--no-llm]   rebuild the decision layer from committed evidence, in order:
                                    verdict table -> D3 report v3 (Nemotron on Token Factory, unless --no-llm) and figures
-                                   -> dashboard report section -> deployment preflight demo -> review cost
+                                   -> next-test plans -> the full review as one HTML file (artifacts/reports/review_report.html,
+                                   no API key needed) -> dashboard report section -> deployment preflight demo -> review cost
+  quantgate.py plan [candidate]    from evidence to the next test: confirmed, open, evidence, and the next test's plan
+                                   (VC-025, FT-FP16, INT8, PC-B; all when omitted), written by code
   quantgate.py ask "<question>"    ask the review (Nemotron picks the rows, code prints verdicts and numbers)
   quantgate.py preflight           the four-check preflight and its fault-injection demo
   quantgate.py cost                what the review cost (Nebius list prices, real-arm hours)
@@ -49,10 +52,16 @@ if __name__ == "__main__":
     if a[0] == "review":
         run("scripts/d3_report_v3.py", *(["--dry"] if "--no-llm" in a else []))
         if "--no-llm" not in a: run("scripts/build_dashboard_report.py")
+        run("scripts/next_test_plan.py"); run("scripts/build_review_html.py"); run("scripts/build_dashboard_nexttest.py")
         run("scripts/deploy_preflight.py"); run("scripts/review_cost.py")
         print("review rebuilt: artifacts/reports/" + ("{d3_v3_verdicts.json" if "--no-llm" in a else "{d3_report_v3.md, d3_v3_verdicts.json") +
-              ", preflight_demo.json, review_cost.md}" + ("" if "--no-llm" in a else "; dashboard/audit_gate.html"))
+              ", next_test_plans.md, review_report.html, preflight_demo.json, review_cost.md}" + ("" if "--no-llm" in a else "; dashboard/audit_gate.html"))
+        print("open artifacts/reports/review_report.html in a browser: the whole review, no key needed")
     elif a[0] == "ask": run("scripts/quantgate_ask.py", *a[1:])
+    elif a[0] == "plan":
+        P = json.load(open(os.path.join(ROOT, "artifacts/reports/next_test_plans.json")))
+        keys = [k for k in P if not a[1:] or k.lower() == a[1].lower()] or sys.exit(f"unknown candidate; one of {list(P)}")
+        sys.path.insert(0, HERE); import next_test_plan as ntp; print(ntp.md({k: P[k] for k in keys}))
     elif a[0] == "preflight": run("scripts/deploy_preflight.py")
     elif a[0] == "cost": run("scripts/review_cost.py")
     elif a[0] == "verify": verify()

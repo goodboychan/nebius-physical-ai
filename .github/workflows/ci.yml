@@ -25,6 +25,14 @@ jobs:
         # 하드웨어 없이 so101_trial.py의 run_one·resolve_norm을 가짜 로봇과 서버로 돌린다
         run: python tests/runner_abort_harness.py
 
+      - name: Review without robot or keys (external review 7)
+        # rebuilds the verdict table, next-test plans and the full HTML review from committed evidence; the committed
+        # outputs must come out identical
+        run: |
+          python scripts/quantgate.py review --no-llm
+          test -s artifacts/reports/review_report.html
+          git diff --exit-code -- artifacts/reports/d3_v3_verdicts.json artifacts/reports/next_test_plans.json
+
       - name: 그리드 무결성 (§4.1)
         # configs/variant_grid.yaml이 정준 생성기와 어긋나면 여기서 실패한다.
         run: python -m edgeqgate.grid
