@@ -34,7 +34,10 @@ than the INT8 builds, so never say it uses the least power. More trials aim to s
 precision, not that it is better. The AI judge's record is conditional: it is wording-sensitive, judges only the end state and has
 more false alarms on a new object, so it must be re-validated before anyone relies on it; never say it can be trusted or is reliable. It WAS already re-checked on
 new live trials in the fine-tune evaluation and held up there; what remains open is other objects and other scenes.
-Do not describe which end of an interval must do what; say "enough trials to show the difference stays within the tolerance"."""
+Do not describe which end of an interval must do what; say "enough trials to show the difference stays within the tolerance".
+The fine-tuned policy is compared with the OLD POLICY (the earlier FP16 policy), never with full precision.
+When both success rates are very high, the pre-registered ceiling rule keeps the verdict undecided whatever the trial count, so
+never say that more trials alone will settle such a comparison; say it needs a revised, pre-registered rule as well."""
 USER = """The decided review (for your understanding only; do not repeat its numbers):
 ```json
 {table}
@@ -50,7 +53,7 @@ FORBIDDEN = [("digit", re.compile(r"\d")),
              ("verdict label", re.compile(r"\bNO-GO\b|\bGO\b|(?i:\bno-go\b|insufficient[ _]evidence|\bflagged\b|improvement[ _]detected|not[ _]detected)")),
              ("approval or safety word", re.compile(r"\b(approv\w*|safe\w*|pass(?:es|ed|ing)?|ready|guarantee\w*|prove[nd]?|equivalen\w*|harmless|certif\w*|ship(?:s|ped|ping)?)\b", re.I)),
              # claim patterns the first v3 run got wrong (2026-10-14): least power, a trustworthy judge, "better than", interval bounds
-             ("misreading pattern", re.compile(r"\b(?:least|lowest|less|lower)\s+power\b|\bcan\s+be\s+trusted\b|\btrustworthy\b|\breliable\b|\bbetter\s+than\b|\b(?:upper|lower)\s+(?:bound|end|limit)\b", re.I))]
+             ("misreading pattern", re.compile(r"\b(?:least|lowest|less|lower)\s+power\b|\bcan\s+be\s+trusted\b|\btrustworthy\b|\breliable\b|\bbetter\s+than\b|\b(?:upper|lower)\s+(?:bound|end|limit)\b|fine[\s\u2011-]*tun\w*[^.]{0,120}full[\s\u2011-]*precision|full[\s\u2011-]*precision[^.]{0,60}fine[\s\u2011-]*tun", re.I))]
 PREC = re.compile(r"\b(?:FP16|FP32|INT8|INT4|BF16|W4A4)\b", re.I)
 DASHES = dict.fromkeys(map(ord, "‐‑‒–—−"), "-")
 
@@ -147,7 +150,7 @@ if __name__ == "__main__":
     caps = {"fig_e1_forest.png": "Success vs FP32 per candidate: every Newcombe interval crosses the 10 pp tolerance, so no GO yet.",
             "fig_cost_evidence.png": "GPU time on the device vs real-arm success: FP16 is cheapest; success intervals overlap.",
             "fig_frames.png": "The frames behind two verdicts: a success, and a failure that Cosmos's first setup called a success.",
-            "fig_ft_position.png": "Position fine-tune: fine-tuned vs old policy at -3, 0 and +3 cm, blinded, 12 vs 12 each."}
+            "fig_ft_position.png": "Position fine-tune: fine-tuned vs old policy at -3 and +3 cm (12 vs 12 each) and at the training mark (T0 + T0R pooled, 24 vs 24); interleaved under sealed schedules, operator blinding partial."}
     figmd = "\n\n## Figures (drawn by code from the verdict table)\n\n" + "".join(f"![{caps[f]}](figures/{f})\n\n*{caps[f]}*\n\n" for f in figs)
     open(f"{a.out}/d3_report_v3.md", "w").write(head + codes + "\n" + expl + "\n" + figmd)
     json.dump({"verdict_hash": h, "issues": final["issues"], "latency_sec": round(sum(x['latency_sec'] for x in attempts), 1), "selftest": st,

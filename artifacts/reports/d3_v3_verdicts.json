@@ -20,7 +20,7 @@
    "verdict": "INSUFFICIENT_EVIDENCE",
    "e2e_ms": 34.3,
    "evidence_path": "artifacts/reports/g6_q2_sensitivity.json#Q2.VC-002",
-   "next_action": "Settle success against FP32 at 10 pp: plan about 110-120 trials per arm (planning estimate, assumes equal true rates near 96-97 percent; not a guarantee)",
+   "next_action": "More trials alone will not settle this: under the pre-registered ceiling rule, two arms both at or above 95 percent stay undecided at any sample size. Settling it needs a revised, pre-registered rule (for example a bound on the failure-rate difference); about 110-120 trials per arm would then give a 10 pp interval (planning estimate, not a guarantee)",
    "gpu_ms_trtexec": 16.8,
    "cost_source": "artifacts/reports/power_bench/SUMMARY.md",
    "interval": {
@@ -53,7 +53,7 @@
    "verdict": "INSUFFICIENT_EVIDENCE",
    "e2e_ms": 34.3,
    "evidence_path": "artifacts/reports/g6_q2_sensitivity.json#Q2.VC-020",
-   "next_action": "Settle success against FP32 at 10 pp: plan about 110-120 trials per arm (planning estimate, assumes equal true rates near 96-97 percent; not a guarantee)",
+   "next_action": "More trials alone will not settle this: under the pre-registered ceiling rule, two arms both at or above 95 percent stay undecided at any sample size. Settling it needs a revised, pre-registered rule (for example a bound on the failure-rate difference); about 110-120 trials per arm would then give a 10 pp interval (planning estimate, not a guarantee)",
    "gpu_ms_trtexec": 16.8,
    "cost_source": "artifacts/reports/power_bench/SUMMARY.md",
    "interval": {
@@ -86,7 +86,7 @@
    "verdict": "INSUFFICIENT_EVIDENCE",
    "e2e_ms": 34.3,
    "evidence_path": "artifacts/reports/g6_q2_sensitivity.json#Q2.VC-010",
-   "next_action": "Settle success against FP32 at 10 pp: plan about 110-120 trials per arm (planning estimate, assumes equal true rates near 96-97 percent; not a guarantee)",
+   "next_action": "More trials alone will not settle this: under the pre-registered ceiling rule, two arms both at or above 95 percent stay undecided at any sample size. Settling it needs a revised, pre-registered rule (for example a bound on the failure-rate difference); about 110-120 trials per arm would then give a 10 pp interval (planning estimate, not a guarantee)",
    "interval": {
     "candidate_minus_reference_pp": 4.0,
     "ci_pp": [
@@ -117,7 +117,7 @@
    "verdict": "INSUFFICIENT_EVIDENCE",
    "e2e_ms": 34.6,
    "evidence_path": "artifacts/reports/g6_q2_sensitivity.json#Q2.VC-011",
-   "next_action": "Settle success against FP32 at 10 pp: plan about 110-120 trials per arm (planning estimate, assumes equal true rates near 96-97 percent; not a guarantee)",
+   "next_action": "More trials alone will not settle this: under the pre-registered ceiling rule, two arms both at or above 95 percent stay undecided at any sample size. Settling it needs a revised, pre-registered rule (for example a bound on the failure-rate difference); about 110-120 trials per arm would then give a 10 pp interval (planning estimate, not a guarantee)",
    "interval": {
     "candidate_minus_reference_pp": 0.0,
     "ci_pp": [
@@ -148,7 +148,7 @@
    "verdict": "INSUFFICIENT_EVIDENCE",
    "e2e_ms": 34.3,
    "evidence_path": "artifacts/reports/g6_q2_sensitivity.json#Q2.VC-012",
-   "next_action": "Settle success against FP32 at 10 pp: plan about 110-120 trials per arm (planning estimate, assumes equal true rates near 96-97 percent; not a guarantee)",
+   "next_action": "More trials alone will not settle this: under the pre-registered ceiling rule, two arms both at or above 95 percent stay undecided at any sample size. Settling it needs a revised, pre-registered rule (for example a bound on the failure-rate difference); about 110-120 trials per arm would then give a 10 pp interval (planning estimate, not a guarantee)",
    "interval": {
     "candidate_minus_reference_pp": 0.0,
     "ci_pp": [
@@ -179,7 +179,7 @@
    "verdict": "INSUFFICIENT_EVIDENCE",
    "e2e_ms": 34.6,
    "evidence_path": "artifacts/reports/g6_q2_sensitivity.json#Q2.VC-015",
-   "next_action": "Settle success against FP32 at 10 pp: plan about 110-120 trials per arm (planning estimate, assumes equal true rates near 96-97 percent; not a guarantee)",
+   "next_action": "More trials alone will not settle this: under the pre-registered ceiling rule, two arms both at or above 95 percent stay undecided at any sample size. Settling it needs a revised, pre-registered rule (for example a bound on the failure-rate difference); about 110-120 trials per arm would then give a 10 pp interval (planning estimate, not a guarantee)",
    "interval": {
     "candidate_minus_reference_pp": 4.0,
     "ci_pp": [
@@ -243,7 +243,7 @@
    "verdict": "INSUFFICIENT_EVIDENCE",
    "e2e_ms": 34.6,
    "evidence_path": "artifacts/reports/g6_q2_sensitivity.json#Q2.VC-007",
-   "next_action": "Settle success against FP32 at 10 pp: plan about 110-120 trials per arm (planning estimate, assumes equal true rates near 96-97 percent; not a guarantee)",
+   "next_action": "More trials alone will not settle this: under the pre-registered ceiling rule, two arms both at or above 95 percent stay undecided at any sample size. Settling it needs a revised, pre-registered rule (for example a bound on the failure-rate difference); about 110-120 trials per arm would then give a 10 pp interval (planning estimate, not a guarantee)",
    "interval": {
     "candidate_minus_reference_pp": 4.0,
     "ci_pp": [
@@ -274,7 +274,7 @@
    "verdict": "INSUFFICIENT_EVIDENCE",
    "e2e_ms": 34.3,
    "evidence_path": "artifacts/reports/g6_q2_sensitivity.json#Q2.VC-022",
-   "next_action": "Settle success against FP32 at 10 pp: plan about 110-120 trials per arm (planning estimate, assumes equal true rates near 96-97 percent; not a guarantee)",
+   "next_action": "More trials alone will not settle this: under the pre-registered ceiling rule, two arms both at or above 95 percent stay undecided at any sample size. Settling it needs a revised, pre-registered rule (for example a bound on the failure-rate difference); about 110-120 trials per arm would then give a 10 pp interval (planning estimate, not a guarantee)",
    "interval": {
     "candidate_minus_reference_pp": 4.0,
     "ci_pp": [
@@ -341,7 +341,7 @@
    "verdict": "INSUFFICIENT_EVIDENCE",
    "e2e_ms": 24.7,
    "evidence_path": "artifacts/reports/fp16_analysis.json#primary_fp16_vs_fp32",
-   "next_action": "Settle success against FP32 at 10 pp: plan about 110-120 trials per arm (planning estimate, assumes equal true rates near 96-97 percent; not a guarantee); also validate start-position changes before deployment",
+   "next_action": "More trials alone will not settle this: under the pre-registered ceiling rule, two arms both at or above 95 percent stay undecided at any sample size. Settling it needs a revised, pre-registered rule (for example a bound on the failure-rate difference); about 110-120 trials per arm would then give a 10 pp interval (planning estimate, not a guarantee); also validate start-position changes before deployment",
    "gpu_ms_trtexec": 11.6,
    "cost_source": "artifacts/reports/power_bench/SUMMARY.md",
    "interval": {
@@ -373,7 +373,7 @@
    "e2": "tolerance_compatible",
    "verdict": "INSUFFICIENT_EVIDENCE",
    "evidence_path": "artifacts/reports/stress_v2_analysis.json#S4.secondary_vs_fp32.VC-002",
-   "next_action": "Settle success against FP32 at 10 pp: plan about 110-120 trials per arm (planning estimate, assumes equal true rates near 96-97 percent; not a guarantee)",
+   "next_action": "More trials alone will not settle this: under the pre-registered ceiling rule, two arms both at or above 95 percent stay undecided at any sample size. Settling it needs a revised, pre-registered rule (for example a bound on the failure-rate difference); about 110-120 trials per arm would then give a 10 pp interval (planning estimate, not a guarantee)",
    "gpu_ms_trtexec": 16.8,
    "cost_source": "artifacts/reports/power_bench/SUMMARY.md",
    "interval": {
@@ -405,7 +405,7 @@
    "e2": "tolerance_compatible",
    "verdict": "INSUFFICIENT_EVIDENCE",
    "evidence_path": "artifacts/reports/stress_v2_analysis.json#S4.secondary_vs_fp32.VC-005",
-   "next_action": "Settle success against FP32 at 10 pp: plan about 110-120 trials per arm (planning estimate, assumes equal true rates near 96-97 percent; not a guarantee)",
+   "next_action": "More trials alone will not settle this: under the pre-registered ceiling rule, two arms both at or above 95 percent stay undecided at any sample size. Settling it needs a revised, pre-registered rule (for example a bound on the failure-rate difference); about 110-120 trials per arm would then give a 10 pp interval (planning estimate, not a guarantee)",
    "gpu_ms_trtexec": 17.1,
    "cost_source": "artifacts/reports/power_bench/SUMMARY.md",
    "interval": {
@@ -437,7 +437,7 @@
    "e2": "tolerance_compatible",
    "verdict": "INSUFFICIENT_EVIDENCE",
    "evidence_path": "artifacts/reports/stress_v2_analysis.json#S4.secondary_vs_fp32.VC-020",
-   "next_action": "Settle success against FP32 at 10 pp: plan about 110-120 trials per arm (planning estimate, assumes equal true rates near 96-97 percent; not a guarantee)",
+   "next_action": "More trials alone will not settle this: under the pre-registered ceiling rule, two arms both at or above 95 percent stay undecided at any sample size. Settling it needs a revised, pre-registered rule (for example a bound on the failure-rate difference); about 110-120 trials per arm would then give a 10 pp interval (planning estimate, not a guarantee)",
    "gpu_ms_trtexec": 16.8,
    "cost_source": "artifacts/reports/power_bench/SUMMARY.md",
    "interval": {

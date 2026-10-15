@@ -27,8 +27,10 @@ For every candidate engine, QuantGate answers three questions.
 
      $$\text{GO} \iff \text{lower bound of } \big(p_{\text{cand}} - p_{\text{FP32}}\big) > -10\ \text{pp}$$
 
-   - With 25 trials per arm that interval is about ±28 pp wide. Every comparison is `INSUFFICIENT_EVIDENCE`, and the
-     review lists the trials still needed (about 110–120 per arm).
+   - With 25 trials per arm that interval is about ±28 pp wide, so every comparison is `INSUFFICIENT_EVIDENCE`.
+   - The review also says what would settle it. Our pre-registered ceiling rule keeps two arms that are both at or
+     above 95% undecided at any sample size. So more trials alone are not enough: it needs a revised, pre-registered
+     rule, with about 110–120 trials per arm for a 10 pp interval.
 
 A one-command CLI (`quantgate.py review | ask | preflight | cost | verify`) rebuilds the whole review from
 committed, hashed evidence.
@@ -41,10 +43,12 @@ committed, hashed evidence.
   - 26 TensorRT engines built on the Jetson with a frozen timing cache, so the same file always behaves the same.
 - **Offline audit**: 2,000 held-out states scored on 48 CPU jobs on Nebius Jobs. The ranking was frozen before any
   real trial.
-- **Real arm**: **505 blinded trials** in 10 sessions.
-  - The schedules are sealed and interleaved, and the operator sees trial numbers only.
-  - Logs are hashed before they are unsealed, so no rule can change after the results are seen. Every analysis was
-    pre-registered.
+- **Real arm**: **505 trials** in 10 sessions, all under sealed, interleaved schedules.
+  - The operator saw trial numbers only. In the fine-tune blocks the two policies moved visibly differently, so
+    operator blinding there was partial; outcomes come from an automatic judge and a blind video re-judge.
+  - Logs are hashed before they are unsealed, so no rule can change after the results are seen.
+  - The primary analyses were pre-registered. Rules set after aggregate results and post-hoc observations are
+    labelled as such in the decision log.
 - **AI layers on Nebius**:
   - **Cosmos-Reason2 on a Nebius AI Endpoint** judges the final frame of each trial.
   - **Nemotron 3 Super on Nebius Token Factory** explains the review in words.

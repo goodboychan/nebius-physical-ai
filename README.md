@@ -7,7 +7,8 @@ edge device. It shows the engine's measured cost, its real-arm behavior and how 
 
 > QuantGate screens INT8 robot policies offline on Nebius and gates which ones reach a Jetson-powered SO-101 arm.
 > Cosmos-Reason2 watched the real runs (215 live, 245 retrospectively) and Nemotron writes the deployment report. The whole real-arm study was
-> pre-registered, operator-blinded and hash-sealed (follow-up caveats under Limitations).
+> pre-registered, operator-blinded and hash-sealed in the main study; follow-ups were sealed and interleaved, with
+> partial operator blinding in the fine-tune blocks (caveats under Limitations).
 
 **License: [Apache 2.0](LICENSE)** · Nebius × NVIDIA Global AI Hackathon, Physical AI track · internal code name
 `edgeqgate`
@@ -345,8 +346,8 @@ Error is the mean action error against FP32 on the 2,000 audit states, in normal
 - **On-policy distillation**: quantization-aware fine-tuning on those states (DAgger with FP32 as the expert), to try to
   recover a broken build such as PC-B. It closes the student-teacher gap only; weaknesses the teacher shares, such as
   the start-position shift, need new demonstrations.
-- **Simulated trials, re-checked on the arm.** Approval needs about 110–120 real trials per arm per candidate, the
-  largest remaining cost.
+- **Simulated trials, re-checked on the arm.** Approval needs a revised, pre-registered rule (the ceiling rule keeps two
+  arms both at ≥ 95% undecided) and about 110–120 real trials per arm per candidate, the largest remaining cost.
   - Next: run the same review on an Isaac Sim twin of this task, thousands of closed-loop trials per candidate, with
     the policy running on the Orin's actual TensorRT engine (hardware in the loop). This keeps "test the measured
     artifact on its real execution path".

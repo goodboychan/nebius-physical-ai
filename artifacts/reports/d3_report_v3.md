@@ -1,11 +1,11 @@
 # QuantGate — deployment report v3 (auto-generated)
 
-> Sections 1–4 are written by code from the verdict table (`d3_v3_verdicts.json`, hash `d479d31b92f251f4`). Sections 5–6 are written by Nemotron 3 Super (Token Factory) and checked by code: no digits, no verdict labels, no approval or safety words. They are never a source of verdicts or numbers; a qualitative misreading in plain words cannot be excluded by these rules. v2 is kept as history (`d3_report_v2.md`).
+> Sections 1–4 are written by code from the verdict table (`d3_v3_verdicts.json`, hash `5b8e3a365ba1d25c`). Sections 5–6 are written by Nemotron 3 Super (Token Factory) and checked by code: no digits, no verdict labels, no approval or safety words. They are never a source of verdicts or numbers; a qualitative misreading in plain words cannot be excluded by these rules. v2 is kept as history (`d3_report_v2.md`).
 
 | Item | Value |
 |---|---|
 | Model attempts | 2 |
-| Latency | 38.0 s |
+| Latency | 27.6 s |
 | **Wording findings (final attempt)** | **0** |
 
 ---
@@ -49,27 +49,25 @@ AI judge: Cosmos-Reason2 end-of-trial judge, held-out eval of 273 recorded trial
 
 ## 4. Next actions (written by code)
 
-- **Settle success against FP32 at 10 pp: plan about 110-120 trials per arm (planning estimate, assumes equal true rates near 96-97 percent; not a guarantee)** — VC-002 (G6 nominal, pads), VC-020 (G6 nominal, pads), VC-010 (G6 nominal, pads), VC-011 (G6 nominal, pads), VC-012 (G6 nominal, pads), VC-015 (G6 nominal, pads), VC-005 (G6 nominal, pads), VC-007 (G6 nominal, pads), VC-022 (G6 nominal, pads), VC-024 (G6 nominal, pads), VC-002 (stress S4 unseen can), VC-005 (stress S4 unseen can), VC-020 (stress S4 unseen can)
-- **Settle success against FP32 at 10 pp: plan about 110-120 trials per arm (planning estimate, assumes equal true rates near 96-97 percent; not a guarantee); also validate start-position changes before deployment** — VC-025 (FP16 run, rubber bands)
+- **More trials alone will not settle this: under the pre-registered ceiling rule, two arms both at or above 95 percent stay undecided at any sample size. Settling it needs a revised, pre-registered rule (for example a bound on the failure-rate difference); about 110-120 trials per arm would then give a 10 pp interval (planning estimate, not a guarantee)** — VC-002 (G6 nominal, pads), VC-020 (G6 nominal, pads), VC-010 (G6 nominal, pads), VC-011 (G6 nominal, pads), VC-012 (G6 nominal, pads), VC-015 (G6 nominal, pads), VC-007 (G6 nominal, pads), VC-022 (G6 nominal, pads), VC-002 (stress S4 unseen can), VC-005 (stress S4 unseen can), VC-020 (stress S4 unseen can)
+- **Settle success against FP32 at 10 pp: plan about 110-120 trials per arm (planning estimate, assumes equal true rates near 96-97 percent; not a guarantee)** — VC-005 (G6 nominal, pads), VC-024 (G6 nominal, pads)
+- **More trials alone will not settle this: under the pre-registered ceiling rule, two arms both at or above 95 percent stay undecided at any sample size. Settling it needs a revised, pre-registered rule (for example a bound on the failure-rate difference); about 110-120 trials per arm would then give a 10 pp interval (planning estimate, not a guarantee); also validate start-position changes before deployment** — VC-025 (FP16 run, rubber bands)
 - **Do not deploy; fix the calibration input (a simple input check catches it); see the real-arm check of PC-B** — PC-N (offline, deliberately miscalibrated), PC-B (offline, deliberately miscalibrated)
 - **Offline warning not confirmed on the arm in 12 trials (unresolved, not 'tolerated'); keep rejecting this build at the calibration-input check; do not read the offline audit as a predictor of closed-loop failure** — PC-B (positive control real arm)
 - **The candidate to validate next where the start position varies, not yet a replacement: settle the training mark, then confirm at more positions and objects** — FT-FP16 (fine-tune vs old, start +3 cm (held out, primary)), FT-FP16 (fine-tune vs old, start -3 cm (held out, symmetry))
 - **Nominal performance at the training mark is still undecided (pooled with the T0R replication: 22/24 vs 23/24); the two T0 failures did not repeat in 12 more trials. Plan a larger block at the training mark before replacing the old policy there** — FT-FP16 (fine-tune vs old, training start mark (secondary)), FT-FP16 (fine-tune vs old, training start mark, T0 + T0R pooled (replication))
 
 ## 5. Why the review looks like this
-The half‑precision candidate uses the least energy per inference and runs fastest, so it is the cheapest option to test first on the device.  
-The fine‑tune version of that candidate removed the start‑position weakness seen when the beginning pose was shifted three centimeters left or right, as shown by clear improvement in those held‑out cases.  
-At the training start mark, however, the fine‑tune version has not yet shown that it stays inside the allowed tolerance compared to the full‑precision baseline.  
-Because the success counts are still low, the confidence interval remains wide and does not allow a decision on whether the candidate is non‑inferior to full precision.  
-The two builds that were deliberately mis‑calibrated fail a simple input sanity check, so they are stopped before any further testing.  
-The AI judge’s record shows it catches most failures but raises false alarms on unfamiliar objects, meaning its output must be re‑checked before it can be relied upon for decisions about operation.
+The half precision engine needs the least energy per inference and has the lowest latency even though its running power draw is higher than that of the eight bit integer builds.  
+The position fine tune kept the same engine cost but removed the start position weakness seen in the original policy showing clear improvement when the start is shifted left or right yet at the trained start mark it still does not give enough evidence to claim it is better or worse than the old policy.  
+Success comparisons with the full precision reference cannot be decided yet because both arms sit at or above a high success rate which activates the pre registered ceiling rule leaving the outcome undecided no matter how many more trials are run unless the rule itself is changed.  
+Deliberately miscalibrated builds are stopped by a simple input check that flags any calibration value outside the allowed range before any arm test occurs.  
+The AI judge record shows it catches many failures but also raises false alarms on new objects depends only on the end state and is sensitive to wording so it must be re validated before anyone relies on its output.  
 
 ## 6. Questions to resolve before deployment
-- How many additional trials are needed to narrow the confidence interval so that the interval’s bottom edge stays above minus ten percent?  
-- Does the fine‑tune version maintain performance across a range of start‑position shifts beyond the two tested offsets?  
-- Can the input sanity check be extended to catch other forms of calibration drift without increasing false rejects?  
-- What is the false‑alarm rate of the AI judge on a broader set of novel objects and backgrounds?  
-- Does the half‑precision candidate consume less average power than the eight‑bit integer builds when measured over a full duty cycle?
+- How many trials per arm are needed to show the difference stays within the ten percentage point tolerance after revising the ceiling rule?  
+- How many trials at the trained start mark are required to move the verdict from undecided to a clear statement about non inferiority or superiority?  
+- What additional checks on unseen objects and novel scenes are needed to lower the false alarm rate of the AI judge before it can be relied upon?
 
 
 ## Figures (drawn by code from the verdict table)
@@ -86,7 +84,7 @@ The AI judge’s record shows it catches most failures but raises false alarms o
 
 *The frames behind two verdicts: a success, and a failure that Cosmos's first setup called a success.*
 
-![Position fine-tune: fine-tuned vs old policy at -3, 0 and +3 cm, blinded, 12 vs 12 each.](figures/fig_ft_position.png)
+![Position fine-tune: fine-tuned vs old policy at -3 and +3 cm (12 vs 12 each) and at the training mark (T0 + T0R pooled, 24 vs 24); interleaved under sealed schedules, operator blinding partial.](figures/fig_ft_position.png)
 
-*Position fine-tune: fine-tuned vs old policy at -3, 0 and +3 cm, blinded, 12 vs 12 each.*
+*Position fine-tune: fine-tuned vs old policy at -3 and +3 cm (12 vs 12 each) and at the training mark (T0 + T0R pooled, 24 vs 24); interleaved under sealed schedules, operator blinding partial.*
 

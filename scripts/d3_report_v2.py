@@ -106,8 +106,12 @@ def verdict_table():
             r["next_action"] = ("Nominal performance at the training mark is still undecided (pooled with the T0R replication: 22/24 vs 23/24); the two "
                                 "T0 failures did not repeat in 12 more trials. Plan a larger block at the training mark before replacing the old policy there")
         elif r["verdict"] == "INSUFFICIENT_EVIDENCE":
-            r["next_action"] = ("Settle success against FP32 at 10 pp: plan about 110-120 trials per arm (planning estimate, assumes equal true rates near 96-97 percent; not a guarantee)"
-                                + ("; also validate start-position changes before deployment" if r["candidate"] == "VC-025" else ""))
+            ceil = (r.get("success") and r.get("reference") and r["success"][0] / r["success"][1] >= 0.95 and r["reference"][0] / r["reference"][1] >= 0.95)
+            r["next_action"] = (("More trials alone will not settle this: under the pre-registered ceiling rule, two arms both at or above 95 percent "
+                                 "stay undecided at any sample size. Settling it needs a revised, pre-registered rule (for example a bound on the failure-rate "
+                                 "difference); about 110-120 trials per arm would then give a 10 pp interval (planning estimate, not a guarantee)") if ceil else
+                                "Settle success against FP32 at 10 pp: plan about 110-120 trials per arm (planning estimate, assumes equal true rates near 96-97 percent; not a guarantee)") \
+                + ("; also validate start-position changes before deployment" if r["candidate"] == "VC-025" else "")
         elif r["verdict"] == "FLAGGED":
             r["next_action"] = "Do not deploy; fix the calibration input (a simple input check catches it); see the real-arm check of PC-B"
         elif r["verdict"] == "NO-GO":
