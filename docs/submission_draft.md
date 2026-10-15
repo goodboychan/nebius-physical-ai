@@ -212,7 +212,20 @@ suggested fix.
 - Settle the fine-tuned policy at the training mark (10/12 vs 12/12, undecided). Then test more positions and objects.
 - A pre-registered check of the post hoc observation that the INT8 build's gripper chatters about twice as much as
   FP16 at a similar success rate.
-- A sealed real-arm block on the Hailo-8 target (FP32 vs Hailo, 12 vs 12), pre-registered separately.
+- Hailo-8 in shadow mode first. The split pipeline misses the 200 ms deadline and the preflight blocks it. It runs
+  beside the Orin on live trials and only logs, to measure on-device action error on real states.
+- **Simulated trials, re-checked on the arm.** Approval needs about 110–120 real trials per arm per candidate, the
+  largest remaining cost.
+  - Next: run the same review on an Isaac Sim twin of this task, thousands of closed-loop trials per candidate, with
+    the policy running on the Orin's actual TensorRT engine (hardware in the loop). This keeps "test the measured
+    artifact on its real execution path".
+  - The twin has started (exploratory, not evidence): Isaac Sim 6.2 runs on an NVIDIA GB10 desktop (`sim/`). The
+    SO-101 is converted to USD, the task scene is built and recorded joint trajectories replay. It is not yet
+    calibrated against the real arm.
+  - A policy trained on real camera images does not transfer to rendered images directly. The simulated review
+    therefore retrains in the twin and studies the same quantization question there.
+  - Simulated results would only pick which candidates to re-test on the arm. Approval would still come from
+    real-arm evidence. Isaac Sim rendering needs RTX-class GPUs, so the scale-out fits Nebius L40S instances.
 - Structured verdicts (done; report v3 moves every number into code): next, link each verdict to its trials and videos on the dashboard.
 - **On-policy audit and distillation.** Build the audit buffer from the states the deployed engine actually visits:
   the 385 logged real-arm rollouts already have states and both camera videos. Label those states offline with the

@@ -330,7 +330,22 @@ Error is the mean action error against FP32 on the 2,000 audit states, in normal
 - **On-policy distillation**: quantization-aware fine-tuning on those states (DAgger with FP32 as the expert), to try to
   recover a broken build such as PC-B. It closes the student-teacher gap only; weaknesses the teacher shares, such as
   the start-position shift, need new demonstrations.
-- A sealed real-arm block on the Hailo-8 target (FP32 vs Hailo, 12 vs 12), pre-registered separately.
+- **Simulated trials, re-checked on the arm.** Approval needs about 110–120 real trials per arm per candidate, the
+  largest remaining cost.
+  - Next: run the same review on an Isaac Sim twin of this task, thousands of closed-loop trials per candidate, with
+    the policy running on the Orin's actual TensorRT engine (hardware in the loop). This keeps "test the measured
+    artifact on its real execution path".
+  - The twin has started (exploratory, not evidence): Isaac Sim 6.2 runs on an NVIDIA GB10 desktop (`sim/`). The
+    SO-101 is converted to USD, the task scene is built and recorded joint trajectories replay. It is not yet
+    calibrated against the real arm.
+  - A policy trained on real camera images does not transfer to rendered images directly. The simulated review
+    therefore retrains in the twin and studies the same quantization question there.
+  - Simulated results would only pick which candidates to re-test on the arm. Approval would still come from
+    real-arm evidence. Isaac Sim rendering needs RTX-class GPUs, so the scale-out fits Nebius L40S instances.
+- **Hailo-8 in shadow mode first.** The split pipeline misses the 200 ms chunk deadline (p95 264 ms), and the preflight
+  blocks it, so it should not drive the arm. Next: run it beside the Orin on live trials, compute only and log, to
+  measure on-device action error on real states. A closed-loop Hailo block would need a different deadline and its
+  own pre-registration.
 - After the position fine-tune (done, item 5):
   - settle its nominal performance at the training mark (10/12 vs 12/12, undecided);
   - test more positions and objects;
