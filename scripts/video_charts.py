@@ -13,8 +13,9 @@ rows = lambda name: list(csv.DictReader(open(f"{D}/{name}", encoding="utf-8-sig"
 ease = lambda x: 0.0 if x <= 0 else (1.0 if x >= 1 else 1 - (1 - x) ** 3)
 ramp = lambda t, a, b: ease((t - a) / max(b - a, 1e-6))
 
+TITLE_END = [0]
 def frame(kicker, title, sub):
-    im = Image.new("RGB", (W, H), BG); d = ImageDraw.Draw(im)
+    im = Image.new("RGB", (W, H), BG); d = ImageDraw.Draw(im); TITLE_END[0] = 120 + d.textlength(title, font=F(54, True))
     d.rounded_rectangle((60, 110, W - 60, H - 70), 24, fill=PANEL)
     d.text((120, 150), kicker.upper(), font=F(24, True), fill=INK2); d.text((120, 192), title, font=F(54, True), fill=INK); d.text((122, 262), sub, font=F(26), fill=INK2)
     return im, d
@@ -23,6 +24,7 @@ def pill(im, d, text, sub, a):
     if a <= 0: return
     f, fs = F(40, True), F(24); w = max(d.textlength(text, font=f), d.textlength(sub or "", font=fs)) + 70; h = 76 + (34 if sub else 0)
     x1, y0 = W - 110, 140; x0, y1 = x1 - w, y0 + h   # top right, beside the title (burned-in subtitles use the bottom)
+    assert x0 > TITLE_END[0] + 30, f"pill would cover the title: shorten the title or the key line ({text})"
     ov = Image.new("RGBA", (W, H), (0, 0, 0, 0)); o = ImageDraw.Draw(ov)
     o.rounded_rectangle((x0, y0, x1, y1), 20, fill=GREEN_L + (int(255 * a),), outline=GREEN + (int(255 * a),), width=3)
     o.text((x0 + 35, y0 + 16), text, font=f, fill=(30, 110, 60, int(255 * a)))
@@ -76,7 +78,7 @@ def g6_success(t, dur):
 
 def cost_vs_success(t, dur):
     R = rows("03_cost_vs_success.csv")
-    im, d = frame("Cost and evidence, side by side", "GPU time vs real-arm success", "each point: an engine; vertical line: Wilson 95% interval of its success")
+    im, d = frame("Cost and evidence, side by side", "Cost vs success", "each point: an engine; vertical line: Wilson 95% interval of its success")
     x0, y0, x1, y1 = 300, 330, 1560, 790; X = lambda ms: x0 + (x1 - x0) * ms / 60; Y = lambda pct: y1 - (y1 - y0) * (pct - 50) / 50
     for v in (50, 75, 100): d.line((x0, Y(v), x1, Y(v)), fill=GRID, width=2); d.text((x0 - 80, Y(v) - 14), f"{v}%", font=F(24), fill=INK2)
     for ms in (0, 20, 40, 60): d.text((X(ms) - 14, y1 + 14), f"{ms}", font=F(24), fill=INK2)
@@ -98,7 +100,7 @@ def cost_vs_success(t, dur):
 
 def audit_vs_random(t, dur):
     R = rows("04_audit_vs_random.csv")
-    im, d = frame("Does the offline audit pick better cells?", "Audit-picked vs random INT8 cells", "real-arm successes, three cells per group (G6)")
+    im, d = frame("Does the offline audit pick better cells?", "Audit vs random picks", "real-arm successes, three cells per group (G6)")
     items = [("audit top picks", float(R[0]["success_pct"]), TEAL, False), ("random picks", float(R[1]["success_pct"]), GREY, False)]
     pr = [ramp(t, 0.2, 1.4)] * 2
     hbars(d, items, 560, 440, 1100, 170, 100, pr, lambda v: "", [0, 50, 100])
