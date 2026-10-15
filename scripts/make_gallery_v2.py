@@ -26,32 +26,33 @@ def side(a, b):
 C, E = "dashboard/clips", "video/edit"
 S = mg.slide
 for f in os.listdir(OUT):
-    if f[:2] in ("02", "03", "04", "05", "06"): os.rename(f"{OUT}/{f}", f"{OUT}/_v1_{f}")
+    if f[:2] in ("02", "03", "04", "05", "06") or not f.startswith(("01", "_v1_")): os.rename(f"{OUT}/{f}", f"{OUT}/_v1_{f}")
 os.rename(f"{OUT}/01_thumbnail.png", f"{OUT}/01_thumbnail.png") if os.path.exists(f"{OUT}/01_thumbnail.png") else None
 S("02_same_robot_same_task", "Same robot, same task", "One run succeeds, one fails. Before shipping to a tiny Jetson, which model can I trust?",
   [(side(still(f"{C}/g6_success.mp4", 99), still(f"{C}/g6_fail_knock.mp4", 99)), 56, 180, 1388, 760)])
-S("03_setup", "One task, one arm, cloud where it does real work", "SO-101 + Jetson Orin Nano Super · training on Nebius Jobs · Cosmos-Reason2 and Nemotron 3 Super on Nebius",
+S("08_setup", "One task, one arm, cloud where it does real work", "SO-101 + Jetson Orin Nano Super · training on Nebius Jobs · Cosmos-Reason2 and Nemotron 3 Super on Nebius",
   [(f"{SHOTS}/setup.png", 56, 180, 1388, 760)])
-S("04_data", "120 teleoperated demonstrations", "Leader-follower SO-101, overhead and wrist cameras · LeRobot ACT (Action Chunking with Transformers)",
+S("09_data", "120 teleoperated demonstrations", "Leader-follower SO-101, overhead and wrist cameras · LeRobot ACT (Action Chunking with Transformers)",
   [(still(f"{C}/demos_top_wrist.mp4", 3.0), 56, 180, 1388, 760)])
 bars = lambda t: vc.CHARTS["engine_cost"](t, 11.2).crop((60, 180, 1860, 790))   # title + bars, no pill (the slide subtitle says it)
-S("05_engine_cost", "Measured on the Jetson, not assumed", "FP16 is the fastest and the cheapest per inference on this device (trtexec, 15 W)",
+S("07_engine_cost", "Measured on the Jetson, not assumed", "FP16 is the fastest and the cheapest per inference on this device (trtexec, 15 W)",
   [(bars(2.45), 56, 180, 1388, 375), (bars(5.6 + 2.45), 56, 565, 1388, 375)])   # bars complete, before the pills appear
-S("06_success_by_cell", "Blinded real-arm trials", "245 sealed, interleaved trials in the main study; 25 per cell cannot separate the cells",
+S("10_success_by_cell", "Blinded real-arm trials", "245 sealed, interleaved trials in the main study; 25 per cell cannot separate the cells",
   [(chart("g6_success", 7.3), 56, 180, 1388, 760)])
-S("07_audit_vs_random", "The offline audit did not predict the arm", "Audit-picked INT8 cells 73/75 vs randomly picked 73/75",
+S("11_audit_vs_random", "The offline audit did not predict the arm", "Audit-picked INT8 cells 73/75 vs randomly picked 73/75",
   [(chart("audit_vs_random", 3.5), 56, 180, 1388, 760)])
-S("08_cost_vs_evidence", "Cost and evidence, side by side", "FP16: cheapest engine, 19/20 on the arm · every comparison with FP32 is still insufficient evidence",
-  [(chart("cost_vs_success", 9.5), 56, 180, 1388, 760)])
-S("09_what_moved", "What moved the success rate", "Not the precision: gripper friction (8/24 without pads) and a 3 cm start shift (0/3)",
+S("05_next_test", "From evidence to the next test", "Pick a candidate: confirmed, open, the evidence, and a plan for the next test with trials per arm",
+  [(Image.open(f"{SHOTS}/nexttest_narrow.png").convert("RGB").crop((0, 0, 1360, 1348)), 56, 180, 690, 760),     # 720 px wide capture, split at
+   (Image.open(f"{SHOTS}/nexttest_narrow.png").convert("RGB").crop((0, 1348, 1360, 1956)), 754, 180, 690, 760)])  # the "Next test" heading
+S("12_what_moved", "What moved the success rate", "Not the precision: gripper friction (8/24 without pads) and a 3 cm start shift (0/3)",
   [(f"{SHOTS}/moved.png", 56, 180, 1388, 760)])
-S("10_position_finetune", "A weakness found, fixed and re-tested", "50 shifted demos, 25-min fine-tune on Nebius Jobs · +3 cm 12/12 vs 3/12 · −3 cm 10/12 vs 2/12",
+S("03_found_fixed_retested", "Found, fixed, re-tested, still not approved", "+3 cm 12/12 vs 3/12 · −3 cm 10/12 vs 2/12 · the training mark is still undecided, so the review does not approve it",
   [(chart("ft_position", 5.5), 56, 180, 1388, 760)])
-S("11_ai_judge", "AI components are tested too", "Cosmos-Reason2 on a Nebius AI Endpoint: first setup 1/21 → validated 20/21 → live 22/24, 2/72 false alarms",
+S("13_ai_judge", "AI components are tested too", "Cosmos-Reason2 on a Nebius AI Endpoint: first setup 1/21 → validated 20/21 → live 22/24, 2/72 false alarms",
   [("artifacts/reports/figures/fig_frames.png", 56, 180, 1388, 760)])
-S("12_deployment_review", "The deployment review", "Which candidate to validate first, which to distrust, and whether to approve: not yet",
+S("04_deployment_review", "The deployment review", "Which candidate to validate first, which to distrust, and whether to approve: not yet",
   [(f"{SHOTS}/review_decisions.png", 56, 180, 1388, 330), (f"{SHOTS}/review_compare.png", 56, 530, 1388, 410)])
-S("13_preflight", "Deployment preflight", "Engine hash · normalization manifest · 200 ms chunk deadline · only an explicit GO passes",
+S("06_preflight", "Deployment preflight", "Engine hash · normalization manifest · 200 ms chunk deadline · only an explicit GO passes",
   [(f"{SHOTS}/preflight.png", 56, 180, 1388, 760)])
 rep = Image.open(f"{SHOTS}/report_meta.png").convert("RGB"); rep = rep.crop((0, 0, rep.width, min(rep.height, int(rep.width * 0.55))))
 S("14_report", "Code writes the verdicts, Nemotron explains", "Deployment report: every number and verdict from code; Nemotron 3 Super on Nebius Token Factory writes words only",

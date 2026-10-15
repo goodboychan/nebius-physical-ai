@@ -12,7 +12,7 @@ with sync_playwright() as p:
     shots = {"review_decisions": pg.locator("#review .decisions"), "review_compare": pg.locator("#review .tbl-scroll").first,
              "review_rows": pg.locator("#review .rows"), "preflight": sec("Deployment preflight"), "cost": sec("Engine cost on the deployment target"),
              "success": sec("Closed-loop success by cell"), "moved": sec("What moved the success rate"), "contrasts": sec("Pre-registered contrasts"),
-             "report_meta": pg.locator("#report"), "pos_strip": pg.locator("#setup .pos"), "agents": sec("Agent layer")}
+             "report_meta": pg.locator("#report"), "pos_strip": pg.locator("#setup .pos"), "agents": sec("Agent layer"), "nexttest": pg.locator("#nexttest")}
     for k, l in shots.items():
         l.scroll_into_view_if_needed(); pg.wait_for_timeout(300); l.screenshot(path=f"{out}/{k}.png")
     b.close()
