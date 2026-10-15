@@ -53,3 +53,4 @@ Outcomes are decided by the locked criterion (automatic judge and §11 consensus
   The coaster was re-seated on its mark. The Cosmos endpoint was up (C1 judge recorded, not used for outcomes).
 - Failures reported by the operator, by trial number only (blind to cells):
   - 22:29 trial 2: the gripper pushed the can while approaching; it slid out of reach and was never grasped.
+- 23:00 T0R complete: 24/24, 0 aborted. Sealed log hashed into artifacts/freeze/ft3_post.json before unsealing. The Cosmos endpoint was stopped.
