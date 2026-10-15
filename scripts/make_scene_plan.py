@@ -66,7 +66,7 @@ wcsv("06_ai_judge.csv", ["setup", "failures_caught", "failures", "false_alarms",
 
 open(f"{D}/README.md", "w").write("# Graph data for the video (from committed artifacts)\n\n" + "\n".join(NOTES) + "\n")
 # scene plan
-src = open("scripts/make_video.py").read(); REL = eval(src[src.index("REL = [") + 6: src.index("]\nSEG")] + "]", {"C": "C", "E": "E", "R": "R", "SHOTS": "SHOTS", "T1L": "T1L"})
+src = open("scripts/make_video.py").read(); REL = eval(src[src.index("REL = [") + 6: src.index("]\nSEG")] + "]", {"C": "C", "E": "E", "R": "R", "SHOTS": "SHOTS", "T1L": "T1L", "LOGO": "video/assets/quantgate_logo_intro.mp4"})
 ST = json.load(open("docs/narration/narration_v3_timing.json"))
 srt = open("docs/narration/narration_v3.srt").read().strip().split("\n\n"); ts = lambda s: sum(float(x) * m for x, m in zip(s.replace(",", ".").split(":"), (3600, 60, 1)))
 SUB = [(ts(b.split("\n")[1].split(" --> ")[0]), ts(b.split("\n")[1].split(" --> ")[1]), " ".join(b.split("\n")[2:])) for b in srt]

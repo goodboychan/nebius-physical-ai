@@ -1,0 +1,147 @@
+1
+00:00:00,000 --> 00:00:00,909
+Same robot.
+
+2
+00:00:00,909 --> 00:00:01,735
+Same task.
+
+3
+00:00:01,735 --> 00:00:04,049
+One run succeeds, one fails.
+
+4
+00:00:04,049 --> 00:00:10,825
+Before I ship this policy to a tiny Jetson, how do I know which model I can trust?
+
+5
+00:00:13,400 --> 00:00:21,322
+For quantization, we need to pick the candidate that has earned its next test, not an approval.
+
+6
+00:00:21,322 --> 00:00:25,075
+That's why robot researchers need Quant Gate.
+
+7
+00:00:25,800 --> 00:00:33,825
+This is an S O one oh one arm running an A C T policy, Action Chunking with Transformers, on a Jetson Orin Nano Super.
+
+8
+00:00:33,825 --> 00:00:40,762
+We taught it with one hundred and twenty teleoperated demonstrations, and trained it with Nebius Jobs.
+
+9
+00:00:40,762 --> 00:00:53,344
+From that one policy, we built twenty-six candidate engines with TensorRT: full precision, half precision, and twenty-four int eight builds that differ only in how they were calibrated.
+
+10
+00:00:53,344 --> 00:00:55,248
+Every real trial is blinded.
+
+11
+00:00:55,248 --> 00:01:02,729
+The operator never knows which engine is running, and the results stay sealed until all the trials are logged.
+
+12
+00:01:02,729 --> 00:01:07,150
+That way, no candidate gets picked after we have seen how it did.
+
+13
+00:01:08,800 --> 00:01:19,721
+QuantGate puts three things side by side for every candidate: what it costs on the real device, how it scored offline, and what it did on the real arm.
+
+14
+00:01:19,721 --> 00:01:23,337
+Training and the offline audit ran on Nebius Jobs.
+
+15
+00:01:23,337 --> 00:01:26,375
+The engines run as TensorRT on the Jetson.
+
+16
+00:01:27,300 --> 00:01:29,322
+Measuring changed the decision.
+
+17
+00:01:29,322 --> 00:01:36,758
+On this Jetson, half precision was the cheapest engine, not int eight, and on the arm it went nineteen for twenty.
+
+18
+00:01:36,758 --> 00:01:40,280
+The audit's top picks did no better than random picks.
+
+19
+00:01:40,280 --> 00:01:43,410
+A new can worked forty-eight out of forty-eight.
+
+20
+00:01:43,410 --> 00:01:47,259
+But with the start moved three centimeters, the arm failed.
+
+21
+00:01:47,259 --> 00:01:55,738
+So we recorded fifty demonstrations at shifted positions, fine-tuned on Nebius, and tested it blinded, at a position it never saw.
+
+22
+00:01:55,738 --> 00:02:03,239
+There, it went twelve for twelve, where the old policy went three for twelve, and ten for twelve on the other side.
+
+23
+00:02:03,239 --> 00:02:06,500
+At the trained spot, more trials are still needed.
+
+24
+00:02:07,300 --> 00:02:09,519
+The A I layers get checked too.
+
+25
+00:02:09,519 --> 00:02:16,246
+In its first setup, Cosmos Reason, on a Nebius A I Endpoint, caught one failure in twenty-one.
+
+26
+00:02:16,246 --> 00:02:24,549
+We tested it like any other component, on held-out recordings, and a validated question caught twenty of twenty-one.
+
+27
+00:02:24,549 --> 00:02:32,350
+Nemotron Super on Token Factory explains the review in words, while every verdict and number comes from code.
+
+28
+00:02:32,650 --> 00:02:35,222
+So QuantGate answers three questions.
+
+29
+00:02:35,222 --> 00:02:37,724
+Which candidate do I validate first?
+
+30
+00:02:37,724 --> 00:02:38,767
+Half precision.
+
+31
+00:02:38,767 --> 00:02:40,157
+Which do I distrust?
+
+32
+00:02:40,157 --> 00:02:48,289
+Broken calibrations, which a simple input check catches, and any engine whose files no longer match what was audited.
+
+33
+00:02:48,289 --> 00:02:50,027
+Can I approve deployment?
+
+34
+00:02:50,027 --> 00:02:50,583
+Not yet.
+
+35
+00:02:50,583 --> 00:02:54,475
+The review lists exactly which trials are still missing.
+
+36
+00:02:55,150 --> 00:02:55,975
+Quant Gate.
+
+37
+00:02:55,975 --> 00:02:58,750
+Earn the next test, not the approval.

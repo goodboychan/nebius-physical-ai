@@ -8,6 +8,7 @@ import av, numpy as np
 from PIL import Image, ImageDraw, ImageFont
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 import phone_clips as pc
+import video_charts as vchart   # feedback notes 3-7: animated charts from the committed CSVs
 
 SHOTS, OUT = sys.argv[1:3]
 W, H, FPS = 1920, 1080, 30
@@ -26,37 +27,40 @@ def srt(path):
         out.append((t(a), t(z), txt))
     return out
 
-SUBS = srt("docs/narration/narration_v3.srt")
+NARR = os.environ.get("NARR", "v4")   # v4 (2026-10-16): feedback notes 1-9, docs/video_feedback_notes.md
+SUBS = srt(f"docs/narration/narration_{NARR}.srt")
 
 # Segments are (scene, start, end) in seconds relative to the scene start (docs/narration/narration_v3_timing.json),
 # then kind, args and the on-screen chip.
-ST = json.load(open("docs/narration/narration_v3_timing.json"))
+ST = json.load(open(f"docs/narration/narration_{NARR}_timing.json"))
 T1L = "video/2.T1_long/20261014_213936.mp4"   # phone, upside down: rot 180
-REL = [
-    ("0", 0.0, 12.3, "intro", (), None),
-    ("1", 0.0, 2.0, "clip", (f"{C}/g6_success.mp4", 2.0, 4, 0), "Same robot, same task: success (overhead, 4×)"),
-    ("1", 2.0, 4.1, "clip", (f"{C}/g6_fail_knock.mp4", 8.0, 4, 0), "Same robot, same task: failure (overhead, 4×)"),
-    ("1", 4.1, 11.3, "card", ("Before I ship this policy to a tiny Jetson,\nhow do I know which model I can trust?",), None),
-    ("2", 0.0, 5.8, "clip", (f"{E}/demo_ft.mp4", 1.0, 1, 0), "Real arm, real time · SO-101 · ACT · Jetson Orin Nano Super"),
-    ("2", 5.8, 12.1, "clip", (f"{C}/demos_top_wrist.mp4", 0.0, 1, 0), "Teleoperated demonstrations: overhead and wrist camera (training data)"),
-    ("2", 12.1, 24.4, "clip", (f"{E}/demo_ft.mp4", 6.8, 1, 0), "Real arm, real time · fine-tuned policy at +3 cm (demonstration take, not counted)"),
-    ("2", 24.4, 43.0, "clip", (T1L, 209.6, 1, 180), "Counted blinded trial (T1 trial 4) · the operator sees trial numbers only"),
-    ("3", 0.0, 11.4, "image", (f"{SHOTS}/cost.png",), "Engine cost measured on the Jetson Orin Nano Super (trtexec, 15 W)"),
-    ("3", 11.4, 18.5, "image", (f"{SHOTS}/success.png",), "Blinded real-arm success by cell (G6, 245 trials)"),
-    ("4", 0.0, 9.9, "image", (f"{R}/fig_cost_evidence.png",), "FP16: cheapest engine; 19/20 on the arm"),
-    ("4", 9.9, 13.5, "image", (f"{SHOTS}/contrasts.png",), "Audit-picked vs random INT8 cells: 73/75 vs 73/75"),
-    ("4", 13.5, 16.6, "clip", (f"{E}/yellow_can_2.mp4", 4.0, 1, 0), "Unseen yellow can · block result 48/48 (side view of a demonstration)"),
-    ("4", 16.6, 20.5, "clip", (f"{C}/v2_shift_regrasp.mp4", 8.0, 4, 0), "Start moved 3 cm: 0/3 (overhead, 4×)"),
-    ("4", 20.5, 29.1, "image", (f"{SHOTS}/pos_strip.png",), "50 new demos at −4…+4 cm · fine-tuned 20k steps on Nebius Jobs · ±3 cm held out"),
-    ("4", 29.1, 36.7, "clip", (f"{E}/t1_old_vs_ft_counted.mp4", 0.0, 2, 0), "Counted blinded trials at +3 cm (side view, 2×)"),
-    ("4", 36.7, 40.0, "image", (f"{R}/fig_ft_position.png",), "+3 cm 12/12 vs 3/12 · −3 cm 10/12 vs 2/12 · training mark undecided"),
-    ("5", 0.0, 9.0, "image", (f"{R}/fig_frames.png",), "A failure the first Cosmos setup called a success"),
-    ("5", 9.0, 17.3, "card", ("Cosmos-Reason2 end-of-trial judge\n\nfirst setup                  1/21 failures caught\nvalidated prompt, held out   20/21 · 5/252 false alarms\nsame prompt, live new trials 22/24 · 2/72 false alarms",), None),
-    ("5", 17.3, 25.2, "image", (f"{SHOTS}/report_meta.png", 0, 1100), "Deployment report: code writes verdicts and numbers; Nemotron (Token Factory) explains"),
-    ("6", 0.0, 7.9, "image", (f"{SHOTS}/review_decisions.png",), "The deployment review"),
-    ("6", 7.9, 16.2, "image", (f"{SHOTS}/preflight.png",), "Deployment preflight: broken builds and timing are blocked"),
-    ("6", 16.2, 22.5, "image", (f"{SHOTS}/review_compare.png",), "Not yet: the review lists the trials still missing"),
-    ("7", 0.0, 4.0, "logo", (), None),
+LOGO = "video/assets/quantgate_logo_intro.mp4"   # the user's logo animation (14.5 s, 1536x1024)
+OUTRO = "video/assets/quantgate_logo_outro.mp4"  # the user's logo-only animation for the last scene (14.5 s)
+REL = [   # v4 order (note 1): success/failure clips and the question first, then the logo
+    ("0", 0.0, 1.7, "clip", (f"{C}/g6_success.mp4", 2.0, 4, 0), "Same robot, same task: success (overhead, 4×)"),
+    ("0", 1.7, 4.0, "clip", (f"{C}/g6_fail_knock.mp4", 8.0, 4, 0), "Same robot, same task: failure (overhead, 4×)"),
+    ("0", 4.0, 11.0, "cardfade", ("Before I ship this policy to a tiny Jetson,\nhow do I know which model I can trust?",), None),
+    ("1", 0.0, 14.5, "video", (LOGO,), None),
+    ("2", 0.0, 8.3, "clip", (f"{E}/demo_ft.mp4", 1.0, 1, 0), "Real arm, real time · SO-101 · ACT (Action Chunking with Transformers) · Jetson Orin Nano Super"),
+    ("2", 8.3, 15.3, "clip", (f"{C}/demos_top_wrist.mp4", 0.0, 1, 0), "Teleoperated demonstrations: overhead and wrist camera (training data)"),
+    ("2", 15.3, 27.8, "clip", (f"{E}/demo_ft.mp4", 6.8, 1, 0), "Real arm, real time · fine-tuned policy at +3 cm (demonstration take, not counted)"),
+    ("2", 27.8, 43.0, "clip", (T1L, 209.6, 1, 180), "Counted blinded trial (T1 trial 4) · the operator sees trial numbers only"),
+    ("3", 0.0, 11.2, "chart", ("engine_cost",), None),
+    ("3", 11.2, 18.5, "chart", ("g6_success",), None),
+    ("4", 0.0, 9.8, "chart", ("cost_vs_success",), None),
+    ("4", 9.8, 13.3, "chart", ("audit_vs_random",), None),
+    ("4", 13.3, 16.4, "clip", (f"{E}/yellow_can_2.mp4", 4.0, 1, 0), "Unseen yellow can · block result 48/48 (side view of a demonstration)"),
+    ("4", 16.4, 20.3, "clip", (f"{C}/v2_shift_regrasp.mp4", 8.0, 4, 0), "Start moved 3 cm: 0/3 (overhead, 4×)"),
+    ("4", 20.3, 28.7, "image", (f"{SHOTS}/pos_strip.png",), "50 new demos at −4…+4 cm · fine-tuned 20k steps on Nebius Jobs · ±3 cm held out"),
+    ("4", 28.7, 34.5, "clip", (f"{E}/t1_old_vs_ft_counted.mp4", 0.0, 2, 0), "Counted blinded trials at +3 cm (side view, 2×)"),
+    ("4", 34.5, 40.0, "chart", ("ft_position",), None),
+    ("5", 0.0, 9.2, "image", (f"{R}/fig_frames.png",), "A failure the first Cosmos setup called a success"),
+    ("5", 9.2, 17.5, "card", ("Cosmos-Reason2 end-of-trial judge\n\nfirst setup                  1/21 failures caught\nvalidated prompt, held out   20/21 · 5/252 false alarms\nsame prompt, live new trials 22/24 · 2/72 false alarms",), None),
+    ("5", 17.5, 25.4, "scroll", (f"{SHOTS}/report_meta.png",), "Deployment report: code writes verdicts and numbers; Nemotron (Token Factory) explains"),
+    ("6", 0.0, 7.8, "image", (f"{SHOTS}/review_decisions.png",), "The deployment review"),
+    ("6", 7.8, 15.9, "image", (f"{SHOTS}/preflight.png",), "Deployment preflight: broken builds and timing are blocked"),
+    ("6", 15.9, 22.5, "image", (f"{SHOTS}/review_compare.png",), "Not yet: the review lists the trials still missing"),
+    ("7", 0.0, 4.2, "endkick", ("Earn the next test, not the approval.",), None),
 ]
 SEG = [(ST[k] + a, ST[k] + b, kind, args, chip) for k, a, b, kind, args, chip in REL]
 
@@ -116,6 +120,32 @@ def frames_of(seg):
     elif kind == "card":
         im = card(args[0])
         for i in range(n): yield im.copy()
+    elif kind == "cardfade":   # note 1: centred, fades in by brightness
+        im = card(args[0]); dark = Image.new("RGB", (W, H), BG)
+        for i in range(n): yield Image.blend(dark, im, min(1.0, i / (1.2 * FPS)))
+    elif kind == "chart":      # notes 3-7
+        fn = vchart.CHARTS[args[0]]
+        for i in range(n): yield fn(i / FPS, t1 - t0)
+    elif kind == "video":      # the user's logo animation, fitted to 1080 high on its own background
+        c_ = av.open(args[0]); fr_ = [f.to_image().convert("RGB") for f in c_.decode(video=0)]; c_.close(); bgc = fr_[0].getpixel((8, 8))
+        for i in range(n):
+            f = fit(fr_[min(i, len(fr_) - 1)], W, H); base = Image.new("RGB", (W, H), bgc); base.paste(f, ((W - f.width) // 2, (H - f.height) // 2)); yield base
+    elif kind == "scroll":     # note 8: the whole report, sliding from top to bottom
+        im = Image.open(args[0]).convert("RGB"); f = fit(im, 1700, 10 ** 6); view = H - 140; travel = max(f.height - view, 0)
+        for i in range(n):
+            u = i / max(n - 1, 1); u = 0 if u < 0.06 else (1 if u > 0.94 else (u - 0.06) / 0.88); u = u * u * (3 - 2 * u)
+            y = int(travel * u); base = Image.new("RGB", (W, H), BG); pad = Image.new("RGB", (f.width + 40, view + 20), (241, 243, 242))
+            base.paste(pad, ((W - pad.width) // 2, 100)); base.paste(f.crop((0, y, f.width, y + view)), ((W - f.width) // 2, 110)); yield base
+    elif kind == "endkick":    # note 9: logo end frame + kick line + repository
+        # the user's logo-only outro animation (note 9 follow-up): its wordmark build (9 s to the end) fitted to the slot
+        c_ = av.open(OUTRO); st_ = c_.streams.video[0]; fr_ = [f.to_image().convert("RGB") for f in c_.decode(video=0) if float(f.pts * st_.time_base) >= 9.0]; c_.close()
+        bgc = fr_[0].getpixel((8, 8))
+        for i in range(n):
+            lg = fit(fr_[min(len(fr_) - 1, int(i * len(fr_) / n))], int(W * 0.62), int(H * 0.62))
+            base = Image.new("RGB", (W, H), bgc); base.paste(lg, ((W - lg.width) // 2, 40)); d = ImageDraw.Draw(base); a_ = min(1.0, max(0.0, (i / FPS - 1.2) / 0.8))
+            col = tuple(int(bgc[k] + (INK[k] - bgc[k]) * a_) for k in range(3)); f1 = F(60, True); txt = args[0]; w = d.textlength(txt, font=f1); d.text(((W - w) / 2, 760), txt, font=f1, fill=col)
+            u = "github.com/goodboychan/nebius-physical-ai"; w = d.textlength(u, font=F(30)); d.text(((W - w) / 2, 870), u, font=F(30), fill=tuple(int(bgc[k] + (INK2[k] - bgc[k]) * a_) for k in range(3)))
+            yield base
     elif kind == "intro":
         th = fit(Image.open("docs/assets/quantgate_thumbnail.png").convert("RGB"), W, H)
         sx, sy = th.width / 1536, th.height / 1024; ox, oy = (W - th.width) // 2, (H - th.height) // 2
@@ -139,13 +169,13 @@ def frames_of(seg):
 
 o = av.open(OUT, "w", options={"movflags": "+faststart"}); vs = o.add_stream("libx264", rate=FPS)
 vs.width, vs.height, vs.pix_fmt = W, H, "yuv420p"; vs.options = {"crf": os.environ.get("CRF", "21"), "preset": "medium"}
-a_in = av.open("docs/narration/narration_v3_am_michael.m4a"); as_ = o.add_stream_from_template(a_in.streams.audio[0], opaque=True)
+a_in = av.open(f"docs/narration/narration_{NARR}_am_michael.m4a"); as_ = o.add_stream_from_template(a_in.streams.audio[0], opaque=True)
 k = 0
 for seg in SEG:
     for im in frames_of(seg):
         t = k / FPS; d = ImageDraw.Draw(im)
         if seg[4]: chip(d, seg[4])
-        subtitle(d, t)
+        if seg[2] not in ("cardfade", "endkick"): subtitle(d, t)   # the card and the kick show the spoken line already
         for p in vs.encode(av.VideoFrame.from_image(im)): o.mux(p)
         k += 1
     print(f"{seg[0]:6.1f}-{seg[1]:6.1f} {seg[2]:5} frames to {k}", flush=True)

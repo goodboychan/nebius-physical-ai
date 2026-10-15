@@ -2,7 +2,7 @@
 espeak-ng is not usable on this host, so the dictionary-only G2P runs and missing words are given explicit phonemes in
 the input. It prints each scene's duration against its target.
 Usage: <venv with kokoro>/python make_narration.py <out dir> [voice] [speed]"""
-import json, os, sys, types
+import json, os, re, sys, types
 fake = types.ModuleType("misaki.espeak")
 class _NoEspeak:
     def __init__(self, *a, **k): raise RuntimeError("espeak disabled")
@@ -15,7 +15,12 @@ out = sys.argv[1]; voice = sys.argv[2] if len(sys.argv) > 2 else "am_michael"; s
 cfg = json.load(open(os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "docs", "narration", "tts_input.json")))
 os.makedirs(out, exist_ok=True); p = KPipeline(lang_code="a", repo_id="hexgrad/Kokoro-82M"); tot = 0
 for k, text in cfg["scenes"].items():
-    a = np.concatenate([x for _, _, x in p(text, voice=voice, speed=speed)]); d = len(a) / 24000; tot += d
+    parts = []   # [[pause:s]] markers become silence (v4: the logo lines are paced to the animation)
+    for chunk in re.split(r"(\[\[pause:[0-9.]+\]\])", text):
+        m = re.fullmatch(r"\[\[pause:([0-9.]+)\]\]", chunk)
+        if m: parts.append(np.zeros(int(float(m.group(1)) * 24000), dtype=np.float32))
+        elif chunk.strip(): parts.append(np.concatenate([x for _, _, x in p(chunk.strip(), voice=voice, speed=speed)]))
+    a = np.concatenate(parts); d = len(a) / 24000; tot += d
     sf.write(f"{out}/scene{k}_{voice}.wav", a, 24000)
     print(f"scene {k}: {d:5.1f} s (target {cfg['targets_s'][k]} s){'  <-- long' if d > cfg['targets_s'][k] else ''}")
 print(f"total {tot:.1f} s")
