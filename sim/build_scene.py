@@ -35,7 +35,19 @@ if CAL:
 if opt("--can-from-video") and opt("--camera"):   # the trial's own can position: can top in its first overhead frame, back-projected
     import av as _av, cv2 as _cv2
     _C = json.load(open(opt("--camera"))); _R = np.array(_C["R_world_to_cam"]); _t = np.array(_C["t_world_to_cam"]); _f = _C["focal_px"]; _cam = -_R.T @ _t
-    _c = _av.open(opt("--can-from-video")); _g = _cv2.cvtColor(next(_c.decode(video=0)).to_ndarray(format="rgb24"), _cv2.COLOR_RGB2GRAY); _c.close()
+    # --pregrasp-s S: start S seconds before the real grasp (first stable hold of the logged gripper) and take the can
+    # from that video frame. The real gripper often shoves the can 2-4 cm on the approach, which an open-loop replay
+    # cannot reproduce, so this isolates the grasp, carry and placement (2026-10-16).
+    START = 0
+    if opt("--pregrasp-s"):
+        import csv as _csv
+        _gs = np.array([float(r["state.gripper"]) for r in _csv.DictReader(open(TRAJ))]); _op = np.where(_gs > 45)[0]
+        _h = [i for i in range(_op[0], len(_gs) - 30) if 10 < _gs[i] < 45 and _gs[i:i + 30].std() < 1.5][0] + 15
+        START = max(0, _h - int(round(float(opt("--pregrasp-s")) * 30))); print("pregrasp start step", START, "hold", _h)
+    _c = _av.open(opt("--can-from-video")); _st = _c.streams.video[0]
+    for _n, _fr in enumerate(_c.decode(_st)):
+        if _fr.time is None or _fr.time >= START / 30 - 1e-3: break
+    _g = _cv2.cvtColor(_fr.to_ndarray(format="rgb24"), _cv2.COLOR_RGB2GRAY); _c.close()
     _cs = _cv2.HoughCircles(_cv2.medianBlur(_g, 5), _cv2.HOUGH_GRADIENT, dp=1.2, minDist=20, param1=100, param2=22, minRadius=17, maxRadius=28)
     _z = (CAL["table_z"] if CAL else -0.0024) + 0.115
     _best = None
@@ -43,7 +55,7 @@ if opt("--can-from-video") and opt("--camera"):   # the trial's own can position
         if _g[int(_y), int(_x)] <= 90: continue
         _d = _R.T @ np.array([(_x - 320) / _f, (_y - 240) / _f, 1.0]); _p = _cam + (_z - _cam[2]) / _d[2] * _d
         if _best is None or np.hypot(*(_p[:2] - start)) < np.hypot(*(_best - start)): _best = _p[:2]
-    if _best is not None and np.hypot(*(_best - start)) < 0.12: print("can from video:", np.round(_best, 3).tolist(), "start mark", np.round(start, 3).tolist()); start = _best
+    if _best is not None and np.hypot(*(_best - start)) < (0.16 if START else 0.12): print("can from video:", np.round(_best, 3).tolist(), "start mark", np.round(start, 3).tolist()); start = _best
 J = ["shoulder_pan", "shoulder_lift", "elbow_flex", "wrist_flex", "wrist_roll", "gripper"]
 BASE_Z = 0.0024   # base bottom sits on the table (z = 0)
 
@@ -127,8 +139,14 @@ def q_of(row):   # LeRobot degrees -> URDF radians (no offsets yet); gripper 0..
     g = row[f"{src}.gripper"]
     if CAL and "gripper_map" in CAL: q[idx[5]] = CAL["gripper_map"]["rad_at_zero"] + CAL["gripper_map"]["rad_per_unit"] * g; return q   # stage 3: measured closed/can points
     q[idx[5]] = -0.1745 + (1.745 + 0.1745) * g / 100.0; return q
+START = globals().get("START", 0); traj = traj[START:]
 arm.set_joint_positions(q_of(traj[0]))
-for _ in range(60): world.step(render=True)
+from isaacsim.core.utils.types import ArticulationAction as _AA
+_p0 = np.r_[start, 0.0575]
+for _ in range(60):   # hold the first pose as the drive target; with --pregrasp-s the arm starts mid-reach, so keep the can at its frame position until the arm is settled
+    arm.apply_action(_AA(joint_positions=q_of(traj[0])))
+    if START: can.set_world_pose(position=_p0, orientation=np.array([1.0, 0, 0, 0])); can.set_linear_velocity(np.zeros(3)); can.set_angular_velocity(np.zeros(3))
+    world.step(render=True)
 log, frames = [], []
 from pxr import UsdGeom, Usd
 GL = [q_.GetPath() for q_ in stage.Traverse() if q_.GetName() == "gripper_link"][0]

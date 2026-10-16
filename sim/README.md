@@ -147,3 +147,29 @@ Exploratory and not part of the hackathon evidence. Nothing here changes a Quant
   - fit a planar offset and rotation between camera-derived can positions and the FK grasp points over all demo grasps;
   - re-run `check_can_vs_grasp.py` (target ≈1 cm);
   - only then re-run agreement.
+
+### Why the open-loop replay cannot agree yet (2026-10-16, diagnosis)
+
+- **The camera-to-arm registration differs by session.**
+  - `fit_cam_fk_offset.py` fits a yaw + xy correction from camera-derived can positions to the FK jaw point at the real
+    grasp.
+  - Fit on both demo sets at once, it stays at 35 mm median on the position demos for every wrist roll tried
+    (−155, −90, 0, +88).
+  - Fit per set, it is good: 5.6 mm on the main demos, 9.5 mm on the position demos. But the two sets need different
+    corrections: yaw +1.7° vs +11.1°, shift (−17, −1) vs (−3, −20) mm.
+  - So the camera or the arm moved between sessions.
+  - Camera-vs-jaw-point gap per rollout: 8–17 mm for the earlier sessions (P, S, main) and T0001; 52–71 mm for T0018,
+    T0022 and the whole +3 cm block.
+  - The uncorrected camera agrees best with roll +88° (20 mm median), so the −90° result above came from the trials,
+    not from the geometry.
+- **The real gripper shoves the can before it grasps.**
+  - Can tracked in the overhead video: it moves 2–4 cm in the last second before the hold (T0001 −23 mm in y, T0018
+    +33 mm).
+  - An open-loop action replay cannot reproduce that contact.
+  - `--pregrasp-s 1.0` (start 1 s before the hold, can from that frame, arm settled before the can is released) stops
+    the start-up blast, but the jaws still close beside the can.
+- **What would fix it:**
+  - a short registration recording in each session: the arm tip touches 4–6 marked points on the sheet while the
+    overhead camera records;
+  - or run the policy closed-loop in the sim on rendered images, which is a separate project because of the image gap.
+- Until then the twin is a visual and kinematic replay, not an outcome predictor.
