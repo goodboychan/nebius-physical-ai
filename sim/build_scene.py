@@ -32,10 +32,23 @@ if CAL:
     OFF[:4] = np.deg2rad([CAL["joint_offsets_deg"][j] for j in ("shoulder_pan", "shoulder_lift", "elbow_flex", "wrist_flex")])
     OFF[4] = np.deg2rad(CAL["joint_offsets_deg"].get("wrist_roll", 0.0))
     start, coaster = np.array(CAL["start_xyz"][:2]), np.array(CAL["coaster_xyz"][:2])
+if opt("--can-from-video") and opt("--camera"):   # the trial's own can position: can top in its first overhead frame, back-projected
+    import av as _av, cv2 as _cv2
+    _C = json.load(open(opt("--camera"))); _R = np.array(_C["R_world_to_cam"]); _t = np.array(_C["t_world_to_cam"]); _f = _C["focal_px"]; _cam = -_R.T @ _t
+    _c = _av.open(opt("--can-from-video")); _g = _cv2.cvtColor(next(_c.decode(video=0)).to_ndarray(format="rgb24"), _cv2.COLOR_RGB2GRAY); _c.close()
+    _cs = _cv2.HoughCircles(_cv2.medianBlur(_g, 5), _cv2.HOUGH_GRADIENT, dp=1.2, minDist=20, param1=100, param2=22, minRadius=17, maxRadius=28)
+    _z = (CAL["table_z"] if CAL else -0.0024) + 0.115
+    _best = None
+    for _x, _y, _r in (_cs[0] if _cs is not None else []):
+        if _g[int(_y), int(_x)] <= 90: continue
+        _d = _R.T @ np.array([(_x - 320) / _f, (_y - 240) / _f, 1.0]); _p = _cam + (_z - _cam[2]) / _d[2] * _d
+        if _best is None or np.hypot(*(_p[:2] - start)) < np.hypot(*(_best - start)): _best = _p[:2]
+    if _best is not None and np.hypot(*(_best - start)) < 0.12: print("can from video:", np.round(_best, 3).tolist(), "start mark", np.round(start, 3).tolist()); start = _best
 J = ["shoulder_pan", "shoulder_lift", "elbow_flex", "wrist_flex", "wrist_roll", "gripper"]
 BASE_Z = 0.0024   # base bottom sits on the table (z = 0)
 
-world = World(stage_units_in_meters=1.0, physics_dt=1 / 240, rendering_dt=1 / 30); world.scene.add_default_ground_plane()
+world = World(stage_units_in_meters=1.0, physics_dt=1 / 240, rendering_dt=1 / 30)
+world.scene.add_default_ground_plane(static_friction=float(opt("--mu-table", 0.5)), dynamic_friction=float(opt("--mu-table", 0.5)))
 stage = omni.usd.get_context().get_stage()
 add_reference_to_stage(USD, "/World/so101")
 root = stage.GetPrimAtPath("/World/so101")
@@ -45,11 +58,21 @@ fj = UsdPhysics.FixedJoint.Define(stage, "/World/so101/base_fixed"); fj.CreateBo
 for j in J:   # position drives, stiff like a hobby servo under LeRobot position control
     p = stage.GetPrimAtPath(f"/World/so101/Physics/{j}"); d = UsdPhysics.DriveAPI.Apply(p, "angular")
     # gripper: an STS3215 stalls near 2.9 N m; stiffness per degree so a 15 deg squeeze gives about 2 N m
-    d.CreateStiffnessAttr(2000.0 if j != "gripper" else float(opt("--grip-k", 0.15))); d.CreateDampingAttr(float(opt("--arm-damp", 60.0)) if j != "gripper" else 0.01); d.CreateMaxForceAttr(10.0 if j != "gripper" else 2.9)
+    # --arm-k / --arm-fmax: servo-like compliance (an STS3215 stalls near 2.9 N m); the old 2000/deg and 10 N m drove the
+    # carried can into the coaster and squeezed it out of the jaws
+    d.CreateStiffnessAttr(float(opt("--arm-k", 2000.0)) if j != "gripper" else float(opt("--grip-k", 0.15))); d.CreateDampingAttr(float(opt("--arm-damp", 60.0)) if j != "gripper" else 0.01)
+    d.CreateMaxForceAttr(float(opt("--arm-fmax", 10.0)) if j != "gripper" else 2.9)
 MU = float(opt("--mu", 1.0))
 from isaacsim.core.api.materials import PhysicsMaterial
 from pxr import UsdShade
 rubber = PhysicsMaterial(prim_path="/World/Materials/rubber", static_friction=MU, dynamic_friction=MU, restitution=0.0)
+# --split-friction: the jaws are rubber (combine mode "max", so jaw-can contact uses the rubber value); the can is
+# aluminium and the table is a desk mat. One rubber material on the can made can-table friction about 1.0 (PhysX averages),
+# so the jaw tipped the can (20-25 deg) instead of sliding it, and the tilted pinch let go in the fast swing.
+SPLIT = "--split-friction" in sys.argv
+if SPLIT:
+    PhysxSchema.PhysxMaterialAPI.Apply(stage.GetPrimAtPath("/World/Materials/rubber")).CreateFrictionCombineModeAttr().Set("max")
+    alu = PhysicsMaterial(prim_path="/World/Materials/aluminium", static_friction=float(opt("--mu-can", 0.4)), dynamic_friction=float(opt("--mu-can", 0.4)) * 0.9, restitution=0.0)
 for prim in stage.Traverse():   # bind the rubber material to every collider on the gripper body and the moving jaw
     path = prim.GetPath().pathString
     if ("gripper_link" in path or "moving_jaw" in path) and prim.HasAPI(UsdPhysics.CollisionAPI):
@@ -57,10 +80,12 @@ for prim in stage.Traverse():   # bind the rubber material to every collider on 
         # pushes the can away, so the gripper meshes use a convex decomposition
         mc = UsdPhysics.MeshCollisionAPI.Apply(prim); mc.CreateApproximationAttr().Set("convexDecomposition")
         cd = PhysxSchema.PhysxConvexDecompositionCollisionAPI.Apply(prim); cd.CreateMaxConvexHullsAttr(32); cd.CreateHullVertexLimitAttr(64); cd.CreateVoxelResolutionAttr(300000)
+        if opt("--torsion"):   # rubber bands touch the can over a patch: torsional friction resists the can rotating in the jaws
+            pc = PhysxSchema.PhysxCollisionAPI.Apply(prim); pc.CreateTorsionalPatchRadiusAttr().Set(float(opt("--torsion"))); pc.CreateMinTorsionalPatchRadiusAttr().Set(float(opt("--torsion")) / 2)
         UsdShade.MaterialBindingAPI.Apply(prim).Bind(UsdShade.Material(stage.GetPrimAtPath("/World/Materials/rubber")), UsdShade.Tokens.weakerThanDescendants, "physics")
 world.scene.add(FixedCylinder(prim_path="/World/coaster", name="coaster", position=np.r_[coaster, 0.002], radius=0.05, height=0.004, color=np.array([0.85, 0.85, 0.8])))
 can = world.scene.add(DynamicCylinder(prim_path="/World/can", name="can", position=np.r_[start, 0.0575], radius=0.033, height=0.115, mass=0.268,
-                                      color=np.array([0.55, 0.05, 0.08]), physics_material=rubber))
+                                      color=np.array([0.55, 0.05, 0.08]), physics_material=(alu if SPLIT else rubber)))
 pu.create_prim("/World/Dome", "DomeLight", attributes={"inputs:intensity": 900.0})
 pu.create_prim("/World/Key", "DistantLight", attributes={"inputs:intensity": 2500.0})
 mid = (start + coaster) / 2
@@ -110,7 +135,7 @@ GL = [q_.GetPath() for q_ in stage.Traverse() if q_.GetName() == "gripper_link"]
 def gripper_T(): return np.array(UsdGeom.Xformable(stage.GetPrimAtPath(GL)).ComputeLocalToWorldTransform(Usd.TimeCode.Default())).T
 from scipy.spatial.transform import Rotation as RotS
 def pose_T(p_, qwxyz): T_ = np.eye(4); T_[:3, :3] = RotS.from_quat([qwxyz[1], qwxyz[2], qwxyz[3], qwxyz[0]]).as_matrix(); T_[:3, 3] = p_; return T_
-ASSIST = "--grasp-assist" in sys.argv; attached, T_gc, events = False, None, []
+ASSIST = "--grasp-assist" in sys.argv; attached, T_gc, events, trace = False, None, [], []
 SMOOTH, q_prev = "--smooth" in sys.argv, None
 NOCOL = "--assist-nocollide" in sys.argv   # the grasp is assisted, so the jaws need not touch the can (no pre-grasp shove)
 if NOCOL:
@@ -152,7 +177,11 @@ for i, row in enumerate(traj[: int(opt("--steps", len(traj)))]):
             # attach can tip it in the sim)
             T_ = G @ T_gc; can.set_world_pose(position=T_[:3, 3], orientation=np.array([1.0, 0, 0, 0]))
             can.set_linear_velocity(np.zeros(3)); can.set_angular_velocity(np.zeros(3))
-    p, _ = can.get_world_pose(); log.append(p.tolist())
+    p, qc = can.get_world_pose(); log.append(p.tolist())
+    if "--trace" in sys.argv:   # per step: can tilt from vertical (deg), can position in the gripper_link frame, gripper angle
+        Gt = gripper_T(); rel = np.linalg.inv(Gt) @ np.r_[p, 1.0]; up = RotS.from_quat([qc[1], qc[2], qc[3], qc[0]]).apply([0, 0, 1.0])
+        trace.append({"i": i, "tilt_deg": round(float(np.degrees(np.arccos(np.clip(up[2], -1, 1)))), 1), "rel_mm": (rel[:3] * 1000).round(1).tolist(),
+                      "grip_cmd": round(float(q_of(row)[idx[5]]), 3), "grip_got": round(float(arm.get_joint_positions()[idx[5]]), 3)})
     if close is not None and 140 <= i <= 230 and i % 10 == 0:
         close.set_world_pose(position=E2, orientation=look_at(E2, T2), camera_axes="world")
         for _ in range(3): world.step(render=True)
@@ -169,6 +198,6 @@ for i, row in enumerate(traj[: int(opt("--steps", len(traj)))]):
     if i % 200 == 0: print("step", i, "cmd", np.round(q_of(row)[idx], 2).tolist(), "got", np.round(arm.get_joint_positions()[idx], 2).tolist(), flush=True)
     if i % EVERY == 0 or i == len(traj) - 1:
         Image.fromarray(cam.get_rgba()[..., :3]).save(f"{OUT}/replay_{i:04d}.png")
-json.dump({"can_xyz": log, "start": start.tolist(), "coaster": coaster.tolist(), "grasp_assist_events": events if ASSIST else None}, open(f"{OUT}/replay_log.json", "w"))
+json.dump({"can_xyz": log, "start": start.tolist(), "coaster": coaster.tolist(), "grasp_assist_events": events if ASSIST else None, "trace": trace or None}, open(f"{OUT}/replay_log.json", "w"))
 print("REPLAY DONE", len(traj), "can start", log[0], "can end", log[-1])
 app.close()
