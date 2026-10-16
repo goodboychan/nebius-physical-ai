@@ -128,3 +128,22 @@ Exploratory and not part of the hackathon evidence. Nothing here changes a Quant
   - check the per-trial can position against the trajectory's grasp point;
   - test grasp robustness to a ±1 cm can offset;
   - only then re-run the agreement test.
+
+## Sim-to-real agreement v6 (2026-10-16): still not useful
+
+- Changes from v1:
+  - Camera refit on calibration v4 (`twin_camera_v4.json`, 5.0 px).
+  - `wrist_roll` set to −90° (`twin_calibration_v6.json`). A roll sweep on T1001 (a real +3 cm success) showed that only
+    −90° lifts the can: 0.183 m, set down upright 66 mm from the coaster. 0°, +88° and 180° do not.
+- Result (`fidelity_v6.json`): again 10/14 with 0/4 real successes reproduced.
+  - The +3 cm block (T1xxx) now lifts the can in all 3 trials. The best ends 67 mm from the coaster, just past the
+    50 mm success radius.
+  - Every other trial still never lifts (≈0.06 m).
+- Reading:
+  - The roll that works depends on which trials are used, so the roll is not the real error.
+  - The remaining error is the frame offset between the back-projected can and the FK jaw point: a near-constant
+    ≈(+0.04, −0.035) m, plus non-uniform camera spacing across the −4…+4 cm demos (`check_can_vs_grasp.py`).
+- Next:
+  - fit a planar offset and rotation between camera-derived can positions and the FK grasp points over all demo grasps;
+  - re-run `check_can_vs_grasp.py` (target ≈1 cm);
+  - only then re-run agreement.

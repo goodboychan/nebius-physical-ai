@@ -1,0 +1,182 @@
+{
+ "n": 14,
+ "agree": 10,
+ "real_success": 4,
+ "sim_success": 0,
+ "confusion": {
+  "real True / sim True": 0,
+  "real True / sim False": 4,
+  "real False / sim True": 0,
+  "real False / sim False": 10
+ },
+ "rows": [
+  {
+   "episode": "rollout_P0016_1013_214101",
+   "block": "Positive-control block",
+   "gripper": "rubber-band gripper",
+   "real_success": false,
+   "sim_success": false,
+   "agree": true,
+   "sim_end_mm_from_coaster": 204,
+   "sim_upright": true,
+   "sim_max_lift_m": 0.064,
+   "operator_note": "The grasp was off, and the can dropped while being carried."
+  },
+  {
+   "episode": "rollout_P0021_1013_214651",
+   "block": "Positive-control block",
+   "gripper": "rubber-band gripper",
+   "real_success": false,
+   "sim_success": false,
+   "agree": true,
+   "sim_end_mm_from_coaster": 182,
+   "sim_upright": true,
+   "sim_max_lift_m": 0.058,
+   "operator_note": "The can was placed on the coaster and the arm went back; then it came back to the coaster and knocked the can over."
+  },
+  {
+   "episode": "rollout_S0005_1011_223252",
+   "block": "Stress test v1, S0",
+   "gripper": "gripper pads removed",
+   "real_success": false,
+   "sim_success": false,
+   "agree": true,
+   "sim_end_mm_from_coaster": 188,
+   "sim_upright": true,
+   "sim_max_lift_m": 0.058,
+   "operator_note": "Gripper pads removed; the can dropped while being carried (overhead review)."
+  },
+  {
+   "episode": "rollout_T0001_1014_221202",
+   "block": "Position fine-tune evaluation T0",
+   "gripper": "rubber-band gripper",
+   "real_success": true,
+   "sim_success": false,
+   "agree": false,
+   "sim_end_mm_from_coaster": 204,
+   "sim_upright": true,
+   "sim_max_lift_m": 0.058,
+   "operator_note": "No failure reported by the operator."
+  },
+  {
+   "episode": "rollout_T0018_1014_223141",
+   "block": "Position fine-tune evaluation T0",
+   "gripper": "rubber-band gripper",
+   "real_success": false,
+   "sim_success": false,
+   "agree": true,
+   "sim_end_mm_from_coaster": 256,
+   "sim_upright": true,
+   "sim_max_lift_m": 0.061,
+   "operator_note": "The can did not fall but was pushed far off the coaster."
+  },
+  {
+   "episode": "rollout_T0022_1014_223628",
+   "block": "Position fine-tune evaluation T0",
+   "gripper": "rubber-band gripper",
+   "real_success": false,
+   "sim_success": false,
+   "agree": true,
+   "sim_end_mm_from_coaster": 261,
+   "sim_upright": true,
+   "sim_max_lift_m": 0.063,
+   "operator_note": "The can was knocked over while being set down."
+  },
+  {
+   "episode": "rollout_T1001_1014_213934",
+   "block": "Position fine-tune evaluation T1",
+   "gripper": "rubber-band gripper",
+   "real_success": true,
+   "sim_success": false,
+   "agree": false,
+   "sim_end_mm_from_coaster": 67,
+   "sim_upright": true,
+   "sim_max_lift_m": 0.183,
+   "operator_note": "No failure reported by the operator."
+  },
+  {
+   "episode": "rollout_T1002_1014_214044",
+   "block": "Position fine-tune evaluation T1",
+   "gripper": "rubber-band gripper",
+   "real_success": false,
+   "sim_success": false,
+   "agree": true,
+   "sim_end_mm_from_coaster": 282,
+   "sim_upright": false,
+   "sim_max_lift_m": 0.167,
+   "operator_note": "Can ended half on the coaster (tilted on the coaster edge); the arm kept moving."
+  },
+  {
+   "episode": "rollout_T1006_1014_214600",
+   "block": "Position fine-tune evaluation T1",
+   "gripper": "rubber-band gripper",
+   "real_success": false,
+   "sim_success": false,
+   "agree": true,
+   "sim_end_mm_from_coaster": 94,
+   "sim_upright": true,
+   "sim_max_lift_m": 0.17,
+   "operator_note": "Can ended half on the coaster."
+  },
+  {
+   "episode": "rollout_T2002_1014_230336",
+   "block": "Position fine-tune evaluation T2",
+   "gripper": "rubber-band gripper",
+   "real_success": true,
+   "sim_success": false,
+   "agree": false,
+   "sim_end_mm_from_coaster": 218,
+   "sim_upright": true,
+   "sim_max_lift_m": 0.06,
+   "operator_note": "No failure reported by the operator."
+  },
+  {
+   "episode": "rollout_T2012_1014_231614",
+   "block": "Position fine-tune evaluation T2",
+   "gripper": "rubber-band gripper",
+   "real_success": false,
+   "sim_success": false,
+   "agree": true,
+   "sim_end_mm_from_coaster": 197,
+   "sim_upright": true,
+   "sim_max_lift_m": 0.058,
+   "operator_note": "The can was set down properly, then the gripper kept moving nearby and knocked it over."
+  },
+  {
+   "episode": "rollout_T2014_1014_231845",
+   "block": "Position fine-tune evaluation T2",
+   "gripper": "rubber-band gripper",
+   "real_success": false,
+   "sim_success": false,
+   "agree": true,
+   "sim_end_mm_from_coaster": 188,
+   "sim_upright": true,
+   "sim_max_lift_m": 0.059,
+   "operator_note": "The can was never grasped."
+  },
+  {
+   "episode": "rollout_main012_1008_004335",
+   "block": "G6 main study",
+   "gripper": "anti-slip pads on the gripper",
+   "real_success": true,
+   "sim_success": false,
+   "agree": false,
+   "sim_end_mm_from_coaster": 197,
+   "sim_upright": true,
+   "sim_max_lift_m": 0.058,
+   "operator_note": "No failure reported by the operator."
+  },
+  {
+   "episode": "rollout_main186_1010_221517",
+   "block": "G6 main study",
+   "gripper": "anti-slip pads on the gripper",
+   "real_success": false,
+   "sim_success": false,
+   "agree": true,
+   "sim_end_mm_from_coaster": 129,
+   "sim_upright": false,
+   "sim_max_lift_m": 0.066,
+   "operator_note": "The can was placed, then the gripper tipped it over while pulling back (overhead review)."
+  }
+ ]
+}

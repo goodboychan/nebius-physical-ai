@@ -1,0 +1,82 @@
+{
+ "joint_offsets_deg": {
+  "shoulder_pan": 0.0,
+  "shoulder_lift": -7.35,
+  "elbow_flex": -19.1,
+  "wrist_flex": 3.8,
+  "wrist_roll": -90.0
+ },
+ "tip_offset_m": 0.0244,
+ "grid_pose": {
+  "xy_m": [
+   0.2521,
+   -0.0184
+  ],
+  "yaw_rad": -1.552
+ },
+ "residual_mm": [
+  3.2,
+  0.5,
+  4.1,
+  4.0,
+  1.1,
+  1.5,
+  2.2,
+  1.5,
+  4.3
+ ],
+ "rms_mm": 2.85,
+ "table_z": -0.0024,
+ "start_xyz": [
+  0.3525,
+  -0.0698,
+  0.0014
+ ],
+ "coaster_xyz": [
+  0.3165,
+  0.1296,
+  0.0038
+ ],
+ "held_out_height_error_mm": {
+  "START": 1.0,
+  "COASTER": 4.1
+ },
+ "can_top_touch_height_m": {
+  "B1F": 0.132,
+  "B1K": 0.292,
+  "B3F": 0.138,
+  "B3K": 0.284,
+  "B7F": 0.14,
+  "B7K": 0.276,
+  "B9F": 0.128,
+  "B9K": 0.276
+ },
+ "fit_points": [
+  "G1",
+  "G2",
+  "G3",
+  "G4",
+  "G5",
+  "G6",
+  "G7",
+  "G8",
+  "G9"
+ ],
+ "note": "stage 3: offsets measured directly (extended pose = old-calibration zero); stage-1/2 data are checks",
+ "wrist_roll_source": "demo grasps with the gap point free (diagnostic fit: roll 87.9 deg, gap x 0.063 z -0.040, grasp xy error 5.8 mm median)",
+ "gripper_map": {
+  "reading_closed": 1.09,
+  "reading_can": 31.93,
+  "rad_per_unit": 0.03089,
+  "rad_at_zero": -0.2083
+ },
+ "check_touch_rms_mm": 3.4,
+ "check_grasp_xy_mm_median": 56.8,
+ "check_grasp_height_mm_median": 80.5,
+ "jaw_centre_in_gripper_link_m": [
+  0.0631,
+  0.0,
+  -0.0397
+ ],
+ "note_v6": "v4 with wrist_roll -90 deg: roll sweep (0, +88, 180, -90) on rollout_T1001 (+3 cm real success); only -90 lifts the can. +88 from the diagnostic fit was the mirror solution."
+}
