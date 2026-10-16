@@ -20,7 +20,7 @@ trials, and an honest verdict. Earn the next test, not the approval.
 
 ## Links
 
-- Video: https://youtu.be/6M23akL-29M
+- Video: https://youtu.be/VJdYplrJfjo
 - Code: https://github.com/goodboychan/nebius-physical-ai (Apache 2.0)
 - Dashboard: https://claude.ai/artifact/2tUAoJHBeT8uLU96BmgPNK
 - Datasets: https://huggingface.co/datasets/chans/quantgate-so101-coaster,

@@ -13,7 +13,7 @@ edge device. It shows the engine's measured cost, its real-arm behavior and how 
 **License: [Apache 2.0](LICENSE)** · Nebius × NVIDIA Global AI Hackathon, Physical AI track · internal code name
 `edgeqgate`
 
-**Video (3 min):** https://youtu.be/6M23akL-29M · **Dashboard:** https://claude.ai/artifact/2tUAoJHBeT8uLU96BmgPNK
+**Video (3 min):** https://youtu.be/VJdYplrJfjo · **Dashboard:** https://claude.ai/artifact/2tUAoJHBeT8uLU96BmgPNK
 
 **Links** · Datasets on the Hugging Face Hub (LeRobot v3):
 [`chans/quantgate-so101-coaster`](https://huggingface.co/datasets/chans/quantgate-so101-coaster) (120 teleoperated
