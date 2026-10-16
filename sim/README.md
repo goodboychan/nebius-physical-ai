@@ -113,3 +113,18 @@ Exploratory and not part of the hackathon evidence. Nothing here changes a Quant
   - The can is released standing on the coaster, 17 mm from its centre (the real trial is a success).
 - Clip: `~/edgeqgate_data/sim_out/t0001_twin_side_by_side.mp4`. Its caption says the grasp is assisted. This is a
   visual replay, not a physics result.
+
+## Sim-to-real agreement v1 (2026-10-16): not yet useful
+
+- One fixed physics setting, unassisted, on all 14 LabLens rollouts, with the can placed from each trial's first
+  overhead frame (`fidelity_run.sh`, `fidelity_report.py`, `fidelity_v1.json`).
+- Result: 10/14 "agreement", but **the sim predicted failure for every trial**. 0/4 real successes were reproduced,
+  including T0 trial 1, which had succeeded with the start mark position.
+- Two failure patterns:
+  - The can never lifts (max height ≈ 0.06 m; 7 trials). The jaws miss the can, so the back-projected can position or
+    the grasp height is off.
+  - The can is lifted and then lost (3 trials).
+- So the agreement number reflects a sim that always fails, not fidelity. Next:
+  - check the per-trial can position against the trajectory's grasp point;
+  - test grasp robustness to a ±1 cm can offset;
+  - only then re-run the agreement test.
