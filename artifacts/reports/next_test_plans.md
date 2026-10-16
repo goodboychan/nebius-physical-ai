@@ -20,8 +20,8 @@ Next test:
 - conditions: training start mark, rubber-band gripper, cola can
 - measure: success (consensus re-judge), placement error, gripper chatter
 - schedule: sealed, interleaved, new tokens
-- rule: pre-register a revised E1 rule without the ceiling clause: GO if the 97.5% Newcombe upper bound of the degradation is below 10 pp
-- trials per arm for 80% power, under the revised rule, if equal at 96%: 120
+- rule: pre-register a revised E1 (success) rule without the ceiling clause: the success criterion is met if the 97.5% Newcombe upper bound of the degradation is below 10 pp; a final GO also needs placement (E2, 5 px) and the preflight
+- trials per arm for 80% power on the success criterion (not the chance of a final GO), under the revised rule, if equal at 96%: 120
 - with the current ceiling rule, power at 200/arm: 0.32
 
 ## FT-FP16 (position fine-tune)
@@ -47,9 +47,9 @@ Next test:
 - conditions: training start mark; then -4/+4 cm and the yellow can
 - measure: success, failure mode (placement disturbance), gripper chatter
 - schedule: sealed, interleaved, new tokens (operator blinding stays partial: the motions differ)
-- rule: non-inferiority at 10 pp (97.5% Newcombe), pre-registered without the ceiling clause: if both arms land at or above 95%, the current ceiling clause would hold the verdict undecided
-- trials per arm for 80% power, under the revised rule, if truly equal (95.8%): 120
-- trials per arm for 80% power, under the revised rule, if the observed 4 pp gap is real: 400
+- rule: success non-inferiority at 10 pp (97.5% Newcombe), pre-registered without the ceiling clause (if both arms land at or above 95%, the current ceiling clause would hold it undecided); a final GO also needs placement (E2, 5 px) and the preflight
+- trials per arm for 80% power on the success criterion (not the chance of a final GO), under the revised rule, if truly equal (95.8%): 120
+- trials per arm for 80% power on the success criterion (not the chance of a final GO), under the revised rule, if the observed 4 pp gap is real: 400
 - with the current ceiling rule, power at 120/arm if truly equal: 0.32
 
 ## INT8 builds (24 calibration variants)

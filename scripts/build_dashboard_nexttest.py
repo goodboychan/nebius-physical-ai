@@ -26,7 +26,7 @@ sec = '''<!--NEXTTEST:BEGIN-->
     const list = (t, xs) => "<h3 style='margin:14px 0 6px;font-size:14px'>" + t + "</h3><ul>" + xs.map(x => "<li>" + esc(x) + "</li>").join("") + "</ul>";
     function show(k){
       const p = D[k]; [...pick.children].forEach(b => b.style.outline = b.dataset.k === k ? "2px solid var(--acc, #12a0a8)" : "none");
-      const nt = p.next_test, tpa = Object.entries(nt.trials_per_arm).map(([a, v]) => (/power at|block size/.test(a) ? a : "trials per arm for 80% power, " + a) + ": " + v);
+      const nt = p.next_test, tpa = Object.entries(nt.trials_per_arm).map(([a, v]) => (/power at|block size/.test(a) ? a : "trials per arm for 80% power on the success criterion (not the chance of a final GO), " + a) + ": " + v);
       body.innerHTML = "<p><b>" + esc(p.candidate) + "</b> · " + esc(p.status) + "</p>" + list("Confirmed", p.confirmed) + list("Open", p.open) +
         list("Evidence", p.evidence) + (p.clip ? "<video src='" + p.clip + "' controls muted playsinline preload='metadata' style='max-width:100%;border-radius:8px'></video>" : "") +
         list("Next test", ["compare: " + nt.compare, "conditions: " + nt.conditions, "measure: " + nt.measure, "schedule: " + nt.schedule, "rule: " + nt.rule].concat(tpa)) +

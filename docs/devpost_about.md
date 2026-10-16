@@ -23,14 +23,19 @@ For every candidate engine, QuantGate answers three questions.
    - Builds that do not match what was audited: a preflight checks the engine hash, the normalization manifest and
      the runner's 200 ms chunk deadline. Only an explicit `GO` passes.
 3. **Can I approve deployment?** Not yet, and the review says why.
-   - Success against FP32 is compared as non-inferiority at a 10 pp tolerance, with a Newcombe interval:
+   - Success against FP32 is compared as non-inferiority at a 10 pp tolerance, with a Newcombe interval. The
+     **success criterion** is met when
 
-     $$\text{GO} \iff \text{lower bound of } \big(p_{\text{cand}} - p_{\text{FP32}}\big) > -10\ \text{pp}$$
+     $$\text{lower bound of } \big(p_{\text{cand}} - p_{\text{FP32}}\big) > -10\ \text{pp}$$
 
-   - With 25 trials per arm that interval is about ±28 pp wide, so every comparison is `INSUFFICIENT_EVIDENCE`.
+   - That is one part of a final `GO`. A `GO` also needs placement error within its 5 px tolerance, the ceiling rule
+     not holding the comparison undecided, and the deployment preflight passing.
+   - With 25 trials per arm the success interval is about ±28 pp wide, so every comparison is
+     `INSUFFICIENT_EVIDENCE`.
    - The review also says what would settle it. Our pre-registered ceiling rule keeps two arms that are both at or
-     above 95% undecided at any sample size. So more trials alone are not enough: it needs a revised, pre-registered
-     rule, with about 110–120 trials per arm for a 10 pp interval.
+     above 95% undecided at any sample size, so more trials alone are not enough. A revised, pre-registered rule is
+     needed. Under it, about 120 trials per arm give 80% power **for the success criterion**; that is not the chance
+     of a final GO.
 
 A one-command CLI (`quantgate.py review | ask | preflight | cost | verify`) rebuilds the whole review from
 committed, hashed evidence.

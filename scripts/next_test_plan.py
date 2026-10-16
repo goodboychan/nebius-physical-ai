@@ -3,7 +3,8 @@ behind both (rows, sealed logs, trial ids, clips), and an exportable plan for th
 measurements, decision rule, trials per arm with simulated power). Everything comes from the code-written verdict table
 (artifacts/reports/d3_v3_verdicts.json) and the committed logs; no model is called.
 Power is simulated (fixed seed) with the same Newcombe interval and 10 pp tolerance as the pre-registered E1 rule:
-power = P(upper bound of the degradation < 10 pp). The pre-registered ceiling rule (both arms >= 95% -> undecided) is
+power = P(upper bound of the degradation < 10 pp), i.e. for the success criterion only; a final GO also needs the
+placement criterion (E2) and the preflight, so it is not the probability of approval. The pre-registered ceiling rule (both arms >= 95% -> undecided) is
 shown separately: with it, two arms at about 96% stay undecided most of the time at any sample size.
 Usage: python scripts/next_test_plan.py [--out artifacts/reports]     (quantgate.py plan [candidate] prints one)"""
 import argparse, json, os, sys
@@ -38,7 +39,7 @@ def plans(T):
         "evidence": [fp16["evidence_path"], "artifacts/freeze/fp16_post.json", "artifacts/trials/fp16_unsealed/stress_fp16_F0_sealed.jsonl"],
         "next_test": {"compare": "VC-025 (FP16) vs VC-000 (FP32), same old policy", "conditions": "training start mark, rubber-band gripper, cola can",
                       "measure": "success (consensus re-judge), placement error, gripper chatter", "schedule": "sealed, interleaved, new tokens",
-                      "rule": "pre-register a revised E1 rule without the ceiling clause: GO if the 97.5% Newcombe upper bound of the degradation is below 10 pp",
+                      "rule": "pre-register a revised E1 (success) rule without the ceiling clause: the success criterion is met if the 97.5% Newcombe upper bound of the degradation is below 10 pp; a final GO also needs placement (E2, 5 px) and the preflight",
                       "trials_per_arm": {"under the revised rule, if equal at 96%": n_for(0.96, 0.96, False), "with the current ceiling rule, power at 200/arm": power(200, 0.96, 0.96, True)}}}
     t0 = by("FT-FP16", "pooled")
     P["FT-FP16"] = {
@@ -51,7 +52,7 @@ def plans(T):
                      "T0 failures: trials 18 and 22 (placement disturbance, docs/sessions/ft_operator_notes.md); clip: dashboard/clips/t1_old_vs_ft.mp4"],
         "next_test": {"compare": "FT-FP16 vs VC-025 (old FP16 policy)", "conditions": "training start mark; then -4/+4 cm and the yellow can",
                       "measure": "success, failure mode (placement disturbance), gripper chatter", "schedule": "sealed, interleaved, new tokens (operator blinding stays partial: the motions differ)",
-                      "rule": "non-inferiority at 10 pp (97.5% Newcombe), pre-registered without the ceiling clause: if both arms land at or above 95%, the current ceiling clause would hold the verdict undecided",
+                      "rule": "success non-inferiority at 10 pp (97.5% Newcombe), pre-registered without the ceiling clause (if both arms land at or above 95%, the current ceiling clause would hold it undecided); a final GO also needs placement (E2, 5 px) and the preflight",
                       "trials_per_arm": {"under the revised rule, if truly equal (95.8%)": n_for(23 / 24, 23 / 24, False),
                                          "under the revised rule, if the observed 4 pp gap is real": n_for(23 / 24, 22 / 24, False),
                                          "with the current ceiling rule, power at 120/arm if truly equal": power(120, 23 / 24, 23 / 24, True)}}}
@@ -75,7 +76,7 @@ def md(P):
         L += [f"## {p['candidate']}", f"**Status**: {p['status']}", "", "Confirmed:"] + [f"- {x}" for x in p["confirmed"]] + ["", "Open:"] + [f"- {x}" for x in p["open"]]
         L += ["", "Evidence:"] + [f"- `{x}`" if "/" in x and " " not in x else f"- {x}" for x in p["evidence"]]
         nt = p["next_test"]; L += ["", "Next test:"] + [f"- {a}: {nt[a]}" for a in ("compare", "conditions", "measure", "schedule", "rule")]
-        L += [(f"- {a}: {v}" if ("power at" in a or "block size" in a) else f"- trials per arm for 80% power, {a}: {v}") for a, v in nt["trials_per_arm"].items()] + [""]
+        L += [(f"- {a}: {v}" if ("power at" in a or "block size" in a) else f"- trials per arm for 80% power on the success criterion (not the chance of a final GO), {a}: {v}") for a, v in nt["trials_per_arm"].items()] + [""]
     return "\n".join(L)
 
 if __name__ == "__main__":

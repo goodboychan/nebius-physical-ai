@@ -19,7 +19,7 @@
    "conditions": "training start mark, rubber-band gripper, cola can",
    "measure": "success (consensus re-judge), placement error, gripper chatter",
    "schedule": "sealed, interleaved, new tokens",
-   "rule": "pre-register a revised E1 rule without the ceiling clause: GO if the 97.5% Newcombe upper bound of the degradation is below 10 pp",
+   "rule": "pre-register a revised E1 (success) rule without the ceiling clause: the success criterion is met if the 97.5% Newcombe upper bound of the degradation is below 10 pp; a final GO also needs placement (E2, 5 px) and the preflight",
    "trials_per_arm": {
     "under the revised rule, if equal at 96%": 120,
     "with the current ceiling rule, power at 200/arm": 0.32
@@ -49,7 +49,7 @@
    "conditions": "training start mark; then -4/+4 cm and the yellow can",
    "measure": "success, failure mode (placement disturbance), gripper chatter",
    "schedule": "sealed, interleaved, new tokens (operator blinding stays partial: the motions differ)",
-   "rule": "non-inferiority at 10 pp (97.5% Newcombe), pre-registered without the ceiling clause: if both arms land at or above 95%, the current ceiling clause would hold the verdict undecided",
+   "rule": "success non-inferiority at 10 pp (97.5% Newcombe), pre-registered without the ceiling clause (if both arms land at or above 95%, the current ceiling clause would hold it undecided); a final GO also needs placement (E2, 5 px) and the preflight",
    "trials_per_arm": {
     "under the revised rule, if truly equal (95.8%)": 120,
     "under the revised rule, if the observed 4 pp gap is real": 400,
