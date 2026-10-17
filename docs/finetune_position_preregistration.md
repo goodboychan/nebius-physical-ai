@@ -328,3 +328,66 @@ Analysis: `scripts/ft3_analysis.py`, written to `artifacts/reports/ft3_analysis.
 - **Limitations**: operator blinding is partial, as in T1/T2. It is one more session, at the same scene. The touch
   calibration for the Isaac Sim twin was done just before the block. The grid sheet was then removed, and the wrist
   check failed until it was.
+
+## 17. Amendment 7 (2026-10-17, after §16, before any generalization trial): a held-out object and positions beyond the demonstrations
+
+- **Why**: FT is the candidate to validate where the start position varies (§14, §16), but its reach is untested
+  beyond ±3 cm and the cola can. Two earlier ideas would not answer that.
+  - **±4 cm** is inside the fine-tune demonstrations (−4, −2, 0, +2, +4 cm), so it is not a held-out test.
+  - **The yellow can at the training mark** gave 48/48 for the old policy (stress v2, S4). Both policies would sit at
+    the ceiling, so the comparison would be uninformative.
+  - So this amendment tests FT where the old policy is expected to fail, with one new element each time.
+  - It is written after T1, T0, T2 and T0R were unsealed, so the design knows those results. No trial of the blocks
+    below exists.
+- **Design**: FT-FP16 12 and OLD-FP16 (`VC-025`) 12 per block, interleaved by the (k + U)/n key.
+  - Seed key `FINETUNE/schedule/GEN/v1`, with new random tokens. Block order is fixed: **TYP → T6P → T6M**.
+
+  | Block | Scene | Role |
+  |---|---|---|
+  | `TYP` | **yellow can** (175 ml, 50 mm) at the **+3 cm (S1) mark**: a held-out object at a held-out position | primary |
+  | `T6P` | cola can at a new **+6 cm** mark, beyond the demonstration range | secondary |
+  | `T6M` | cola can at a new **−6 cm** mark | secondary |
+
+  - The ±6 cm marks are taped on the same axis as the other marks.
+  - Sealed schedule `~/.edgeqgate_sealed/stress_ft4/stress_sealed.json`, sha256
+    `59d6bced0bbaf049e6f99dda6629a3294c69671afb105aa4bd17fba883275553`. The public copy is
+    `artifacts/finetune/stress_schedule_GEN_public.json`.
+  - The engines are hard links to the T1/T0 files (sha256 `4affc06d…` and `3b19f7eb…`).
+  - The normalization manifest is `stress_ft4/engines/norm_manifest.json`, sha256 `e358eb33f4281c1b…`.
+  - The engine folder was built by `scripts/ft4_setup_orin.py`, which prints no token-to-cell mapping. The local
+    copy of the sealed schedule was deleted unread.
+- **Checks before the first trial of a block** (none uses a policy):
+  - **Yellow can judge values (TYP)**: `so101_can_calib.py stress_can_TYP.json`, measured as in the stress protocol
+    §4. It is re-measured because the camera-to-arm registration has differed between sessions.
+    - The judge must call the centred can a success with base distance ≤ 5 px; otherwise TYP is not run.
+    - The file and its sha256 are committed before the first TYP trial. The runner refuses TYP without the file.
+  - **Reach (T6P, T6M)**: the operator moves the follower with the leader arm to the can at the ±6 cm mark once.
+    - If the gripper cannot close around the can there, that block uses a ±5 cm mark instead.
+    - The choice is written in the decision log before the block's first trial.
+- **Runner**: `so101_trial.py --blind TYP|T6P|T6M ft4`, sha256 `f499c1b0009c6b5d…`, deployed 2026-10-17 with no
+  block running. The previous `609ee74b` is kept as a backup.
+  - The blocks behave as T1: the manifest is required, and the C1 end-of-trial judge records if the endpoint is up.
+  - The stop rule is 2 operator aborts per block.
+- **Outcome**: as §4. The consensus video re-judge (stress §11, built for the yellow can) is run blind to cells
+  before unsealing. Failure modes are labelled blind, as in §15.
+- **Analysis** (`scripts/ft4_analysis.py`, written now and dry-run on relabelled T1/T2 data):
+  - **Primary (TYP)**: FT − OLD success difference, Newcombe 95%; improvement detected iff the lower bound > 0.
+  - **Secondary (T6P, T6M)**: the same rule, each reported separately, with no multiplicity adjustment of the primary.
+  - Power, as §5: 12 against 12 detects only a large gap.
+
+  | TYP | Reading |
+  |---|---|
+  | detected | The position fix carries to a new object at a held-out position |
+  | not detected, FT ≥ 9/12 | FT handles the object, but the old policy did too often enough that no gain is shown |
+  | not detected, FT < 9/12 | No evidence that the fix carries to this object |
+
+  | T6P / T6M | Reading |
+  |---|---|
+  | detected | The fine-tune extrapolates past its demonstration range on that side |
+  | not detected | No evidence of extrapolation on that side; the supported range stays ±3 cm |
+
+- **Date stop**: a block not started by 2026-10-25 is reported as not run, never partially analysed by choice.
+- **Order**: run the blocks → hash the sealed logs into `artifacts/freeze/ft4_post.json` → blind consensus re-judge
+  and mode labels → unseal into `artifacts/trials/ft4_unsealed/` → `ft4_analysis.py`.
+- **Limitations stated now**: operator blinding is partial (the motions differ), as in T1/T2. The yellow can's lower
+  mass (190 g against 268 g) also changes the grasp.
