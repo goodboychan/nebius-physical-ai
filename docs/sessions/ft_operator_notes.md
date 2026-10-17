@@ -75,3 +75,4 @@ Outcomes are decided by the locked criterion (automatic judge and §11 consensus
   (c) the can is carried and set down on the coaster edge.
   These are used as descriptive sub-labels in the blind mode labelling before unsealing ((a), (b) under `grasp`,
   (c) under `other: edge placement`); they do not change the outcome rule.
+  - trial 13: (a), the start position was not found and the can was grasped in the wrong place.
