@@ -86,3 +86,6 @@ Outcomes are decided by the locked criterion (automatic judge and §11 consensus
   - trial 21: (b), the right start position was reached, but the can was pushed away while the gripper closed.
   - trial 22: (a), the start position was not found and the can was grasped in the wrong place.
   - trial 23: (a), the start position was not found and the can was grasped in the wrong place.
+  - trial 24: (b), the right start position was reached, but the can was pushed away while the gripper closed.
+- TYP complete: 24 trials, 0 aborted. Operator-reported failures: 21 (trials 1-3, 5-7, 9, 11-24); not reported as failures: 4, 8, 10. The counted outcome is the judge and the blind consensus re-judge.
+- TYP sealed log hashed before T6P (interim, not opened): `stress_ft4_TYP_sealed.jsonl` sha256 `d90d75b2b95a6d41e17e45769eb45b744eef7dc7ef468310ab1b9d5f865420e4`, 24 trials, 0 aborted, 0 invalid. Live automatic judge failures by trial (no cells): 1-3, 5-7, 9, 11-24 (21), the same trials the operator reported.
