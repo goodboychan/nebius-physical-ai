@@ -77,3 +77,4 @@ Outcomes are decided by the locked criterion (automatic judge and §11 consensus
   (c) under `other: edge placement`); they do not change the outcome rule.
   - trial 13: (a), the start position was not found and the can was grasped in the wrong place.
   - trial 14: (b), the right start position was reached, but the can was pushed away while the gripper closed.
+  - trial 15: (a), the start position was not found and the can was grasped in the wrong place.
