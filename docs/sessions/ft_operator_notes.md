@@ -63,3 +63,4 @@ Outcomes are decided by the locked criterion (automatic judge and §11 consensus
 - Failures reported by the operator, by trial number only (blind to cells):
   - trial 1: the gripper pushed the can while approaching; it was never grasped.
   - trial 2: the gripper closed partly on the can, then the can was pushed away.
+  - trial 3: as trial 1, the gripper pushed the can while approaching; it was never grasped.
