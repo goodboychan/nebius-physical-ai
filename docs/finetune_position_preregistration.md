@@ -395,3 +395,9 @@ Analysis: `scripts/ft3_analysis.py`, written to `artifacts/reports/ft3_analysis.
 - **Yellow can judge values, measured 2026-10-17 before any TYP trial**: `artifacts/finetune/stress_can_TYP.json`,
   sha256 `7ebd6cc4dd59622e…`. Top radius median 20.9 px, `r_range` [16, 29], `top_to_base` [4.4, 22.4]; self-check
   success with base distance 0.0 px (PASS). The same file is on the Orin beside the runner.
+- **Reach check, 2026-10-17 before any T6P or T6M trial** (operator, leader arm, not recorded): at both the +6 cm and
+  −6 cm marks the gripper reaches and closes around the cola can, so both blocks keep ±6 cm.
+  - At −6 cm the follower did not keep up with the leader while lifting. This is noted now as a possible arm limit at
+    that position (torque or joint range), the same for both policies.
+  - A T6M result with both policies failing on the lift is read as that limit, not as evidence about the fine-tune.
+    Lift failures stay labelled `transport` or `grasp` by the blind mode labelling.
