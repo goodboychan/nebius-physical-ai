@@ -101,3 +101,4 @@ Outcomes are decided by the locked criterion (automatic judge and §11 consensus
   - trial 7: (a), the start position was not found and the can was grasped in the wrong place.
   - trial 8: (b), the right start position was reached, but the can was pushed away while the gripper closed.
   - trial 9: (a), the start position was not found and the can was grasped in the wrong place.
+- T6P complete: 24 trials, 0 aborted, 0 invalid. The operator reported trials 1-9 individually; trials 10-24 were not described. Sealed log hashed (interim, not opened): `stress_ft4_T6P_sealed.jsonl` sha256 `3a766befbae52140b3ecae21018bd2e7896733da97fbd819e616564fce9055bd`. Live automatic judge: all 24 trials failed (this is a block-level tally; with every trial failing it shows no cell-level difference before unsealing).
