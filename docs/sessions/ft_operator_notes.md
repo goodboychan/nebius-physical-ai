@@ -54,3 +54,12 @@ Outcomes are decided by the locked criterion (automatic judge and §11 consensus
 - Failures reported by the operator, by trial number only (blind to cells):
   - 22:29 trial 2: the gripper pushed the can while approaching; it slid out of reach and was never grasped.
 - 23:00 T0R complete: 24/24, 0 aborted. Sealed log hashed into artifacts/freeze/ft3_post.json before unsealing. The Cosmos endpoint was stopped.
+
+## TYP (2026-10-17, prereg §17; yellow can at the +3 cm mark, rubber-band gripper)
+
+- Before the block: yellow can judge values re-measured (PASS, `stress_can_TYP.json`); reach check at ±6 cm with
+  the leader arm (not recorded). The Cosmos endpoint was stopped (C1 not recorded; an offline batch re-judge of the
+  final frames is planned before unsealing).
+- Failures reported by the operator, by trial number only (blind to cells):
+  - trial 1: the gripper pushed the can while approaching; it was never grasped.
+  - trial 2: the gripper closed partly on the can, then the can was pushed away.
