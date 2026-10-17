@@ -391,3 +391,7 @@ Analysis: `scripts/ft3_analysis.py`, written to `artifacts/reports/ft3_analysis.
   and mode labels → unseal into `artifacts/trials/ft4_unsealed/` → `ft4_analysis.py`.
 - **Limitations stated now**: operator blinding is partial (the motions differ), as in T1/T2. The yellow can's lower
   mass (190 g against 268 g) also changes the grasp.
+
+- **Yellow can judge values, measured 2026-10-17 before any TYP trial**: `artifacts/finetune/stress_can_TYP.json`,
+  sha256 `7ebd6cc4dd59622e…`. Top radius median 20.9 px, `r_range` [16, 29], `top_to_base` [4.4, 22.4]; self-check
+  success with base distance 0.0 px (PASS). The same file is on the Orin beside the runner.

@@ -1,0 +1,30 @@
+{
+ "can": "yellow 175 ml, 190 g, 50 mm x 10 cm",
+ "r_top_median_px": 20.9,
+ "r_top_range_seen": [
+  18.3,
+  22.5
+ ],
+ "top_xy_median": [
+  390.6,
+  354.6
+ ],
+ "brightness_median": 145,
+ "n_frames": 30,
+ "r_range": [
+  16,
+  29
+ ],
+ "top_to_base": [
+  4.4,
+  22.4
+ ],
+ "rule": "offset = coaster centre - top centre; r_range = [floor(0.81 r), ceil(1.34 r)] (cola-can ratios)",
+ "self_check": {
+  "success": true,
+  "reason": "ok",
+  "base_dist_px": 0.0,
+  "move_px": 2.4,
+  "grip": 0.0
+ }
+}
