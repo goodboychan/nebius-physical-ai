@@ -67,3 +67,4 @@ Outcomes are decided by the locked criterion (automatic judge and §11 consensus
   - trial 5: as trial 1, the gripper pushed the can while approaching; it was never grasped.
   - trial 6: grasped, carried and set down, but on the coaster edge; the judge called it a failure.
   - trial 7: as trial 1, the gripper pushed the can while approaching; it was never grasped.
+  - trial 9: reported as the same as before (the gripper pushed the can while approaching; never grasped).
