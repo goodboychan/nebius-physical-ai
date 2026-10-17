@@ -68,3 +68,10 @@ Outcomes are decided by the locked criterion (automatic judge and §11 consensus
   - trial 6: grasped, carried and set down, but on the coaster edge; the judge called it a failure.
   - trial 7: as trial 1, the gripper pushed the can while approaching; it was never grasped.
   - trial 9: reported as the same as before (the gripper pushed the can while approaching; never grasped).
+  - trials 11 and 12: failures (mode not yet given).
+- Operator observation after trial 12 (blind to cells): the failures so far fall into three kinds:
+  (a) the gripper does not find the can's start position and grasps in the wrong place;
+  (b) it reaches the right start position, but the can is pushed away while the gripper closes;
+  (c) the can is carried and set down on the coaster edge.
+  These are used as descriptive sub-labels in the blind mode labelling before unsealing ((a), (b) under `grasp`,
+  (c) under `other: edge placement`); they do not change the outcome rule.
