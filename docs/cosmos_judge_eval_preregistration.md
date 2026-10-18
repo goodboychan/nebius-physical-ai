@@ -90,3 +90,24 @@ Eval: 273 trials, 21 failures (`artifacts/cosmos_judge/eval/`, `eval_scores.json
   - It is very sensitive to wording (§6), so a deployment must re-validate the exact prompt on held-out labelled
     trials.
   - The live 2 Hz supervisor prompt (CONTINUE / FALLBACK / ABORT) was not re-evaluated here.
+
+## Out-of-distribution batch (2026-10-18, amendment 7 blocks; not pre-registered as a judge test)
+
+- **What**: the frozen C1 p1 prompt, unchanged, on the final overhead frame of all 72 generalization trials (TYP: the
+  yellow can at +3 cm; T6P/T6M: the cola can at ±6 cm). These scenes were never used to choose the prompt.
+- **How**: an offline batch (`cosmos_judge_eval.py run`), after the blocks and **after unsealing**. The prompt and
+  model were fixed beforehand and the judge sees only the frame, so unsealing cannot inform it. It is still labelled
+  as post-unsealing, not live. Labels: the consensus re-judge. The endpoint was started for this batch and stopped
+  right after.
+- **Result** (`artifacts/finetune/judge/GEN_C1p1_batch.json`):
+  - Failures caught **55/61** (90%, Wilson 95% [80, 95]); false alarms **0/11** [0, 26]; no abstains; median
+    latency 716 ms.
+  - By block: TYP 20/21 caught, 0/3 false alarms; T6P 24/24; T6M 11/16 caught, 0/8 false alarms.
+- **Misses**: 6, all of two kinds.
+  - Four T6M grasp failures (trials 1, 6, 8, 10). The can was never grasped and stayed upright at the −6 cm start;
+    the judge answered YES. The prompt asks "upright on the coaster", and a standing can off the coaster is its blind
+    spot.
+  - Two edge placements (TYP 6, T6M 23).
+- **Reading**: the prompt transfers to a new can and new positions with no false alarms. It confuses "standing" with
+  "standing on the coaster" when an upright can is left away from the coaster. It stays a monitor to validate, not
+  an outcome source.
