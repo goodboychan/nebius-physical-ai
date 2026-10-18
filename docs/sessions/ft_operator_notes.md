@@ -120,3 +120,4 @@ Outcomes are decided by the locked criterion (automatic judge and §11 consensus
   - trial 17: (a), the start position was not found and the can was grasped in the wrong place.
   - trial 19: (a), the start position was not found and the can was grasped in the wrong place.
   - trial 21: (a), the start position was not found and the can was grasped in the wrong place.
+  - trial 23: (c), the can was carried and set down on the coaster edge.
