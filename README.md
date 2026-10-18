@@ -97,6 +97,14 @@ Numbers come from committed artifacts. The figure's script lists its sources.
 
    - Reading: position improved on both sides of the trained start. Whether nominal performance is maintained is
      undetermined. A pre-registered replication at the training mark (T0R) did not repeat the two fine-tune failures.
+   - **Generalization, pre-registered as amendment 7 and run after the results above**: FT against old, 12 trials
+     each, sealed and interleaved.
+     - A held-out object at a held-out position (yellow can at +3 cm, primary): **0/12 vs 3/12**, −25 pp [−53, +4];
+       no improvement detected. Every FT failure was in the grasp.
+     - Beyond the demonstrations: **+6 cm 0/12 vs 0/12** (not detected); **−6 cm 8/12 vs 0/12**, +67 pp [+30, +86]
+       (detected).
+     - Reading: the fix carries to −6 cm but not to +6 cm or to the smaller can. FT is the candidate where the start
+       varies between −6 and +3 cm with the cola can, not a general fix.
    - Off the training position, the old policy's commanded gripper also chatters about 4× more (exploratory,
      pre-specified metric).
    - Caveat: the operator could see that the two policies moved differently, so operator blinding was partial.
@@ -117,7 +125,7 @@ Stress tests were unsealed on 2026-10-13. The stress protocol is
 | Nebius Managed MLflow | 1.5 h | 0.7 |
 | **Cloud total** | | **≈ 31** |
 
-- The real arm ran 505 trials in about 12.5 operator-hours.
+- The real arm ran 577 trials in about 14.4 operator-hours.
 - For scale, not as a saving: settling approval for all 25 candidates and FP32 at about 115 trials per arm would be
   about 2,990 trials and about 74 arm-hours, before any stress or position test. The two numbers answer different goals.
 - The review did not settle approval. It ranked what to validate first, blocked broken builds, found and fixed a

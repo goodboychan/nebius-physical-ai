@@ -78,7 +78,7 @@ L += [f"| Nebius AI Endpoint · Cosmos-Reason2 (L40S) | {EP['sessions']} session
       f"would be **{bf_trials:,} trials, about {bf_h:.0f} arm-hours**, before any stress or position test. The two numbers answer different "
       "goals, because this review did not settle approval.", "",
       f"What the {n_trials} trials produced: a cost-favoured candidate to validate first (FP16), two miscalibrated builds blocked at the input "
-      "check, two weak conditions found (grip, start position), the position weakness fixed and re-tested (+75 pp and +67 pp at ±3 cm), "
+      "check, two weak conditions found (grip, start position), the position weakness fixed and re-tested (+75 pp and +67 pp at ±3 cm) and its reach mapped (−6 cm yes; +6 cm and a smaller can no), "
       "an AI judge validated live (22/24), and a list of the trials still missing before approval. It did not settle approval; that still "
       "needs the trials it lists."]
 open(f"{a.out}/review_cost.md", "w").write("\n".join(L) + "\n"); print("\n".join(L))

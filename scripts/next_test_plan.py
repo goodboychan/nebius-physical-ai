@@ -42,15 +42,23 @@ def plans(T):
                       "rule": "pre-register a revised E1 (success) rule without the ceiling clause: the success criterion is met if the 97.5% Newcombe upper bound of the degradation is below 10 pp; a final GO also needs placement (E2, 5 px) and the preflight",
                       "trials_per_arm": {"under the revised rule, if equal at 96%": n_for(0.96, 0.96, False), "with the current ceiling rule, power at 200/arm": power(200, 0.96, 0.96, True)}}}
     t0 = by("FT-FP16", "pooled")
+    # amendment 7 (prereg §17-18): generalization blocks; absent before 2026-10-18
+    g = json.load(open("artifacts/reports/ft4_analysis.json")) if os.path.exists("artifacts/reports/ft4_analysis.json") else {}
+    GEN_CTX = {"TYP": "yellow can at +3 cm (held-out object, primary)", "T6P": "start +6 cm (beyond the demonstrations)", "T6M": "start -6 cm (beyond the demonstrations)"}
     P["FT-FP16"] = {
-        "candidate": "FT-FP16 (position fine-tune)", "status": "next candidate where the start varies; not a replacement at the trained spot",
+        "candidate": "FT-FP16 (position fine-tune)", "status": "next candidate where the start varies between -6 and +3 cm with the cola can; not a replacement at the trained spot, not an object or +6 cm fix",
         "confirmed": [f"{r['context']}: {r['success'][0]}/{r['success'][1]} vs old {r['reference'][0]}/{r['reference'][1]}, {r['verdict']}" for r in rows
-                      if r["candidate"] == "FT-FP16" and r["verdict"] == "IMPROVEMENT_DETECTED"],
-        "open": [f"training mark, T0 + T0R pooled: {t0['success'][0]}/{t0['success'][1]} vs old {t0['reference'][0]}/{t0['reference'][1]}, {t0['verdict']}",
-                 "positions beyond +-3 cm and other objects are untested"],
+                      if r["candidate"] == "FT-FP16" and r["verdict"] == "IMPROVEMENT_DETECTED"]
+                     + [f"{GEN_CTX[k]}: {g[k]['test']['ft'][0]}/{g[k]['test']['ft'][1]} vs old {g[k]['test']['old'][0]}/{g[k]['test']['old'][1]}, IMPROVEMENT_DETECTED" for k in ("T6M",)
+                        if k in g and g[k]["test"]["improvement_detected"]],
+        "open": [f"training mark, T0 + T0R pooled: {t0['success'][0]}/{t0['success'][1]} vs old {t0['reference'][0]}/{t0['reference'][1]}, {t0['verdict']}"]
+                + [f"{GEN_CTX[k]}: {g[k]['test']['ft'][0]}/{g[k]['test']['ft'][1]} vs old {g[k]['test']['old'][0]}/{g[k]['test']['old'][1]}, NOT_DETECTED" for k in ("TYP", "T6P")
+                   if k in g and not g[k]["test"]["improvement_detected"]],
         "evidence": [t0["evidence_path"], "artifacts/freeze/ft_post.json", "artifacts/freeze/ft3_post.json", "artifacts/finetune/T0R_modes.json",
+                     "artifacts/reports/ft4_analysis.json", "artifacts/freeze/ft4_post.json", "artifacts/finetune/GEN_modes.json",
                      "T0 failures: trials 18 and 22 (placement disturbance, docs/sessions/ft_operator_notes.md); clip: dashboard/clips/t1_old_vs_ft.mp4"],
-        "next_test": {"compare": "FT-FP16 vs VC-025 (old FP16 policy)", "conditions": "training start mark; then -4/+4 cm and the yellow can",
+        "next_test": {"compare": "FT-FP16 vs VC-025 (old FP16 policy) at the training mark; for the gaps, a new fine-tune with demonstrations at +6 cm and with the yellow can, re-tested at TYP/T6P under a new pre-registration",
+                      "conditions": "training start mark (nominal); +6 cm and the yellow can at +3 cm (generalization gaps, amendment 7)",
                       "measure": "success, failure mode (placement disturbance), gripper chatter", "schedule": "sealed, interleaved, new tokens (operator blinding stays partial: the motions differ)",
                       "rule": "success non-inferiority at 10 pp (97.5% Newcombe), pre-registered without the ceiling clause (if both arms land at or above 95%, the current ceiling clause would hold it undecided); a final GO also needs placement (E2, 5 px) and the preflight",
                       "trials_per_arm": {"under the revised rule, if truly equal (95.8%)": n_for(23 / 24, 23 / 24, False),

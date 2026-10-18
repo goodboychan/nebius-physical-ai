@@ -25,26 +25,31 @@ Next test:
 - with the current ceiling rule, power at 200/arm: 0.32
 
 ## FT-FP16 (position fine-tune)
-**Status**: next candidate where the start varies; not a replacement at the trained spot
+**Status**: next candidate where the start varies between -6 and +3 cm with the cola can; not a replacement at the trained spot, not an object or +6 cm fix
 
 Confirmed:
 - fine-tune vs old, start +3 cm (held out, primary): 12/12 vs old 3/12, IMPROVEMENT_DETECTED
 - fine-tune vs old, start -3 cm (held out, symmetry): 10/12 vs old 2/12, IMPROVEMENT_DETECTED
+- start -6 cm (beyond the demonstrations): 8/12 vs old 0/12, IMPROVEMENT_DETECTED
 
 Open:
 - training mark, T0 + T0R pooled: 22/24 vs old 23/24, INSUFFICIENT_EVIDENCE
-- positions beyond +-3 cm and other objects are untested
+- yellow can at +3 cm (held-out object, primary): 0/12 vs old 3/12, NOT_DETECTED
+- start +6 cm (beyond the demonstrations): 0/12 vs old 0/12, NOT_DETECTED
 
 Evidence:
 - `artifacts/reports/ft3_analysis.json#pooled_T0_T0R`
 - `artifacts/freeze/ft_post.json`
 - `artifacts/freeze/ft3_post.json`
 - `artifacts/finetune/T0R_modes.json`
+- `artifacts/reports/ft4_analysis.json`
+- `artifacts/freeze/ft4_post.json`
+- `artifacts/finetune/GEN_modes.json`
 - T0 failures: trials 18 and 22 (placement disturbance, docs/sessions/ft_operator_notes.md); clip: dashboard/clips/t1_old_vs_ft.mp4
 
 Next test:
-- compare: FT-FP16 vs VC-025 (old FP16 policy)
-- conditions: training start mark; then -4/+4 cm and the yellow can
+- compare: FT-FP16 vs VC-025 (old FP16 policy) at the training mark; for the gaps, a new fine-tune with demonstrations at +6 cm and with the yellow can, re-tested at TYP/T6P under a new pre-registration
+- conditions: training start mark (nominal); +6 cm and the yellow can at +3 cm (generalization gaps, amendment 7)
 - measure: success, failure mode (placement disturbance), gripper chatter
 - schedule: sealed, interleaved, new tokens (operator blinding stays partial: the motions differ)
 - rule: success non-inferiority at 10 pp (97.5% Newcombe), pre-registered without the ceiling clause (if both arms land at or above 95%, the current ceiling clause would hold it undecided); a final GO also needs placement (E2, 5 px) and the preflight

@@ -75,16 +75,18 @@ img{max-width:100%;height:auto;display:block}figcaption{color:#5d666e;font-size:
 <li>with the current ceiling rule, power at 200/arm: 0.32</li>
 </ul>
 <h3>FT-FP16 (position fine-tune)</h3>
-<p><b>Status</b>: next candidate where the start varies; not a replacement at the trained spot</p>
+<p><b>Status</b>: next candidate where the start varies between -6 and +3 cm with the cola can; not a replacement at the trained spot, not an object or +6 cm fix</p>
 <p>Confirmed:</p>
 <ul>
 <li>fine-tune vs old, start +3 cm (held out, primary): 12/12 vs old 3/12, IMPROVEMENT_DETECTED</li>
 <li>fine-tune vs old, start -3 cm (held out, symmetry): 10/12 vs old 2/12, IMPROVEMENT_DETECTED</li>
+<li>start -6 cm (beyond the demonstrations): 8/12 vs old 0/12, IMPROVEMENT_DETECTED</li>
 </ul>
 <p>Open:</p>
 <ul>
 <li>training mark, T0 + T0R pooled: 22/24 vs old 23/24, INSUFFICIENT_EVIDENCE</li>
-<li>positions beyond +-3 cm and other objects are untested</li>
+<li>yellow can at +3 cm (held-out object, primary): 0/12 vs old 3/12, NOT_DETECTED</li>
+<li>start +6 cm (beyond the demonstrations): 0/12 vs old 0/12, NOT_DETECTED</li>
 </ul>
 <p>Evidence:</p>
 <ul>
@@ -92,12 +94,15 @@ img{max-width:100%;height:auto;display:block}figcaption{color:#5d666e;font-size:
 <li><code>artifacts/freeze/ft_post.json</code></li>
 <li><code>artifacts/freeze/ft3_post.json</code></li>
 <li><code>artifacts/finetune/T0R_modes.json</code></li>
+<li><code>artifacts/reports/ft4_analysis.json</code></li>
+<li><code>artifacts/freeze/ft4_post.json</code></li>
+<li><code>artifacts/finetune/GEN_modes.json</code></li>
 <li>T0 failures: trials 18 and 22 (placement disturbance, docs/sessions/ft_operator_notes.md); clip: dashboard/clips/t1_old_vs_ft.mp4</li>
 </ul>
 <p>Next test:</p>
 <ul>
-<li>compare: FT-FP16 vs VC-025 (old FP16 policy)</li>
-<li>conditions: training start mark; then -4/+4 cm and the yellow can</li>
+<li>compare: FT-FP16 vs VC-025 (old FP16 policy) at the training mark; for the gaps, a new fine-tune with demonstrations at +6 cm and with the yellow can, re-tested at TYP/T6P under a new pre-registration</li>
+<li>conditions: training start mark (nominal); +6 cm and the yellow can at +3 cm (generalization gaps, amendment 7)</li>
 <li>measure: success, failure mode (placement disturbance), gripper chatter</li>
 <li>schedule: sealed, interleaved, new tokens (operator blinding stays partial: the motions differ)</li>
 <li>rule: success non-inferiority at 10 pp (97.5% Newcombe), pre-registered without the ceiling clause (if both arms land at or above 95%, the current ceiling clause would hold it undecided); a final GO also needs placement (E2, 5 px) and the preflight</li>

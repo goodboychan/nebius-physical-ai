@@ -48,7 +48,7 @@ committed, hashed evidence.
   - 26 TensorRT engines built on the Jetson with a frozen timing cache, so the same file always behaves the same.
 - **Offline audit**: 2,000 held-out states scored on 48 CPU jobs on Nebius Jobs. The ranking was frozen before any
   real trial.
-- **Real arm**: **505 trials** in 10 sessions, all under sealed, interleaved schedules.
+- **Real arm**: **577 trials** in 13 sessions, all under sealed, interleaved schedules.
   - The operator saw trial numbers only. In the fine-tune blocks the two policies moved visibly differently, so
     operator blinding there was partial; outcomes come from an automatic judge and a blind video re-judge.
   - Logs are hashed before they are unsealed, so no rule can change after the results are seen.
@@ -72,6 +72,9 @@ committed, hashed evidence.
 - **We fixed the weakness with data and re-tested it under a rule fixed in advance.**
   - 50 new demonstrations at −4…+4 cm and a 25-minute fine-tune on Nebius Jobs.
   - At held-out positions: **12/12 vs 3/12 at +3 cm** (+75 pp, 95% CI [+38, +91]) and **10/12 vs 2/12 at −3 cm**.
+  - We then mapped how far the fix reaches, under a new pre-registration: **8/12 vs 0/12 at −6 cm**, beyond the
+    demonstrations, but **0/12 vs 0/12 at +6 cm** and **0/12 vs 3/12 with a smaller yellow can at +3 cm**. The review
+    now states the range where the fine-tune is a candidate, and where it is not.
   - At the trained spot it is still undecided (22/24 vs 23/24, with a pre-registered replication), so the review
     does not approve it there.
 
