@@ -121,3 +121,6 @@ Outcomes are decided by the locked criterion (automatic judge and §11 consensus
   - trial 19: (a), the start position was not found and the can was grasped in the wrong place.
   - trial 21: (a), the start position was not found and the can was grasped in the wrong place.
   - trial 23: (c), the can was carried and set down on the coaster edge.
+  - trial 24: (a), the start position was not found and the can was grasped in the wrong place.
+- T6M complete: 24 trials, 0 aborted, 0 invalid; live judge failures 1, 4-6, 8-10, 12-14, 16, 17, 19, 21, 23, 24 (16), the same trials the operator reported.
+- All three sealed logs hashed into `artifacts/freeze/ft4_post.json` before any is opened.
