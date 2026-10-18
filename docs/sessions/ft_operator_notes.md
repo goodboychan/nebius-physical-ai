@@ -112,3 +112,4 @@ Outcomes are decided by the locked criterion (automatic judge and §11 consensus
 - After trial 6 the operator said the arm had "stopped" several times; the log shows no operator abort (Ctrl+C) in trials 1-6, so the stop rule (2 aborts) has not been reached.
   - trial 8: (a), the start position was not found and the can was grasped in the wrong place.
   - trial 9: the can was set down properly, then knocked over while the arm moved back (pre-registered label `placement disturbance`; a fourth kind, not (a)-(c)).
+  - trial 10: (a), the start position was not found and the can was grasped in the wrong place.
