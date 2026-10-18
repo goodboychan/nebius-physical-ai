@@ -401,3 +401,34 @@ Analysis: `scripts/ft3_analysis.py`, written to `artifacts/reports/ft3_analysis.
     that position (torque or joint range), the same for both policies.
   - A T6M result with both policies failing on the lift is read as that limit, not as evidence about the fine-tune.
     Lift failures stay labelled `transport` or `grasp` by the blind mode labelling.
+
+## 18. Generalization results (2026-10-18, unsealed after ft4_post.json)
+
+Order kept:
+1. The three sealed logs were hashed into `artifacts/freeze/ft4_post.json` (pushed) before any was opened.
+2. The video consensus re-judge was run blind to cells: TYP 3/24, T6P 0/24, T6M 8/24, equal to the live automatic
+   judge and to the operator's reports.
+3. The failure-mode labels were written blind (`artifacts/finetune/GEN_modes.json`, 61 failures).
+4. Only then were the logs unsealed. All three match the post record.
+
+Analysis: `scripts/ft4_analysis.py`, written to `artifacts/reports/ft4_analysis.json`.
+
+| Block | FT-FP16 | OLD-FP16 (VC-025) | FT − OLD, Newcombe 95% | Reading (§17 table) |
+|---|---|---|---|---|
+| **TYP, yellow can at +3 cm (primary)** | **0/12** | 3/12 | −25.0 pp [−53.2, +4.1] | **not detected, FT < 9/12: no evidence that the fix carries to this object** |
+| T6P, cola can at +6 cm | 0/12 | 0/12 | 0.0 pp [−24.2, +24.2] | not detected: no evidence of extrapolation on the + side |
+| T6M, cola can at −6 cm | **8/12** | 0/12 | **+66.7 pp [+29.9, +86.2]** | **detected: the fine-tune extrapolates past its demonstrations on the − side** |
+
+- **Failure modes** (blind labels):
+  - TYP: FT 12/12 `grasp`; OLD 8 `grasp` and 1 edge placement.
+  - T6P: every failure of both policies is `grasp` (the can stays at its start; the gripper goes to the trained spot).
+  - T6M: OLD 12/12 `grasp`; FT 1 `grasp`, 2 edge placements and 1 `placement disturbance` (trial 9). So FT reached
+    and carried the can in 11 of 12 trials.
+- **Reading**:
+  - The position fine-tune does **not** carry to the smaller yellow can at +3 cm. FT's 0/12 is not a detected
+    degradation (the interval includes 0), but it gives no support for object generalization.
+  - The supported range is **asymmetric**: −6 cm is handled (8/12), +6 cm is not (0/12).
+  - FT stays the candidate where the start varies between −6 and +3 cm with the cola can. It is not a general
+    object or position solution.
+- **Limitations**: operator blinding was partial, as in T1/T2. One session per block. At −6 cm the arm lagged the
+  leader during the reach check; FT still lifted the can there in 11 trials, so the arm limit did not decide T6M.

@@ -14,7 +14,7 @@ if not os.path.exists("artifacts/freeze/ft4_post.json"): sys.exit("ft4_post.json
 a = sys.argv[1:]; opt = lambda k: a[a.index(k) + 1] if k in a else None
 out, modes_p, sdir = opt("--out"), opt("--modes"), a[0]
 for f in a[1:min(a.index(k) for k in ("--out", "--modes") if k in a)]: sa.REJ.update(json.load(open(f)))
-MODES = json.load(open(modes_p)) if modes_p else {}   # {"<block>/<trial>": "placement disturbance" | "grasp" | "transport" | "other"}
+MODES = (lambda d: d.get("labels", d))(json.load(open(modes_p))) if modes_p else {}   # {"<block>/<trial>": "placement disturbance" | "grasp" | "transport" | "other"}
 ROLE = {"TYP": "primary", "T6P": "secondary", "T6M": "secondary"}; rep = {}
 for blk, role in ROLE.items():
     p = os.path.join(sdir, f"stress_ft4_{blk}_sealed.jsonl")

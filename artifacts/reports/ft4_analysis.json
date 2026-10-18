@@ -1,0 +1,354 @@
+{
+ "TYP": {
+  "role": "primary",
+  "run": true,
+  "cells": {
+   "FT-FP16": {
+    "k": 0,
+    "n": 12
+   },
+   "VC-025": {
+    "k": 3,
+    "n": 12
+   }
+  },
+  "failures": {
+   "FT-FP16": [
+    {
+     "trial": 1,
+     "mode": "grasp"
+    },
+    {
+     "trial": 3,
+     "mode": "grasp"
+    },
+    {
+     "trial": 5,
+     "mode": "grasp"
+    },
+    {
+     "trial": 7,
+     "mode": "grasp"
+    },
+    {
+     "trial": 9,
+     "mode": "grasp"
+    },
+    {
+     "trial": 11,
+     "mode": "grasp"
+    },
+    {
+     "trial": 13,
+     "mode": "grasp"
+    },
+    {
+     "trial": 15,
+     "mode": "grasp"
+    },
+    {
+     "trial": 17,
+     "mode": "grasp"
+    },
+    {
+     "trial": 19,
+     "mode": "grasp"
+    },
+    {
+     "trial": 22,
+     "mode": "grasp"
+    },
+    {
+     "trial": 23,
+     "mode": "grasp"
+    }
+   ],
+   "VC-025": [
+    {
+     "trial": 2,
+     "mode": "grasp"
+    },
+    {
+     "trial": 6,
+     "mode": "other: edge placement"
+    },
+    {
+     "trial": 12,
+     "mode": "grasp"
+    },
+    {
+     "trial": 14,
+     "mode": "grasp"
+    },
+    {
+     "trial": 16,
+     "mode": "grasp"
+    },
+    {
+     "trial": 18,
+     "mode": "grasp"
+    },
+    {
+     "trial": 20,
+     "mode": "grasp"
+    },
+    {
+     "trial": 21,
+     "mode": "grasp"
+    },
+    {
+     "trial": 24,
+     "mode": "grasp"
+    }
+   ]
+  },
+  "test": {
+   "ft": [
+    0,
+    12
+   ],
+   "old": [
+    3,
+    12
+   ],
+   "diff_pp": -25.0,
+   "newcombe95_pp": [
+    -53.23053349335657,
+    4.11067320475475
+   ],
+   "improvement_detected": false
+  }
+ },
+ "T6P": {
+  "role": "secondary",
+  "run": true,
+  "cells": {
+   "VC-025": {
+    "k": 0,
+    "n": 12
+   },
+   "FT-FP16": {
+    "k": 0,
+    "n": 12
+   }
+  },
+  "failures": {
+   "VC-025": [
+    {
+     "trial": 1,
+     "mode": "grasp"
+    },
+    {
+     "trial": 3,
+     "mode": "grasp"
+    },
+    {
+     "trial": 6,
+     "mode": "grasp"
+    },
+    {
+     "trial": 8,
+     "mode": "grasp"
+    },
+    {
+     "trial": 9,
+     "mode": "grasp"
+    },
+    {
+     "trial": 11,
+     "mode": "grasp"
+    },
+    {
+     "trial": 13,
+     "mode": "grasp"
+    },
+    {
+     "trial": 16,
+     "mode": "grasp"
+    },
+    {
+     "trial": 17,
+     "mode": "grasp"
+    },
+    {
+     "trial": 19,
+     "mode": "grasp"
+    },
+    {
+     "trial": 21,
+     "mode": "grasp"
+    },
+    {
+     "trial": 24,
+     "mode": "grasp"
+    }
+   ],
+   "FT-FP16": [
+    {
+     "trial": 2,
+     "mode": "grasp"
+    },
+    {
+     "trial": 4,
+     "mode": "grasp"
+    },
+    {
+     "trial": 5,
+     "mode": "grasp"
+    },
+    {
+     "trial": 7,
+     "mode": "grasp"
+    },
+    {
+     "trial": 10,
+     "mode": "grasp"
+    },
+    {
+     "trial": 12,
+     "mode": "grasp"
+    },
+    {
+     "trial": 14,
+     "mode": "grasp"
+    },
+    {
+     "trial": 15,
+     "mode": "grasp"
+    },
+    {
+     "trial": 18,
+     "mode": "grasp"
+    },
+    {
+     "trial": 20,
+     "mode": "grasp"
+    },
+    {
+     "trial": 22,
+     "mode": "grasp"
+    },
+    {
+     "trial": 23,
+     "mode": "grasp"
+    }
+   ]
+  },
+  "test": {
+   "ft": [
+    0,
+    12
+   ],
+   "old": [
+    0,
+    12
+   ],
+   "diff_pp": 0.0,
+   "newcombe95_pp": [
+    -24.24940066552409,
+    24.24940066552409
+   ],
+   "improvement_detected": false
+  }
+ },
+ "T6M": {
+  "role": "secondary",
+  "run": true,
+  "cells": {
+   "VC-025": {
+    "k": 0,
+    "n": 12
+   },
+   "FT-FP16": {
+    "k": 8,
+    "n": 12
+   }
+  },
+  "failures": {
+   "VC-025": [
+    {
+     "trial": 1,
+     "mode": "grasp"
+    },
+    {
+     "trial": 4,
+     "mode": "grasp"
+    },
+    {
+     "trial": 6,
+     "mode": "grasp"
+    },
+    {
+     "trial": 8,
+     "mode": "grasp"
+    },
+    {
+     "trial": 10,
+     "mode": "grasp"
+    },
+    {
+     "trial": 12,
+     "mode": "grasp"
+    },
+    {
+     "trial": 13,
+     "mode": "grasp"
+    },
+    {
+     "trial": 16,
+     "mode": "grasp"
+    },
+    {
+     "trial": 17,
+     "mode": "grasp"
+    },
+    {
+     "trial": 19,
+     "mode": "grasp"
+    },
+    {
+     "trial": 21,
+     "mode": "grasp"
+    },
+    {
+     "trial": 24,
+     "mode": "grasp"
+    }
+   ],
+   "FT-FP16": [
+    {
+     "trial": 5,
+     "mode": "other: edge placement"
+    },
+    {
+     "trial": 9,
+     "mode": "placement disturbance"
+    },
+    {
+     "trial": 14,
+     "mode": "grasp"
+    },
+    {
+     "trial": 23,
+     "mode": "other: edge placement"
+    }
+   ]
+  },
+  "test": {
+   "ft": [
+    8,
+    12
+   ],
+   "old": [
+    0,
+    12
+   ],
+   "diff_pp": 66.66666666666666,
+   "newcombe95_pp": [
+    29.923782703495462,
+    86.18799089087868
+   ],
+   "improvement_detected": true
+  }
+ }
+}
