@@ -71,3 +71,36 @@ failures.
 
 The outcome uses the consensus re-judge of stress protocol §11 (`stress_rejudge_consensus.py` `382acdf3…`) instead of §9.
 The reason is the §9 rule's false failures on an off-center can, documented in §11 and validated on 345 videos.
+
+## 9. Amendment 3 (2026-10-18, before any Q8 trial): an INT8 chatter block
+
+- **Why**: in G6 and the FP16 block, the INT8 build `VC-002` commanded a gripper that chatters about twice as much as
+  FP16 (`artifacts/reports/ft_chatter.json`; median 0.29–0.31 against 0.13). That is a post hoc observation. This block
+  tests it prospectively. It also matters for deployment: the review recommends FP16 first, and INT8 only if memory or
+  power forces it.
+  - Written after G6, the FP16 block and the fine-tune blocks were unsealed. No Q8 trial exists.
+- **Design**: block **Q8**, the cola can at the training start mark, rubber-band gripper.
+  - `VC-002` (INT8, engine sha256 `86eba809…`) 24 and `VC-025` (FP16, `3b19f7eb…`) 24, both the original policy,
+    interleaved by the (k + U)/n key.
+  - Seed key `INT8/chatter/schedule/v1`, with new random tokens.
+  - Sealed schedule `~/.edgeqgate_sealed/stress_int8c/stress_sealed.json`, sha256
+    `5646236006255b44f16326ac272d5fad6136ccf757d3dcd9e222627fbc4eddd5`. The public copy is
+    `artifacts/fp16/stress_schedule_Q8_public.json`.
+  - The engines are hard links to the FP16-block files, built by `scripts/int8c_setup_orin.py` (no token-to-cell
+    output). There is one normalization file (`273746c2…`) with a per-token manifest (`2e3ec4632d118c83…`). The local
+    copy of the sealed schedule was deleted unread.
+- **Runner**: `so101_trial.py --blind Q8 int8c`, sha256 `bfc723a6ee8ba4eb…`, deployed with no block running. The
+  previous `f499c1b0` is kept as a backup. The manifest is required. The C1 end-of-trial judge records if the endpoint
+  is up. The stop rule is 2 operator aborts.
+- **Primary** (`scripts/int8c_analysis.py`, written now and dry-run on relabelled FP16-block data):
+  - Gripper chatter (the fine-tune prereg §13 metric, computed on the Orin by `ft_chatter.py measure`), `VC-002`
+    against `VC-025`, Mann-Whitney U two-sided at α = 0.05.
+  - The direction stated now is `VC-002` > `VC-025`. **Confirmed** iff p < 0.05 and the `VC-002` median is higher.
+    Otherwise the reading is "not confirmed".
+- **Secondary**: `chatter_hold` (closed-gripper steps), the same test.
+- **Descriptive**: success with the usual semantics (97.5%, 10 pp, ceiling rule). No approval follows from this block.
+- **Power, stated now**: if the earlier gap is real (medians about 0.30 against 0.13, with little overlap), 24 against
+  24 detects it almost surely. A null result would contradict the post hoc pattern.
+- **Order**: run Q8 → hash the sealed log into `artifacts/freeze/int8c_post.json` → blind consensus re-judge →
+  chatter measured on the Orin (no cells) → unseal → `int8c_analysis.py`.
+- **Date stop**: if not started by 2026-10-25, it is reported as not run.
