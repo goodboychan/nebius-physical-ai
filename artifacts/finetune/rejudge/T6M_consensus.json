@@ -1,0 +1,128 @@
+{
+ "T6M001_1018_205208": {
+  "success_geom": false,
+  "reason": "outside",
+  "base_dist_px": 89.7,
+  "n_consensus_frames": 15
+ },
+ "T6M002_1018_205320": {
+  "success_geom": true,
+  "reason": "ok",
+  "base_dist_px": 5.6,
+  "n_consensus_frames": 15
+ },
+ "T6M003_1018_205438": {
+  "success_geom": true,
+  "reason": "ok",
+  "base_dist_px": 5.7,
+  "n_consensus_frames": 15
+ },
+ "T6M004_1018_205631": {
+  "success_geom": false,
+  "reason": "moving_or_not_standing",
+  "n_consensus_frames": 1
+ },
+ "T6M005_1018_205745": {
+  "success_geom": false,
+  "reason": "moving_or_not_standing",
+  "n_consensus_frames": 1
+ },
+ "T6M006_1018_205907": {
+  "success_geom": false,
+  "reason": "outside",
+  "base_dist_px": 83.0,
+  "n_consensus_frames": 15
+ },
+ "T6M007_1018_210035": {
+  "success_geom": true,
+  "reason": "ok",
+  "base_dist_px": 7.2,
+  "n_consensus_frames": 15
+ },
+ "T6M008_1018_210317": {
+  "success_geom": false,
+  "reason": "can_top_not_found(fallen_or_occluded)"
+ },
+ "T6M009_1018_210430": {
+  "success_geom": false,
+  "reason": "moving_or_not_standing",
+  "n_consensus_frames": 2
+ },
+ "T6M010_1018_210557": {
+  "success_geom": false,
+  "reason": "outside",
+  "base_dist_px": 79.7,
+  "n_consensus_frames": 15
+ },
+ "T6M011_1018_210711": {
+  "success_geom": true,
+  "reason": "ok",
+  "base_dist_px": 10.3,
+  "n_consensus_frames": 15
+ },
+ "T6M012_1018_210829": {
+  "success_geom": false,
+  "reason": "moving_or_not_standing",
+  "n_consensus_frames": 4
+ },
+ "T6M013_1018_211042": {
+  "success_geom": false,
+  "reason": "moving_or_not_standing",
+  "n_consensus_frames": 5
+ },
+ "T6M014_1018_211154": {
+  "success_geom": false,
+  "reason": "can_top_not_found(fallen_or_occluded)"
+ },
+ "T6M015_1018_211308": {
+  "success_geom": true,
+  "reason": "ok",
+  "base_dist_px": 3.4,
+  "n_consensus_frames": 15
+ },
+ "T6M016_1018_211457": {
+  "success_geom": false,
+  "reason": "moving_or_not_standing",
+  "n_consensus_frames": 2
+ },
+ "T6M017_1018_211613": {
+  "success_geom": false,
+  "reason": "moving_or_not_standing",
+  "n_consensus_frames": 3
+ },
+ "T6M018_1018_211737": {
+  "success_geom": true,
+  "reason": "ok",
+  "base_dist_px": 12.0,
+  "n_consensus_frames": 15
+ },
+ "T6M019_1018_211851": {
+  "success_geom": false,
+  "reason": "can_top_not_found(fallen_or_occluded)"
+ },
+ "T6M020_1018_212003": {
+  "success_geom": true,
+  "reason": "ok",
+  "base_dist_px": 7.6,
+  "n_consensus_frames": 15
+ },
+ "T6M021_1018_212119": {
+  "success_geom": false,
+  "reason": "moving_or_not_standing",
+  "n_consensus_frames": 3
+ },
+ "T6M022_1018_212306": {
+  "success_geom": true,
+  "reason": "ok",
+  "base_dist_px": 3.7,
+  "n_consensus_frames": 15
+ },
+ "T6M023_1018_212426": {
+  "success_geom": false,
+  "reason": "can_top_not_found(fallen_or_occluded)"
+ },
+ "T6M024_1018_212543": {
+  "success_geom": false,
+  "reason": "can_top_not_found(fallen_or_occluded)"
+ }
+}

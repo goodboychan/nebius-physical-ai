@@ -1,0 +1,114 @@
+{
+ "T6P001_1017_210715": {
+  "success_geom": false,
+  "reason": "moving_or_not_standing",
+  "n_consensus_frames": 2
+ },
+ "T6P002_1017_210846": {
+  "success_geom": false,
+  "reason": "can_top_not_found(fallen_or_occluded)"
+ },
+ "T6P003_1017_210959": {
+  "success_geom": false,
+  "reason": "moving_or_not_standing",
+  "n_consensus_frames": 3
+ },
+ "T6P004_1017_211117": {
+  "success_geom": false,
+  "reason": "moving_or_not_standing",
+  "n_consensus_frames": 1
+ },
+ "T6P005_1017_212333": {
+  "success_geom": false,
+  "reason": "can_top_not_found(fallen_or_occluded)"
+ },
+ "T6P006_1017_212507": {
+  "success_geom": false,
+  "reason": "can_top_not_found(fallen_or_occluded)"
+ },
+ "T6P007_1017_212624": {
+  "success_geom": false,
+  "reason": "moving_or_not_standing",
+  "n_consensus_frames": 1
+ },
+ "T6P008_1017_212739": {
+  "success_geom": false,
+  "reason": "moving_or_not_standing",
+  "n_consensus_frames": 2
+ },
+ "T6P009_1017_220005": {
+  "success_geom": false,
+  "reason": "moving_or_not_standing",
+  "n_consensus_frames": 1
+ },
+ "T6P010_1017_220218": {
+  "success_geom": false,
+  "reason": "moving_or_not_standing",
+  "n_consensus_frames": 1
+ },
+ "T6P011_1017_220657": {
+  "success_geom": false,
+  "reason": "can_top_not_found(fallen_or_occluded)"
+ },
+ "T6P012_1017_220809": {
+  "success_geom": false,
+  "reason": "moving_or_not_standing",
+  "n_consensus_frames": 2
+ },
+ "T6P013_1017_220920": {
+  "success_geom": false,
+  "reason": "moving_or_not_standing",
+  "n_consensus_frames": 2
+ },
+ "T6P014_1017_221032": {
+  "success_geom": false,
+  "reason": "moving_or_not_standing",
+  "n_consensus_frames": 1
+ },
+ "T6P015_1017_221144": {
+  "success_geom": false,
+  "reason": "can_top_not_found(fallen_or_occluded)"
+ },
+ "T6P016_1017_221256": {
+  "success_geom": false,
+  "reason": "moving_or_not_standing",
+  "n_consensus_frames": 1
+ },
+ "T6P017_1017_221410": {
+  "success_geom": false,
+  "reason": "can_top_not_found(fallen_or_occluded)"
+ },
+ "T6P018_1017_221521": {
+  "success_geom": false,
+  "reason": "moving_or_not_standing",
+  "n_consensus_frames": 2
+ },
+ "T6P019_1017_221654": {
+  "success_geom": false,
+  "reason": "moving_or_not_standing",
+  "n_consensus_frames": 1
+ },
+ "T6P020_1017_221808": {
+  "success_geom": false,
+  "reason": "moving_or_not_standing",
+  "n_consensus_frames": 4
+ },
+ "T6P021_1017_221951": {
+  "success_geom": false,
+  "reason": "moving_or_not_standing",
+  "n_consensus_frames": 3
+ },
+ "T6P022_1017_222106": {
+  "success_geom": false,
+  "reason": "moving_or_not_standing",
+  "n_consensus_frames": 1
+ },
+ "T6P023_1017_222216": {
+  "success_geom": false,
+  "reason": "can_top_not_found(fallen_or_occluded)"
+ },
+ "T6P024_1017_222329": {
+  "success_geom": false,
+  "reason": "can_top_not_found(fallen_or_occluded)"
+ }
+}

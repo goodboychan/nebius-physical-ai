@@ -1,0 +1,122 @@
+{
+ "TYP001_1017_203228": {
+  "success_geom": false,
+  "reason": "can_top_not_found(fallen_or_occluded)"
+ },
+ "TYP002_1017_203515": {
+  "success_geom": false,
+  "reason": "moving_or_not_standing",
+  "n_consensus_frames": 3
+ },
+ "TYP003_1017_203636": {
+  "success_geom": false,
+  "reason": "moving_or_not_standing",
+  "n_consensus_frames": 6
+ },
+ "TYP004_1017_203758": {
+  "success_geom": true,
+  "reason": "ok",
+  "base_dist_px": 31.2,
+  "n_consensus_frames": 15
+ },
+ "TYP005_1017_203913": {
+  "success_geom": false,
+  "reason": "moving_or_not_standing",
+  "n_consensus_frames": 2
+ },
+ "TYP006_1017_204026": {
+  "success_geom": false,
+  "reason": "outside",
+  "base_dist_px": 57.5,
+  "n_consensus_frames": 15
+ },
+ "TYP007_1017_204142": {
+  "success_geom": false,
+  "reason": "can_top_not_found(fallen_or_occluded)"
+ },
+ "TYP008_1017_204309": {
+  "success_geom": true,
+  "reason": "ok",
+  "base_dist_px": 27.0,
+  "n_consensus_frames": 15
+ },
+ "TYP009_1017_204422": {
+  "success_geom": false,
+  "reason": "can_top_not_found(fallen_or_occluded)"
+ },
+ "TYP010_1017_204534": {
+  "success_geom": true,
+  "reason": "ok",
+  "base_dist_px": 25.8,
+  "n_consensus_frames": 15
+ },
+ "TYP011_1017_204732": {
+  "success_geom": false,
+  "reason": "can_top_not_found(fallen_or_occluded)"
+ },
+ "TYP012_1017_204844": {
+  "success_geom": false,
+  "reason": "moving_or_not_standing",
+  "n_consensus_frames": 2
+ },
+ "TYP013_1017_204958": {
+  "success_geom": false,
+  "reason": "moving_or_not_standing",
+  "n_consensus_frames": 3
+ },
+ "TYP014_1017_205129": {
+  "success_geom": false,
+  "reason": "moving_or_not_standing",
+  "n_consensus_frames": 3
+ },
+ "TYP015_1017_205309": {
+  "success_geom": false,
+  "reason": "moving_or_not_standing",
+  "n_consensus_frames": 2
+ },
+ "TYP016_1017_205426": {
+  "success_geom": false,
+  "reason": "moving_or_not_standing",
+  "n_consensus_frames": 5
+ },
+ "TYP017_1017_205545": {
+  "success_geom": false,
+  "reason": "moving_or_not_standing",
+  "n_consensus_frames": 1
+ },
+ "TYP018_1017_205659": {
+  "success_geom": false,
+  "reason": "moving_or_not_standing",
+  "n_consensus_frames": 4
+ },
+ "TYP019_1017_205817": {
+  "success_geom": false,
+  "reason": "moving_or_not_standing",
+  "n_consensus_frames": 3
+ },
+ "TYP020_1017_205933": {
+  "success_geom": false,
+  "reason": "moving_or_not_standing",
+  "n_consensus_frames": 5
+ },
+ "TYP021_1017_210047": {
+  "success_geom": false,
+  "reason": "moving_or_not_standing",
+  "n_consensus_frames": 4
+ },
+ "TYP022_1017_210208": {
+  "success_geom": false,
+  "reason": "moving_or_not_standing",
+  "n_consensus_frames": 1
+ },
+ "TYP023_1017_210319": {
+  "success_geom": false,
+  "reason": "moving_or_not_standing",
+  "n_consensus_frames": 1
+ },
+ "TYP024_1017_210432": {
+  "success_geom": false,
+  "reason": "moving_or_not_standing",
+  "n_consensus_frames": 4
+ }
+}
