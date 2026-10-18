@@ -114,3 +114,4 @@ Outcomes are decided by the locked criterion (automatic judge and §11 consensus
   - trial 9: the can was set down properly, then knocked over while the arm moved back (pre-registered label `placement disturbance`; a fourth kind, not (a)-(c)).
   - trial 10: (a), the start position was not found and the can was grasped in the wrong place.
   - trial 12: (a), the start position was not found and the can was grasped in the wrong place.
+  - trial 13: (a), the start position was not found and the can was grasped in the wrong place.
