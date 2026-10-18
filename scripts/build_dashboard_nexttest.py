@@ -1,5 +1,5 @@
 """Dashboard section "From evidence to the next test" (external review 7), injected between <!--NEXTTEST:BEGIN--> and
-<!--NEXTTEST:END--> before the preflight section. Data: artifacts/reports/next_test_plans.json (written by code).
+<!--NEXTTEST:END--> first, before the deployment review (moved to the top on 2026-10-18 so a reader can try it first). Data: artifacts/reports/next_test_plans.json (written by code).
 Pick a candidate -> status, confirmed, open, evidence (with the counted clip where there is one) and the next test's plan,
 with a Copy button for the plan as Markdown.
 Usage: python scripts/build_dashboard_nexttest.py [dashboard/audit_gate.html]"""
@@ -12,8 +12,8 @@ CLIP = {"FT-FP16": "clips/t1_old_vs_ft.mp4"}
 data = {k: {**v, "md": ntp.md({k: v}), "clip": CLIP.get(k)} for k, v in P.items()}
 sec = '''<!--NEXTTEST:BEGIN-->
   <section class="panel" id="nexttest">
-    <div class="plate"><h2>From evidence to the next test</h2><span class="ref">scripts/next_test_plan.py · written by code</span></div>
-    <p class="note">Pick a candidate: what is confirmed, what is still open, the evidence behind both, and the plan for the next test,
+    <div class="plate"><h2>Try it: from evidence to the next test</h2><span class="ref">scripts/next_test_plan.py · written by code</span></div>
+    <p class="note"><b>No robot needed, about 30 seconds.</b> Pick a candidate: what is confirmed, what is still open, the evidence behind both, and the plan for the next test,
       with trials per arm from a simulated power calculation under the same Newcombe rule. Copy the plan to pre-register it.</p>
     <div id="nt-pick" style="display:flex;gap:8px;flex-wrap:wrap"></div>
     <div id="nt-body"></div>
@@ -50,5 +50,5 @@ s = open(page).read()
 if "<!--NEXTTEST:BEGIN-->" in s:
     s = s[:s.index("<!--NEXTTEST:BEGIN-->")] + sec.lstrip() + s[s.index("<!--NEXTTEST:END-->") + len("<!--NEXTTEST:END-->\n"):]
 else:
-    anchor = '  <section class="panel" id="preflight">'; assert anchor in s; s = s.replace(anchor, sec + anchor, 1)
+    anchor = '  <section class="panel" id="review">'; assert anchor in s; s = s.replace(anchor, sec + anchor, 1)
 open(page, "w").write(s); print("next-test section written:", list(P))
