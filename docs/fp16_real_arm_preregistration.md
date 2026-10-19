@@ -104,3 +104,31 @@ The reason is the §9 rule's false failures on an off-center can, documented in 
 - **Order**: run Q8 → hash the sealed log into `artifacts/freeze/int8c_post.json` → blind consensus re-judge →
   chatter measured on the Orin (no cells) → unseal → `int8c_analysis.py`.
 - **Date stop**: if not started by 2026-10-25, it is reported as not run.
+
+## 10. Amendment 4 (2026-10-20, before any Q8B trial): Q8 restarted as Q8B after a scene deviation
+
+- **What happened**: Q8 was paused after 6 trials (all failed by the live judge, one operator abort). No Q8 cell was
+  opened.
+  - The hardware check found one scene difference from the pre-registered nominal scene, the one used in T0R: small
+    red round markers on the start axis next to the can, present since 2026-10-17.
+  - Everything else matched T0R: engine and normalization files, calibration, control-loop timing, joint tracking, can
+    position and image brightness.
+- **Decision**: the 6 Q8 trials are **discarded as a scene deviation** and never analysed. The decision rests only on
+  the scene difference, not on cell outcomes.
+  - The sealed log is kept unopened: `stress_int8c_Q8_sealed.jsonl`, sha256
+    `635a78d229a9bdf0671e04025a5469fc1f06d4b36c87c42704846ee60afd5cae`, 7 records.
+  - The markers were removed (checked on the overhead frame).
+- **Diagnostic, non-blind, not counted** (old FP16 engine, FP16-block token `39b99e35`, session `diag_q8_fp16`):
+  - with markers, 2/3 (the operator called the successes marginal);
+  - after removal, 2/3.
+  - In T0R the same engine went 11/12 at the mark. The lower diagnostic rate is reported as a limitation. Q8B's primary
+    endpoint (gripper chatter) is measured on every trial, success or not.
+- **Design**: unchanged from §9 except the names. Block **Q8B**: `VC-002` 24 and `VC-025` 24, interleaved.
+  - Seed key `INT8/chatter/schedule/v2`, with new random tokens.
+  - Sealed schedule `~/.edgeqgate_sealed/stress_int8c2/stress_sealed.json`, sha256
+    `33b6a82e98697fcb5f7ab736eb6c39c3bb3f910a3c044621513658f71f866125`. The public copy is
+    `artifacts/fp16/stress_schedule_Q8B_public.json`.
+  - Engines `86eba809…` and `3b19f7eb…`; normalization `273746c2…`; manifest `cd661bc72ded866b…`.
+  - Runner: `so101_trial.py --blind Q8B int8c2`, sha256 `89e26180bd2e36f9…`, deployed after the diagnostic session ended.
+- **Analysis**: `int8c_analysis.py --block Q8B`, the same rules as §9 (dry-run on relabelled FP16-block data).
+- **Order**: as §9, with `artifacts/freeze/int8c2_post.json`.

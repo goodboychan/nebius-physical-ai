@@ -20,6 +20,7 @@
       so101_trial.py --blind T0R ft3         (원래 위치 독립 재현 블록, 같은 문서 §15 개정 6)
       so101_trial.py --blind TYP|T6P|T6M ft4 (일반화 블록: 노란 캔 +3 cm, 콜라캔 ±6 cm, 같은 문서 §17 개정 7)
       so101_trial.py --blind Q8 int8c        (INT8 떨림 블록: VC-002 vs VC-025, docs/fp16_real_arm_preregistration.md §9 개정 3)
+      so101_trial.py --blind Q8B int8c2      (같은 블록을 새 봉인으로 다시: 장면 이탈로 Q8 6회 폐기, 같은 문서 §10 개정 4)
       so101_trial.py --blind <S0|S1|S4> [v2] (스트레스 시험, v2 = 고무줄 그리퍼 §8, S0 = 패드 없는 정상 조건 기준, docs/stress_test_protocol.md: 새 봉인 순서표 ~/.edgeqgate_sealed/stress/,
                                               S4는 시험 전에 잰 캔 판정 값 stress_can_S4.json, trial 끝에 Cosmos에게 판정 질문 1회 — 기술 통계용)
 블라인드 모드: 셀↔토큰 대응과 순서는 ~/.edgeqgate_sealed/에만 있다. 화면과 공개 로그에는 trial 번호만 남고, 셀·arm은 봉인 로그에만
@@ -39,7 +40,7 @@ from edgeqgate.supervisor import Supervisor, SupervisorConfig
 # D4 Cosmos-Reason2 감독자 — **관찰 모드**(판정을 기록만 하고 팔에 개입하지 않는다, decision_log 2026-10-08).
 # 엔드포인트 설정이 없거나 응답이 없으면 감독 없이 진행하고 그 사실을 기록한다.
 D4_CFG = os.path.expanduser("~/.config/edgeqgate/cosmos_endpoint.json")
-STRESS = len(sys.argv) > 2 and sys.argv[1] == "--blind" and sys.argv[2] in ("S0", "S1", "S4", "F0", "P0", "T1", "T0", "T2", "T0R", "TYP", "T6P", "T6M", "Q8")
+STRESS = len(sys.argv) > 2 and sys.argv[1] == "--blind" and sys.argv[2] in ("S0", "S1", "S4", "F0", "P0", "T1", "T0", "T2", "T0R", "TYP", "T6P", "T6M", "Q8", "Q8B")
 D4_PROMPT = ("Overhead camera view of a robot arm that picks up a " + ("can" if STRESS else "cola can") + " and stands it upright on a round coaster. "
              "Answer with exactly one word: CONTINUE if the task is proceeding normally, FALLBACK if the arm looks stuck or "
              "confused, ABORT if something is unsafe (the can falling off the table, the arm hitting something, a human hand "
@@ -78,8 +79,8 @@ def make_d4():
 BLIND = sys.argv[1] == "--blind"
 SEALED = os.path.expanduser("~/.edgeqgate_sealed")
 if BLIND:
-    bsession = sys.argv[2]; assert bsession in ("main", "retest", "S0", "S1", "S4", "F0", "P0", "T1", "T0", "T2", "T0R", "TYP", "T6P", "T6M", "Q8")
-    SV = sys.argv[3] if STRESS and len(sys.argv) > 3 else "v1"; assert SV in ("v1", "v2", "fp16", "pc", "ft", "ft2", "ft3", "ft4", "int8c")   # v2: 고무줄 그리퍼(프로토콜 §8), fp16: FP16 실기
+    bsession = sys.argv[2]; assert bsession in ("main", "retest", "S0", "S1", "S4", "F0", "P0", "T1", "T0", "T2", "T0R", "TYP", "T6P", "T6M", "Q8", "Q8B")
+    SV = sys.argv[3] if STRESS and len(sys.argv) > 3 else "v1"; assert SV in ("v1", "v2", "fp16", "pc", "ft", "ft2", "ft3", "ft4", "int8c", "int8c2")   # v2: 고무줄 그리퍼(프로토콜 §8), fp16: FP16 실기
     assert (bsession == "F0") == (SV == "fp16"), "F0 블록은 fp16과 함께만: --blind F0 fp16"
     assert (bsession == "P0") == (SV == "pc"), "P0 블록은 pc와 함께만: --blind P0 pc"
     assert (bsession in ("T1", "T0")) == (SV == "ft"), "T1/T0 블록은 ft와 함께만: --blind T1 ft"
@@ -87,9 +88,10 @@ if BLIND:
     assert (bsession == "T0R") == (SV == "ft3"), "T0R 블록은 ft3와 함께만: --blind T0R ft3"
     assert (bsession in ("TYP", "T6P", "T6M")) == (SV == "ft4"), "TYP/T6P/T6M 블록은 ft4와 함께만: --blind TYP ft4"
     assert (bsession == "Q8") == (SV == "int8c"), "Q8 블록은 int8c와 함께만: --blind Q8 int8c"
-    if STRESS: SEALED += "/stress" + {"v1": "", "v2": "_v2", "fp16": "_fp16", "pc": "_pc", "ft": "_ft", "ft2": "_ft2", "ft3": "_ft3", "ft4": "_ft4", "int8c": "_int8c"}[SV]
+    assert (bsession == "Q8B") == (SV == "int8c2"), "Q8B 블록은 int8c2와 함께만: --blind Q8B int8c2"
+    if STRESS: SEALED += "/stress" + {"v1": "", "v2": "_v2", "fp16": "_fp16", "pc": "_pc", "ft": "_ft", "ft2": "_ft2", "ft3": "_ft3", "ft4": "_ft4", "int8c": "_int8c", "int8c2": "_int8c2"}[SV]
     sealed = json.load(open(f"{SEALED}/{'stress' if STRESS else 'g6'}_sealed.json")); plan = sealed[bsession]
-    session, cell = f"{'stress' + {'v1': '', 'v2': '_v2', 'fp16': '_fp16', 'pc': '_pc', 'ft': '_ft', 'ft2': '_ft2', 'ft3': '_ft3', 'ft4': '_ft4', 'int8c': '_int8c'}[SV] if STRESS else 'g6'}_{bsession}", "BLIND"
+    session, cell = f"{'stress' + {'v1': '', 'v2': '_v2', 'fp16': '_fp16', 'pc': '_pc', 'ft': '_ft', 'ft2': '_ft2', 'ft3': '_ft3', 'ft4': '_ft4', 'int8c': '_int8c', 'int8c2': '_int8c2'}[SV] if STRESS else 'g6'}_{bsession}", "BLIND"
     engine_of = lambda tok: f"{SEALED}/engines/{tok}.engine"
     pubfull = json.load(open(f"{SEALED}/{'stress' if STRESS else 'g6'}_schedule_public.json")); pub = pubfull[bsession]
     # 실행 전 확인(2026-10-12 외부 검토 반영): 봉인 순서표가 공개본에 적힌 해시와 같은지, LOCK-2 기록이 온전한지.
@@ -117,7 +119,7 @@ if BLIND and bsession == "TYP":   # 개정 7: 노란 캔 판정 값을 TYP 직�
     _cp = os.path.join(HERE, "stress_can_TYP.json")
     if not os.path.exists(_cp): sys.exit("실행 거부: stress_can_TYP.json이 없다 — so101_can_calib.py로 노란 캔 판정 값을 먼저 잰다")
     CAN = json.load(open(_cp))
-START = {"Q8": "콜라캔을 원래 시작 표시에 세우고", "TYP": "**노란 캔**을 **+3 cm(S1) 표시**에 세우고", "T6P": "콜라캔을 **+6 cm 표시**에 세우고", "T6M": "콜라캔을 **−6 cm 표시**에 세우고", "T0R": "콜라캔을 원래 시작 표시에 세우고", "T2": "콜라캔을 **−3 cm 표시**에 세우고", "T1": "콜라캔을 **+3 cm(S1) 표시**에 세우고", "T0": "콜라캔을 원래 시작 표시에 세우고", "P0": "콜라캔을 원래 시작 표시에 세우고 (Ctrl+C를 누를 준비를 하고)", "F0": "콜라캔을 원래 시작 표시에 세우고", "S0": "캔을 원래 시작 표시(S0)에 세우고", "S1": "캔을 **3cm 옮긴** 시작 표시(S1)에 세우고", "S4": "**노란 캔**을 원래 시작 표시에 세우고"}.get(sys.argv[2] if BLIND else "", "캔을 시작 표시에 세우고")
+START = {"Q8B": "콜라캔을 원래 시작 표시에 세우고 (빨간 표시 없음 확인)", "Q8": "콜라캔을 원래 시작 표시에 세우고", "TYP": "**노란 캔**을 **+3 cm(S1) 표시**에 세우고", "T6P": "콜라캔을 **+6 cm 표시**에 세우고", "T6M": "콜라캔을 **−6 cm 표시**에 세우고", "T0R": "콜라캔을 원래 시작 표시에 세우고", "T2": "콜라캔을 **−3 cm 표시**에 세우고", "T1": "콜라캔을 **+3 cm(S1) 표시**에 세우고", "T0": "콜라캔을 원래 시작 표시에 세우고", "P0": "콜라캔을 원래 시작 표시에 세우고 (Ctrl+C를 누를 준비를 하고)", "F0": "콜라캔을 원래 시작 표시에 세우고", "S0": "캔을 원래 시작 표시(S0)에 세우고", "S1": "캔을 **3cm 옮긴** 시작 표시(S1)에 세우고", "S4": "**노란 캔**을 원래 시작 표시에 세우고"}.get(sys.argv[2] if BLIND else "", "캔을 시작 표시에 세우고")
 FPS, T_MAX, N_ACT = 30, 60.0, 100
 PREF, BLEND = 10, 4  # chunk가 10스텝 남으면 다음 chunk를 요청, 마지막 4스텝 동안 이전·새 chunk를 섞어 넘어간다(2026-10-07)
 NAMES = ["shoulder_pan", "shoulder_lift", "elbow_flex", "wrist_flex", "wrist_roll", "gripper"]
@@ -148,7 +150,7 @@ def start_server(eng):
     global srv, sk, rf, cur_engine
     if eng == cur_engine: return
     if srv is not None: sk.close(); srv.terminate(); srv.wait()
-    norm = resolve_norm(eng, require_manifest=BLIND and STRESS and SV in ("ft", "ft2", "ft3", "ft4", "int8c"))
+    norm = resolve_norm(eng, require_manifest=BLIND and STRESS and SV in ("ft", "ft2", "ft3", "ft4", "int8c", "int8c2"))
     srv = subprocess.Popen(["/usr/bin/python3", os.path.join(HERE, "trt_policy_server.py"), eng, norm, SOCK],
                            stdout=subprocess.PIPE, stderr=subprocess.STDOUT, text=True)
     for line in srv.stdout:
@@ -277,7 +279,7 @@ def run_one(tid, label, cellname, engname):
     ai = None   # 스트레스: trial 끝 프레임으로 Cosmos에게 한 번 묻는다(기술 통계, 판정에 쓰지 않는다)
     if STRESS and d4_ask["f"] and not aborted:
         t_a = time.perf_counter()
-        c1 = SV in ("ft", "ft2", "ft3", "ft4", "int8c")
+        c1 = SV in ("ft", "ft2", "ft3", "ft4", "int8c", "int8c2")
         try:
             raw = d4_ask["f"](latest_top["img"], D4_JUDGE_PROMPT_C1 if c1 else D4_JUDGE_PROMPT, 768 if c1 else 8).strip()
             m = re.findall(r"ANSWER\s*[:：]\s*(YES|NO)", raw.upper()) if c1 else None
@@ -323,7 +325,7 @@ else:
     pub_log = f"{OUT}/trials.jsonl"
     done = {json.loads(l)["trial"] for l in open(pub_log)} if os.path.exists(pub_log) else set()
     todo = [r for r in pub if r["trial"] not in done]
-    tag = ({"F0": "FP16", "P0": "양성 대조", "T1": "파인튜닝 T1", "T0": "파인튜닝 T0", "T2": "파인튜닝 T2", "T0R": "파인튜닝 T0R", "TYP": "일반화 TYP", "T6P": "일반화 T6P", "T6M": "일반화 T6M", "Q8": "INT8 떨림 Q8"}.get(bsession, "스트레스")) if STRESS else "G6"
+    tag = ({"F0": "FP16", "P0": "양성 대조", "T1": "파인튜닝 T1", "T0": "파인튜닝 T0", "T2": "파인튜닝 T2", "T0R": "파인튜닝 T0R", "TYP": "일반화 TYP", "T6P": "일반화 T6P", "T6M": "일반화 T6M", "Q8": "INT8 떨림 Q8", "Q8B": "INT8 떨림 Q8B"}.get(bsession, "스트레스")) if STRESS else "G6"
     print(f"\n{tag} {bsession}: 남은 trial {len(todo)} / {len(pub)}")
     for r in todo:
         tok = r["engine_token"]; start_server(engine_of(tok))

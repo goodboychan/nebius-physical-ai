@@ -34,3 +34,4 @@ Hardware: rubber bands on the gripper, pads removed. Scene: cola can at the trai
   - run 1 after removal: failure (b), the can was pushed away while the gripper closed.
 - Start-pose gripper position in the first overhead frame is the same across blocks within a few pixels (T0R 171,341;
   latest diagnostic 169,338), so a shifted arm base is not supported.
+  - runs 2 and 3 after removal: success. Diagnostic after removal: 2/3.
