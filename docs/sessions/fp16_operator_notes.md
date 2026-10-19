@@ -49,3 +49,8 @@ Hardware: rubber bands on the gripper, pads removed. Scene: cola can at the trai
   - trial 41: the can fell over while being set down.
   - trial 44: the can fell over while being set down.
 - Q8B complete: 48 trials, 0 aborted, 0 invalid; live judge failures 33, 36, 39, 41, 44, the same trials the operator reported. Sealed log hashed into `artifacts/freeze/int8c2_post.json` before opening.
+- Wrist-camera check (2026-10-20, first frame of each trial, arm at the rest pose): in T0, T0R and TYP (10-14 to 10-17)
+  two white fingertips and an orange element sit in the bottom-right corner of the wrist view. From Q8 (10-19) on,
+  through the diagnostic and Q8B, only the edge of one white fingertip shows, and the orange element is not visible.
+  The wrist camera's tilt, or the finger or band position, changed between 10-17 and 10-19. This matches when chatter
+  stayed high at the training mark. An automated pose-matched alignment was inconclusive, so this is a visual finding.
