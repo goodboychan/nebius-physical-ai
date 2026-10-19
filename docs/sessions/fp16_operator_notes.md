@@ -35,3 +35,7 @@ Hardware: rubber bands on the gripper, pads removed. Scene: cola can at the trai
 - Start-pose gripper position in the first overhead frame is the same across blocks within a few pixels (T0R 171,341;
   latest diagnostic 169,338), so a shifted arm base is not supported.
   - runs 2 and 3 after removal: success. Diagnostic after removal: 2/3.
+- 2026-10-20 before Q8B: system update with all 108 NVIDIA/TensorRT/CUDA packages held, then reboot. Checks after
+  reboot: L4T 36.5.2 and TensorRT 10.3.0.30 unchanged, 15 W, device links intact, Q8B engine hashes 3b19f7eb/86eba809,
+  runner 89e26180, no leftover processes. trtexec on the FP16-block engines: FP16 median 11.71 ms, INT8 16.95 ms (the
+  benchmarked 11.6 ms and 16.8-17.1 ms).
