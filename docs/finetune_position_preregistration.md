@@ -438,3 +438,24 @@ Analysis: `scripts/ft4_analysis.py`, written to `artifacts/reports/ft4_analysis.
   not in the demonstrations, so the generalization blocks tested FT under one more change than §17 lists: a visual
   distractor of the can's colour. The pre-registered readings in §18 stand as computed, with this limitation added. A
   re-test without the markers would separate the two effects.
+
+## 19. Amendment 8 (2026-10-20, before any re-test trial): T6P and TYP re-run without the red markers
+
+- **Why**: §18 found red round markers next to the can in TYP, T6P and T6M, absent from the demonstrations. This
+  amendment re-runs the two no-gain blocks without them, to separate the markers from the conditions.
+  - T6M showed an improvement despite the markers and is not re-run.
+- **Design**: as §17, FT-FP16 12 and OLD-FP16 (`VC-025`) 12 per block, interleaved. Order fixed: **T6PR** (cola can
+  at +6 cm), then **TYPR** (yellow can at +3 cm). Seed key `FINETUNE/schedule/GEN/v2`, new tokens.
+  - Sealed schedule `~/.edgeqgate_sealed/stress_ft5/stress_sealed.json`, sha256
+    `ba26a9ccd67c1f5dbd1216e710f0601dc5a1e7a9733e68f4fb7e8bf9606f2b6c`. The public copy is
+    `artifacts/finetune/stress_schedule_GEN2_public.json`.
+  - Engines `4affc06d…` (FT) and `3b19f7eb…` (OLD); manifest `24bd9984d00aab47…`.
+  - Runner `so101_trial.py --blind T6PR|TYPR ft5`, sha256 `a2adda1f5ea04d02…`, deployed with no block running.
+  - TYPR uses the yellow-can judge values measured on 2026-10-17 (`stress_can_TYP.json`, PASS).
+- **Gate**: the re-tests run only if the health check H1 (fp16 prereg §12) does not read "not nominal".
+- **Analysis**: `scripts/ft5_analysis.py` (dry-run on relabelled T6P data), the §17 rule for each block.
+  - T6PR is primary, TYPR secondary.
+  - Reported beside T6P/TYP. Differing results mean the markers mattered; the same results mean the §18 readings
+    stand without the marker caveat.
+- **Order**: H1 → T6PR → TYPR → hash into `artifacts/freeze/ft5_post.json` → blind re-judge and mode labels → unseal.
+- **Date stop**: a block not started by 2026-10-25 is reported as not run.

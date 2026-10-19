@@ -163,3 +163,20 @@ Analysis: `scripts/int8c_analysis.py --block Q8B`, written to `artifacts/reports
     is worse here", not as evidence for INT8.
 - **Limitations**: one session. The six earlier Q8 trials were discarded unopened for a scene deviation (§10). The
   chatter rise means this block may not represent the earlier nominal condition.
+
+## 12. Health check H1 (2026-10-20, before any H1 trial): is the training-mark scene back to nominal?
+
+- **Why**: gripper chatter tracks how far the policy is from familiar conditions. At the training mark the old FP16
+  policy chattered at a median of 0.13 in T0R and 0.13 in the FP16 block. Since 2026-10-19 it has stayed high at the
+  same mark: the discarded Q8 block 0.70, the diagnostic 0.60 (before the system update and reboot), Q8B 0.39.
+  Hard-failure conditions sit at 0.56–0.74 (T6P, TYP). So the scene may still differ from T0R in a way not yet found.
+- **Design**: non-blind, one engine, so no cells. The old FP16 engine (FP16-block token `39b99e35`), 12 runs at the
+  training mark in the pre-registered scene (no extra markers), session `health_h1`. Never counted in any comparison.
+- **Measures**: per-run chatter (`ft_chatter.py measure`), live judge success, and operator notes.
+- **Readings, fixed now**:
+
+  | H1 chatter median | H1 success | Reading | Then |
+  |---|---|---|---|
+  | ≤ 0.20 | ≥ 10/12 | back to nominal | run the re-test blocks (finetune prereg §19) |
+  | 0.20–0.30, or ≥ 0.30 with ≥ 10/12 | — | unclear | run the re-tests and flag them |
+  | ≥ 0.30 | < 10/12 | not nominal | do not run the re-tests; look for the cause first (wrist camera mount, lighting, gripper bands) |
