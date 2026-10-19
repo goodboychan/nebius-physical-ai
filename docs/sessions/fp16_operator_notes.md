@@ -44,3 +44,4 @@ Hardware: rubber bands on the gripper, pads removed. Scene: cola can at the trai
 
 - Failures reported by the operator, by trial number only (blind to cells):
   - trial 33: (e), set the can down, then knocked it over while the arm moved away (`placement disturbance`).
+  - trial 36: grasped in the wrong place, and the can fell over while being set down.
