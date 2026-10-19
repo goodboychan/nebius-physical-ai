@@ -54,3 +54,10 @@ Hardware: rubber bands on the gripper, pads removed. Scene: cola can at the trai
   through the diagnostic and Q8B, only the edge of one white fingertip shows, and the orange element is not visible.
   The wrist camera's tilt, or the finger or band position, changed between 10-17 and 10-19. This matches when chatter
   stayed high at the training mark. An automated pose-matched alignment was inconclusive, so this is a visual finding.
+- Hardware note (2026-10-20, before H1): the can had once struck the wrist camera, and the operator thinks the camera
+  shifted slightly then. The operator re-aimed the wrist camera a little toward the centre; the gripper bands were not
+  changed.
+  - Snapshot afterwards (arm at the rest pose, no motion, `wrist_snap.py`): both fingertips and the orange band are back
+    in the bottom-right corner, as in T0R (10-15).
+  - The orange band was already out of view in TYP (10-17), and the fingertips were partly out of view from Q8 (10-19).
+  - H1 and the re-tests run in this restored wrist view.

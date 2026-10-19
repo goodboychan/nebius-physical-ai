@@ -459,3 +459,7 @@ Analysis: `scripts/ft4_analysis.py`, written to `artifacts/reports/ft4_analysis.
     stand without the marker caveat.
 - **Order**: H1 → T6PR → TYPR → hash into `artifacts/freeze/ft5_post.json` → blind re-judge and mode labels → unseal.
 - **Date stop**: a block not started by 2026-10-25 is reported as not run.
+- **Hardware note for §18 and §19 (2026-10-20)**: wrist-camera frames at the rest pose show the orange gripper band out
+  of view from TYP (10-17), and the fingertips partly out of view from 10-19. A can had struck the wrist camera. The
+  camera was re-aimed toward the centre before H1, which restored the T0R view. The re-tests (§19) therefore also undo
+  this change; their comparison with T6P/TYP cannot separate the markers from the wrist view.
