@@ -1,0 +1,29 @@
+{
+  "schema": "edgeqgate.int8c2_post.v1",
+  "frozen_at": "2026-10-20T14:30:00+00:00",
+  "git_commit": "c892975942b5ee45fb7f3afecc577f20964b7957",
+  "status": "INT8 chatter block Q8B complete (fp16 prereg \u00a710): 48 trials, 0 invalid, 0 aborted",
+  "sealed_logs": {
+    "stress_int8c2_Q8B_sealed.jsonl": {
+      "sha256": "4a442990cfffd0f8b4106217635980823139c1a7c8f98d8a395d216d7a02260d",
+      "trials": 48
+    }
+  },
+  "sealed_schedule_sha256": "33b6a82e98697fcb5f7ab736eb6c39c3bb3f910a3c044621513658f71f866125",
+  "discarded_Q8_log": {
+    "stress_int8c_Q8_sealed.jsonl": "635a78d229a9bdf0671e04025a5469fc1f06d4b36c87c42704846ee60afd5cae"
+  },
+  "public_tally": {
+    "live_judge_failures": {
+      "Q8B": [
+        33,
+        36,
+        39,
+        41,
+        44
+      ]
+    },
+    "operator_note": "the operator reported the same five trials",
+    "cells": "not opened"
+  }
+}

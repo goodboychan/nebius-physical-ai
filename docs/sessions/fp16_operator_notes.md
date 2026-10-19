@@ -48,3 +48,4 @@ Hardware: rubber bands on the gripper, pads removed. Scene: cola can at the trai
   - trial 39: a different kind; while grasping, the gripper suddenly pulled back and knocked the can over.
   - trial 41: the can fell over while being set down.
   - trial 44: the can fell over while being set down.
+- Q8B complete: 48 trials, 0 aborted, 0 invalid; live judge failures 33, 36, 39, 41, 44, the same trials the operator reported. Sealed log hashed into `artifacts/freeze/int8c2_post.json` before opening.
