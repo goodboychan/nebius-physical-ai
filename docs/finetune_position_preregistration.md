@@ -432,3 +432,9 @@ Analysis: `scripts/ft4_analysis.py`, written to `artifacts/reports/ft4_analysis.
     object or position solution.
 - **Limitations**: operator blinding was partial, as in T1/T2. One session per block. At −6 cm the arm lagged the
   leader during the reach check; FT still lifted the can there in 11 trials, so the arm limit did not decide T6M.
+
+- **Post-result scene note (2026-10-20, found during the Q8 hardware check)**: the overhead frames of TYP, T6P and T6M
+  show small red round markers on the start axis next to the can. They are absent in T1, T0 and T0R. These markers were
+  not in the demonstrations, so the generalization blocks tested FT under one more change than §17 lists: a visual
+  distractor of the can's colour. The pre-registered readings in §18 stand as computed, with this limitation added. A
+  re-test without the markers would separate the two effects.

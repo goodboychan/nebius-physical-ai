@@ -24,3 +24,9 @@ Hardware: rubber bands on the gripper, pads removed. Scene: cola can at the trai
   training mark, in its own session `diag_q8_fp16`. These runs are never counted in Q8.
   - diagnostic run 1 (FP16, non-blind, not counted): success.
   - diagnostic run 2: failure. It went for the wrong start spot, pushed the can, grasped it only partly and dropped it ((a) then (b)).
+  - diagnostic run 3: success; the operator notes that all the diagnostic successes were marginal.
+  - Diagnostic total: 2/3, with marginal successes.
+- Scene finding (first overhead frames, all blocks): small **red round markers** lie on the start axis next to the can
+  from the generalization blocks (TYP, 2026-10-17) onward, in TYP, T6P, T6M, Q8 and the diagnostic. They are absent
+  in T1, T0 and T0R, where the old FP16 policy succeeded at the mark; T2 shows at most one faint marker. The can is
+  red, so the markers are a plausible visual distractor. This finding uses no cell information.
