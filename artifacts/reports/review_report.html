@@ -120,22 +120,25 @@ img{max-width:100%;height:auto;display:block}figcaption{color:#5d666e;font-size:
 <p>Open:</p>
 <ul>
 <li>success against FP32: INSUFFICIENT_EVIDENCE for every cell, under the ceiling rule</li>
-<li>post hoc: VC-002 chatters about twice as much as FP16 (hypothesis)</li>
+<li>chatter re-test (Q8B, pre-registered): VC-002 median 0.497 vs FP16 0.391, MWU p = 0.12, the post hoc 2x pattern NOT confirmed; chatter rose for both engines in that session (unexplained)</li>
+<li>Q8B success, descriptive: VC-002 23/24 vs FP16 20/24 (FP16 below its earlier level at the mark; no approval follows)</li>
 </ul>
 <p>Evidence:</p>
 <ul>
 <li><code>artifacts/reports/g6_analysis.json</code></li>
 <li><code>artifacts/freeze/lock3.json</code></li>
 <li><code>artifacts/reports/ft_chatter.json</code></li>
+<li><code>artifacts/reports/int8c2_analysis.json</code></li>
+<li><code>artifacts/freeze/int8c2_post.json</code></li>
 </ul>
 <p>Next test:</p>
 <ul>
-<li>compare: one INT8 cell (VC-002) vs FP16 (VC-025), only if memory or power forces INT8</li>
-<li>conditions: training start mark</li>
-<li>measure: success and gripper chatter (pre-registered as the primary)</li>
+<li>compare: only if memory or power forces INT8: VC-002 vs FP16 (VC-025) against FP32 under the revised success rule; first find why chatter rose for every engine between sessions (FP16-only check at the mark)</li>
+<li>conditions: training start mark, the pre-registered scene (no extra markers)</li>
+<li>measure: success, placement, gripper chatter as a session-level health check</li>
 <li>schedule: sealed, interleaved</li>
-<li>rule: chatter: two-sided MWU at alpha 0.05, registered before the block; success as for FP16</li>
-<li>chatter, as in the earlier blocks (block size, not a power calculation): 24</li>
+<li>rule: success non-inferiority at 10 pp (97.5% Newcombe) without the ceiling clause; chatter compared with the earlier nominal blocks before any engine comparison</li>
+<li>chatter re-test done (Q8B, block size): 24</li>
 </ul>
 <h3>PC-B (black-frame calibration)</h3>
 <p><b>Status</b>: rejected</p>

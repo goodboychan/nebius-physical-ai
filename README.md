@@ -125,7 +125,7 @@ Stress tests were unsealed on 2026-10-13. The stress protocol is
 | Nebius Managed MLflow | 1.5 h | 0.7 |
 | **Cloud total** | | **≈ 31** |
 
-- The real arm ran 577 trials in about 14.4 operator-hours.
+- The real arm ran 625 trials in about 15.4 operator-hours.
 - For scale, not as a saving: settling approval for all 25 candidates and FP32 at about 115 trials per arm would be
   about 2,990 trials and about 74 arm-hours, before any stress or position test. The two numbers answer different goals.
 - The review did not settle approval. It ranked what to validate first, blocked broken builds, found and fixed a
@@ -378,7 +378,9 @@ Error is the mean action error against FP32 on the 2,000 audit states, in normal
   - settle its nominal performance at the training mark (pooled with the T0R replication 22/24 vs 23/24, undecided) with a larger block;
   - test more positions and objects;
   - check the post hoc observation that INT8 roughly doubles gripper chatter at a similar success rate, as its own
-    pre-registered block.
+    pre-registered block. **Done (Q8B, 48 trials)**: not confirmed (median 0.497 vs 0.391, MWU p = 0.12); chatter rose
+    for both engines in that session, which is reported as unexplained. Six earlier trials were discarded unopened for a
+    scene deviation (red markers next to the can).
 
 ## Limitations
 

@@ -66,20 +66,23 @@ Confirmed:
 
 Open:
 - success against FP32: INSUFFICIENT_EVIDENCE for every cell, under the ceiling rule
-- post hoc: VC-002 chatters about twice as much as FP16 (hypothesis)
+- chatter re-test (Q8B, pre-registered): VC-002 median 0.497 vs FP16 0.391, MWU p = 0.12, the post hoc 2x pattern NOT confirmed; chatter rose for both engines in that session (unexplained)
+- Q8B success, descriptive: VC-002 23/24 vs FP16 20/24 (FP16 below its earlier level at the mark; no approval follows)
 
 Evidence:
 - `artifacts/reports/g6_analysis.json`
 - `artifacts/freeze/lock3.json`
 - `artifacts/reports/ft_chatter.json`
+- `artifacts/reports/int8c2_analysis.json`
+- `artifacts/freeze/int8c2_post.json`
 
 Next test:
-- compare: one INT8 cell (VC-002) vs FP16 (VC-025), only if memory or power forces INT8
-- conditions: training start mark
-- measure: success and gripper chatter (pre-registered as the primary)
+- compare: only if memory or power forces INT8: VC-002 vs FP16 (VC-025) against FP32 under the revised success rule; first find why chatter rose for every engine between sessions (FP16-only check at the mark)
+- conditions: training start mark, the pre-registered scene (no extra markers)
+- measure: success, placement, gripper chatter as a session-level health check
 - schedule: sealed, interleaved
-- rule: chatter: two-sided MWU at alpha 0.05, registered before the block; success as for FP16
-- chatter, as in the earlier blocks (block size, not a power calculation): 24
+- rule: success non-inferiority at 10 pp (97.5% Newcombe) without the ceiling clause; chatter compared with the earlier nominal blocks before any engine comparison
+- chatter re-test done (Q8B, block size): 24
 
 ## PC-B (black-frame calibration)
 **Status**: rejected

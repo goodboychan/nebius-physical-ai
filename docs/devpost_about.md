@@ -48,7 +48,7 @@ committed, hashed evidence.
   - 26 TensorRT engines built on the Jetson with a frozen timing cache, so the same file always behaves the same.
 - **Offline audit**: 2,000 held-out states scored on 48 CPU jobs on Nebius Jobs. The ranking was frozen before any
   real trial.
-- **Real arm**: **577 trials** in 13 sessions, all under sealed, interleaved schedules.
+- **Real arm**: **625 trials** in 14 sessions, all under sealed, interleaved schedules.
   - The operator saw trial numbers only. In the fine-tune blocks the two policies moved visibly differently, so
     operator blinding there was partial; outcomes come from an automatic judge and a blind video re-judge.
   - Logs are hashed before they are unsealed, so no rule can change after the results are seen.

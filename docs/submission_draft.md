@@ -110,8 +110,8 @@ The demo copies are labelled as injected faults, not observed failures.
 ## What one review cost (`review_cost.md`)
 
 About **$31 of Nebius cloud** in total. Most of it is the Cosmos endpoint (16.5 h up, $25.6). Training and the
-fine-tune on Jobs cost $4.5, Token Factory $0.1 (a lower bound) and MLflow $0.7. On the arm it took **577 trials in
-about 12.5 operator-hours**.
+fine-tune on Jobs cost $4.5, Token Factory $0.1 (a lower bound) and MLflow $0.7. On the arm it took **625 trials in
+about 15.4 operator-hours**.
 
 For scale, not as a saving: settling approval for every candidate against FP32 would take about 2,990 trials and
 74 arm-hours, before any stress test, and this review did not settle approval. QuantGate spent its arm time where it
@@ -221,7 +221,7 @@ suggested fix.
   re-check on 96 fine-tune trials (22/24, 2/72 false alarms) are done.
 - Settle the fine-tuned policy at the training mark (pooled 22/24 vs 23/24 after the T0R replication, undecided) with a larger block. Then test more positions and objects.
 - A pre-registered check of the post hoc observation that the INT8 build's gripper chatters about twice as much as
-  FP16 at a similar success rate.
+  FP16 at a similar success rate. Done (Q8B): not confirmed, p = 0.12; chatter rose for both engines in that session.
 - Hailo-8 in shadow mode first. The split pipeline misses the 200 ms deadline and the preflight blocks it. It runs
   beside the Orin on live trials and only logs, to measure on-device action error on real states.
 - **Simulated trials, re-checked on the arm.** Approval needs about 110–120 real trials per arm per candidate, the
