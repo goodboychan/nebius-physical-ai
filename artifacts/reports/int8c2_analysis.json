@@ -1,0 +1,75 @@
+{
+ "cells": {
+  "VC-002": {
+   "k": 23,
+   "n": 24
+  },
+  "VC-025": {
+   "k": 20,
+   "n": 24
+  }
+ },
+ "chatter": {
+  "median": {
+   "VC-002": 0.4973019009880123,
+   "VC-025": 0.3912509088857664
+  },
+  "n": {
+   "VC-002": 24,
+   "VC-025": 24
+  },
+  "mwu_p_two_sided": 0.11952183383136966,
+  "confirmed_direction_int8_higher": false
+ },
+ "chatter_hold": {
+  "median": {
+   "VC-002": 0.48824890245210717,
+   "VC-025": 0.3844758568009451
+  },
+  "n": {
+   "VC-002": 24,
+   "VC-025": 24
+  },
+  "mwu_p_two_sided": 0.1296345808790129,
+  "confirmed_direction_int8_higher": false
+ },
+ "primary": "chatter",
+ "success_descriptive": {
+  "ref_k_n": [
+   20,
+   24
+  ],
+  "test_k_n": [
+   23,
+   24
+  ],
+  "E1": {
+   "degradation_pp": -12.5,
+   "ci_pp": [
+    -35.09563636213059,
+    9.713019432532146
+   ],
+   "method": "Newcombe hybrid score",
+   "decision": "tolerance_compatible",
+   "bootstrap_ci_pp_secondary": [
+    -33.333333333333336,
+    4.166666666666674
+   ]
+  },
+  "E2": {
+   "degradation_px": 1.184347826086963,
+   "ci_px": [
+    0.08173641304348281,
+    2.303065217391311
+   ],
+   "n_place": [
+    20,
+    23
+   ],
+   "decision": "tolerance_compatible"
+  },
+  "verdict": "GO",
+  "ceiling_rule_applied": false,
+  "conf": 0.975
+ }
+}

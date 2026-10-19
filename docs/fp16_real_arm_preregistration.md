@@ -132,3 +132,34 @@ The reason is the §9 rule's false failures on an off-center can, documented in 
   - Runner: `so101_trial.py --blind Q8B int8c2`, sha256 `89e26180bd2e36f9…`, deployed after the diagnostic session ended.
 - **Analysis**: `int8c_analysis.py --block Q8B`, the same rules as §9 (dry-run on relabelled FP16-block data).
 - **Order**: as §9, with `artifacts/freeze/int8c2_post.json`.
+
+## 11. Q8B results (2026-10-20, unsealed after int8c2_post.json)
+
+Order kept:
+1. The sealed log was hashed into `artifacts/freeze/int8c2_post.json` (pushed).
+2. The consensus re-judge was run blind to cells: 43/48, equal to the live judge and the operator's reports.
+3. The failure-mode labels were written blind (`artifacts/fp16/Q8B_modes.json`), and chatter was measured on the Orin
+   for all 48 trials with no cell information.
+4. Only then was the log unsealed. It matches the post record (`4a442990…`).
+
+Analysis: `scripts/int8c_analysis.py --block Q8B`, written to `artifacts/reports/int8c2_analysis.json`.
+
+| | VC-002 (INT8) | VC-025 (FP16) | Test | Reading |
+|---|---|---|---|---|
+| **Gripper chatter (primary)** | median 0.497 | 0.391 | MWU two-sided p = 0.12 | **Not confirmed**: the direction is INT8 > FP16, but the difference is not significant |
+| Chatter, closed gripper (secondary) | 0.488 | 0.384 | p = 0.13 | not confirmed |
+| Success (descriptive) | 23/24 | 20/24 | degradation −12.5 pp [−35.1, +9.7] at 97.5%; placement +1.2 px [+0.1, +2.3] | tolerance-compatible on both endpoints under `compare` semantics. By §9 this block is descriptive for success: **no approval follows** |
+
+- **Failures** (blind labels): VC-002 1 (41, fell while being set down). VC-025 4: 33 placement disturbance, 36 fell
+  after a wrong grasp, 39 pulled back while grasping, 44 fell while being set down.
+- **Reading**:
+  - The post hoc pattern from G6 and the FP16 block (INT8 chatter about twice FP16) is **not confirmed** prospectively.
+    In this session the gap was about 1.3×.
+  - **Chatter rose for both engines.** It was about 0.39–0.50, against 0.13 (FP16) and 0.29–0.31 (INT8) in the
+    earlier nominal blocks at the same mark. The session-level rise is unexplained. It came after the red-marker period,
+    the system update with the NVIDIA stack held, and a reboot. It is reported, not attributed.
+  - FP16's 20/24 is lower than its earlier 19/20 and 11/12 at this mark, consistent with the diagnostic (2/3). The INT8
+    success interval meets the 10 pp tolerance only because the reference itself was lower. Read it as "no sign INT8
+    is worse here", not as evidence for INT8.
+- **Limitations**: one session. The six earlier Q8 trials were discarded unopened for a scene deviation (§10). The
+  chatter rise means this block may not represent the earlier nominal condition.
