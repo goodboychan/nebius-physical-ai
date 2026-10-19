@@ -1,4 +1,4 @@
-"""Internal seminar deck (about 60 min, Korean): teleoperation survey -> LeRobot / ALOHA / ACT -> QuantGate -> AEP,
+"""Internal seminar deck (about 60 min, Korean): teleoperation survey -> LeRobot / ALOHA / ACT -> QuantGate -> ODI 2026 paper,
 framed as the safety lifecycle of learned robot policies (the team's Safety Robotics focus for next year).
 Every number comes from committed artifacts or from the cited papers' abstracts; every paper id was checked on alphaXiv.
 Usage: <venv with python-pptx, PIL> python scripts/make_seminar.py <shots dir> <out.pptx>"""
@@ -58,7 +58,7 @@ def arrow(s, x1, y1, x2, y2):
     c.line._get_or_add_ln().append(__import__("lxml").etree.fromstring('<a:tailEnd xmlns:a="http://schemas.openxmlformats.org/drawingml/2006/main" type="triangle"/>'))
 
 def pic(s, path, x, y, w, h):
-    im = Image.open(path); r = min(w / im.width, h / im.height); ww, hh = im.width * r, im.height * r
+    path = os.path.expanduser(path); im = Image.open(path); r = min(w / im.width, h / im.height); ww, hh = im.width * r, im.height * r
     return s.shapes.add_picture(path, PX(x + (w - ww) / 2), PX(y + (h - hh) / 2), PX(ww), PX(hh))
 
 def table(s, x, y, w, rows, widths, size=13, head_fill=ACC):
@@ -76,22 +76,22 @@ R = "artifacts/reports/figures"; G = "docs/media/gallery"; ST = "dashboard/setup
 # 1 title
 s = prs.slides.add_slide(BL); s.background.fill.solid(); s.background.fill.fore_color.rgb = RGBColor(16, 24, 28); N[0] += 1
 tb(s, 140, 300, 1640, 200, "안전하게 배포할 수 있는 로봇 학습", 50, RGBColor(240, 244, 244), True)
-tb(s, 140, 420, 1640, 120, "텔레오퍼레이션에서 배포 검증까지 — SO-101 실험(QuantGate)과 AEP", 26, RGBColor(170, 220, 222))
+tb(s, 140, 420, 1640, 120, "텔레오퍼레이션에서 배포 검증까지 — SO-101 실험(QuantGate)과 ODI 2026 논문", 26, RGBColor(170, 220, 222))
 tb(s, 140, 560, 1640, 120, ["내부 세미나 · 약 60분", "Safety Robotics 관점: 데이터 → 학습·압축 → 배포 전 검증 → 운영 중 감시 → 사후 분석"], 18, RGBColor(170, 184, 186))
 pic(s, "docs/assets/quantgate_logo.png", 1460, 760, 360, 220)
-s.notes_slide.notes_text_frame.text = "오늘의 큰 질문: 학습된 로봇 정책을 언제 믿고 배포할 수 있는가. 텔레오퍼레이션 서베이로 시작해 우리가 SO-101로 한 실험과 AEP 논문까지, 내년 Safety Robotics 과제와 연결해서 봅니다."
+s.notes_slide.notes_text_frame.text = "오늘의 큰 질문: 학습된 로봇 정책을 언제 믿고 배포할 수 있는가. 텔레오퍼레이션 서베이로 시작해 우리가 SO-101로 한 실험과 ODI 2026 논문까지, 내년 Safety Robotics 과제와 연결해서 봅니다."
 
 # 2 agenda / lifecycle
 s = slide("오늘의 질문: 학습된 정책을 언제 믿고 배포할 수 있는가?", "학습 정책의 안전 수명주기와 오늘 다룰 내용",
           "학습 정책은 규칙 기반 제어처럼 보장을 주지 않는다. 그래서 수명주기 각 단계에서 '무엇으로 믿을 근거를 만드는가'가 안전의 핵심이다. 오늘 이야기는 이 다섯 단계를 따라간다.")
-stages = [("1. 데이터", "텔레오퍼레이션\n시연 품질·개입"), ("2. 학습·압축", "ACT 학습\n양자화 (AEP)"), ("3. 배포 전 검증", "블라인드 실기\n배포 전 점검 (QuantGate)"),
+stages = [("1. 데이터", "텔레오퍼레이션\n시연 품질·개입"), ("2. 학습·압축", "ACT 학습\n양자화 (ODI 2026)"), ("3. 배포 전 검증", "블라인드 실기\n배포 전 점검 (QuantGate)"),
           ("4. 운영 중 감시", "런타임 모니터\n안전 필터"), ("5. 사후 분석", "에피소드 조사\n(LabLens)")]
 for i, (a, b) in enumerate(stages):
     box(s, 80 + i * 360, 260, 320, 200, a + "\n" + b, fill=BAND if i != 2 else RGBColor(214, 236, 238), size=20, bold=True)
     if i < 4: arrow(s, 80 + i * 360 + 320, 360, 80 + (i + 1) * 360, 360)
 table(s, 80, 540, 1760, [["시간", "파트", "내용"], ["0–5분", "도입", "왜 학습 정책의 안전이 어려운가"], ["5–20분", "PART 1", "텔레오퍼레이션: ALOHA·ACT, 인터페이스 서베이, 안전 관점(데이터 품질·개입)"],
                          ["20–28분", "PART 2", "LeRobot 구조와 우리 SO-101 셋업, 데이터 수집에서 배운 것"], ["28–42분", "PART 3", "QuantGate: 양자화된 정책의 배포 검증 실험과 결과"],
-                         ["42–50분", "PART 4", "AEP: 고정 상태 정확도 ≠ 폐루프 성능"], ["50–60분", "PART 5", "운영 중 감시 연구 지도, 내년 Safety Robotics 방향, 질의"]], [200, 220, 1340], 14)
+                         ["42–50분", "PART 4", "ODI 2026: 같은 정책, 다른 아티팩트"], ["50–60분", "PART 5", "운영 중 감시 연구 지도, 내년 Safety Robotics 방향, 질의"]], [200, 220, 1340], 14)
 
 # 3 why hard
 s = slide("학습 정책의 안전은 왜 어려운가", None,
@@ -99,7 +99,7 @@ s = slide("학습 정책의 안전은 왜 어려운가", None,
 tb(s, 80, 180, 1000, 800, ["보장이 없다", "  신경망 정책은 규칙처럼 경계 조건을 증명할 수 없다",
                             "성공 ≠ 안전", "  목표는 달성해도 궤적 중 충돌·위험 접촉이 숨을 수 있다 (SafeVLA-Bench, 2606.00773)",
                             "분포 이동에 약하다", "  우리 SO-101: 시작 위치 3 cm 이동만으로 0/3, 그리퍼 패드 제거만으로 8/24",
-                            "압축·배포가 동작을 바꾼다", "  양자화·컴파일러 설정이 같은 모델의 폐루프 행동을 바꾼다 (AEP)",
+                            "압축·배포가 동작을 바꾼다", "  보정 데이터·컴파일러 설정이 같은 모델의 폐루프 행동을 바꾼다 (ODI 2026)",
                             "평가가 비싸다", "  '실패 0'을 보이려면 수백 회 실기가 필요 — 25회로는 ±28%p 불확실"], 21)
 pic(s, f"{G}/03_position_finetune.png", 1110, 200, 740, 500)
 tb(s, 1110, 710, 740, 120, "같은 정책·같은 작업이 위치 이동에서 무너지고, 데이터로 고친 사례 (PART 3)", 14, MUTED)
@@ -220,17 +220,24 @@ tb(s, 80, 640, 1100, 360, ["교훈", "  문구에 민감 → 배포 전 그 문�
 pic(s, f"{R}/fig_frames.png", 1220, 190, 640, 760)
 
 # PART 4
-section(4, "AEP 논문", "Better Fixed-State Fidelity Need Not Improve Closed-Loop Performance in Quantized Neural Policies",
-        "AEP는 QuantGate의 이론적 배경. 고정된 상태에서 FP32와 더 비슷하게 행동한다고 해서, 실제 폐루프에서 더 잘하는 것은 아니라는 주장이다.")
-s = slide("AEP: 고정 상태 정확도 ≠ 폐루프 성능", "양자화된 정책에서 '더 비슷한 행동'이 '더 좋은 결과'를 보장하지 않는다",
-          "숫자는 초안 초록 기준. Hailo FetchReach 계열에서 고정 상태 평균 행동 오차가 16% 더 작은 아티팩트가 FP32 대비 반환 손실은 34배 컸다. AdaRound를 켠 컴파일러 개입은 8개 규칙 모두 RMSE를 줄였지만 평균 반환은 5개에서 감소했다. 그래서 '측정된 실행 파일을 실제 실행 경로에서' 검증하는 절차를 제안한다.")
-tb(s, 80, 190, 1000, 780, ["질문", "  FP32와 행동이 더 비슷하면 양자화 후 폐루프 성능도 더 좋은가?",
-                            "설계", "  학습된 정책은 고정, 보정 데이터·컴파일러 설정만 바꿔 Edge TPU · Hailo에서 실행 (시뮬레이션 제어 과제)",
-                            "핵심 결과 (초안 초록)", "  고정 상태 행동 오차가 16% 작은 아티팩트가 반환 손실은 34배 큼",
-                            "  AdaRound 개입: 8개 규칙 모두 RMSE 감소, 그러나 평균 반환은 5개에서 감소",
-                            "제안", "  정확도 기반 '후보 선택'과 과제 허용 오차 기반 '승인'을 분리", "  측정한 실행 파일을 실제 실행 경로에서 평가"], 19)
-box(s, 1120, 200, 740, 340, "물리 로봇 근거 (QuantGate → AEP)\nSO-101 실기 G6, 사전등록 v1\n오프라인 감사 최상위 vs 무작위: 73/75 vs 73/75\n오프라인 순위 vs 배치 오차: Spearman ≈ 0", fill=RGBColor(214, 236, 238), size=18, bold=True)
-box(s, 1120, 580, 740, 300, "Safety 관점의 의미\n'오프라인 지표가 좋다'는 안전 인증이 아니다\n배포 경로 그대로의 실행 검증이 필요하다", fill=BAND, size=18, bold=True)
+section(4, "ODI 2026 논문", "Same Policy, Different Artifacts: Paired Task Audits for On-Device Neural Control",
+        "NeurIPS 2026 On-Device Intelligence 워크숍 포스터 채택. 같은 정책·같은 정밀도 이름이라도 실제로 실행되는 아티팩트가 다르면 다른 제어기가 된다. QuantGate는 이 주장을 실제 로봇 팔에서 실행한 버전이다.")
+s = slide("ODI 2026: 같은 정책, 다른 아티팩트", "NeurIPS 2026 ODI 워크숍 포스터 · 시뮬 과제, 제어는 실제 Edge TPU·Hailo-8에서",
+          "정책, 툴체인-장치 경로, 1,024개 짝지은 시작 상태를 모두 고정하고 보정에 쓰는 상태만 바꿨다. Hailo-8에서 최종 성공률이 96.6%와 21.4%로 갈렸다(평균 목표 거리로 약 30 cm). 독립 학습한 FetchReach 정책 8개 중 7개에서 다시 나타났고, 컴파일러 최적화 수준을 바꿔도 남았다. 컴파일러는 보정 행 64개를 썼다고만 보고하고 어느 행인지는 남기지 않는다 — 같은 행의 순서만 바꿔도 결과가 달라졌다. 고정 상태 행동 오차를 10% 안으로 맞춘 쌍도 과제 결과는 달랐다. 결론: 체크포인트·정밀도 이름·국소 지표가 아니라, 정확한 배포 인스턴스의 짝지은 과제 결과로 판정하라.")
+pic(s, "~/edgeqgate_data/seminar_assets/figure_odi_artifact_task_outcomes.png", 60, 200, 1800, 432)
+tb(s, 60, 650, 900, 330, [("핵심 결과", ACC, True), "  Hailo-8, 보정 상태만 바꿈: 최종 성공 96.6% vs 21.4%", "  독립 학습 정책 8개 중 7개에서 재현 (그림 B)",
+                           "  고정 상태 오차를 맞춘 쌍도 과제 결과는 다름 → 국소 지표로 승인 불가"], 17)
+tb(s, 980, 650, 880, 330, [("배포 인스턴스", ACC, True), "  실행 파일 + 런타임 + 장치 + 러너 + 입출력 처리",
+                            ("기록해야 할 것", ACC, True), "  보정 행의 개수·정체·순서 (컴파일러는 개수만 보고)"], 17)
+s = slide("ODI ↔ QuantGate: 같은 원칙을 실제 로봇 팔에서", "ODI가 시뮬 과제로 보인 것을 SO-101 실기와 배포 전 점검으로 구현했다",
+          "왼쪽은 논문의 주장, 가운데는 QuantGate의 구현, 오른쪽은 실기에서 나온 결과. Jetson TensorRT 경로에서는 INT8 보정 변형 사이의 성공률 차이가 실기 25회 단위로 보이지 않았다(모두 천장 근처). 그러나 검은 화면 보정(양성 대조)은 입력 점검에서 막혔고, INT8 VC-002의 집게 떨림은 FP16의 약 2배였다(사후 관찰, Q8 블록으로 사전등록 검증 예정). 즉 '아티팩트가 행동을 바꾼다'는 신호는 성공률보다 행동 지표에서 먼저 보였다.")
+table(s, 60, 180, 1800, [["ODI 2026의 주장", "QuantGate의 구현", "실기 결과"],
+                         ["국소 지표는 배포 판정을 대신 못 한다", "오프라인 감사 순위를 실기 전에 고정하고 비교", "감사 최상위 vs 무작위 73/75 vs 73/75 · Spearman 0.02–0.08"],
+                         ["보정 데이터가 제어기를 바꾼다", "같은 체크포인트에서 INT8 보정 변형 24개 + 검은 화면 보정(양성 대조)", "검은 화면 빌드는 입력 점검에서 BLOCK · INT8 떨림 약 2배 (검증 중)"],
+                         ["배포 인스턴스 단위로 판정한다", "배포 전 점검: 엔진 해시 · 정규화 매니페스트 · 러너 200 ms 마감", "파일 바꿔치기 · 매니페스트 누락 · 엔진 교체 · Hailo p95 264 ms → BLOCK"],
+                         ["짝지은 과제 감사", "봉인 · 인터리브 · 운영자 블라인드 실기 577회", "FP16이 가장 싸고 빠름 (11.6 ms, 82 mJ) · 승인은 아직 근거 부족"],
+                         ["적용 계약(허용 오차)으로 승인", "GO / NO-GO / 근거 부족 (10%p, 5 px), 추천 ≠ 승인", "파인튜닝 적용 범위: −6 ~ +3 cm, +6 cm·작은 캔 제외"]], [520, 640, 640], 15)
+box(s, 60, 760, 1800, 200, "Safety 관점: '같은 모델'이라는 말은 배포 근거가 아니다 — 무엇이 실제로 실행되는지(아티팩트·경로)를 기록하고, 그 단위로 과제 결과를 쌓는다", fill=BAND, size=18, bold=True)
 
 # PART 5
 section(5, "운영 중 감시와 내년 방향", "Safety Robotics: 배포 이후에도 근거를 만든다", "")
@@ -246,7 +253,7 @@ table(s, 60, 180, 1800, [["갈래", "대표 연구 (arXiv)", "무엇을 하나"]
 s = slide("우리 작업과 내년 Safety Robotics의 연결", "수명주기 단계별: 한 일 → 남은 공백 → 다음 과제", "")
 table(s, 60, 180, 1800, [["단계", "우리가 한 일", "남은 공백", "내년 과제 후보"],
                          ["데이터", "SO-101 시연 120+50, 품질 사고 기록", "수집 중 자동 품질 점검 없음", "에피소드 품질 점검 + LabLens식 조사 도구"],
-                         ["학습·압축", "AEP: 정확도 ≠ 폐루프, Hailo 이식성 탐색", "압축이 바꾸는 '동작 품질' 미측정", "INT8 그리퍼 떨림(약 2배) 같은 행동 지표의 사전등록 검증"],
+                         ["학습·압축", "ODI 2026: 같은 정책·다른 아티팩트, Hailo·Edge TPU 실행", "압축이 바꾸는 '동작 품질' 미측정", "INT8 그리퍼 떨림(약 2배) 같은 행동 지표의 사전등록 검증"],
                          ["배포 전 검증", "QuantGate: 블라인드 실기 577회, 구간 판정, 적용 범위 지도, 배포 전 점검", "승인까지 필요한 시험 규모가 큼", "on-policy 감사·디지털 트윈으로 실기 비용 줄이기"],
                          ["운영 중 감시", "Cosmos 끝 상태 판정기 검증 (실기 22/24, 처음 보는 장면 55/61) · 2 Hz 감독자는 실패 감지 못함", "실행 중 감독자 프롬프트 미검증", "검증된 런타임 모니터 + 안전 필터, 개입 → 보정 데이터 (DAgger)"],
                          ["사후 분석", "운영자 노트, 영상 재판정, 실패 유형 라벨", "사건 단위 근거 연결 부족", "영상·궤적·가설을 잇는 조사 도구 (LabLens)"]], [260, 520, 460, 560], 14)
@@ -276,7 +283,7 @@ s = slide("다음 연구 후보 (2026–2027)", "보유 장비: Jetson Orin Nano
           "자세한 내용은 docs/research/next_research_ideation.md. 공통 원칙은 QuantGate와 같다: 사전등록, 블라인드, 봉인, 그리고 '추천 ≠ 승인'.")
 table(s, 60, 180, 1800, [["후보", "질문", "Safety 연결"],
                          ["A. 가속기 간 판정 이전성", "Jetson에서 낸 판정이 Hailo·QAIRT로 옮겨도 유지되는가", "배포 대상이 바뀌면 다시 검증해야 하는 범위"],
-                         ["B. AIMET AdaRound·CLE 실기 재현", "오프라인 정확도를 올리는 컴파일러 개입이 실기에서도 좋은가 (AEP의 물리 확장)", "'더 정확' ≠ '더 안전'의 실기 근거"],
+                         ["B. AIMET AdaRound·CLE 실기 재현", "오프라인 정확도를 올리는 컴파일러 개입이 실기에서도 좋은가 (ODI 결과의 실기 확장)", "'더 정확' ≠ '더 안전'의 실기 근거"],
                          ["C. 두 개의 뇌 런타임 보증", "NPU 정책 + MCU 안전 감시자 (VENTUNO Q)", "정책과 독립된 안전 경로"],
                          ["D. 독립 상시 감시자", "Coralboard로 별도 카메라 감시", "단일 고장점 줄이기"],
                          ["E. 지연을 안전 변수로", "추론 지연·지터가 성공·위험에 주는 영향", "실시간 마감(200 ms)의 근거"],
@@ -302,5 +309,5 @@ tb(s, 80, 160, 1760, 860, ["실패 감지: SAFE 2506.09937 · VLA-FAIL 2606.2138
                             "벤치마크: SafeVLA-Bench 2606.00773 · SafeStage 2609.21223 · ForesightSafety-VLA 2606.27079 · FailBench 2609.03611 · No Free Checker 2609.09250",
                             "실기 RL: ACCRUE 2610.18596",
                             "배포·압축: Deployment-Time Reliability 2603.11400 · OGAM 2610.05878 · PreDE 2609.19441 · VLAQuantBench 2609.25376 · FoldQuantVLA 2609.24433 · 8 GB Bimanual ACT 2608.03938",
-                            "우리 작업: QuantGate (github.com/goodboychan/nebius-physical-ai, 10/26 공개 예정) · AEP 초안 (비공개)"], 15)
+                            "우리 작업: QuantGate (github.com/goodboychan/nebius-physical-ai, 10/26 공개 예정) · ODI 2026 포스터 \"Same Policy, Different Artifacts\""], 15)
 prs.save(OUT); print("saved", OUT, N[0], "slides")
