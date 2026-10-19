@@ -30,3 +30,7 @@ Hardware: rubber bands on the gripper, pads removed. Scene: cola can at the trai
   from the generalization blocks (TYP, 2026-10-17) onward, in TYP, T6P, T6M, Q8 and the diagnostic. They are absent
   in T1, T0 and T0R, where the old FP16 policy succeeded at the mark; T2 shows at most one faint marker. The can is
   red, so the markers are a plausible visual distractor. This finding uses no cell information.
+- Red markers removed (2026-10-20, checked on the overhead frame). Diagnostic restarted (FP16, non-blind, not counted):
+  - run 1 after removal: failure (b), the can was pushed away while the gripper closed.
+- Start-pose gripper position in the first overhead frame is the same across blocks within a few pixels (T0R 171,341;
+  latest diagnostic 169,338), so a shifted arm base is not supported.
