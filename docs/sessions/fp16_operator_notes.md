@@ -23,3 +23,4 @@ Hardware: rubber bands on the gripper, pads removed. Scene: cola can at the trai
 - Next: a non-blind diagnostic of 3 runs with the old FP16 engine (FP16-block token `39b99e35`, not a Q8 token) at the
   training mark, in its own session `diag_q8_fp16`. These runs are never counted in Q8.
   - diagnostic run 1 (FP16, non-blind, not counted): success.
+  - diagnostic run 2: failure.
