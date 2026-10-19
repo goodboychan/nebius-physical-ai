@@ -39,3 +39,8 @@ Hardware: rubber bands on the gripper, pads removed. Scene: cola can at the trai
   reboot: L4T 36.5.2 and TensorRT 10.3.0.30 unchanged, 15 W, device links intact, Q8B engine hashes 3b19f7eb/86eba809,
   runner 89e26180, no leftover processes. trtexec on the FP16-block engines: FP16 median 11.71 ms, INT8 16.95 ms (the
   benchmarked 11.6 ms and 16.8-17.1 ms).
+
+## Q8B (2026-10-20, fp16 prereg §10 amendment 4; INT8 chatter block, restarted, cola can at the training mark, no red markers)
+
+- Failures reported by the operator, by trial number only (blind to cells):
+  - trial 33: (e), set the can down, then knocked it over while the arm moved away (`placement disturbance`).
