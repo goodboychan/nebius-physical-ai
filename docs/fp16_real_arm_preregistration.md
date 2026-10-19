@@ -180,3 +180,13 @@ Analysis: `scripts/int8c_analysis.py --block Q8B`, written to `artifacts/reports
   | ≤ 0.20 | ≥ 10/12 | back to nominal | run the re-test blocks (finetune prereg §19) |
   | 0.20–0.30, or ≥ 0.30 with ≥ 10/12 | — | unclear | run the re-tests and flag them |
   | ≥ 0.30 | < 10/12 | not nominal | do not run the re-tests; look for the cause first (wrist camera mount, lighting, gripper bands) |
+
+## 13. H1 result (2026-10-20)
+
+- 12 runs, old FP16 engine, training mark, restored scene (no red markers, wrist camera re-aimed; operator notes).
+  Live judge **11/12** (run 11 failed, (b)).
+- Chatter median **0.242** (per run 0.14–0.71; `artifacts/fp16/chatter_raw_H1.json`).
+  - That is lower than the diagnostic (0.60) and Q8B FP16 (0.39), and above T0R and the FP16 block (0.13).
+  - Runs 8–11 were higher (0.45–0.71) than the rest.
+- **Reading (§12 table): "unclear"** (chatter 0.20–0.30). By the gate, the re-tests (finetune prereg §19) run and are
+  flagged as run in a scene whose nominal status is unclear.
