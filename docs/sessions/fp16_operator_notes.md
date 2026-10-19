@@ -46,3 +46,4 @@ Hardware: rubber bands on the gripper, pads removed. Scene: cola can at the trai
   - trial 33: (e), set the can down, then knocked it over while the arm moved away (`placement disturbance`).
   - trial 36: grasped in the wrong place, and the can fell over while being set down.
   - trial 39: a different kind; while grasping, the gripper suddenly pulled back and knocked the can over.
+  - trial 41: the can fell over while being set down.
