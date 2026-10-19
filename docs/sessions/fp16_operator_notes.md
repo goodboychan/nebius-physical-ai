@@ -61,3 +61,4 @@ Hardware: rubber bands on the gripper, pads removed. Scene: cola can at the trai
     in the bottom-right corner, as in T0R (10-15).
   - The orange band was already out of view in TYP (10-17), and the fingertips were partly out of view from Q8 (10-19).
   - H1 and the re-tests run in this restored wrist view.
+- H1 (2026-10-20, non-blind, old FP16 engine, 12 runs): operator-reported failures: run 11, (b) the can was pushed away and never grasped.
