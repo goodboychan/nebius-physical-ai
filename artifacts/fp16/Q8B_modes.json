@@ -1,0 +1,10 @@
+{
+ "labels": {
+  "Q8B/33": "placement disturbance",
+  "Q8B/36": "other: fell while being set down (wrong grasp)",
+  "Q8B/39": "grasp: pulled back while grasping, knocked the can",
+  "Q8B/41": "other: fell while being set down",
+  "Q8B/44": "other: fell while being set down"
+ },
+ "rule": "fp16 prereg \u00a710; written blind to cells before unsealing, from the operator notes by trial number"
+}
