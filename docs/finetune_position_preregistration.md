@@ -463,3 +463,32 @@ Analysis: `scripts/ft4_analysis.py`, written to `artifacts/reports/ft4_analysis.
   of view from TYP (10-17), and the fingertips partly out of view from 10-19. A can had struck the wrist camera. The
   camera was re-aimed toward the centre before H1, which restored the T0R view. The re-tests (§19) therefore also undo
   this change; their comparison with T6P/TYP cannot separate the markers from the wrist view.
+
+## 20. Amendment 8 results (2026-10-21, unsealed after ft5_post.json)
+
+Order kept:
+1. Both sealed logs were hashed into `artifacts/freeze/ft5_post.json` (pushed) before either was opened.
+2. The consensus re-judge was run blind to cells: T6PR 0/24, TYPR 0/24, equal to the live judge and the operator's
+   reports (`artifacts/finetune/rejudge/{T6PR,TYPR}_consensus.json`).
+3. Failure-mode labels were written blind (`artifacts/finetune/GEN2_modes.json`): all 48 at the grasp stage.
+4. Only then were the logs unsealed. They match the post record (`47e8a484…`, `aad20c02…`).
+
+Analysis: `scripts/ft5_analysis.py`, written to `artifacts/reports/ft5_analysis.json`. Flagged: H1 read "unclear"
+(fp16 prereg §13).
+
+| Block | FT-FP16 | OLD-FP16 (`VC-025`) | Difference, Newcombe 95% | Reading | Beside §18 |
+|---|---|---|---|---|---|
+| **T6PR** (primary), cola can +6 cm | 0/12 | 0/12 | 0 pp [−24.2, +24.2] | no improvement detected | T6P 0/12 vs 0/12: the same |
+| **TYPR** (secondary), yellow can +3 cm | 0/12 | 0/12 | 0 pp [−24.2, +24.2] | no improvement detected | TYP 0/12 vs 3/12: OLD lost its 3 successes |
+
+- **Failure kinds** (blind labels, then read by cell): FT failed every trial with (a), never finding the can's start
+  position (24/24). OLD failed with (a) except six (b) trials (T6PR 2, 4; TYPR 18, 19, 21, 24), where it reached the
+  can and pushed it away while closing.
+- **Reading**:
+  - **T6PR**: the §18 reading stands without the marker caveat. At +6 cm neither policy succeeds; +6 cm stays outside
+    the fine-tuned policy's verified range.
+  - **TYPR**: FT is again 0/12, so the §18 reading for FT (no gain on the yellow can) stands. OLD fell from 3/12 to 0/12.
+    The red markers and the wrist view were restored together, so which change mattered cannot be separated. That OLD's
+    earlier successes depended on the marker period is possible but not shown.
+  - The verified range in the next-test plan stays: cola can, −6 to +3 cm.
+- **Limitations**: one session per block; 12 vs 12 detects only a large gap; scene status "unclear" by H1.
