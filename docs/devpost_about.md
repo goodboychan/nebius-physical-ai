@@ -40,6 +40,23 @@ For every candidate engine, QuantGate answers three questions.
 A one-command CLI (`quantgate.py review | ask | preflight | cost | verify`) rebuilds the whole review from
 committed, hashed evidence.
 
+## Who it is for
+
+Teams that ship learned robot policies to edge accelerators such as Jetson and Hailo: robotics startups, labs moving a
+policy into a product, and integrators who must sign off a build. The need recurs. Every retrain, quantization,
+compiler or device change makes a new artifact, and each artifact needs its own evidence.
+
+- **Free entry point (Apache 2.0)**: the on-device preflight that blocks a build that does not match what was
+  audited, and the CLI that rebuilds the review from hashed evidence with no GPU or API key.
+- **What a team would pay for**: a review per deployment artifact (cost on the target device, the blinded real-arm
+  protocol, the validated judge and the evidence report), and the same check in CI on every new build. The compute
+  behind it (fine-tuning jobs, the judge, the report agent) runs on Nebius.
+- **First users**: the LeRobot and SO-101 community, reached through the public datasets and this repository.
+- **Why now**: from 20 January 2027 the EU Machinery Regulation (2023/1230) puts machine-learning safety components
+  under third-party conformity assessment. QuantGate does not claim compliance. Its pre-registered, hashed records are
+  the kind of evidence such reviews ask for.
+- **Status**: not yet tried by outside teams. Every number here comes from our own arm.
+
 ## How we built it
 
 - **Data and training**:
