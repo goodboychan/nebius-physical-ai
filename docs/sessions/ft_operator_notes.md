@@ -165,3 +165,4 @@ Outcomes are decided by the locked criterion (automatic judge and §11 consensus
   - trial 5: (a), the start position was not found and the can was grasped in the wrong place.
   - trial 6: (a), the start position was not found and the can was grasped in the wrong place.
   - trial 7: (a), the start position was not found and the can was grasped in the wrong place.
+  - trial 8: (a), the start position was not found and the can was grasped in the wrong place.
