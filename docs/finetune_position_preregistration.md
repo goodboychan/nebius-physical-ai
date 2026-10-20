@@ -492,3 +492,10 @@ Analysis: `scripts/ft5_analysis.py`, written to `artifacts/reports/ft5_analysis.
     earlier successes depended on the marker period is possible but not shown.
   - The verified range in the next-test plan stays: cola can, −6 to +3 cm.
 - **Limitations**: one session per block; 12 vs 12 detects only a large gap; scene status "unclear" by H1.
+- **Hardware note, found after unsealing (2026-10-21)**: the rest-pose wrist frame taken after TYPR shows the fingertips
+  nearer the right edge and the orange band out of view, unlike the frame taken before T6PR. The first wrist frame of
+  each trial shows the same change from T6PR trial 1 to trial 12 and stays so through TYPR
+  (`artifacts/finetune/wrist_check/ft5_first_frames.jpg`, `ft5_rest_pre_post.jpg`). The wrist camera seems to have
+  shifted again early in T6PR. This does not change the pre-registered readings above; it adds to their limitations
+  (the re-tests did not hold the restored wrist view throughout). Before the next block the mount should be fixed and
+  checked against a reference frame at the start of every session.
