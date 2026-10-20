@@ -160,3 +160,4 @@ Outcomes are decided by the locked criterion (automatic judge and §11 consensus
 - Failures reported by the operator, by trial number only (blind to cells; kinds as in TYP):
   - trial 1: (a), the start position was not found and the can was grasped in the wrong place.
   - trial 2: (a), the start position was not found and the can was grasped in the wrong place.
+  - trial 3: (a), the start position was not found and the can was grasped in the wrong place.
