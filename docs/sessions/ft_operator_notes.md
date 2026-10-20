@@ -174,3 +174,4 @@ Outcomes are decided by the locked criterion (automatic judge and §11 consensus
   - trial 19: (b), the right start position was reached, but the can was pushed away while the gripper closed (typed "ㅠ", the b key on the Korean layout).
   - trial 20: (a), the start position was not found and the can was grasped in the wrong place.
   - trial 21: (b), the right start position was reached, but the can was pushed away while the gripper closed.
+  - trial 22: (a), the start position was not found and the can was grasped in the wrong place.
