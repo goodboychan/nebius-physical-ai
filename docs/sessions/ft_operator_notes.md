@@ -130,3 +130,4 @@ Outcomes are decided by the locked criterion (automatic judge and §11 consensus
 - Pre-block check (no policy, arm not moved): rest-pose wrist frame shows the fingertips and orange band as after the 10-20 re-aim; overhead frame shows no red markers.
 - Failures reported by the operator, by trial number only (blind to cells; kinds as in TYP):
   - trial 1: (a), the start position was not found and the can was grasped in the wrong place.
+  - trial 2: (b), the right start position was reached, but the can was pushed away while the gripper closed.
