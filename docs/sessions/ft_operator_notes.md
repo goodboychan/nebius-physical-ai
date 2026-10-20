@@ -171,3 +171,4 @@ Outcomes are decided by the locked criterion (automatic judge and §11 consensus
   - After trial 10 the operator said the arm seemed to miss the can's position more completely than in TYP (10-17), and asked whether every trial might fail. No operator abort so far; the block continues (stop rule: 2 aborts).
   - trials 11-17: (a), the start position was not found and the can was grasped in the wrong place (reported together after trial 18; from trial 11 the operator reported only failures other than (a) as they happened).
   - trial 18: (b), the right start position was reached, but the can was pushed away while the gripper closed.
+  - trial 19: (b), the right start position was reached, but the can was pushed away while the gripper closed (typed "ㅠ", the b key on the Korean layout).
