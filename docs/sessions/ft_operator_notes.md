@@ -124,3 +124,9 @@ Outcomes are decided by the locked criterion (automatic judge and §11 consensus
   - trial 24: (a), the start position was not found and the can was grasped in the wrong place.
 - T6M complete: 24 trials, 0 aborted, 0 invalid; live judge failures 1, 4-6, 8-10, 12-14, 16, 17, 19, 21, 23, 24 (16), the same trials the operator reported.
 - All three sealed logs hashed into `artifacts/freeze/ft4_post.json` before any is opened.
+
+## T6PR (2026-10-21, prereg §19 amendment 8; cola can at the +6 cm mark, no red markers, wrist camera as re-aimed before H1)
+
+- Pre-block check (no policy, arm not moved): rest-pose wrist frame shows the fingertips and orange band as after the 10-20 re-aim; overhead frame shows no red markers.
+- Failures reported by the operator, by trial number only (blind to cells; kinds as in TYP):
+  - trial 1: (a), the start position was not found and the can was grasped in the wrong place.
