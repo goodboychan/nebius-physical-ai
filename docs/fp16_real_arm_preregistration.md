@@ -190,3 +190,30 @@ Analysis: `scripts/int8c_analysis.py --block Q8B`, written to `artifacts/reports
   - Runs 8–11 were higher (0.45–0.71) than the rest.
 - **Reading (§12 table): "unclear"** (chatter 0.20–0.30). By the gate, the re-tests (finetune prereg §19) run and are
   flagged as run in a scene whose nominal status is unclear.
+
+## 14. Health check H2 (2026-10-21, before any H2 trial): does a fixed wrist mount bring chatter back to nominal?
+
+- **Why**: H1 read "unclear" (chatter 0.242, 11/12). After the amendment 8 re-tests the rest-pose wrist frame showed the
+  camera shifted again (finetune prereg §20 hardware note). The hypothesis, stated before any H2 trial: the raised
+  chatter since 2026-10-19 comes mainly from the wrist camera view. If so, a fixed mount should bring the old FP16
+  policy back near its earlier 0.13 at the training mark.
+- **Before the first run** (no policy, the arm does not move):
+  - the operator fixes the wrist-camera mount (cable ties or adhesive) and aims it as in T0R;
+  - a rest-pose wrist frame is taken (`wrist_snap.py`) and committed as the reference
+    (`artifacts/fp16/wrist_ref_H2.png`) with its sha256, beside the T0R first frame;
+  - the overhead frame is checked for stray markers.
+- **Design**: as H1 (§12). Non-blind, one engine, no cells: the old FP16 engine (FP16-block token `39b99e35`), 12 runs
+  at the training mark, session `health_h2`. Never counted in any comparison.
+  - `so101_trial.py health_h2 VC-025 ~/.edgeqgate_sealed/stress_fp16/engines/39b99e35.engine 12`
+- **Measures**: per-run chatter (`ft_chatter.py measure`), live judge success, operator notes, and a rest-pose wrist
+  frame after run 12 compared with the reference.
+- **Readings, fixed now** (the §12 table, unchanged):
+
+  | H2 chatter median | H2 success | Reading | Then |
+  |---|---|---|---|
+  | ≤ 0.20 | ≥ 10/12 | back to nominal; the wrist hypothesis is supported | pre-register and run amendment 9 (fine-tune v2) |
+  | 0.20–0.30, or ≥ 0.30 with ≥ 10/12 | — | unclear | amendment 9 may run, flagged |
+  | ≥ 0.30 | < 10/12 | not nominal | no amendment 9 block; look for the cause first |
+
+  - If the after-run wrist frame shows the camera moved again, H2 is reported with that note and the mount is fixed
+    again before any later block.
