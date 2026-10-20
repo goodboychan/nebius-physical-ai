@@ -109,7 +109,8 @@ Numbers come from committed artifacts. The figure's script lists its sources.
        blocks, and the wrist camera had been knocked off-axis. With both restored: **+6 cm 0/12 vs 0/12** and **yellow
        can 0/12 vs 0/12** (no improvement detected; flagged because a health check read the scene as "unclear"). The
        +6 cm reading stands. On the yellow can the old policy lost its 3 successes; which restored change mattered
-       cannot be separated.
+       cannot be separated. The wrist camera seems to have shifted again early in the re-tests, so the restored view did not hold
+       throughout (hardware note in the pre-registration §20).
    - Off the training position, the old policy's commanded gripper also chatters about 4× more (exploratory,
      pre-specified metric).
    - Caveat: the operator could see that the two policies moved differently, so operator blinding was partial.
