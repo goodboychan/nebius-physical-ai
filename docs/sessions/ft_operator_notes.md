@@ -138,3 +138,5 @@ Outcomes are decided by the locked criterion (automatic judge and §11 consensus
   - trial 7: (a), the start position was not found and the can was grasped in the wrong place.
   - trial 8: (a), the start position was not found and the can was grasped in the wrong place.
   - trial 9: (a), the start position was not found and the can was grasped in the wrong place.
+  - trial 10: (a), the start position was not found and the can was grasped in the wrong place.
+  - After trial 10 the operator said every trial seemed to fail; no operator abort so far, so the block continues (stop rule: 2 aborts).
