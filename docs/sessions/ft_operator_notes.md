@@ -152,3 +152,5 @@ Outcomes are decided by the locked criterion (automatic judge and §11 consensus
   - trial 21: (a), the start position was not found and the can was grasped in the wrong place.
   - trial 22: (a), the start position was not found and the can was grasped in the wrong place.
   - trial 23: (a), the start position was not found and the can was grasped in the wrong place.
+  - trial 24: (a), the start position was not found and the can was grasped in the wrong place.
+- T6PR complete: 24 trials, 0 aborted, 0 invalid. Live automatic judge: all 24 failed, trial 18 included (block-level tally; with every trial failing it shows no cell-level difference before unsealing). Sealed log hashed (interim, not opened): `stress_ft5_T6PR_sealed.jsonl` sha256 `47e8a4849fedbdcb883c2fa6840ffb03e2b8c591be85ac515a3a78a59fa65904`.
