@@ -28,7 +28,7 @@ validating next", not "approved": in this study no INT8 build was approved again
 
 ```bash
 uv venv .venv && uv pip install --python .venv/bin/python -e ".[dev]"
-.venv/bin/python scripts/quantgate.py verify          # tests, runner harness, 13 sealed logs vs their post-lock hashes
+.venv/bin/python scripts/quantgate.py verify          # tests, runner harness, 19 sealed logs vs their post-lock hashes
 .venv/bin/python scripts/quantgate.py review --no-llm # verdict table, next-test plans, the full review as one HTML file
                                                       # (artifacts/reports/review_report.html), preflight demo, review cost
 .venv/bin/python scripts/quantgate.py plan FT-FP16    # from evidence to the next test: confirmed, open, evidence, plan
@@ -105,6 +105,11 @@ Numbers come from committed artifacts. The figure's script lists its sources.
        (detected).
      - Reading: the fix carries to −6 cm but not to +6 cm or to the smaller can. FT is the candidate where the start
        varies between −6 and +3 cm with the cola can, not a general fix.
+     - **Re-test without a scene deviation (amendment 8)**: small red markers had been next to the can in those
+       blocks, and the wrist camera had been knocked off-axis. With both restored: **+6 cm 0/12 vs 0/12** and **yellow
+       can 0/12 vs 0/12** (no improvement detected; flagged because a health check read the scene as "unclear"). The
+       +6 cm reading stands. On the yellow can the old policy lost its 3 successes; which restored change mattered
+       cannot be separated.
    - Off the training position, the old policy's commanded gripper also chatters about 4× more (exploratory,
      pre-specified metric).
    - Caveat: the operator could see that the two policies moved differently, so operator blinding was partial.
@@ -125,7 +130,7 @@ Stress tests were unsealed on 2026-10-13. The stress protocol is
 | Nebius Managed MLflow | 1.5 h | 0.7 |
 | **Cloud total** | | **≈ 31** |
 
-- The real arm ran 625 trials in about 15.4 operator-hours.
+- The real arm ran 673 trials in about 16.4 operator-hours.
 - For scale, not as a saving: settling approval for all 25 candidates and FP32 at about 115 trials per arm would be
   about 2,990 trials and about 74 arm-hours, before any stress or position test. The two numbers answer different goals.
 - The review did not settle approval. It ranked what to validate first, blocked broken builds, found and fixed a

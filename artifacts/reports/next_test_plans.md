@@ -36,6 +36,8 @@ Open:
 - training mark, T0 + T0R pooled: 22/24 vs old 23/24, INSUFFICIENT_EVIDENCE
 - yellow can at +3 cm (held-out object, primary): 0/12 vs old 3/12, NOT_DETECTED
 - start +6 cm (beyond the demonstrations): 0/12 vs old 0/12, NOT_DETECTED
+- start +6 cm re-test without the red markers (amendment 8, H1 'unclear'): 0/12 vs old 0/12, NOT_DETECTED
+- yellow can at +3 cm re-test without the red markers (amendment 8, H1 'unclear'): 0/12 vs old 0/12, NOT_DETECTED
 
 Evidence:
 - `artifacts/reports/ft3_analysis.json#pooled_T0_T0R`
@@ -45,6 +47,9 @@ Evidence:
 - `artifacts/reports/ft4_analysis.json`
 - `artifacts/freeze/ft4_post.json`
 - `artifacts/finetune/GEN_modes.json`
+- `artifacts/reports/ft5_analysis.json`
+- `artifacts/freeze/ft5_post.json`
+- `artifacts/finetune/GEN2_modes.json`
 - T0 failures: trials 18 and 22 (placement disturbance, docs/sessions/ft_operator_notes.md); clip: dashboard/clips/t1_old_vs_ft.mp4
 
 Next test:

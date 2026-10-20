@@ -65,7 +65,7 @@ compiler or device change makes a new artifact, and each artifact needs its own 
   - 26 TensorRT engines built on the Jetson with a frozen timing cache, so the same file always behaves the same.
 - **Offline audit**: 2,000 held-out states scored on 48 CPU jobs on Nebius Jobs. The ranking was frozen before any
   real trial.
-- **Real arm**: **625 trials** in 14 sessions, all under sealed, interleaved schedules.
+- **Real arm**: **673 trials** in 16 sessions, all under sealed, interleaved schedules.
   - The operator saw trial numbers only. In the fine-tune blocks the two policies moved visibly differently, so
     operator blinding there was partial; outcomes come from an automatic judge and a blind video re-judge.
   - Logs are hashed before they are unsealed, so no rule can change after the results are seen.
@@ -91,7 +91,8 @@ compiler or device change makes a new artifact, and each artifact needs its own 
   - At held-out positions: **12/12 vs 3/12 at +3 cm** (+75 pp, 95% CI [+38, +91]) and **10/12 vs 2/12 at −3 cm**.
   - We then mapped how far the fix reaches, under a new pre-registration: **8/12 vs 0/12 at −6 cm**, beyond the
     demonstrations, but **0/12 vs 0/12 at +6 cm** and **0/12 vs 3/12 with a smaller yellow can at +3 cm**. The review
-    now states the range where the fine-tune is a candidate, and where it is not.
+    now states the range where the fine-tune is a candidate, and where it is not. A pre-registered re-test, after we
+    found and removed a scene deviation (stray markers, a knocked wrist camera), gave the same no-gain readings.
   - At the trained spot it is still undecided (22/24 vs 23/24, with a pre-registered replication), so the review
     does not approve it there.
 

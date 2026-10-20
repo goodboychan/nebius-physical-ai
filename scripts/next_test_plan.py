@@ -44,6 +44,8 @@ def plans(T):
     t0 = by("FT-FP16", "pooled")
     # amendment 7 (prereg §17-18): generalization blocks; absent before 2026-10-18
     g = json.load(open("artifacts/reports/ft4_analysis.json")) if os.path.exists("artifacts/reports/ft4_analysis.json") else {}
+    # amendment 8 (prereg §19-20): re-tests without the red markers; absent before 2026-10-21
+    r5 = json.load(open("artifacts/reports/ft5_analysis.json")) if os.path.exists("artifacts/reports/ft5_analysis.json") else {}
     GEN_CTX = {"TYP": "yellow can at +3 cm (held-out object, primary)", "T6P": "start +6 cm (beyond the demonstrations)", "T6M": "start -6 cm (beyond the demonstrations)"}
     P["FT-FP16"] = {
         "candidate": "FT-FP16 (position fine-tune)", "status": "next candidate where the start varies between -6 and +3 cm with the cola can; not a replacement at the trained spot, not an object or +6 cm fix",
@@ -53,9 +55,12 @@ def plans(T):
                         if k in g and g[k]["test"]["improvement_detected"]],
         "open": [f"training mark, T0 + T0R pooled: {t0['success'][0]}/{t0['success'][1]} vs old {t0['reference'][0]}/{t0['reference'][1]}, {t0['verdict']}"]
                 + [f"{GEN_CTX[k]}: {g[k]['test']['ft'][0]}/{g[k]['test']['ft'][1]} vs old {g[k]['test']['old'][0]}/{g[k]['test']['old'][1]}, NOT_DETECTED" for k in ("TYP", "T6P")
-                   if k in g and not g[k]["test"]["improvement_detected"]],
+                   if k in g and not g[k]["test"]["improvement_detected"]]
+                + [f"{c} re-test without the red markers (amendment 8, H1 'unclear'): {r5[k]['test']['ft'][0]}/{r5[k]['test']['ft'][1]} vs old {r5[k]['test']['old'][0]}/{r5[k]['test']['old'][1]}, NOT_DETECTED"
+                   for k, c in (("T6PR", "start +6 cm"), ("TYPR", "yellow can at +3 cm")) if k in r5 and not r5[k]["test"]["improvement_detected"]],
         "evidence": [t0["evidence_path"], "artifacts/freeze/ft_post.json", "artifacts/freeze/ft3_post.json", "artifacts/finetune/T0R_modes.json",
                      "artifacts/reports/ft4_analysis.json", "artifacts/freeze/ft4_post.json", "artifacts/finetune/GEN_modes.json",
+                     "artifacts/reports/ft5_analysis.json", "artifacts/freeze/ft5_post.json", "artifacts/finetune/GEN2_modes.json",
                      "T0 failures: trials 18 and 22 (placement disturbance, docs/sessions/ft_operator_notes.md); clip: dashboard/clips/t1_old_vs_ft.mp4"],
         "next_test": {"compare": "FT-FP16 vs VC-025 (old FP16 policy) at the training mark; for the gaps, a new fine-tune with demonstrations at +6 cm and with the yellow can, re-tested at TYP/T6P under a new pre-registration",
                       "conditions": "training start mark (nominal); +6 cm and the yellow can at +3 cm (generalization gaps, amendment 7)",
