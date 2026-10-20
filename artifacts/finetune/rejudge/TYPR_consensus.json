@@ -1,0 +1,117 @@
+{
+ "TYPR001_1021_004053": {
+  "success_geom": false,
+  "reason": "moving_or_not_standing",
+  "n_consensus_frames": 1
+ },
+ "TYPR002_1021_004210": {
+  "success_geom": false,
+  "reason": "moving_or_not_standing",
+  "n_consensus_frames": 1
+ },
+ "TYPR003_1021_004326": {
+  "success_geom": false,
+  "reason": "can_top_not_found(fallen_or_occluded)"
+ },
+ "TYPR004_1021_013200": {
+  "success_geom": false,
+  "reason": "moving_or_not_standing",
+  "n_consensus_frames": 4
+ },
+ "TYPR005_1021_013317": {
+  "success_geom": false,
+  "reason": "moving_or_not_standing",
+  "n_consensus_frames": 3
+ },
+ "TYPR006_1021_013427": {
+  "success_geom": false,
+  "reason": "moving_or_not_standing",
+  "n_consensus_frames": 1
+ },
+ "TYPR007_1021_013603": {
+  "success_geom": false,
+  "reason": "moving_or_not_standing",
+  "n_consensus_frames": 8
+ },
+ "TYPR008_1021_013714": {
+  "success_geom": false,
+  "reason": "moving_or_not_standing",
+  "n_consensus_frames": 5
+ },
+ "TYPR009_1021_013827": {
+  "success_geom": false,
+  "reason": "can_top_not_found(fallen_or_occluded)"
+ },
+ "TYPR010_1021_013942": {
+  "success_geom": false,
+  "reason": "moving_or_not_standing",
+  "n_consensus_frames": 1
+ },
+ "TYPR011_1021_014056": {
+  "success_geom": false,
+  "reason": "moving_or_not_standing",
+  "n_consensus_frames": 4
+ },
+ "TYPR012_1021_014218": {
+  "success_geom": false,
+  "reason": "can_top_not_found(fallen_or_occluded)"
+ },
+ "TYPR013_1021_014334": {
+  "success_geom": false,
+  "reason": "moving_or_not_standing",
+  "n_consensus_frames": 3
+ },
+ "TYPR014_1021_014501": {
+  "success_geom": false,
+  "reason": "can_top_not_found(fallen_or_occluded)"
+ },
+ "TYPR015_1021_014622": {
+  "success_geom": false,
+  "reason": "moving_or_not_standing",
+  "n_consensus_frames": 6
+ },
+ "TYPR016_1021_014810": {
+  "success_geom": false,
+  "reason": "moving_or_not_standing",
+  "n_consensus_frames": 2
+ },
+ "TYPR017_1021_014928": {
+  "success_geom": false,
+  "reason": "can_top_not_found(fallen_or_occluded)"
+ },
+ "TYPR018_1021_015233": {
+  "success_geom": false,
+  "reason": "moving_or_not_standing",
+  "n_consensus_frames": 3
+ },
+ "TYPR019_1021_015343": {
+  "success_geom": false,
+  "reason": "moving_or_not_standing",
+  "n_consensus_frames": 1
+ },
+ "TYPR020_1021_015504": {
+  "success_geom": false,
+  "reason": "moving_or_not_standing",
+  "n_consensus_frames": 1
+ },
+ "TYPR021_1021_015622": {
+  "success_geom": false,
+  "reason": "moving_or_not_standing",
+  "n_consensus_frames": 1
+ },
+ "TYPR022_1021_015734": {
+  "success_geom": false,
+  "reason": "moving_or_not_standing",
+  "n_consensus_frames": 5
+ },
+ "TYPR023_1021_015849": {
+  "success_geom": false,
+  "reason": "moving_or_not_standing",
+  "n_consensus_frames": 1
+ },
+ "TYPR024_1021_020002": {
+  "success_geom": false,
+  "reason": "moving_or_not_standing",
+  "n_consensus_frames": 2
+ }
+}

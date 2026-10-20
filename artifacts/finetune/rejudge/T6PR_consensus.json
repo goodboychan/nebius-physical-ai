@@ -1,0 +1,106 @@
+{
+ "T6PR001_1021_000911": {
+  "success_geom": false,
+  "reason": "can_top_not_found(fallen_or_occluded)"
+ },
+ "T6PR002_1021_001033": {
+  "success_geom": false,
+  "reason": "can_top_not_found(fallen_or_occluded)"
+ },
+ "T6PR003_1021_001147": {
+  "success_geom": false,
+  "reason": "can_top_not_found(fallen_or_occluded)"
+ },
+ "T6PR004_1021_001258": {
+  "success_geom": false,
+  "reason": "moving_or_not_standing",
+  "n_consensus_frames": 1
+ },
+ "T6PR005_1021_001414": {
+  "success_geom": false,
+  "reason": "moving_or_not_standing",
+  "n_consensus_frames": 1
+ },
+ "T6PR006_1021_001526": {
+  "success_geom": false,
+  "reason": "can_top_not_found(fallen_or_occluded)"
+ },
+ "T6PR007_1021_001637": {
+  "success_geom": false,
+  "reason": "can_top_not_found(fallen_or_occluded)"
+ },
+ "T6PR008_1021_001750": {
+  "success_geom": false,
+  "reason": "moving_or_not_standing",
+  "n_consensus_frames": 3
+ },
+ "T6PR009_1021_001903": {
+  "success_geom": false,
+  "reason": "can_top_not_found(fallen_or_occluded)"
+ },
+ "T6PR010_1021_002021": {
+  "success_geom": false,
+  "reason": "can_top_not_found(fallen_or_occluded)"
+ },
+ "T6PR011_1021_002135": {
+  "success_geom": false,
+  "reason": "can_top_not_found(fallen_or_occluded)"
+ },
+ "T6PR012_1021_002250": {
+  "success_geom": false,
+  "reason": "moving_or_not_standing",
+  "n_consensus_frames": 1
+ },
+ "T6PR013_1021_002402": {
+  "success_geom": false,
+  "reason": "can_top_not_found(fallen_or_occluded)"
+ },
+ "T6PR014_1021_002520": {
+  "success_geom": false,
+  "reason": "moving_or_not_standing",
+  "n_consensus_frames": 3
+ },
+ "T6PR015_1021_002631": {
+  "success_geom": false,
+  "reason": "moving_or_not_standing",
+  "n_consensus_frames": 6
+ },
+ "T6PR016_1021_002744": {
+  "success_geom": false,
+  "reason": "can_top_not_found(fallen_or_occluded)"
+ },
+ "T6PR017_1021_002857": {
+  "success_geom": false,
+  "reason": "can_top_not_found(fallen_or_occluded)"
+ },
+ "T6PR018_1021_003014": {
+  "success_geom": false,
+  "reason": "can_top_not_found(fallen_or_occluded)"
+ },
+ "T6PR019_1021_003126": {
+  "success_geom": false,
+  "reason": "can_top_not_found(fallen_or_occluded)"
+ },
+ "T6PR020_1021_003238": {
+  "success_geom": false,
+  "reason": "moving_or_not_standing",
+  "n_consensus_frames": 1
+ },
+ "T6PR021_1021_003350": {
+  "success_geom": false,
+  "reason": "can_top_not_found(fallen_or_occluded)"
+ },
+ "T6PR022_1021_003505": {
+  "success_geom": false,
+  "reason": "moving_or_not_standing",
+  "n_consensus_frames": 1
+ },
+ "T6PR023_1021_003626": {
+  "success_geom": false,
+  "reason": "can_top_not_found(fallen_or_occluded)"
+ },
+ "T6PR024_1021_003740": {
+  "success_geom": false,
+  "reason": "can_top_not_found(fallen_or_occluded)"
+ }
+}
