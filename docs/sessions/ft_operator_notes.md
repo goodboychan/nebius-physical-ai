@@ -151,3 +151,4 @@ Outcomes are decided by the locked criterion (automatic judge and §11 consensus
   - trial 20: (a), the start position was not found and the can was grasped in the wrong place.
   - trial 21: (a), the start position was not found and the can was grasped in the wrong place.
   - trial 22: (a), the start position was not found and the can was grasped in the wrong place.
+  - trial 23: (a), the start position was not found and the can was grasped in the wrong place.
