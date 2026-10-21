@@ -153,8 +153,9 @@ footer{border-top:1px solid var(--rule); padding-top:18px; color:var(--ink-3); f
       by side. Everything below was measured on a real SO-101 arm: <b>673 blinded, pre-registered trials</b>, engine costs on the
       Jetson, and how well the offline audit and the AI judge predicted what happened. No robot needed to try it: pick a
       candidate in the first panel.</p>
+    <p class="sub"><b>For teams shipping learned robot policies to edge devices.</b> Every new build is checked before it reaches the arm: the preflight (<code>quantgate.py preflight</code>) blocks a build whose engine hash, normalization files or timing do not match what was audited, with no GPU or API key.</p>
     <div class="mast-meta">
-      <span>status 2026-10-18</span><span>SO-101 · ACT 51.6M</span><span>Jetson Orin Nano Super · 15 W · TRT 10.3</span>
+      <span>status 2026-10-21</span><span>SO-101 · ACT 51.6M</span><span>Jetson Orin Nano Super · 15 W · TRT 10.3</span>
       <span>673 real-arm trials · G6 245 / 245</span>
     </div>
   </header>
