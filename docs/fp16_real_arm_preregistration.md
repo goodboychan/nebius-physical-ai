@@ -217,3 +217,10 @@ Analysis: `scripts/int8c_analysis.py --block Q8B`, written to `artifacts/reports
 
   - If the after-run wrist frame shows the camera moved again, H2 is reported with that note and the mount is fixed
     again before any later block.
+- **Reference frame, before the first H2 run (2026-10-21)**: the operator re-aimed and fixed the wrist mount; the
+  fingertips and the orange band are back in the lower right, as in the frame before T6PR. Committed as
+  `artifacts/fp16/wrist_ref_H2.png`, sha256 `490f71ab0fcc16e48f0c9b14d62954dd8e298916a31b3e6c2e690c81c374d3ff` (overhead frame `top_ref_H2.png`).
+  - Deviation, stated before any H2 run: the arm was not at the rest pose (joints [48.8, 25.3, 30.9, 36.4, -5.8, 2.0]),
+    so the background differs from earlier rest-pose frames. The fingertips and band sit on the same link as the
+    camera, so their place in the frame shows the camera angle regardless of the arm pose. The first wrist frame of
+    H2 run 1, taken at the rest pose by the runner, is added as a second reference before H2 is read.
