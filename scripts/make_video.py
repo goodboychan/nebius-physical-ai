@@ -69,7 +69,7 @@ if NARR == "v6":   # v9 (2026-10-21): audience line, 673 blinded trials, the fin
     A = os.path.expanduser("~/edgeqgate_data/seminar_assets")
     slot = lambda k: ST[str(int(k) + 1)] - ST[k]
     REL = [r for r in REL if r[0] not in ("1", "4", "5", "6")] + [
-        ("6", 0.0, slot("6"), "clip", ("video/assets/dashboard_walkthrough.mp4", 0.0, 1, 0), "QuantGate audit board · screen capture: validate first → preflight → not yet"),
+        ("6", 0.0, slot("6"), "clip", ("video/assets/dashboard_walkthrough.mp4", 0.0, 1, 0), None),
         ("1", 0.0, slot("1"), "video", (LOGO,), None),
         ("4", 0.0, 4.8, "chart", ("what_moved",), None),
         ("4", 4.8, 8.0, "clip", (f"{E}/yellow_can_2.mp4", 4.0, 1, 0), "Unseen yellow can · block result 48/48 (side view of a demonstration)"),
@@ -111,7 +111,7 @@ def card(text):
     return im
 
 def table_card(title, rows):   # v9: the Cosmos judge figures as a small light table, like the dashboard panels
-    im = Image.new("RGB", (W, H), BG); d = ImageDraw.Draw(im); x0, y0, x1 = 300, 270, W - 300; rh = 112
+    im = Image.new("RGB", (W, H), BG); d = ImageDraw.Draw(im); x0, y0, x1 = 200, 270, W - 200; rh = 112
     d.rounded_rectangle((x0, y0, x1, y0 + 120 + rh * len(rows)), 22, fill=(241, 243, 242))
     d.text((x0 + 56, y0 + 36), title, font=F(46, True), fill=(20, 24, 28))
     for i, (k, v, tone) in enumerate(rows):
