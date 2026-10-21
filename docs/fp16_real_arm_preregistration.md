@@ -224,3 +224,17 @@ Analysis: `scripts/int8c_analysis.py --block Q8B`, written to `artifacts/reports
     so the background differs from earlier rest-pose frames. The fingertips and band sit on the same link as the
     camera, so their place in the frame shows the camera angle regardless of the arm pose. The first wrist frame of
     H2 run 1, taken at the rest pose by the runner, is added as a second reference before H2 is read.
+
+## 15. H2 result (2026-10-21)
+
+- 12 runs, old FP16 engine, training mark, wrist mount re-aimed and fixed, no stray markers. Live judge **11/12**
+  (run 12 failed: the can fell while being set down, operator report; placement disturbance).
+- Chatter median **0.106** (per run 0.089–0.737; `artifacts/fp16/chatter_raw_H2.json`). Runs 6, 8 and 12 were higher
+  (0.39, 0.41, 0.74); the other nine were 0.09–0.15.
+  - That is back at the earlier nominal level (T0R and the FP16 block 0.13) and below H1 (0.242), Q8B (0.39) and the
+    diagnostic (0.60).
+- Wrist view: the first frame of run 1 (rest pose, second reference, sha256 `269ad2b6ae8a35b9…`) and a rest-pose frame after
+  run 12 both show the fingertips and the band as in the reference (`artifacts/fp16/wrist_H2_check.jpg`). The mount held.
+- **Reading (§14 table): "back to nominal"; the wrist hypothesis is supported.** It was stated before H2 and tested
+  once, in one session, non-blind; it is not a controlled comparison of camera angles. Amendment 9 (finetune prereg
+  §21) may be locked and run.
