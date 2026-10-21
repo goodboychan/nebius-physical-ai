@@ -14,6 +14,8 @@ SHOTS, OUT = sys.argv[1:3]
 W, H, FPS = 1920, 1080, 30
 BG, INK, INK2, ACC = (16, 20, 19), (230, 234, 233), (174, 184, 183), (18, 160, 168)
 F = lambda s, b=False: ImageFont.truetype("/usr/share/fonts/truetype/dejavu/DejaVuSans%s.ttf" % ("-Bold" if b else ""), s)
+if os.environ.get("NARR", "v5") == "v6":   # v9: Noto Sans, the same family as the deck and closer to the dashboard
+    F = lambda s, b=False: ImageFont.truetype("/usr/share/fonts/opentype/noto/NotoSansCJK-%s.ttc" % ("Bold" if b else "Regular"), s, index=1)
 FONT_SUB, FONT_CHIP, FONT_CARD, FONT_BIG = F(34), F(28), F(46, True), F(80, True)
 R = "artifacts/reports/figures"; C = "dashboard/clips"; E = "video/edit"
 
@@ -66,7 +68,8 @@ REL = [   # v8 (external review 7): found -> fixed -> still not approved, in the
 if NARR == "v6":   # v9 (2026-10-21): audience line, 673 blinded trials, the fine-tune's reach, the hidden scene change
     A = os.path.expanduser("~/edgeqgate_data/seminar_assets")
     slot = lambda k: ST[str(int(k) + 1)] - ST[k]
-    REL = [r for r in REL if r[0] not in ("1", "4", "5")] + [
+    REL = [r for r in REL if r[0] not in ("1", "4", "5", "6")] + [
+        ("6", 0.0, slot("6"), "clip", ("video/assets/dashboard_walkthrough.mp4", 0.0, 1, 0), "QuantGate audit board · screen capture: validate first → preflight → not yet"),
         ("1", 0.0, slot("1"), "video", (LOGO,), None),
         ("4", 0.0, 4.8, "chart", ("what_moved",), None),
         ("4", 4.8, 8.0, "clip", (f"{E}/yellow_can_2.mp4", 4.0, 1, 0), "Unseen yellow can · block result 48/48 (side view of a demonstration)"),
@@ -74,7 +77,7 @@ if NARR == "v6":   # v9 (2026-10-21): audience line, 673 blinded trials, the fin
         ("4", 12.3, 14.8, "image", (f"{SHOTS}/pos_strip.png",), "50 new demos at −4…+4 cm · fine-tuned 20k steps on Nebius Jobs"),
         ("4", 14.8, slot("4"), "image", (f"{R}/fig_ft_reach.png",), "Reach, blinded, 12 vs 12 per condition · re-tested after a scene fix: same readings"),
         ("5", 0.0, 8.6, "clip", (f"{A}/wrist_before_after.mp4", 3.0, 1, 0), None),
-        ("5", 8.6, 17.4, "card", ("Cosmos-Reason2 end-of-trial judge\n\nfirst setup                  1/21 failures caught\nvalidated prompt, held out   20/21 · 5/252 false alarms\nsame prompt, live new trials 22/24 · 2/72 false alarms",), None),
+        ("5", 8.6, 17.4, "table", ("Cosmos-Reason2 end-of-trial judge", [("first setup", "1/21 failures caught", "bad"), ("validated prompt, held-out recordings", "20/21 · 5/252 false alarms", "ok"), ("same prompt, live new trials", "22/24 · 2/72 false alarms", "ok")]), None),
         ("5", 17.4, slot("5"), "scroll", (f"{SHOTS}/report_meta.png",), "Deployment report: code writes verdicts and numbers; Nemotron (Token Factory) explains"),
     ]
     REL = [(k, a, (slot(k) if k == "2" and b == 37.525 else b), kind, args, chip) for k, a, b, kind, args, chip in REL]
@@ -105,6 +108,17 @@ def card(text):
     lines = text.split("\n"); hh = 64 * len(lines); y = (H - hh) / 2 - 60
     for i, ln in enumerate(lines):
         w = d.textlength(ln, font=f); d.text(((W - w) / 2 if not mono else 260, y), ln, font=(FONT_CARD if (mono and i == 0) else f), fill=ACC if (mono and i == 0) else INK); y += 64
+    return im
+
+def table_card(title, rows):   # v9: the Cosmos judge figures as a small light table, like the dashboard panels
+    im = Image.new("RGB", (W, H), BG); d = ImageDraw.Draw(im); x0, y0, x1 = 300, 270, W - 300; rh = 112
+    d.rounded_rectangle((x0, y0, x1, y0 + 120 + rh * len(rows)), 22, fill=(241, 243, 242))
+    d.text((x0 + 56, y0 + 36), title, font=F(46, True), fill=(20, 24, 28))
+    for i, (k, v, tone) in enumerate(rows):
+        y = y0 + 120 + rh * i; d.line((x0 + 56, y, x1 - 56, y), fill=(210, 216, 214), width=2)
+        d.text((x0 + 56, y + 32), k, font=F(38), fill=(60, 70, 78))
+        col = {"bad": (176, 52, 44), "ok": (16, 128, 110)}.get(tone, (20, 24, 28)); w = d.textlength(v, font=F(40, True))
+        d.text((x1 - 56 - w, y + 30), v, font=F(40, True), fill=col)
     return im
 
 def logo():
@@ -163,6 +177,9 @@ def frames_of(seg):
             base = Image.new("RGB", (W, H), BG); f = fit(last, W, H); base.paste(f, ((W - f.width) // 2, (H - f.height) // 2))
             panel = fn(i / FPS, t1 - t0).crop((60, 110, 1860, 1010)).resize((1100, 550)); a_ = min(1.0, i / (0.4 * FPS))
             region = base.crop((770, 120, 1870, 670)); base.paste(Image.blend(region, panel, a_), (770, 120)); yield base
+    elif kind == "table":
+        im = table_card(*args)
+        for i in range(n): yield im.copy()
     elif kind == "chart":      # notes 3-7
         fn = vchart.CHARTS[args[0]]
         for i in range(n): yield fn(i / FPS, t1 - t0)
@@ -219,6 +236,10 @@ for seg in SEG:
     for im in frames_of(seg):
         t = k / FPS; d = ImageDraw.Draw(im)
         if seg[4]: chip(d, seg[4])
+        if NARR == "v6" and 0.3 <= t < 3.3:   # v9: one number in the first seconds
+            a_ = min(1.0, (t - 0.3) / 0.4, (3.3 - t) / 0.4); hl = "673 blinded real-arm trials · evidence before deployment"; fh = F(52, True)
+            w = d.textlength(hl, font=fh); x = (W - w) / 2; d.rounded_rectangle((x - 36, 120, x + w + 36, 220), 18, fill=(16, 20, 19))
+            d.text((x, 136), hl, font=fh, fill=tuple(int(16 + (c - 16) * a_) for c in (240, 244, 244)))
         if seg[2] not in ("cardfade", "endkick"): subtitle(d, t)   # the card and the kick show the spoken line already
         if SCALE != 1: im = im.resize((W * SCALE, H * SCALE), Image.LANCZOS)
         for p in vs.encode(av.VideoFrame.from_image(im)): o.mux(p)
