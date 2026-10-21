@@ -539,3 +539,13 @@ amendment 7 data reproduced those results), runner `scripts/so101_trial.py` (`9d
 - **Date stop**: a block not started by 2026-10-25 is reported as not run.
 - **Power**: 12 against 12 detects only a large gap (as §5); FT is 0/12 in both conditions, so a gain of about 6/12 or
   more would be detected.
+- **Build and seal, before the first amendment 9 trial (2026-10-22)**:
+  - FT2 checkpoint `g2/act_ft2_20k/020000`, model sha256 `601758711ab55a66…` (Nebius Job `aijob-e00yvz0s3mkcx58s4k`, 1,525 s,
+    final loss 0.072). Normalization `c79d64afc49fb2cd…`, ONNX `b078b053b9e43436…` (torch vs ONNX max 1.25e-06).
+  - FP16 engine `cea6c0e367fce70c…`, same flags and frozen timing cache as FT-FP16 (`67fca693…`), build 166 s. Unlike FT,
+    a rebuild gave a different binary (`6a66e042…`); the first build is the engine under test and is pinned by hash.
+    trtexec latency 12.2 ms (FT-FP16 11.6–11.7 ms), far inside the 200 ms chunk deadline.
+  - Sealed schedule `~/.edgeqgate_sealed/stress_ft6/stress_sealed.json`, sha256
+    `341d812ae5c8f043735094fa859ca38b6f174655fd7ae5a2af1c17e10b663518`; the local copy was deleted unread. Public copy
+    `artifacts/finetune/stress_schedule_GEN3_public.json`. Engines `4affc06d…` (FT) and `cea6c0e3…` (FT2), linked by
+    `scripts/ft6_setup_orin.py`; manifest `4f77309b8532c5d2…`.
