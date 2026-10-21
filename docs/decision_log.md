@@ -1117,3 +1117,5 @@ Wording, also from the review:
   파일 해시 합 `cfba3102…`, S3 경로 `g2/ft2_train`. (Orin의 ft_train 사본은 메타 파일 하나가 빠져 있어 병합 원본으로 쓰지 않았다)
 - 학습: `scripts/job/finetune_act.sh` `4aebcc0c…`, INIT `g2/act_ft_pos_20k/020000/pretrained_model`(FT), STEPS 20000, BATCH 8, SEED 1002,
   저장은 마지막 1회. Nebius Jobs L40S
+- 파인튜닝 v2 학습 완료: Nebius Job `aijob-e00yvz0s3mkcx58s4k` (L40S, 20k 스텝, 1,525 s, 최종 loss 0.072).
+  체크포인트 `g2/act_ft2_20k/020000`, model.safetensors sha256 `601758711ab55a66…` (엔진 빌드 전 고정). 정규화 통계(FT2 체크포인트 기준) `…`
