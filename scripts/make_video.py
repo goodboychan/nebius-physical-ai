@@ -63,6 +63,22 @@ REL = [   # v8 (external review 7): found -> fixed -> still not approved, in the
     ("6", 15.6, 23.4, "image", (f"{SHOTS}/review_compare.png",), "Not yet: the review lists the trials and rule changes still missing"),
     ("7", 0.0, 4.2, "endkick", ("Earn the next test, not the approval.",), None),
 ]
+if NARR == "v6":   # v9 (2026-10-21): audience line, 673 blinded trials, the fine-tune's reach, the hidden scene change
+    A = os.path.expanduser("~/edgeqgate_data/seminar_assets")
+    slot = lambda k: ST[str(int(k) + 1)] - ST[k]
+    REL = [r for r in REL if r[0] not in ("1", "4", "5")] + [
+        ("1", 0.0, slot("1"), "video", (LOGO,), None),
+        ("4", 0.0, 4.8, "chart", ("what_moved",), None),
+        ("4", 4.8, 8.0, "clip", (f"{E}/yellow_can_2.mp4", 4.0, 1, 0), "Unseen yellow can · block result 48/48 (side view of a demonstration)"),
+        ("4", 8.0, 11.5, "clip", (f"{C}/v1_nopad_drop.mp4", 4.0, 4, 0), "Gripper pads removed: the block finished 8/24 (overhead, 4×)"),
+        ("4", 11.5, 14.5, "image", (f"{SHOTS}/pos_strip.png",), "50 new demos at −4…+4 cm · fine-tuned 20k steps on Nebius Jobs"),
+        ("4", 14.5, slot("4"), "image", (f"{R}/fig_ft_reach.png",), "Reach, blinded, 12 vs 12 per condition · re-tested after a scene fix: same readings"),
+        ("5", 0.0, 8.6, "clip", (f"{A}/wrist_before_after.mp4", 3.0, 1, 0), "Hidden scene change: wrist camera knocked off-axis (left) · re-aimed (right)"),
+        ("5", 8.6, 17.4, "card", ("Cosmos-Reason2 end-of-trial judge\n\nfirst setup                  1/21 failures caught\nvalidated prompt, held out   20/21 · 5/252 false alarms\nsame prompt, live new trials 22/24 · 2/72 false alarms",), None),
+        ("5", 17.4, slot("5"), "scroll", (f"{SHOTS}/report_meta.png",), "Deployment report: code writes verdicts and numbers; Nemotron (Token Factory) explains"),
+    ]
+    REL = [(k, a, (slot(k) if k == "2" and b == 37.525 else b), kind, args, chip) for k, a, b, kind, args, chip in REL]
+    REL.sort(key=lambda r: (int(r[0]), r[1]))
 SEG = [(ST[k] + a, ST[k] + b, kind, args, chip) for k, a, b, kind, args, chip in REL]
 
 def fit(im, box_w, box_h):

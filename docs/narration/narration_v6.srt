@@ -1,0 +1,155 @@
+1
+00:00:00,000 --> 00:00:00,717
+Same robot.
+
+2
+00:00:00,717 --> 00:00:01,370
+Same task.
+
+3
+00:00:01,370 --> 00:00:03,196
+One run succeeds, one fails.
+
+4
+00:00:03,196 --> 00:00:08,217
+Move the start three centimeters, and it failed all of its first three tries.
+
+5
+00:00:08,217 --> 00:00:10,239
+Our review found that weakness.
+
+6
+00:00:10,239 --> 00:00:19,630
+We fixed it with fifty new demonstrations, and re-tested it on a sealed schedule: twelve for twelve, where the old policy went three for twelve.
+
+7
+00:00:19,630 --> 00:00:23,412
+But at the trained spot, the evidence is still not enough.
+
+8
+00:00:23,412 --> 00:00:25,825
+So QuantGate does not approve it yet.
+
+9
+00:00:26,825 --> 00:00:34,402
+For quantization, we need to pick the candidate that has earned its next test, not an approval.
+
+10
+00:00:34,402 --> 00:00:40,225
+That's why teams shipping robot policies to edge devices need Quant Gate.
+
+11
+00:00:40,525 --> 00:00:48,678
+This is an S O one oh one arm running an A C T policy, Action Chunking with Transformers, on a Jetson Orin Nano Super.
+
+12
+00:00:48,678 --> 00:00:55,725
+We taught it with one hundred and twenty teleoperated demonstrations, and trained it with Nebius Jobs.
+
+13
+00:00:55,725 --> 00:01:08,506
+From that one policy, we built twenty-six candidate engines with TensorRT: full precision, half precision, and twenty-four int eight builds that differ only in how they were calibrated.
+
+14
+00:01:08,506 --> 00:01:17,350
+Six hundred and seventy-three real trials, every one from a sealed, interleaved schedule, with the operator blind to the engine.
+
+15
+00:01:17,650 --> 00:01:19,991
+First, measure on the real device.
+
+16
+00:01:19,991 --> 00:01:26,944
+On this Jetson, half precision was the fastest engine, and the cheapest per inference, not int eight.
+
+17
+00:01:26,944 --> 00:01:32,314
+On the arm, every candidate succeeded ninety to a hundred percent of the time.
+
+18
+00:01:32,314 --> 00:01:36,858
+And the offline audit's top picks did no better than random picks.
+
+19
+00:01:36,858 --> 00:01:39,750
+Twenty-five trials cannot tell them apart.
+
+20
+00:01:40,050 --> 00:01:44,517
+What moved success was the deployment condition, not the precision.
+
+21
+00:01:44,517 --> 00:01:47,717
+A new can worked forty-eight out of forty-eight.
+
+22
+00:01:47,717 --> 00:01:52,183
+Without the gripper pads, success fell to eight out of twenty-four.
+
+23
+00:01:52,183 --> 00:01:58,517
+The start-position fine-tune held to minus six centimeters, but not plus six, or a smaller can.
+
+24
+00:01:58,517 --> 00:02:01,050
+So the review states where it applies.
+
+25
+00:02:01,350 --> 00:02:03,224
+The setup gets checked too.
+
+26
+00:02:03,224 --> 00:02:10,167
+When success suddenly dropped, we kept every result sealed, and traced it to a knocked wrist camera.
+
+27
+00:02:10,167 --> 00:02:15,720
+Cosmos Reason, on a Nebius A I Endpoint, first caught one failure in twenty-one.
+
+28
+00:02:15,720 --> 00:02:20,233
+Validated on held-out recordings, it caught twenty of twenty-one.
+
+29
+00:02:20,233 --> 00:02:27,175
+Nemotron Super on Token Factory explains the review, while every verdict and number comes from code.
+
+30
+00:02:27,475 --> 00:02:29,996
+So QuantGate answers three questions.
+
+31
+00:02:29,996 --> 00:02:32,449
+Which candidate do I validate first?
+
+32
+00:02:32,449 --> 00:02:33,471
+Half precision.
+
+33
+00:02:33,471 --> 00:02:34,834
+Which do I distrust?
+
+34
+00:02:34,834 --> 00:02:42,807
+Broken calibrations, which a simple input check catches, and any engine whose files no longer match what was audited.
+
+35
+00:02:42,807 --> 00:02:44,510
+Can I approve deployment?
+
+36
+00:02:44,510 --> 00:02:45,056
+Not yet.
+
+37
+00:02:45,056 --> 00:02:50,575
+The review lists exactly which trials, and which rule changes, are still missing.
+
+38
+00:02:50,875 --> 00:02:51,700
+Quant Gate.
+
+39
+00:02:51,700 --> 00:02:54,475
+Earn the next test, not the approval.

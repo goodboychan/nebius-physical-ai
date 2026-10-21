@@ -499,3 +499,41 @@ Analysis: `scripts/ft5_analysis.py`, written to `artifacts/reports/ft5_analysis.
   shifted again early in T6PR. This does not change the pre-registered readings above; it adds to their limitations
   (the re-tests did not hold the restored wrist view throughout). Before the next block the mount should be fixed and
   checked against a reference frame at the start of every session.
+
+## 21. Amendment 9, DRAFT (2026-10-21): fine-tune v2 for the two gaps (yellow can, +6 cm)
+
+**Status: draft.** It is locked by a later commit, after H2 (fp16 prereg §14) and before the first new demonstration
+is recorded. Nothing below may change after that commit.
+
+- **Why**: §18 and §20 found no gain at +6 cm and with the yellow can, and every FT failure there was (a), not finding
+  the start position. The old fix (§2–3) worked with demonstrations at nearby positions. This amendment tests the same
+  remedy for these two gaps.
+- **Gate**: runs only if H2 does not read "not nominal". Before each session the rest-pose wrist frame is compared with
+  the H2 reference (`artifacts/fp16/wrist_ref_H2.png`): the fingertips and the orange band must be in the same place.
+  Otherwise the session does not start until the mount is fixed.
+- **50 new teleoperated demos**, order shuffled from seed key `FINETUNE/positions/v2` (`ft_demo_order.py`):
+  - yellow can, 25: 5 at each of −4, −2, 0, +2, +4 cm;
+  - cola can, 25: 13 at +5 cm and 12 at +7 cm.
+  - **+3 cm with the yellow can and +6 cm with the cola can are never used in training.**
+  - Recording: `~/so101_record.sh ftpos2 50 25 10`, a new dataset `~/so101_data/ftpos2`. Earlier datasets are not touched.
+  - The 48 amendment 8 trials are not used for training.
+- **Training**: start from the FT checkpoint (`g2/act_ft_pos_20k/020000`, model sha256 `1385d3dd…`). Data: the 50 new
+  demos, the 50 position demos and the 80 LOCK-1 train episodes, mixed. 20,000 steps, other settings as §3, seed 1002,
+  Nebius Jobs on L40S. The final checkpoint is used, with no selection. FP16 TensorRT engine as `FT-FP16`; the policy is
+  called `FT2-FP16`.
+- **Evaluation**: FT2-FP16 12 against FT-FP16 12 per block, interleaved, sealed, new tokens. Seed key
+  `FINETUNE/schedule/GEN/v3`. Block order fixed: **TYP2** (yellow can at +3 cm, primary), **T6P2** (cola can at +6 cm,
+  secondary), **T0G** (cola can at the training mark, guard).
+  - Runner `so101_trial.py --blind TYP2|T6P2|T0G ft6`, deployed with no block running; manifest required.
+  - TYP2 uses the yellow-can judge values from `stress_can_TYP.json`.
+  - Stop rule: 2 operator aborts per block.
+- **Analysis** (`scripts/ft6_analysis.py`, written and dry-run before the first trial):
+  - TYP2 and T6P2: FT2 − FT success difference, Newcombe 95%; improvement detected iff the lower bound > 0.
+  - T0G: descriptive. Reported with its Newcombe interval; a drop is flagged, and no replacement of FT at the trained
+    spot follows from this block either way.
+  - Failure kinds labelled blind, as §15.
+- **Order**: lock → record demos → train → hashes of the config and checkpoint → engine → schedule sealed and hashed →
+  blocks → `artifacts/freeze/ft6_post.json` → blind re-judge and labels → unseal.
+- **Date stop**: a block not started by 2026-10-25 is reported as not run.
+- **Power**: 12 against 12 detects only a large gap (as §5); FT is 0/12 in both conditions, so a gain of about 6/12 or
+  more would be detected.
