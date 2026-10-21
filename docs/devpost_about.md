@@ -40,6 +40,16 @@ For every candidate engine, QuantGate answers three questions.
 A one-command CLI (`quantgate.py review | ask | preflight | cost | verify`) rebuilds the whole review from
 committed, hashed evidence.
 
+### Which model does what
+
+| Part | Model or tool | Its job | What it is not allowed to do |
+|---|---|---|---|
+| The robot policy | ACT (51.6M), trained on Nebius Jobs | picks up the can | — |
+| The candidates | TensorRT FP32 / FP16 / INT8 engines on the Jetson | the builds under review | — |
+| The judge | Cosmos-Reason2 on a Nebius AI Endpoint | says whether the can ended standing on the coaster | decide a verdict on its own; it was validated on held-out recordings first |
+| The writer | Nemotron 3 Super on Nebius Token Factory | explains the review in words | write any number, verdict or approval word (code rejects them) |
+| The verdicts | plain code | every number, interval and GO / HOLD / BLOCK | — |
+
 ## Who it is for
 
 Teams that ship learned robot policies to edge accelerators such as Jetson and Hailo: robotics startups, labs moving a
@@ -110,6 +120,25 @@ compiler or device change makes a new artifact, and each artifact needs its own 
   Outcomes come from an automatic judge and a blind video re-judge, which agree.
 - **Hardware is the unglamorous failure mode**: empty episodes, voltage errors and gripper friction. Each became a
   recorded deployment condition.
+
+## Failure cases we publish
+
+We keep these in the write-up on purpose; each one changed what the review says.
+
+- **A knocked wrist camera.** Success at the trained spot suddenly fell. We kept every result sealed, ruled out the
+  software, found stray markers and a wrist camera knocked off-axis, and fixed the mount. A pre-registered health
+  check then read "back to nominal" (gripper chatter 0.11, near the earlier 0.13). Six trials run in the bad scene
+  were discarded unopened.
+- **The fix has a reach.** The position fine-tune works from −6 to +3 cm with the cola can, but not at +6 cm or with a
+  smaller yellow can (0/12 against 0/12 in a re-test).
+- **The first AI judge setup missed 20 of 21 failures.** After validation it still misses some: cans left standing at
+  the start look like successes to it.
+- **An offline warning that the arm did not confirm.** A deliberately broken calibration scored badly offline but went
+  11/12 on the arm in 12 trials.
+- **A hypothesis we could not confirm.** INT8 seemed to make the gripper chatter twice as much; a pre-registered test
+  found 1.3x, not significant (p = 0.12).
+- **The simulator cannot predict the arm yet.** An Isaac Sim twin agreed with 10 of 14 real runs only because it
+  predicts failure every time.
 
 ## What we learned
 
