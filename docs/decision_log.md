@@ -1106,3 +1106,14 @@ Wording, also from the review:
   request. Both were checked as viewable without login. They are linked at the top of the README.
 - Secret check 2 (`scripts/prepublish_check.py`) passed before this: 0 exact secrets in 1,018 blobs.
 - The code repository and the dashboard are switched by the user.
+
+---
+
+## 2026-10-22 — 파인튜닝 v2(개정 9): 데이터·학습 설정 고정 (학습 전)
+
+- ftpos2 50개 녹화 완료(`artifacts/finetune/demo_order2.txt` 순서). 모두 25초 전체 길이(743–746 프레임), 동작이 적은 에피소드 0개
+- 녹화 중 "28.5 Hz" 경고 1회. Orin에서 Ray 홈랩 워커 서비스가 재시작을 반복하고 있었고, 작업자가 녹화 중 서비스를 멈췄다
+- 학습 데이터 `ft2_train` = LOCK-1 train 80 + ftpos 50 + ftpos2 50 = **180 에피소드, 118,328 프레임**(`lerobot-edit-dataset merge`).
+  파일 해시 합 `cfba3102…`, S3 경로 `g2/ft2_train`. (Orin의 ft_train 사본은 메타 파일 하나가 빠져 있어 병합 원본으로 쓰지 않았다)
+- 학습: `scripts/job/finetune_act.sh` `4aebcc0c…`, INIT `g2/act_ft_pos_20k/020000/pretrained_model`(FT), STEPS 20000, BATCH 8, SEED 1002,
+  저장은 마지막 1회. Nebius Jobs L40S
