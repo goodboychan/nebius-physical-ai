@@ -500,10 +500,12 @@ Analysis: `scripts/ft5_analysis.py`, written to `artifacts/reports/ft5_analysis.
   (the re-tests did not hold the restored wrist view throughout). Before the next block the mount should be fixed and
   checked against a reference frame at the start of every session.
 
-## 21. Amendment 9, DRAFT (2026-10-21): fine-tune v2 for the two gaps (yellow can, +6 cm)
+## 21. Amendment 9 (2026-10-21): fine-tune v2 for the two gaps (yellow can, +6 cm)
 
-**Status: draft.** It is locked by a later commit, after H2 (fp16 prereg §14) and before the first new demonstration
-is recorded. Nothing below may change after that commit.
+**Status: locked** (2026-10-21, after H2 read "back to nominal", fp16 prereg §15, and before the first new
+demonstration). Nothing below changes after this commit. Locked files: demo order `artifacts/finetune/demo_order2.txt`
+(sha256 `9728198ee114c619…`), `scripts/ft6_schedule.py` (`a018e5b62fa25be4…`), `scripts/ft6_analysis.py` (`c5e9600c3bde4ff8…`, dry-run on relabelled
+amendment 7 data reproduced those results), runner `scripts/so101_trial.py` (`9db8c0e8efdcff61…`, deployed with no block running).
 
 - **Why**: §18 and §20 found no gain at +6 cm and with the yellow can, and every FT failure there was (a), not finding
   the start position. The old fix (§2–3) worked with demonstrations at nearby positions. This amendment tests the same
