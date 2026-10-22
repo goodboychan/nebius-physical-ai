@@ -157,7 +157,7 @@ if NARR == "v9":   # v11 (2026-10-22, second review): >= 60 s of the real arm (r
             [("live, 96 new trials", "22/24 caught · 2/72 false alarms", "ok", 0.0), ("held-out recordings", "20/21 · 5/252", None, 0.0), ("first setup", "1/21", "bad", 0.0)], False), "Real arm (overhead, 2×)"),
         ("7", ss("7", 2), slot("7"), "scroll", (f"{SHOTS}/report_meta.png",), "Code writes verdicts and numbers; Nemotron (Token Factory) explains"),
     ]
-    P8 = "video/assets/product_v11.mp4"; cuts = [0.0, ss("8", 1), ss("8", 2), ss("8", 3), ss("8", 5), ss("8", 6), slot("8")]
+    P8 = os.environ.get("PRODUCT", "video/assets/product_v12.mp4"); cuts = [0.0, ss("8", 1), ss("8", 2), ss("8", 3), ss("8", 5), ss("8", 6), slot("8")]
     labs = ["QuantGate audit board · screen capture", "1 · pick a candidate", "2 · the evidence behind it", "3 · the verdict: HOLD", "4 · the next test · copy the plan", "5 · BLOCK before the arm (fault injection)"]
     REL += [("8", a_, b_, "clip", (P8, a_, 1, 0), l_) for a_, b_, l_ in zip(cuts, cuts[1:], labs)]
     REL += [("9", 0.0, ss("9", 1) - 0.3, "split", ((T1L, 215.0, 1, 180), "For this policy", "what the developer leaves with",
