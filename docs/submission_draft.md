@@ -26,7 +26,7 @@ trials, and says what to validate, hold or block. Earn the next test, not the ap
 
 ## Links
 
-- Video: `[USER: new YouTube link for v11]` (first submission: https://youtu.be/VJdYplrJfjo)
+- Video: https://www.youtube.com/watch?v=z80w9vig-qA (v12; first submission: https://youtu.be/VJdYplrJfjo)
 - Code: https://github.com/goodboychan/nebius-physical-ai (Apache 2.0)
 - Dashboard: https://claude.ai/artifact/2tUAoJHBeT8uLU96BmgPNK
 - Datasets: https://huggingface.co/datasets/chans/quantgate-so101-coaster,
@@ -283,7 +283,7 @@ PyTorch · Hailo-8 (portability probe)
 
 **Repository URL**: https://github.com/goodboychan/nebius-physical-ai (public from 2026-10-26). Apache 2.0. Setup and reproduction are in the README (`quantgate.py verify | review | plan`; no GPU or API key needed to rebuild the review).
 
-**Demo URL**: the dashboard, https://claude.ai/artifact/2tUAoJHBeT8uLU96BmgPNK (no robot needed). Video: `[USER: new YouTube link for v11]`.
+**Demo URL**: the dashboard, https://claude.ai/artifact/2tUAoJHBeT8uLU96BmgPNK (no robot needed). Video: https://www.youtube.com/watch?v=z80w9vig-qA.
 
 **Which model(s) did you use, and why that size/variant?**
 - `nvidia/nemotron-3-super-120b-a12b` for the deployment-report agent (D3). The report has to read a large evidence

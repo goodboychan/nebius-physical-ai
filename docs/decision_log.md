@@ -1136,3 +1136,5 @@ Wording, also from the review:
   the evidence finding from the deployment decision in the preflight and the workflow, and folds the full report. The
   first-visit candidate is FP16 (VC-025). FT-FP16's plan marks the +6 cm and yellow-can fine-tune as completed by FT2. No
   number, verdict or rule changed; the decision text restates committed results (`scripts/build_dashboard_nexttest.py`).
+- 2026-10-23: second submission sent by the user; video v12 on YouTube (https://www.youtube.com/watch?v=z80w9vig-qA),
+  linked from the README, the submission documents and the dashboard menu.
