@@ -178,3 +178,9 @@ Outcomes are decided by the locked criterion (automatic judge and §11 consensus
   - trial 23: (a), the start position was not found and the can was grasped in the wrong place.
   - trial 24: (b), the right start position was reached, but the can was pushed away while the gripper closed.
 - TYPR complete: 24 trials, 0 aborted, 0 invalid. Live automatic judge: all 24 failed (block-level tally). Operator kinds: (b) in trials 18, 19, 21, 24; (a) in the rest. Both sealed logs hashed into `artifacts/freeze/ft5_post.json` before either is opened.
+
+## TYP2 (2026-10-22, prereg §21 amendment 9; yellow can at the +3 cm mark, FT2 vs FT, wrist mount fixed, Ray worker service stopped)
+
+- Pre-block check (no policy, arm not moved): wrist frame shows the fingertips and band as in the H2 reference; overhead frame shows no stray markers.
+- Failures reported by the operator, by trial number only (blind to cells; kinds as in TYP):
+  - trial 1: (a), the start position was not found and the can was grasped in the wrong place.
