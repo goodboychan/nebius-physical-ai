@@ -14,7 +14,7 @@ SHOTS, OUT = sys.argv[1:3]
 W, H, FPS = 1920, 1080, 30
 BG, INK, INK2, ACC = (16, 20, 19), (230, 234, 233), (174, 184, 183), (18, 160, 168)
 F = lambda s, b=False: ImageFont.truetype("/usr/share/fonts/truetype/dejavu/DejaVuSans%s.ttf" % ("-Bold" if b else ""), s)
-if os.environ.get("NARR", "v5") in ("v6", "v7"):   # v9: Noto Sans, the same family as the deck and closer to the dashboard
+if os.environ.get("NARR", "v5") in ("v6", "v7", "v8"):   # v9: Noto Sans, the same family as the deck and closer to the dashboard
     F = lambda s, b=False: ImageFont.truetype("/usr/share/fonts/opentype/noto/NotoSansCJK-%s.ttc" % ("Bold" if b else "Regular"), s, index=1)
 FONT_SUB, FONT_CHIP, FONT_CARD, FONT_BIG = F(34), F(28), F(46, True), F(80, True)
 R = "artifacts/reports/figures"; C = "dashboard/clips"; E = "video/edit"
@@ -84,6 +84,42 @@ if NARR in ("v6", "v7"):   # v9 (2026-10-21): audience line, 673 blinded trials,
     ]
     REL = [(k, a, (slot(k) if k == "2" and b == 37.525 else b), kind, args, chip) for k, a, b, kind, args, chip in REL]
     REL.sort(key=lambda r: (int(r[0]), r[1]))
+if NARR == "v8":   # v10 (2026-10-22, storytelling review): question first, each result ends in a decision, the product segment last
+    A = os.path.expanduser("~/edgeqgate_data/seminar_assets")
+    slot = lambda k: ST[str(int(k) + 1)] - ST[k] if str(int(k) + 1) in ST else 11.5
+    def ss(k, i):   # start of the i-th sentence of scene k, relative to the scene start
+        s0 = ST[k]; e = ST.get(str(int(k) + 1), 1e9); xs = [x[0] - s0 for x in SUBS if s0 - 0.01 <= x[0] < e]; return xs[i]
+    T6 = "Fine-tune v2 · same session, sealed, interleaved"
+    REL = [
+        ("0", 0.0, 1.5, "clip", (f"{C}/g6_success.mp4", 2.0, 4, 0), "Same robot, same task: success (overhead, 4×)"),
+        ("0", 1.5, ss("0", 3), "clip", (f"{C}/g6_fail_knock.mp4", 8.0, 4, 0), "Same robot, same task: failure (overhead, 4×)"),
+        ("0", ss("0", 3), ss("0", 4), "clipmark", (f"{C}/v2_shift_regrasp.mp4", 0.0, 4, 0, ((850, 880, 62, "start moved 3 cm"), (1129, 848, 88, "goal"))), "Initial probe: start moved 3 cm · 0/3 (overhead, 4×)"),
+        ("0", ss("0", 4), slot("0"), "bigq", ("Which build do you ship?", "What still blocks deployment?"), None),
+        ("1", 0.0, ss("1", 1) - 0.2, "logo", (), None),
+        ("1", ss("1", 1) - 0.2, slot("1"), "questions", (("Which candidate do I validate first?", "Can this build deploy?", "What do I test next?"), [ss("1", i) - (ss("1", 1) - 0.2) for i in (1, 2, 3)]), None),
+        ("2", 0.0, ss("2", 1), "clip", (f"{E}/demo_ft.mp4", 1.0, 1, 0), "Real arm, real time · the can goes to the coaster (demonstration take, not counted)"),
+        ("2", ss("2", 1), ss("2", 2), "clip", (f"{C}/demos_top_wrist.mp4", 0.0, 1, 0), "SO-101 · ACT policy · teleoperated demonstrations · trained on Nebius Jobs"),
+        ("2", ss("2", 2), ss("2", 3), "table", ("One policy, 26 TensorRT engines on the Jetson", [("full precision (FP32)", "1", None), ("half precision (FP16)", "1", None), ("INT8, different calibrations", "24", None)]), None),
+        ("2", ss("2", 3), slot("2"), "clip", (T1L, 209.6, 1, 180), "745 real-arm trials · sealed, interleaved · operator blinding partial in fine-tune blocks"),
+        ("3", 0.0, slot("3"), "chart", ("engine_cost",), "Decision 1 · what to validate first"),
+        ("4", 0.0, 8.3, "chart", ("g6_success_v2",), None),
+        ("4", 8.3, ss("4", 2), "chart", ("audit_vs_random_v2",), None),
+        ("4", ss("4", 2), slot("4"), "table", ("Verdict for FP16 against FP32", [("success, 25 trials per arm", "INSUFFICIENT_EVIDENCE", "bad"), ("deployment", "HOLD", "bad"), ("to settle it", "pre-register a rule, run more trials", "ok")]), "Decision 2 · can it deploy? not yet"),
+        ("5", 0.0, ss("5", 2), "chart", ("what_moved_v2",), None),
+        ("5", ss("5", 2), ss("5", 3), "clip", (f"{C}/v1_nopad_drop.mp4", 4.0, 4, 0), "Gripper pads removed: the block finished 8/24 (overhead, 4×)"),
+        ("5", ss("5", 3), ss("5", 4), "clip", (f"{C}/v2_shift_regrasp.mp4", 8.0, 4, 0), "Initial probe, start moved 3 cm: missed (overhead, 4×)"),
+        ("5", ss("5", 4), ss("5", 5), "clip", (f"{E}/t1_old_vs_ft_counted.mp4", 0.0, 2, 0), "Sealed comparison at +3 cm: old 3/12 · fine-tuned 12/12 (side view, 2×)"),
+        ("5", ss("5", 5), slot("5"), "table", (T6, [("start +6 cm", "v2 12/12 · first fine-tune 2/12", "ok"), ("smaller yellow can, +3 cm", "v2 12/12 · first fine-tune 7/12", "ok"), ("training mark (guard)", "12/12 · 12/12", None)]), "Decision 3 · what to test next: the weak conditions"),
+        ("6", 0.0, slot("6"), "clip", (f"{A}/wrist_before_after.mp4", 3.0, 1, 0), None),
+        ("7", 0.0, ss("7", 1), "image", (f"{R}/fig_frames.png",), "Cosmos-Reason2 judges the final frame of each trial"),
+        ("7", ss("7", 1), ss("7", 2), "table", ("Cosmos-Reason2 end-of-trial judge", [("live, 96 new trials", "22/24 caught · 2/72 false alarms", "ok"), ("held-out recordings", "20/21 caught · 5/252", None), ("first setup, before validation", "1/21 caught", "bad")]), None),
+        ("7", ss("7", 2), slot("7"), "scroll", (f"{SHOTS}/report_meta.png",), "Code writes verdicts and numbers; Nemotron (Token Factory) explains"),
+    ]
+    P8 = "video/assets/product_v10.mp4"; cuts = [0.0, ss("8", 1), ss("8", 2), ss("8", 3), ss("8", 5), ss("8", 6), slot("8")]
+    labs = ["QuantGate audit board · screen capture", "1 · pick a candidate", "2 · the evidence behind it", "3 · the verdict: HOLD", "4 · the next test", "5 · BLOCK before the arm (fault injection)"]
+    REL += [("8", a_, b_, "clip", (P8, a_, 1, 0), l_) for a_, b_, l_ in zip(cuts, cuts[1:], labs)]
+    REL += [("9", 0.0, ss("9", 3) - 0.3, "endcard", ((("Priority", "FP16 (VC-025): validate first"), ("Status", "deployment HOLD · not enough evidence yet"), ("Next", "FP16 vs FP32 under a pre-registered rule")), [ss("9", i) for i in (0, 1, 2)]), None),
+            ("9", ss("9", 3) - 0.3, slot("9"), "endkick", ("Earn the next test, not the approval.",), None)]
 SEG = [(ST[k] + a, ST[k] + b, kind, args, chip) for k, a, b, kind, args, chip in REL]
 
 def fit(im, box_w, box_h):
@@ -179,6 +215,38 @@ def frames_of(seg):
             base = Image.new("RGB", (W, H), BG); f = fit(last, W, H); base.paste(f, ((W - f.width) // 2, (H - f.height) // 2))
             panel = fn(i / FPS, t1 - t0).crop((60, 110, 1860, 1010)).resize((1100, 550)); a_ = min(1.0, i / (0.4 * FPS))
             region = base.crop((770, 120, 1870, 670)); base.paste(Image.blend(region, panel, a_), (770, 120)); yield base
+    elif kind == "clipmark":   # v10: a clip with marks (x, y, r, label) on the fitted 1920x1080 frame for its first 1.6 s
+        path, s0, speed, rot, marks = args; gen = pc.frames(path, s0, (t1 - t0) * speed + 0.5, fps=FPS / speed, size=None); last = None
+        for i in range(n):
+            try: last = next(gen)[1]
+            except StopIteration: pass
+            base = Image.new("RGB", (W, H), BG); f = fit(last, W, H); base.paste(f, ((W - f.width) // 2, (H - f.height) // 2)); d = ImageDraw.Draw(base)
+            if i / FPS < 1.6:
+                for (x, y, rr, lab) in marks:
+                    for a_ in range(0, 360, 20): d.arc((x - rr, y - rr, x + rr, y + rr), a_, a_ + 11, fill=(255, 214, 64), width=5)
+                    w = d.textlength(lab, font=FONT_CHIP); d.rounded_rectangle((x - w / 2 - 14, y - rr - 62, x + w / 2 + 14, y - rr - 14), 10, fill=(16, 20, 19)); d.text((x - w / 2, y - rr - 56), lab, font=FONT_CHIP, fill=(255, 214, 64))
+            yield base
+    elif kind == "logo":
+        im = logo()
+        for i in range(n): yield im.copy()
+    elif kind == "bigq":       # v10: the developer's question, large, on the dark ground
+        im = Image.new("RGB", (W, H), BG); d = ImageDraw.Draw(im); f = F(76, True)
+        for j, s in enumerate(args): w = d.textlength(s, font=f); d.text(((W - w) / 2, 360 + j * 130), s, font=f, fill=INK if j == 0 else ACC)
+        for i in range(n): yield im.copy()
+    elif kind == "questions":  # v10: the three questions QuantGate answers, each appearing with its sentence
+        qs, at = args
+        for i in range(n):
+            tt = i / FPS; im = Image.new("RGB", (W, H), BG); d = ImageDraw.Draw(im); d.text((240, 220), "QuantGate answers three questions", font=F(44, True), fill=INK2)
+            for j, q in enumerate(qs):
+                if tt + 0.05 >= at[j]: d.text((240, 360 + j * 140), f"{j + 1}", font=F(70, True), fill=ACC); d.text((340, 368 + j * 140), q, font=F(62, True), fill=INK)
+            yield im
+    elif kind == "endcard":    # v10: what the developer leaves with
+        items, at = args
+        for i in range(n):
+            tt = i / FPS; im = Image.new("RGB", (W, H), BG); d = ImageDraw.Draw(im)
+            for j, (k_, v_) in enumerate(items):
+                if tt + 0.05 >= at[j]: d.text((260, 330 + j * 150), k_, font=F(44, True), fill=ACC); d.text((600, 326 + j * 150), v_, font=F(56, True), fill=INK)
+            yield im
     elif kind == "table":
         im = table_card(*args)
         for i in range(n): yield im.copy()
@@ -229,6 +297,14 @@ def frames_of(seg):
 # UPSCALE=2: frames are drawn at 1920x1080 and encoded at 3840x2160 (Lanczos). YouTube gives 4K uploads a much higher
 # bitrate, so even 1080p playback is sharper than a 1080p upload; CRF and preset can be set from the environment
 SCALE = int(os.environ.get("UPSCALE", "1"))
+if os.environ.get("PREVIEW"):   # one frame from the middle of each segment, as PNGs in the PREVIEW folder (layout check, no encode)
+    os.makedirs(os.environ["PREVIEW"], exist_ok=True)
+    for j, seg in enumerate(SEG):
+        fr = list(frames_of(seg)); im = fr[min(len(fr) - 1, int(len(fr) * float(os.environ.get("PREVIEW_FRAC", "0.667"))))] if fr else Image.new("RGB", (W, H)); d = ImageDraw.Draw(im)
+        if seg[4]: chip(d, seg[4])
+        if seg[2] not in ("cardfade", "endkick", "bigq", "questions", "endcard"): subtitle(d, seg[0] + (seg[1] - seg[0]) * 2 / 3)
+        im.resize((640, 360)).save(f"{os.environ['PREVIEW']}/s{j:02d}_{seg[2]}.png")
+    print("preview", len(SEG)); sys.exit(0)
 o = av.open(OUT, "w", options={"movflags": "+faststart"}); vs = o.add_stream("libx264", rate=FPS)
 vs.width, vs.height, vs.pix_fmt = W * SCALE, H * SCALE, "yuv420p"
 vs.options = {"crf": os.environ.get("CRF", "21"), "preset": os.environ.get("PRESET", "medium"), "profile": "high", "tune": "film"}
@@ -238,11 +314,11 @@ for seg in SEG:
     for im in frames_of(seg):
         t = k / FPS; d = ImageDraw.Draw(im)
         if seg[4]: chip(d, seg[4])
-        if NARR in ("v6", "v7") and 0.3 <= t < 3.3:   # v9: one number in the first seconds
-            a_ = min(1.0, (t - 0.3) / 0.4, (3.3 - t) / 0.4); hl = ("745" if NARR == "v7" else "673") + " blinded real-arm trials · evidence before deployment"; fh = F(52, True)
+        if NARR in ("v6", "v7", "v8") and 0.3 <= t < 3.3:   # v9: one number in the first seconds
+            a_ = min(1.0, (t - 0.3) / 0.4, (3.3 - t) / 0.4); hl = "745 real-arm trials · evidence before deployment" if NARR == "v8" else ("745" if NARR == "v7" else "673") + " blinded real-arm trials · evidence before deployment"; fh = F(52, True)
             w = d.textlength(hl, font=fh); x = (W - w) / 2; d.rounded_rectangle((x - 36, 120, x + w + 36, 220), 18, fill=(16, 20, 19))
             d.text((x, 136), hl, font=fh, fill=tuple(int(16 + (c - 16) * a_) for c in (240, 244, 244)))
-        if seg[2] not in ("cardfade", "endkick"): subtitle(d, t)   # the card and the kick show the spoken line already
+        if seg[2] not in ("cardfade", "endkick", "bigq", "questions", "endcard"): subtitle(d, t)   # the card and the kick show the spoken line already
         if SCALE != 1: im = im.resize((W * SCALE, H * SCALE), Image.LANCZOS)
         for p in vs.encode(av.VideoFrame.from_image(im)): o.mux(p)
         k += 1

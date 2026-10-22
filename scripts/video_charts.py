@@ -8,6 +8,9 @@ W, H = 1920, 1080
 BG, PANEL, INK, INK2, GRID = (16, 20, 19), (246, 247, 248), (24, 32, 40), (96, 106, 116), (226, 230, 234)
 GREEN, GREEN_L, TEAL, GREY = (64, 168, 104), (214, 240, 222), (24, 152, 166), (128, 136, 144)
 F = lambda s, b=False: ImageFont.truetype("/usr/share/fonts/truetype/dejavu/DejaVuSans%s.ttf" % ("-Bold" if b else ""), s)
+import os
+if os.environ.get("NARR") == "v8":   # v10: Noto Sans, like the cards and subtitles
+    F = lambda s, b=False: ImageFont.truetype("/usr/share/fonts/opentype/noto/NotoSansCJK-%s.ttc" % ("Bold" if b else "Regular"), s, index=1)
 D = "video/scene_plan/data"
 rows = lambda name: list(csv.DictReader(open(f"{D}/{name}", encoding="utf-8-sig")))
 ease = lambda x: 0.0 if x <= 0 else (1.0 if x >= 1 else 1 - (1 - x) ** 3)
@@ -147,3 +150,51 @@ def what_moved(t, dur):
     return im
 
 CHARTS = {"what_moved": what_moved, "engine_cost": engine_cost, "g6_success": g6_success, "cost_vs_success": cost_vs_success, "audit_vs_random": audit_vs_random, "ft_position": ft_position}
+
+
+# v10 (storytelling review, 2026-10-22): final states instead of growing bars where the end state is the point, narrower wording
+def g6_success_v2(t, dur):
+    R = rows("02_g6_success_by_cell.csv"); R = sorted(R, key=lambda r: (r["cell"] == "VC-000", r["cell"]))
+    im, d = frame("G6 nominal tests · FP32 + 10 INT8 candidates", "Success on the arm, by engine", "successes / trials per engine at the trained mark (FP32 in grey) · Wilson 95% interval")
+    n = len(R); rh = 44; x0, y0, bw = 420, 320, 1100; a = ramp(t, 0.0, 0.5)
+    rates = [int(r["successes"]) / int(r["trials"]) for r in R]; lo_, hi_ = min(rates), max(rates)
+    d.rectangle((x0 + bw * lo_, y0 - 14, x0 + bw * hi_, y0 + rh * n), fill=GREEN_L)
+    for tk in (0, 25, 50, 75, 100):
+        x = x0 + bw * tk / 100; d.line((x, y0 - 14, x, y0 + rh * n), fill=GRID, width=2); d.text((x - 18, y0 + rh * n + 8), f"{tk}%", font=F(22), fill=INK2)
+    for i, r in enumerate(R):
+        y = y0 + i * rh; k, m = int(r["successes"]), int(r["trials"]); v = k / m
+        lab = "FP32 (VC-000)" if r["cell"] == "VC-000" else r["cell"]; d.text((x0 - 24 - d.textlength(lab, font=F(24)), y + 4), lab, font=F(24), fill=INK)
+        d.rounded_rectangle((x0, y + 4, x0 + bw * v * a, y + rh - 14), 8, fill=GREY if r["cell"] == "VC-000" else TEAL)
+        lo, hi = float(r["wilson95_lo_pct"]) / 100, float(r["wilson95_hi_pct"]) / 100; yc = y + (rh - 10) / 2
+        d.line((x0 + bw * lo, yc, x0 + bw * hi, yc), fill=INK, width=3); d.text((x0 + bw * 1.0 + 20, y + 4), f"{k}/{m}", font=F(24, True), fill=INK)
+    pill(im, d, f"All {lo_*100:.0f}–{hi_*100:.0f}%", "25 trials per engine cannot separate them", ramp(t, 1.0, 1.5))
+    return im
+
+def audit_vs_random_v2(t, dur):
+    R = rows("04_audit_vs_random.csv")
+    im, d = frame("Does the offline audit pick better engines?", "Audit picks vs random picks", "real-arm successes, three engines per group (G6 nominal tests)")
+    for i, r in enumerate(R):
+        y = 430 + i * 190; lab = ("audit top picks", "random picks")[i]
+        d.text((200, y), lab, font=F(44, True), fill=INK); d.text((1000, y - 20), f'{r["successes"]}/{r["trials"]}', font=F(96, True), fill=TEAL if i == 0 else GREY)
+    pill(im, d, "Same result", "the offline score did not predict the arm", ramp(t, 0.8, 1.2))
+    return im
+
+def what_moved_v2(t, dur):
+    R = rows("07_what_moved.csv")
+    im, d = frame("Same arm, same policy family", "What moved success", "successes / trials per condition · Wilson 95% interval · separate sessions, not randomized")
+    n = len(R); gw = 230; x0, y1, hmax = 250, 800, 420; a = ramp(t, 0.0, 0.6)
+    for v in (0, 50, 100): yy = y1 - hmax * v / 100; d.line((200, yy, 1720, yy), fill=GRID, width=2); d.text((140, yy - 14), f"{v}%", font=F(22), fill=INK2)
+    col = {"FP32": GREY, "INT8 × 10 cells": TEAL, "Unseen can": TEAL}
+    for i, r in enumerate(R):
+        k, m = int(r["successes"]), int(r["trials"]); cx = x0 + i * gw + gw / 2
+        c = col.get(r["condition"], (204, 102, 51)); hh = hmax * k / m * a
+        d.rounded_rectangle((cx - 70, y1 - max(hh, 4), cx + 70, y1), 10, fill=c)
+        lo, hi = float(r["wilson95_lo_pct"]), float(r["wilson95_hi_pct"]); d.line((cx, y1 - hmax * lo / 100, cx, y1 - hmax * hi / 100), fill=INK, width=3)
+        lab = f"{k}/{m}"; d.text((cx - d.textlength(lab, font=F(30, True)) / 2, y1 - hmax * hi / 100 - 44), lab, font=F(30, True), fill=INK)
+        cond = "Unseen can, at the mark" if r["condition"] == "Unseen can" else r["condition"]
+        for j, (txt, f) in enumerate(((cond, F(24, True)), (r["block"], F(22)))):
+            d.text((cx - d.textlength(txt, font=f) / 2, y1 + 14 + j * 34), txt, font=f, fill=INK if j == 0 else INK2)
+    pill(im, d, "Grip and position moved it", "no difference detected between precisions", ramp(t, 1.2, 1.7))
+    return im
+
+CHARTS.update({"g6_success_v2": g6_success_v2, "audit_vs_random_v2": audit_vs_random_v2, "what_moved_v2": what_moved_v2})

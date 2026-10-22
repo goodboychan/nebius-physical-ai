@@ -1,0 +1,163 @@
+1
+00:00:00,000 --> 00:00:00,809
+Same robot.
+
+2
+00:00:00,809 --> 00:00:01,545
+Same task.
+
+3
+00:00:01,545 --> 00:00:03,604
+One run succeeds, one fails.
+
+4
+00:00:03,604 --> 00:00:06,988
+Move the can three centimeters, and it misses.
+
+5
+00:00:06,988 --> 00:00:11,475
+So which build do you ship, and what still blocks deployment?
+
+6
+00:00:13,500 --> 00:00:16,368
+ Quant Gate answers three questions.
+
+7
+00:00:16,368 --> 00:00:19,236
+Which candidate do I validate first?
+
+8
+00:00:19,236 --> 00:00:20,988
+Can this build deploy?
+
+9
+00:00:20,988 --> 00:00:22,900
+And what do I test next?
+
+10
+00:00:23,200 --> 00:00:27,934
+It started with an arm that brings a drink to someone working hard.
+
+11
+00:00:27,934 --> 00:00:34,505
+This S O one oh one runs an A C T policy on a Jetson Orin Nano Super, trained on Nebius Jobs.
+
+12
+00:00:34,505 --> 00:00:43,690
+From that one policy we built twenty-six TensorRT engines: full precision, half precision, and twenty-four int eight calibrations.
+
+13
+00:00:43,690 --> 00:00:49,625
+Seven hundred and forty-five real-arm trials ran from sealed, interleaved schedules.
+
+14
+00:00:49,925 --> 00:00:52,639
+First decision: what to validate first.
+
+15
+00:00:52,639 --> 00:01:00,225
+Measured on this Jetson, half precision was the fastest engine and the cheapest per inference, not int eight.
+
+16
+00:01:02,425 --> 00:01:04,166
+But cost is not approval.
+
+17
+00:01:04,166 --> 00:01:14,961
+In the nominal tests, every candidate succeeded ninety to a hundred percent of the time, and the offline audit's top picks did no better than random picks.
+
+18
+00:01:14,961 --> 00:01:20,950
+Twenty-five trials cannot tell them apart, so the verdict is: not enough evidence yet.
+
+19
+00:01:21,250 --> 00:01:24,760
+We detected no success difference between the precisions.
+
+20
+00:01:24,760 --> 00:01:27,900
+The clearest failures came from the physical setup.
+
+21
+00:01:27,900 --> 00:01:30,795
+Without the gripper pads, eight of twenty-four.
+
+22
+00:01:30,795 --> 00:01:33,258
+A start moved three centimeters: missed.
+
+23
+00:01:33,258 --> 00:01:38,923
+Fifty new demonstrations and a sealed comparison: twelve of twelve, against three of twelve.
+
+24
+00:01:38,923 --> 00:01:47,975
+We repeated it for the next gaps, a smaller can and six centimeters out: twelve of twelve in both, against the first fine-tune in the same session.
+
+25
+00:01:48,275 --> 00:01:50,648
+Even the camera mount is in scope.
+
+26
+00:01:50,648 --> 00:01:57,000
+When success dropped, we kept every result sealed, and traced it to a knocked wrist camera.
+
+27
+00:01:57,575 --> 00:02:03,377
+Cosmos Reason, on a Nebius A I Endpoint, judges the final frame of each trial.
+
+28
+00:02:03,377 --> 00:02:11,484
+On ninety-six new trials, it caught twenty-two of twenty-four failures, with two false alarms in seventy-two.
+
+29
+00:02:11,484 --> 00:02:18,625
+Nemotron Super on Token Factory explains the review, while code writes every number and verdict.
+
+30
+00:02:19,175 --> 00:02:21,702
+Here is what a developer does with it.
+
+31
+00:02:21,702 --> 00:02:23,897
+Pick a candidate: half precision.
+
+32
+00:02:23,897 --> 00:02:27,688
+The evidence: cost on the device, and results on the arm.
+
+33
+00:02:27,688 --> 00:02:28,885
+The verdict: hold.
+
+34
+00:02:28,885 --> 00:02:33,008
+It is not approved, because the comparison is still too small.
+
+35
+00:02:33,008 --> 00:02:36,998
+The plan says what to run next, under a pre-registered rule.
+
+36
+00:02:36,998 --> 00:02:43,250
+And a build whose files no longer match what was audited is blocked before it reaches the arm.
+
+37
+00:02:44,175 --> 00:02:46,958
+Validate half precision first.
+
+38
+00:02:46,958 --> 00:02:48,442
+Hold deployment.
+
+39
+00:02:48,442 --> 00:02:50,297
+Run the listed test.
+
+40
+00:02:50,297 --> 00:02:51,318
+Quant Gate.
+
+41
+00:02:51,318 --> 00:02:54,750
+Earn the next test, not the approval.
