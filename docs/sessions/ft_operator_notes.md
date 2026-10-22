@@ -190,3 +190,8 @@ Outcomes are decided by the locked criterion (automatic judge and §11 consensus
   - trial 19: (a), the start position was not found and the can was grasped in the wrong place.
   - trial 22: (a), the start position was not found and the can was grasped in the wrong place.
 - TYP2 complete: 24 trials, 0 aborted, 0 invalid. Live automatic judge failures (block-level tally, cells not opened): 1, 3, 8, 17, 19, 22, 23 (7). The operator reported 1, 3, 17, 19, 22; the judge also failed 8 and 23, which the operator did not mention. The blind consensus re-judge settles these. Sealed log hashed (interim, not opened): `stress_ft6_TYP2_sealed.jsonl` sha256 `5ed7d265167cbc9996744f028d8d888905c8801863b7f9792f987ef6e6f115a2`.
+
+## T6P2 (2026-10-22, prereg §21 amendment 9; cola can at the +6 cm mark, FT2 vs FT)
+
+- Failures reported by the operator, by trial number only (blind to cells); a trial not mentioned is one the operator saw succeed:
+  - trial 3: (a), the start position was not found and the can was grasped in the wrong place.
