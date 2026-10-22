@@ -205,3 +205,8 @@ Outcomes are decided by the locked criterion (automatic judge and §11 consensus
   - trial 20: (a), the start position was not found and the can was grasped in the wrong place (typed "ㅁ", the a key on the Korean layout).
   - trial 22: (a), the start position was not found and the can was grasped in the wrong place.
 - T6P2 complete: 24 trials, 0 aborted, 0 invalid. Live automatic judge failures (block-level tally, cells not opened): 3, 5, 8, 10, 12, 13, 15, 18, 20, 22 (10), the same trials the operator reported. Sealed log hashed (interim, not opened): `stress_ft6_T6P2_sealed.jsonl` sha256 `c055328df8ac8e54fc689a76a8e815ff5523fad71fb998593696c96706168f9a`.
+
+## T0G (2026-10-22, prereg §21 amendment 9; cola can at the training mark, FT2 vs FT)
+
+- No failures reported by the operator. Live automatic judge: 24/24 succeeded (block-level tally). 0 aborted, 0 invalid.
+- All three sealed logs hashed into `artifacts/freeze/ft6_post.json` before any is opened.
