@@ -204,3 +204,4 @@ Outcomes are decided by the locked criterion (automatic judge and §11 consensus
   - trial 18: (a), the start position was not found and the can was grasped in the wrong place. (The operator first typed 17 and corrected it to 18.)
   - trial 20: (a), the start position was not found and the can was grasped in the wrong place (typed "ㅁ", the a key on the Korean layout).
   - trial 22: (a), the start position was not found and the can was grasped in the wrong place.
+- T6P2 complete: 24 trials, 0 aborted, 0 invalid. Live automatic judge failures (block-level tally, cells not opened): 3, 5, 8, 10, 12, 13, 15, 18, 20, 22 (10), the same trials the operator reported. Sealed log hashed (interim, not opened): `stress_ft6_T6P2_sealed.jsonl` sha256 `c055328df8ac8e54fc689a76a8e815ff5523fad71fb998593696c96706168f9a`.
