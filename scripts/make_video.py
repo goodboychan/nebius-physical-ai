@@ -14,7 +14,7 @@ SHOTS, OUT = sys.argv[1:3]
 W, H, FPS = 1920, 1080, 30
 BG, INK, INK2, ACC = (16, 20, 19), (230, 234, 233), (174, 184, 183), (18, 160, 168)
 F = lambda s, b=False: ImageFont.truetype("/usr/share/fonts/truetype/dejavu/DejaVuSans%s.ttf" % ("-Bold" if b else ""), s)
-if os.environ.get("NARR", "v5") in ("v6", "v7", "v8"):   # v9: Noto Sans, the same family as the deck and closer to the dashboard
+if os.environ.get("NARR", "v5") in ("v6", "v7", "v8", "v9"):   # v9: Noto Sans, the same family as the deck and closer to the dashboard
     F = lambda s, b=False: ImageFont.truetype("/usr/share/fonts/opentype/noto/NotoSansCJK-%s.ttc" % ("Bold" if b else "Regular"), s, index=1)
 FONT_SUB, FONT_CHIP, FONT_CARD, FONT_BIG = F(34), F(28), F(46, True), F(80, True)
 R = "artifacts/reports/figures"; C = "dashboard/clips"; E = "video/edit"
@@ -120,7 +120,73 @@ if NARR == "v8":   # v10 (2026-10-22, storytelling review): question first, each
     REL += [("8", a_, b_, "clip", (P8, a_, 1, 0), l_) for a_, b_, l_ in zip(cuts, cuts[1:], labs)]
     REL += [("9", 0.0, ss("9", 3) - 0.3, "endcard", ((("Priority", "FP16 (VC-025): validate first"), ("Status", "deployment HOLD · not enough evidence yet"), ("Next", "FP16 vs FP32 under a pre-registered rule")), [ss("9", i) for i in (0, 1, 2)]), None),
             ("9", ss("9", 3) - 0.3, slot("9"), "endkick", ("Earn the next test, not the approval.",), None)]
+if NARR == "v9":   # v11 (2026-10-22, second review): >= 60 s of the real arm (robot left, card right), the first output in 30 s, FP16 19/20 vs 10/10
+    A = os.path.expanduser("~/edgeqgate_data/seminar_assets")
+    slot = lambda k: ST[str(int(k) + 1)] - ST[k] if str(int(k) + 1) in ST else 9.2
+    def ss(k, i):
+        s0 = ST[k]; e = ST.get(str(int(k) + 1), 1e9); xs = [x[0] - s0 for x in SUBS if s0 - 0.01 <= x[0] < e]; return xs[i]
+    R1 = lambda k, i: ss(k, i) - 0.05
+    REL = [
+        ("0", 0.0, 1.5, "clip", (f"{C}/g6_success.mp4", 2.0, 4, 0), "Same robot, same task: success (overhead, 4×)"),
+        ("0", 1.5, ss("0", 3), "clip", (f"{C}/g6_fail_knock.mp4", 8.0, 4, 0), "Same robot, same task: failure (overhead, 4×)"),
+        ("0", ss("0", 3), slot("0"), "clipmark", (f"{C}/v2_shift_regrasp.mp4", 0.0, 4, 0, ((850, 880, 62, "start moved 3 cm"), (1129, 848, 88, "goal"))), "Initial probe: start moved 3 cm · 0/3 (overhead, 4×)"),
+        ("1", 0.0, slot("1"), "split", ((f"{E}/demo_ft.mp4", 12.0, 1, 0), "QuantGate", "for developers validating LeRobot policies on Jetson",
+            [("validate first", "FP16 (VC-025)", "ok", R1("1", 1)), ("deployment", "HOLD", "bad", R1("1", 2)), ("next test", "FP16 vs FP32, pre-registered", "ok", R1("1", 3))], True),
+            "Real arm, real time (demonstration take, not counted)"),
+        ("2", 0.0, ss("2", 1), "clip", (f"{E}/demo_ft.mp4", 30.0, 1, 0), "Real arm, real time · the can goes to the coaster (demonstration take, not counted)"),
+        ("2", ss("2", 1), ss("2", 2), "clip", (f"{C}/demos_top_wrist.mp4", 0.0, 1, 0), "SO-101 · ACT policy · teleoperated demonstrations · trained on Nebius Jobs"),
+        ("2", ss("2", 2), ss("2", 3), "split", ((T1L, 196.0, 1, 180), "One policy, 26 engines", "TensorRT on the Jetson Orin Nano Super",
+            [("full precision", "FP32 · 1", None, 0.0), ("half precision", "FP16 · 1", None, 0.0), ("INT8 calibrations", "24", None, 0.0)], False), "Counted trial (T1) · real time"),
+        ("2", ss("2", 3), slot("2"), "clip", (T1L, 209.6, 1, 180), "745 real-arm trials · sealed, interleaved · operator blinding partial in fine-tune blocks"),
+        ("3", 0.0, slot("3"), "chart", ("engine_cost",), "Decision 1 · what to validate first"),
+        ("4", 0.0, 7.6, "chart", ("g6_success_v2",), None),
+        ("4", 7.6, ss("4", 2), "chart", ("audit_vs_random_v2",), None),
+        ("4", ss("4", 2), slot("4"), "split", ((f"{C}/v2_rubber_success.mp4", 4.0, 2, 0), "FP16 vs FP32", "the same old policy, F0 block on the real arm",
+            [("observed", "19/20 vs 10/10", None, 0.0), ("verdict", "INSUFFICIENT_EVIDENCE", "bad", R1("4", 3) - ss("4", 2)), ("deployment", "HOLD", "bad", R1("4", 3) - ss("4", 2)), ("next", "pre-register a revised test", "ok", R1("4", 3) - ss("4", 2))], False),
+            "Decision 2 · can it deploy? not yet · real arm, overhead (2×)"),
+        ("5", 0.0, ss("5", 2), "chart", ("what_moved_v2",), None),
+        ("5", ss("5", 2), ss("5", 3), "clip", (f"{C}/v1_nopad_drop.mp4", 4.0, 4, 0), "Gripper pads removed: the block finished 8/24 (overhead, 4×)"),
+        ("5", ss("5", 3), ss("5", 4), "clip", (f"{C}/v2_shift_regrasp.mp4", 8.0, 4, 0), "Initial probe, start moved 3 cm: missed (overhead, 4×)"),
+        ("5", ss("5", 4), ss("5", 5), "clip", (f"{E}/t1_old_vs_ft_counted.mp4", 0.0, 2, 0), "Sealed comparison at +3 cm: old 3/12 · fine-tuned 12/12 (side view, 2×)"),
+        ("5", ss("5", 5), slot("5"), "split", ((f"{E}/ft2_TYP2002_top.mp4", 4.0, 2, 0), "Fine-tune v2", "same session, sealed, interleaved, 12 vs 12",
+            [("start +6 cm", "12/12 vs 2/12", "ok", 0.0), ("yellow can, +3 cm", "12/12 vs 7/12", "ok", 0.0), ("training mark (guard)", "12/12 vs 12/12", None, 0.0)], False),
+            "Decision 3 · next: the weak conditions · fine-tune v2, yellow can at +3 cm (counted trial, 2×)"),
+        ("6", 0.0, slot("6"), "clip", (f"{A}/wrist_before_after.mp4", 3.0, 1, 0), None),
+        ("7", 0.0, ss("7", 1), "image", (f"{R}/fig_frames.png",), "Cosmos-Reason2 judges the final frame of each trial"),
+        ("7", ss("7", 1), ss("7", 2), "split", ((f"{C}/g6_success.mp4", 30.0, 2, 0), "Cosmos-Reason2", "end-of-trial judge, validated before use",
+            [("live, 96 new trials", "22/24 caught · 2/72 false alarms", "ok", 0.0), ("held-out recordings", "20/21 · 5/252", None, 0.0), ("first setup", "1/21", "bad", 0.0)], False), "Real arm (overhead, 2×)"),
+        ("7", ss("7", 2), slot("7"), "scroll", (f"{SHOTS}/report_meta.png",), "Code writes verdicts and numbers; Nemotron (Token Factory) explains"),
+    ]
+    P8 = "video/assets/product_v11.mp4"; cuts = [0.0, ss("8", 1), ss("8", 2), ss("8", 3), ss("8", 5), ss("8", 6), slot("8")]
+    labs = ["QuantGate audit board · screen capture", "1 · pick a candidate", "2 · the evidence behind it", "3 · the verdict: HOLD", "4 · the next test · copy the plan", "5 · BLOCK before the arm (fault injection)"]
+    REL += [("8", a_, b_, "clip", (P8, a_, 1, 0), l_) for a_, b_, l_ in zip(cuts, cuts[1:], labs)]
+    REL += [("9", 0.0, ss("9", 1) - 0.3, "split", ((T1L, 215.0, 1, 180), "For this policy", "what the developer leaves with",
+                [("priority", "validate FP16 first", "ok", 0.0), ("status", "deployment HOLD", "bad", 0.0), ("next", "FP16 vs FP32, pre-registered", "ok", 0.0)], False), None),
+            ("9", ss("9", 1) - 0.3, slot("9"), "endkick", ("Earn the next test, not the approval.",), None)]
 SEG = [(ST[k] + a, ST[k] + b, kind, args, chip) for k, a, b, kind, args, chip in REL]
+# v11 model badges (user request): which model, service or code is doing the work in each segment; top right, beside the chip
+BADGE = [None] * len(SEG)
+if NARR == "v9":
+    MOD, CODE = (107, 76, 154), (0, 128, 140)
+    def badge_for(k, kind, args):
+        if k in ("0",): return ("ACT policy · TensorRT engine on Jetson Orin Nano Super", MOD)
+        if k == "1": return ("QuantGate review · verdicts written by code", CODE)
+        if k == "2": return ("ACT 51.6M · trained on Nebius Jobs (L40S)", MOD) if kind == "clip" and "demos_top_wrist" in str(args) else ("TensorRT engines on Jetson Orin Nano Super", MOD)
+        if k == "3": return ("measured on the device · trtexec, 15 W", CODE)
+        if k == "4": return ("verdict: code · Newcombe interval, pre-registered rule", CODE)
+        if k == "5":
+            if kind == "chart": return ("results: sealed real-arm blocks", CODE)
+            return ("fine-tunes trained on Nebius Jobs (L40S)", MOD) if ("t1_old_vs_ft" in str(args) or "ft2_" in str(args)) else ("ACT policy · TensorRT engine on Jetson", MOD)
+        if k == "6": return ("health check: code · gripper chatter", CODE)
+        if k == "7": return ("Nemotron 3 Super · Nebius Token Factory (words only)", MOD) if kind == "scroll" else ("Cosmos-Reason2 · Nebius AI Endpoint", MOD)
+        if k == "8": return ("verdicts: code · explanation: Nemotron 3 Super", CODE)
+        return None
+    BADGE = [badge_for(k, kind, args) for k, a, b, kind, args, chip in REL]
+
+def badge(d, b):
+    if not b: return
+    txt, col = b; w = d.textlength(txt, font=FONT_CHIP); x1 = W - 40; x0 = x1 - w - 56
+    d.rounded_rectangle((x0, 28, x1, 76), 10, fill=col); d.ellipse((x0 + 16, 46, x0 + 28, 58), fill=(255, 255, 255)); d.text((x0 + 40, 36), txt, font=FONT_CHIP, fill=(255, 255, 255))
 
 def fit(im, box_w, box_h):
     r = min(box_w / im.width, box_h / im.height); return im.resize((max(1, int(im.width * r)), max(1, int(im.height * r))), Image.LANCZOS)
@@ -215,6 +281,35 @@ def frames_of(seg):
             base = Image.new("RGB", (W, H), BG); f = fit(last, W, H); base.paste(f, ((W - f.width) // 2, (H - f.height) // 2))
             panel = fn(i / FPS, t1 - t0).crop((60, 110, 1860, 1010)).resize((1100, 550)); a_ = min(1.0, i / (0.4 * FPS))
             region = base.crop((770, 120, 1870, 670)); base.paste(Image.blend(region, panel, a_), (770, 120)); yield base
+    elif kind == "split":      # v11: the real arm large on the left, a card on the right whose rows appear at their times
+        (path, s0, speed, rot), title, sub, rows, show_logo = args
+        gen = pc.frames(path, s0, (t1 - t0) * speed + 0.5, fps=FPS / speed, size=None); last = None
+        lg = fit(Image.open("docs/assets/quantgate_logo.png").convert("RGBA"), 300, 120) if show_logo else None
+        for i in range(n):
+            try:
+                last = next(gen)[1]
+                if rot: last = last.rotate(rot)
+            except StopIteration: pass
+            base = Image.new("RGB", (W, H), BG); f = fit(last, 1160, 870); base.paste(f, (30 + (1160 - f.width) // 2, 110 + (870 - f.height) // 2)); d = ImageDraw.Draw(base)
+            x0, x1, y = 1230, 1890, 150; tt = i / FPS
+            words, lines_, cur = sub.split(), [], ""
+            for w_ in words:
+                if d.textlength((cur + " " + w_).strip(), font=F(26)) > x1 - x0 - 80 and cur: lines_.append(cur); cur = w_
+                else: cur = (cur + " " + w_).strip()
+            lines_.append(cur)
+            d.rounded_rectangle((x0, y, x1, y + 36 + (130 if lg else 0) + 110 + 34 * len(lines_) + 150 * len(rows) + 10), 22, fill=(241, 243, 242))
+            yy = y + 36
+            if lg: base.paste(lg, (x0 + 40, yy), lg); yy += 130
+            fitf = lambda s, sz, b, w: next(F(z, b) for z in range(sz, 20, -2) if d.textlength(s, font=F(z, b)) <= w or z <= 22)
+            d.text((x0 + 40, yy), title, font=F(46, True), fill=(20, 24, 28))
+            for j, ln in enumerate(lines_): d.text((x0 + 40, yy + 60 + 34 * j), ln, font=F(26), fill=(60, 70, 78))
+            yy += 110 + 34 * len(lines_)
+            for (k_, v_, tone, at) in rows:
+                if tt + 0.05 < at: break
+                d.line((x0 + 40, yy, x1 - 40, yy), fill=(210, 216, 214), width=2)
+                d.text((x0 + 40, yy + 18), k_, font=F(28), fill=(60, 70, 78))
+                col = {"bad": (176, 52, 44), "ok": (16, 128, 110)}.get(tone, (20, 24, 28)); d.text((x0 + 40, yy + 60), v_, font=fitf(v_, 40, True, x1 - x0 - 80), fill=col); yy += 150
+            yield base
     elif kind == "clipmark":   # v10: a clip with marks (x, y, r, label) on the fitted 1920x1080 frame for its first 1.6 s
         path, s0, speed, rot, marks = args; gen = pc.frames(path, s0, (t1 - t0) * speed + 0.5, fps=FPS / speed, size=None); last = None
         for i in range(n):
@@ -302,6 +397,7 @@ if os.environ.get("PREVIEW"):   # one frame from the middle of each segment, as 
     for j, seg in enumerate(SEG):
         fr = list(frames_of(seg)); im = fr[min(len(fr) - 1, int(len(fr) * float(os.environ.get("PREVIEW_FRAC", "0.667"))))] if fr else Image.new("RGB", (W, H)); d = ImageDraw.Draw(im)
         if seg[4]: chip(d, seg[4])
+        if seg[2] not in ("endkick", "logo"): badge(d, BADGE[j])
         if seg[2] not in ("cardfade", "endkick", "bigq", "questions", "endcard"): subtitle(d, seg[0] + (seg[1] - seg[0]) * 2 / 3)
         im.resize((640, 360)).save(f"{os.environ['PREVIEW']}/s{j:02d}_{seg[2]}.png")
     print("preview", len(SEG)); sys.exit(0)
@@ -310,12 +406,13 @@ vs.width, vs.height, vs.pix_fmt = W * SCALE, H * SCALE, "yuv420p"
 vs.options = {"crf": os.environ.get("CRF", "21"), "preset": os.environ.get("PRESET", "medium"), "profile": "high", "tune": "film"}
 a_in = av.open(f"docs/narration/narration_{NARR}_am_michael.m4a"); as_ = o.add_stream_from_template(a_in.streams.audio[0], opaque=True)
 k = 0
-for seg in SEG:
+for si, seg in enumerate(SEG):
     for im in frames_of(seg):
         t = k / FPS; d = ImageDraw.Draw(im)
         if seg[4]: chip(d, seg[4])
-        if NARR in ("v6", "v7", "v8") and 0.3 <= t < 3.3:   # v9: one number in the first seconds
-            a_ = min(1.0, (t - 0.3) / 0.4, (3.3 - t) / 0.4); hl = "745 real-arm trials · evidence before deployment" if NARR == "v8" else ("745" if NARR == "v7" else "673") + " blinded real-arm trials · evidence before deployment"; fh = F(52, True)
+        if seg[2] not in ("endkick", "logo"): badge(d, BADGE[si])
+        if NARR in ("v6", "v7", "v8", "v9") and 0.3 <= t < 3.3:   # v9: one number in the first seconds
+            a_ = min(1.0, (t - 0.3) / 0.4, (3.3 - t) / 0.4); hl = "745 real-arm trials · evidence before deployment" if NARR in ("v8", "v9") else ("745" if NARR == "v7" else "673") + " blinded real-arm trials · evidence before deployment"; fh = F(52, True)
             w = d.textlength(hl, font=fh); x = (W - w) / 2; d.rounded_rectangle((x - 36, 120, x + w + 36, 220), 18, fill=(16, 20, 19))
             d.text((x, 136), hl, font=fh, fill=tuple(int(16 + (c - 16) * a_) for c in (240, 244, 244)))
         if seg[2] not in ("cardfade", "endkick", "bigq", "questions", "endcard"): subtitle(d, t)   # the card and the kick show the spoken line already

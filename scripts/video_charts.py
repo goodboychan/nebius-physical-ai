@@ -9,7 +9,7 @@ BG, PANEL, INK, INK2, GRID = (16, 20, 19), (246, 247, 248), (24, 32, 40), (96, 1
 GREEN, GREEN_L, TEAL, GREY = (64, 168, 104), (214, 240, 222), (24, 152, 166), (128, 136, 144)
 F = lambda s, b=False: ImageFont.truetype("/usr/share/fonts/truetype/dejavu/DejaVuSans%s.ttf" % ("-Bold" if b else ""), s)
 import os
-if os.environ.get("NARR") == "v8":   # v10: Noto Sans, like the cards and subtitles
+if os.environ.get("NARR") in ("v8", "v9"):   # v10: Noto Sans, like the cards and subtitles
     F = lambda s, b=False: ImageFont.truetype("/usr/share/fonts/opentype/noto/NotoSansCJK-%s.ttc" % ("Bold" if b else "Regular"), s, index=1)
 D = "video/scene_plan/data"
 rows = lambda name: list(csv.DictReader(open(f"{D}/{name}", encoding="utf-8-sig")))
@@ -167,7 +167,7 @@ def g6_success_v2(t, dur):
         d.rounded_rectangle((x0, y + 4, x0 + bw * v * a, y + rh - 14), 8, fill=GREY if r["cell"] == "VC-000" else TEAL)
         lo, hi = float(r["wilson95_lo_pct"]) / 100, float(r["wilson95_hi_pct"]) / 100; yc = y + (rh - 10) / 2
         d.line((x0 + bw * lo, yc, x0 + bw * hi, yc), fill=INK, width=3); d.text((x0 + bw * 1.0 + 20, y + 4), f"{k}/{m}", font=F(24, True), fill=INK)
-    pill(im, d, f"All {lo_*100:.0f}–{hi_*100:.0f}%", "25 trials per engine cannot separate them", ramp(t, 1.0, 1.5))
+    pill(im, d, f"All {lo_*100:.0f}–{hi_*100:.0f}%", "10–25 trials per engine: too few to separate them", ramp(t, 1.0, 1.5))
     return im
 
 def audit_vs_random_v2(t, dur):
