@@ -549,3 +549,36 @@ amendment 7 data reproduced those results), runner `scripts/so101_trial.py` (`9d
     `341d812ae5c8f043735094fa859ca38b6f174655fd7ae5a2af1c17e10b663518`; the local copy was deleted unread. Public copy
     `artifacts/finetune/stress_schedule_GEN3_public.json`. Engines `4affc06d…` (FT) and `cea6c0e3…` (FT2), linked by
     `scripts/ft6_setup_orin.py`; manifest `4f77309b8532c5d2…`.
+
+## 22. Amendment 9 results (2026-10-22, unsealed after ft6_post.json)
+
+Order kept:
+1. The three sealed logs were hashed into `artifacts/freeze/ft6_post.json` (pushed) before any was opened.
+2. The consensus re-judge was run blind to cells: TYP2 19/24, T6P2 14/24, T0G 24/24
+   (`artifacts/finetune/rejudge/{TYP2,T6P2,T0G}_consensus.json`). In TYP2 the live judge also failed trials 8 and 23; the
+   re-judge and the operator called both successes.
+3. Failure-mode labels were written blind (`artifacts/finetune/GEN3_modes.json`): every failure was (a), at the grasp.
+4. Only then were the logs unsealed. They match the post record (`5ed7d265…`, `c055328d…`, `516e8cb0…`).
+
+Analysis: `scripts/ft6_analysis.py`, written to `artifacts/reports/ft6_analysis.json`. Wrist mount fixed and checked
+before TYP2 and between T6P2 and T0G (unchanged); Ray worker service stopped during the session.
+
+| Block | FT2-FP16 | FT-FP16 | Difference, Newcombe 95% | Reading |
+|---|---|---|---|---|
+| **TYP2** (primary), yellow can +3 cm | **12/12** | 7/12 | +42 pp [+9, +68] | **improvement detected** |
+| **T6P2** (secondary), cola can +6 cm | **12/12** | 2/12 | +83 pp [+46, +95] | **improvement detected** |
+| **T0G** (guard), cola can at the training mark | 12/12 | 12/12 | 0 pp [−24, +24] | no drop flagged |
+
+- **Failure kinds**: all 15 failures were FT's, all (a), not finding the can's start position. FT2 did not fail.
+- **Reading**:
+  - The new demonstrations (yellow can at −4…+4 cm, cola can at +5/+7 cm) fixed both gaps, at held-out conditions
+    (the yellow can at +3 cm and the cola can at +6 cm were never in training).
+  - The guard found no loss at the training mark in 12 trials.
+  - **FT itself did better than in §18 and §20**: 7/12 against 0/12 with the yellow can, 2/12 against 0/12 at +6 cm.
+    This session had the fixed wrist mount (H2, fp16 prereg §15) and no stray markers; the earlier blocks had a
+    knocked wrist camera. So part of the gap §18 found was the scene. The FT2 − FT comparison is within one session
+    and stays valid; comparisons of FT across sessions are confounded by the scene.
+- **What this does not show**: approval. 12/12 detects a large gain only; FT2 is the candidate to validate next for the
+  yellow can and starts up to +6 cm, not an approved replacement.
+- **Limitations**: one session per block; operator blinding partial (the two policies move differently); a 12-trial
+  guard cannot show non-inferiority at the training mark.
