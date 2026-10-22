@@ -398,8 +398,8 @@ if os.environ.get("PREVIEW"):   # one frame from the middle of each segment, as 
         fr = list(frames_of(seg)); im = fr[min(len(fr) - 1, int(len(fr) * float(os.environ.get("PREVIEW_FRAC", "0.667"))))] if fr else Image.new("RGB", (W, H)); d = ImageDraw.Draw(im)
         if seg[4]: chip(d, seg[4])
         if seg[2] not in ("endkick", "logo"): badge(d, BADGE[j])
-        if seg[2] not in ("cardfade", "endkick", "bigq", "questions", "endcard"): subtitle(d, seg[0] + (seg[1] - seg[0]) * 2 / 3)
-        im.resize((640, 360)).save(f"{os.environ['PREVIEW']}/s{j:02d}_{seg[2]}.png")
+        if seg[2] not in ("cardfade", "endkick", "bigq", "questions", "endcard") and not os.environ.get("PREVIEW_NOSUB"): subtitle(d, seg[0] + (seg[1] - seg[0]) * 2 / 3)
+        (im if os.environ.get("PREVIEW_FULL") else im.resize((640, 360))).save(f"{os.environ['PREVIEW']}/s{j:02d}_{seg[2]}.png")
     print("preview", len(SEG)); sys.exit(0)
 o = av.open(OUT, "w", options={"movflags": "+faststart"}); vs = o.add_stream("libx264", rate=FPS)
 vs.width, vs.height, vs.pix_fmt = W * SCALE, H * SCALE, "yuv420p"
