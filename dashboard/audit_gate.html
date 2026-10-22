@@ -35,10 +35,11 @@
 *{box-sizing:border-box}
 body{background:var(--paper); color:var(--ink); font-family:var(--sans); font-size:15px; line-height:1.55; margin:0;
   padding-block:40px 72px; padding-left:20px; padding-right:20px; -webkit-font-smoothing:antialiased}
-.wrap{max-width:1080px; margin:0 auto; display:flex; flex-direction:column; gap:44px}
+.wrap{max-width:1080px; margin:0 auto; display:flex; flex-direction:column; gap:44px; overflow-x:clip}
 h1,h2{text-wrap:balance; margin:0}
 p{margin:0}
 .num{font-family:var(--mono); font-variant-numeric:tabular-nums}
+li .num{overflow-wrap:anywhere}   /* long verdict tokens in the review list wrap on phones */
 .mast{display:flex; flex-direction:column; gap:14px}
 .eyebrow{font-family:var(--cond); font-weight:600; font-size:12px; letter-spacing:.14em; text-transform:uppercase; color:var(--ink-3)}
 h1{font-size:clamp(28px,4.4vw,42px); font-weight:600; letter-spacing:-.02em; line-height:1.12}
@@ -142,6 +143,23 @@ footer{border-top:1px solid var(--rule); padding-top:18px; color:var(--ink-3); f
   .row{grid-template-columns:64px 1fr} .row .v{grid-column:2; text-align:left}
   .hrow{grid-template-columns:1fr; gap:2px}
 }
+
+/* workflow (2026-10-21): the whole pipeline on one plate, with where each step runs and which model does it */
+.flow{display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:14px}
+.lane{display:flex; flex-direction:column; gap:10px; min-width:0}
+.lane h3{margin:0; font-family:var(--cond); font-size:12px; font-weight:600; letter-spacing:.12em; text-transform:uppercase; color:var(--ink-3)}
+.step{background:var(--plate); border:1px solid var(--rule); border-left:3px solid var(--rule); border-radius:4px; padding:10px 12px; display:flex; flex-direction:column; gap:3px; position:relative}
+.step + .step::before{content:"↓"; position:absolute; top:-13px; left:14px; font-size:11px; color:var(--ink-3); line-height:1}
+.step .t{font-weight:600; font-size:14px}
+.step .w{font-family:var(--mono); font-size:11px; color:var(--ink-3)}
+.step .n{font-size:13px; color:var(--ink-2)}
+.step.model{border-left-color:var(--plum)}
+.step.code{border-left-color:var(--signal)}
+.step.arm{border-left-color:var(--ember)}
+.flow-legend{display:flex; gap:16px; flex-wrap:wrap; font-size:12px; color:var(--ink-3)}
+.flow-legend span::before{content:""; display:inline-block; width:10px; height:10px; margin-right:6px; vertical-align:-1px; border-radius:2px; background:var(--k)}
+.loop{font-size:13px; color:var(--ink-2); border-top:1px dashed var(--rule); padding-top:10px}
+@media (max-width:760px){ .flow{grid-template-columns:minmax(0,1fr)} }
 </style>
 
 <div class="wrap">
@@ -167,6 +185,32 @@ footer{border-top:1px solid var(--rule); padding-top:18px; color:var(--ink-3); f
       <p>The cell-to-engine map was opened only after all 245 trials were logged and hashed. The stress tests and the FP16
         run were unsealed on 10-13, the position fine-tune (T1, T0 and T2) on 10-14 after all three blocks were hashed, its replication (T0R) on 10-15 the reach blocks (TYP, T6P, T6M) on 10-18, the INT8 chatter block (Q8B) on 10-20 and the reach re-tests (T6PR, TYPR) on 10-21, each after its post-run hash was committed.</p>
     </div>
+  </section>
+
+  <section class="panel" id="workflow">
+    <div class="plate"><h2>How it works: the whole workflow</h2><span class="ref">where each step runs · which model does what</span></div>
+    <p class="note"><b>Models suggest and describe; code decides.</b> Every number and verdict comes from code over committed, hashed evidence.</p>
+    <div class="flow-legend"><span style="--k:var(--ember)">real arm or device</span><span style="--k:var(--plum)">an AI model</span><span style="--k:var(--signal)">plain code</span></div>
+    <div class="flow">
+      <div class="lane"><h3>1 · Build the candidates</h3>
+        <div class="step arm"><span class="t">Teleoperate demonstrations</span><span class="w">SO-101 leader arm · LeRobot</span><span class="n">120 demos, then 50 + 50 for the fine-tunes</span></div>
+        <div class="step model"><span class="t">Train the policy</span><span class="w">ACT 51.6M · Nebius Jobs (L40S)</span><span class="n">one checkpoint; fine-tunes in about 25 min</span></div>
+        <div class="step arm"><span class="t">Build engines</span><span class="w">TensorRT 10.3 · Jetson Orin Nano Super</span><span class="n">26 candidates: FP32, FP16, 24 INT8 calibrations</span></div>
+      </div>
+      <div class="lane"><h3>2 · Gather evidence</h3>
+        <div class="step arm"><span class="t">Measure cost on the device</span><span class="w">trtexec · 15 W</span><span class="n">FP16 11.6 ms and 82 mJ, faster than INT8 here</span></div>
+        <div class="step code"><span class="t">Offline audit</span><span class="w">48 CPU jobs · Nebius Jobs</span><span class="n">2,000 held-out states; ranking frozen before the arm</span></div>
+        <div class="step arm"><span class="t">Sealed real-arm trials</span><span class="w">interleaved · operator blind · hashed before unsealing</span><span class="n">673 trials so far</span></div>
+        <div class="step model"><span class="t">Judge each trial</span><span class="w">Cosmos-Reason2 · Nebius AI Endpoint</span><span class="n">validated first: 20/21 failures caught on held-out recordings</span></div>
+      </div>
+      <div class="lane"><h3>3 · Decide</h3>
+        <div class="step code"><span class="t">Verdict</span><span class="w">Newcombe intervals · pre-registered rules</span><span class="n">GO · HOLD · BLOCK · INSUFFICIENT_EVIDENCE</span></div>
+        <div class="step model"><span class="t">Explain in words</span><span class="w">Nemotron 3 Super · Nebius Token Factory</span><span class="n">words only; code rejects any number or verdict in its text</span></div>
+        <div class="step code"><span class="t">Preflight before the arm</span><span class="w">engine hash · normalization manifest · 200 ms deadline</span><span class="n">only an explicit GO passes</span></div>
+        <div class="step code"><span class="t">Plan the next test</span><span class="w">scripts/next_test_plan.py</span><span class="n">what is confirmed, what is open, trials per arm</span></div>
+      </div>
+    </div>
+    <p class="loop"><b>The loop:</b> when the evidence finds a weakness (a 3 cm start shift, a smaller can), new demonstrations go back into step 1 and the fix is re-tested under a new pre-registration — a fix earns its next test, not an approval.</p>
   </section>
 
 <!--NEXTTEST:BEGIN-->
