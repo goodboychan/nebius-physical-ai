@@ -188,3 +188,4 @@ Outcomes are decided by the locked criterion (automatic judge and §11 consensus
   - trial 3: (a), the start position was not found and the can was grasped in the wrong place.
   - trial 17: (a), the start position was not found and the can was grasped in the wrong place. (Trials 4-16 not mentioned: seen as successes by the operator.)
   - trial 19: (a), the start position was not found and the can was grasped in the wrong place.
+  - trial 22: (a), the start position was not found and the can was grasped in the wrong place.
