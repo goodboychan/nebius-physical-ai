@@ -2,6 +2,9 @@
 
 # QuantGate — a robot deployment review
 
+*Why a can on a coaster?* It started as a small gesture: an arm that brings a drink to someone working hard.
+Setting it down properly on the coaster turned out to be the hard part.
+
 **Evidence before deployment.** QuantGate helps robot developers decide which precision of a policy to ship on an
 edge device. It shows the engine's measured cost, its real-arm behavior and how strong the evidence is.
 

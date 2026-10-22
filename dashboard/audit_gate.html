@@ -175,6 +175,28 @@ a.step:hover .go, a.step:focus-visible .go, a.step.current .go{opacity:1}
 .flash{animation:wfflash 1.4s ease-out}
 @keyframes wfflash{0%{box-shadow:0 0 0 3px var(--signal)} 100%{box-shadow:0 0 0 0 transparent}}
 @media (prefers-reduced-motion:reduce){.flash{animation:none} a.step{transition:none}}
+
+/* physical evidence (2026-10-22): real footage first, the reach on the table, the physical failures */
+.hero-clips{display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:12px; margin-top:6px; max-width:760px}
+.hero-clips figure{margin:0; display:flex; flex-direction:column; gap:6px; min-width:0}
+.hero-clips video{width:100%; max-width:100%; aspect-ratio:4/3; object-fit:cover; border-radius:4px; background:#0c0f0e; border:1px solid var(--rule)}
+.hero-clips figcaption{font-size:12.5px; color:var(--ink-2)}
+.hero-clips .tag{font-family:var(--cond); font-weight:600; font-size:11px; letter-spacing:.08em; text-transform:uppercase; margin-right:6px}
+.origin{border-left:3px solid var(--ember); padding:4px 0 4px 12px; color:var(--ink-2); font-size:14px; max-width:72ch}
+.origin b{color:var(--ink)}
+.reach-wrap{position:relative; max-width:760px}
+.reach-wrap img{display:block; width:100%; border-radius:4px}
+.reach-wrap svg{position:absolute; inset:0; width:100%; height:100%}
+.reach-legend{display:flex; gap:16px; flex-wrap:wrap; font-size:12px; color:var(--ink-3)}
+.reach-legend i{display:inline-block; width:10px; height:10px; border-radius:2px; margin-right:6px; vertical-align:-1px}
+.gallery{display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:14px}
+.gcard{background:var(--plate); border:1px solid var(--rule); border-radius:4px; overflow:hidden; display:flex; flex-direction:column; min-width:0}
+.gcard img{width:100%; max-width:100%; aspect-ratio:16/10; object-fit:cover; display:block; background:#0c0f0e}
+.gcard .gb{padding:10px 12px 12px; display:flex; flex-direction:column; gap:4px}
+.gcard .gt{font-weight:600; font-size:14px}
+.gcard .gn{font-family:var(--mono); font-size:12px; color:var(--halt)}
+.gcard .gl{font-size:13px; color:var(--ink-2)}
+@media (max-width:760px){ .hero-clips, .gallery{grid-template-columns:minmax(0,1fr)} }
 </style>
 
 <div class="wrap">
@@ -190,6 +212,13 @@ a.step:hover .go, a.step:focus-visible .go, a.step.current .go{opacity:1}
     <div class="mast-meta">
       <span>status 2026-10-21</span><span>SO-101 · ACT 51.6M</span><span>Jetson Orin Nano Super · 15 W · TRT 10.3</span>
       <span>673 real-arm trials · G6 245 / 245</span>
+    </div>
+    <p class="origin"><b>Why a can on a coaster?</b> It started as a small gesture: an arm that brings a drink to someone working hard. Setting it down properly on the coaster turned out to be the hard part. Then the policy had to run on a small edge device, and we wanted to know whether it would still put the can down right, and how sure we could be.</p>
+    <div class="hero-clips">
+      <figure><video src="clips/g6_success.mp4" poster="setup/poster_success.jpg" autoplay muted loop playsinline preload="metadata" aria-label="Overhead view: the arm sets the can upright on the coaster"></video>
+        <figcaption><span class="tag" style="color:var(--good)">success</span>the can ends upright on the coaster (overhead camera, 4× speed)</figcaption></figure>
+      <figure><video src="clips/g6_fail_knock.mp4" poster="setup/poster_fail.jpg" autoplay muted loop playsinline preload="metadata" aria-label="Overhead view: same robot and task, the can is knocked over"></video>
+        <figcaption><span class="tag" style="color:var(--halt)">failure</span>same robot, same task: the can is knocked over (overhead camera, 4× speed)</figcaption></figure>
     </div>
   </header>
 
@@ -264,6 +293,26 @@ a.step:hover .go, a.step:focus-visible .go, a.step.current .go{opacity:1}
   })();
   </script>
 <!--NEXTTEST:END-->
+
+  <section class="panel" id="reach">
+    <div class="plate"><h2>Where the fine-tune works, on the table</h2><span class="ref">overhead camera · blinded, pre-registered · 12 vs 12 per mark</span></div>
+    <p class="note">Each mark is a start position the can was placed on. Bars show success out of 12 for the <b>fine-tuned policy</b> and the <b>old policy</b>; the shaded band is where the fine-tune's demonstrations were. The fix reaches −6 cm, but not +6 cm or the smaller yellow can.</p>
+    <div class="reach-legend"><span><i style="background:var(--signal)"></i>fine-tuned (FT-FP16)</span><span><i style="background:#9aa4a3"></i>old policy (FP16)</span><span><i style="background:rgba(255,190,60,.35)"></i>fine-tune demonstrations −4…+4 cm</span></div>
+    <div class="reach-wrap"><img src="setup/reach_base.jpg" alt="Overhead view of the table: the cola can at the training mark, the coaster to its right" width="380" height="230"><svg id="reach-svg" viewBox="0 0 380 230" aria-hidden="true"></svg></div>
+    <svg id="reach-bars" viewBox="0 0 380 92" role="img" aria-label="Success out of 12 at each start position, fine-tuned and old policy" style="max-width:760px; width:100%"></svg>
+    <p class="note" id="reach-note"></p>
+  </section>
+
+  <section class="panel" id="physical">
+    <div class="plate"><h2>Physical failures we found and publish</h2><span class="ref">each one changed what the review says</span></div>
+    <div class="gallery">
+      <div class="gcard"><img src="setup/fail_nopad.jpg" alt="The can falls from the gripper after the anti-slip pads were removed" loading="lazy"><div class="gb"><span class="gt">Gripper friction</span><span class="gn">pads removed: 8/24 · rubber bands: 23/24</span><span class="gl">The same engine; only the fingertips changed. Grip is a deployment condition.</span></div></div>
+      <div class="gcard"><img src="setup/fail_shift.jpg" alt="The gripper closes beside the can after the start moved 3 cm" loading="lazy"><div class="gb"><span class="gt">A 3 cm start shift</span><span class="gn">0/3 in the first tries · fixed: 12/12 vs 3/12</span><span class="gl">The policy had memorized one spot. Fifty new demonstrations fixed it, within a range.</span></div></div>
+      <div class="gcard"><img src="setup/fail_yellow.jpg" alt="A smaller yellow can at the +3 cm mark" loading="lazy"><div class="gb"><span class="gt">A smaller can, off the mark</span><span class="gn">fine-tuned 0/12 · old 3/12 · re-test 0/12 vs 0/12</span><span class="gl" style="font-size:12px">Photo from the first block, when stray red markers were on the table; the re-test removed them.</span><span class="gl">At the trained mark the same can worked 48/48; off the mark it did not. The fix has a reach.</span></div></div>
+      <div class="gcard"><img src="setup/fail_wrist.jpg" style="object-fit:contain; background:#fafbfa" alt="Wrist camera at rest: reference, knocked off-axis, re-aimed" loading="lazy"><div class="gb"><span class="gt">A knocked wrist camera</span><span class="gn">chatter 0.39 knocked · 0.11 after fixing the mount</span><span class="gl">Success fell with no software change. Results stayed sealed while we found the cause.</span></div></div>
+    </div>
+  </section>
+
   <section class="panel" id="review">
     <div class="plate"><h2>Deployment review</h2><span class="ref">ACT pick-and-place policy · Jetson Orin Nano Super 15 W · as of 2026-10-15</span></div>
     <p class="note">A review aid, not an automatic approval. It answers the developer's three questions, keeping the
@@ -731,5 +780,34 @@ bars("mj",[["FP16 VC-025",82,"var(--good)"],["INT8 VC-002",101,"var(--signal)"],
     const k = Object.keys(REL).find(x => b.textContent.trim().startsWith(x)); if (!k) return;
     steps.forEach(s => { const on = REL[k].s.includes(+s.dataset.step); s.classList.toggle("rel", on); s.classList.toggle("dim", !on); });
     note.hidden = false; note.innerHTML = "<b>Steps behind " + k + ":</b> " + REL[k].why; });
+})();
+</script>
+
+<script>
+/* reach map: data from ft_analysis, ft3_analysis (pooled mark), ft4_analysis and ft5_analysis; pixel x of each mark from the overhead frames */
+(function(){
+  const svg = document.getElementById("reach-svg"), bars = document.getElementById("reach-bars"); if (!svg || !bars) return;
+  const NS = "http://www.w3.org/2000/svg", Y = 139;
+  const M = [{cm: -6, x: 220, ft: [8, 12], old: [0, 12]}, {cm: -3, x: 187, ft: [10, 12], old: [2, 12]}, {cm: 0, x: 155, ft: [22, 24], old: [23, 24]},
+             {cm: 3, x: 117, ft: [12, 12], old: [3, 12]}, {cm: 6, x: 82, ft: [0, 12], old: [0, 12]}];
+  const el = (s, n, a, txt) => { const e = document.createElementNS(NS, n); for (const k in a) e.setAttribute(k, a[k]); if (txt != null) e.textContent = txt; s.appendChild(e); return e; };
+  const tone = m => m.cm === 0 ? "#C7A244" : (m.ft[0] / m.ft[1] > m.old[0] / m.old[1] + .3 ? "#5FA57E" : "#D4726C");
+  el(svg, "rect", {x: 109, y: 122, width: 92, height: 34, rx: 3, fill: "rgba(255,190,60,.18)", stroke: "rgba(255,190,60,.7)", "stroke-width": .7});
+  el(svg, "circle", {cx: 305, cy: 127, r: 35, fill: "none", stroke: "rgba(255,255,255,.6)", "stroke-dasharray": "3 2", "stroke-width": .9});
+  el(svg, "text", {x: 305, y: 174, "text-anchor": "middle", "font-size": 9, fill: "#fff", "font-family": "IBM Plex Sans, sans-serif"}, "coaster");
+  for (const m of M) { el(svg, "line", {x1: m.x, y1: Y, x2: m.x, y2: 230, stroke: "rgba(255,255,255,.35)", "stroke-width": .6});
+    el(svg, "circle", {cx: m.x, cy: Y, r: 4, fill: tone(m), stroke: "#fff", "stroke-width": 1}); }
+  const css = getComputedStyle(document.documentElement), ink = css.getPropertyValue("--ink").trim(), ink3 = css.getPropertyValue("--ink-3").trim(), sig = css.getPropertyValue("--signal").trim();
+  const B = 58, H = 44;
+  for (const m of M) { const f = m.ft[0] / m.ft[1], o = m.old[0] / m.old[1];
+    el(bars, "line", {x1: m.x, y1: 0, x2: m.x, y2: 4, stroke: ink3, "stroke-width": .6});
+    el(bars, "rect", {x: m.x - 10, y: B - H * f, width: 9, height: Math.max(H * f, .8), fill: sig});
+    el(bars, "rect", {x: m.x + 1, y: B - H * o, width: 9, height: Math.max(H * o, .8), fill: "#9aa4a3"});
+    el(bars, "line", {x1: m.x - 14, y1: B, x2: m.x + 14, y2: B, stroke: ink3, "stroke-width": .5});
+    el(bars, "text", {x: m.x, y: B + 11, "text-anchor": "middle", "font-size": 8.5, fill: ink, "font-weight": 600, "font-family": "IBM Plex Sans, sans-serif"}, (m.cm > 0 ? "+" : m.cm < 0 ? "−" : "") + Math.abs(m.cm) + " cm");
+    el(bars, "text", {x: m.x, y: B + 21, "text-anchor": "middle", "font-size": 6.5, fill: ink3, "font-family": "IBM Plex Mono, monospace"}, m.ft[0] + " · " + m.old[0]); }
+  el(bars, "text", {x: 300, y: 30, "text-anchor": "middle", "font-size": 7.5, fill: ink3, "font-family": "IBM Plex Sans, sans-serif"}, "fine-tuned · old successes");
+  el(bars, "text", {x: 300, y: 40, "text-anchor": "middle", "font-size": 7.5, fill: ink3, "font-family": "IBM Plex Sans, sans-serif"}, "out of 12 (24 at the 0 cm mark)");
+  document.getElementById("reach-note").innerHTML = "Green dot: improvement detected (Newcombe 95% lower bound &gt; 0). Amber: the trained mark, still undecided (22/24 vs 23/24). Red: no gain shown; at +6 cm a re-test after the scene fix gave 0/12 vs 0/12 again. <b>Yellow can at +3 cm:</b> fine-tuned 0/12, old 3/12; re-test 0/12 vs 0/12. Fine-tune v2 (new demonstrations with the yellow can and at +5/+7 cm) is being tested now.";
 })();
 </script>

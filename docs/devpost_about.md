@@ -1,5 +1,8 @@
 ## Inspiration
 
+It started as a small gesture: a robot arm that brings a drink to someone working hard. Setting the can down
+properly on the coaster turned out to be the hard part, and we got curious about it.
+
 We had a robot policy that worked: an SO-101 arm picks up a cola can and stands it on a coaster, driven by a LeRobot
 ACT (Action Chunking with Transformers) policy. Then we had to put it on a Jetson Orin Nano Super. That gave us
 26 ways to ship the same checkpoint: FP32, FP16 and 24 INT8 builds that differ only in how they were calibrated.
