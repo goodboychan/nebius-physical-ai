@@ -197,8 +197,8 @@ NVIDIA Cosmos-Reason2-2B, NVIDIA Nemotron 3 Super, NVIDIA TensorRT, TensorRT Mod
 ## 6. "Try it out" links
 
 - Dashboard (no robot needed): https://claude.ai/artifact/2tUAoJHBeT8uLU96BmgPNK
-- Code (Apache 2.0, public from 2026-10-26): https://github.com/goodboychan/nebius-physical-ai
-- Datasets (public from 2026-10-26):
+- Code (Apache 2.0, public): https://github.com/goodboychan/nebius-physical-ai
+- Datasets:
   - https://huggingface.co/datasets/chans/quantgate-so101-coaster
   - https://huggingface.co/datasets/chans/quantgate-so101-coaster-positions
   - https://huggingface.co/datasets/chans/quantgate-so101-coaster-positions-v2
@@ -234,7 +234,7 @@ the two older galleries are left out for size; they are in the repository.
 
 ## 10. Survey answers
 
-**Repository URL**: https://github.com/goodboychan/nebius-physical-ai (public from 2026-10-26). Apache 2.0. Setup and reproduction are in the README (`quantgate.py verify | review | plan`; no GPU or API key needed to rebuild the review).
+**Repository URL**: https://github.com/goodboychan/nebius-physical-ai. Apache 2.0. Setup and reproduction are in the README (`quantgate.py verify | review | plan`; no GPU or API key needed to rebuild the review).
 
 **Demo URL**: the dashboard, https://claude.ai/artifact/2tUAoJHBeT8uLU96BmgPNK (no robot needed). Video: https://www.youtube.com/watch?v=z80w9vig-qA.
 

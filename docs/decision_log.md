@@ -1138,3 +1138,7 @@ Wording, also from the review:
   number, verdict or rule changed; the decision text restates committed results (`scripts/build_dashboard_nexttest.py`).
 - 2026-10-23: second submission sent by the user; video v12 on YouTube (https://www.youtube.com/watch?v=z80w9vig-qA),
   linked from the README, the submission documents and the dashboard menu.
+- 2026-10-23, publication (moved up from 10/26 at the user's request, after the second submission): the three Hugging
+  Face datasets are public (checked anonymously). Before the repository goes public, three internal files (a company
+  seminar deck builder, an internal-hackathon episode bundler and an ideation note) were removed from the tree and kept
+  locally; their past versions remain in the git history. Secret check: see below.

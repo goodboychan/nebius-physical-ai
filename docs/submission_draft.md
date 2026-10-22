@@ -31,7 +31,7 @@ trials, and says what to validate, hold or block. Earn the next test, not the ap
 - Dashboard: https://claude.ai/artifact/2tUAoJHBeT8uLU96BmgPNK
 - Datasets: https://huggingface.co/datasets/chans/quantgate-so101-coaster,
   https://huggingface.co/datasets/chans/quantgate-so101-coaster-positions,
-  https://huggingface.co/datasets/chans/quantgate-so101-coaster-positions-v2 (public from 2026-10-26)
+  https://huggingface.co/datasets/chans/quantgate-so101-coaster-positions-v2
 
 ## The problem
 
@@ -281,7 +281,7 @@ PyTorch · Hailo-8 (portability probe)
 
 ## Survey answers (draft)
 
-**Repository URL**: https://github.com/goodboychan/nebius-physical-ai (public from 2026-10-26). Apache 2.0. Setup and reproduction are in the README (`quantgate.py verify | review | plan`; no GPU or API key needed to rebuild the review).
+**Repository URL**: https://github.com/goodboychan/nebius-physical-ai. Apache 2.0. Setup and reproduction are in the README (`quantgate.py verify | review | plan`; no GPU or API key needed to rebuild the review).
 
 **Demo URL**: the dashboard, https://claude.ai/artifact/2tUAoJHBeT8uLU96BmgPNK (no robot needed). Video: https://www.youtube.com/watch?v=z80w9vig-qA.
 
