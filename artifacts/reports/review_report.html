@@ -75,7 +75,7 @@ img{max-width:100%;height:auto;display:block}figcaption{color:#5d666e;font-size:
 <li>with the current ceiling rule, power at 200/arm: 0.32</li>
 </ul>
 <h3>FT-FP16 (position fine-tune)</h3>
-<p><b>Status</b>: next candidate where the start varies between -6 and +3 cm with the cola can; not a replacement at the trained spot, not an object or +6 cm fix</p>
+<p><b>Status</b>: next candidate where the start varies between -6 and +3 cm with the cola can; superseded for the yellow can and +6 cm by FT2-FP16 (amendment 9); not a replacement at the trained spot</p>
 <p>Confirmed:</p>
 <ul>
 <li>fine-tune vs old, start +3 cm (held out, primary): 12/12 vs old 3/12, IMPROVEMENT_DETECTED</li>
@@ -114,6 +114,36 @@ img{max-width:100%;height:auto;display:block}figcaption{color:#5d666e;font-size:
 <li>trials per arm for 80% power on the success criterion (not the chance of a final GO), under the revised rule, if truly equal (95.8%): 120</li>
 <li>trials per arm for 80% power on the success criterion (not the chance of a final GO), under the revised rule, if the observed 4 pp gap is real: 400</li>
 <li>with the current ceiling rule, power at 120/arm if truly equal: 0.32</li>
+</ul>
+<h3>FT2-FP16 (fine-tune v2: yellow can and far starts)</h3>
+<p><b>Status</b>: next candidate for the yellow can and starts up to +6 cm; not approved, not yet a replacement at the trained spot</p>
+<p>Confirmed:</p>
+<ul>
+<li>yellow can at +3 cm (held out, primary): 12/12 vs FT 7/12, IMPROVEMENT_DETECTED</li>
+<li>start +6 cm (held out, secondary): 12/12 vs FT 2/12, IMPROVEMENT_DETECTED</li>
+<li>training mark (guard): 12/12 vs FT 12/12, no drop flagged (12-trial guard)</li>
+</ul>
+<p>Open:</p>
+<ul>
+<li>non-inferiority at the training mark against the old policy (the guard detects only a large drop)</li>
+<li>FT did better in this session than before (7/12 and 2/12 against 0/12): the earlier gap was partly the scene (a knocked wrist camera)</li>
+</ul>
+<p>Evidence:</p>
+<ul>
+<li><code>artifacts/reports/ft6_analysis.json</code></li>
+<li><code>artifacts/freeze/ft6_post.json</code></li>
+<li><code>artifacts/finetune/GEN3_modes.json</code></li>
+<li><code>artifacts/finetune/rejudge/TYP2_consensus.json</code></li>
+<li><code>docs/finetune_position_preregistration.md#22</code></li>
+</ul>
+<p>Next test:</p>
+<ul>
+<li>compare: FT2-FP16 vs VC-025 (old FP16 policy) at the training mark, and FT2 at more objects and positions</li>
+<li>conditions: training mark; the yellow can and the cola can between -6 and +7 cm; a session-start wrist-camera check</li>
+<li>measure: success, failure mode, gripper chatter</li>
+<li>schedule: sealed, interleaved, new tokens</li>
+<li>rule: success non-inferiority at 10 pp (97.5% Newcombe) without the ceiling clause; a final GO also needs placement (E2, 5 px) and the preflight</li>
+<li>trials per arm for 80% power on the success criterion (not the chance of a final GO), under the revised rule, if truly equal (about 96%): 120</li>
 </ul>
 <h3>INT8 builds (24 calibration variants)</h3>
 <p><b>Status</b>: not first: slower and costlier per inference than FP16 on this device</p>

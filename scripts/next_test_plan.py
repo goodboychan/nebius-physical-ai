@@ -48,7 +48,7 @@ def plans(T):
     r5 = json.load(open("artifacts/reports/ft5_analysis.json")) if os.path.exists("artifacts/reports/ft5_analysis.json") else {}
     GEN_CTX = {"TYP": "yellow can at +3 cm (held-out object, primary)", "T6P": "start +6 cm (beyond the demonstrations)", "T6M": "start -6 cm (beyond the demonstrations)"}
     P["FT-FP16"] = {
-        "candidate": "FT-FP16 (position fine-tune)", "status": "next candidate where the start varies between -6 and +3 cm with the cola can; not a replacement at the trained spot, not an object or +6 cm fix",
+        "candidate": "FT-FP16 (position fine-tune)", "status": "next candidate where the start varies between -6 and +3 cm with the cola can; superseded for the yellow can and +6 cm by FT2-FP16 (amendment 9); not a replacement at the trained spot",
         "confirmed": [f"{r['context']}: {r['success'][0]}/{r['success'][1]} vs old {r['reference'][0]}/{r['reference'][1]}, {r['verdict']}" for r in rows
                       if r["candidate"] == "FT-FP16" and r["verdict"] == "IMPROVEMENT_DETECTED"]
                      + [f"{GEN_CTX[k]}: {g[k]['test']['ft'][0]}/{g[k]['test']['ft'][1]} vs old {g[k]['test']['old'][0]}/{g[k]['test']['old'][1]}, IMPROVEMENT_DETECTED" for k in ("T6M",)
@@ -69,6 +69,26 @@ def plans(T):
                       "trials_per_arm": {"under the revised rule, if truly equal (95.8%)": n_for(23 / 24, 23 / 24, False),
                                          "under the revised rule, if the observed 4 pp gap is real": n_for(23 / 24, 22 / 24, False),
                                          "with the current ceiling rule, power at 120/arm if truly equal": power(120, 23 / 24, 23 / 24, True)}}}
+    # amendment 9 (prereg §21-22): fine-tune v2 for the two gaps; absent before 2026-10-22
+    r6 = json.load(open("artifacts/reports/ft6_analysis.json")) if os.path.exists("artifacts/reports/ft6_analysis.json") else {}
+    if r6:
+        C6 = {"TYP2": "yellow can at +3 cm (held out, primary)", "T6P2": "start +6 cm (held out, secondary)", "T0G": "training mark (guard)"}
+        tt = lambda k: f"{C6[k]}: {r6[k]['test']['ft2'][0]}/{r6[k]['test']['ft2'][1]} vs FT {r6[k]['test']['ft'][0]}/{r6[k]['test']['ft'][1]}"
+        P["FT2-FP16"] = {
+            "candidate": "FT2-FP16 (fine-tune v2: yellow can and far starts)", "status": "next candidate for the yellow can and starts up to +6 cm; not approved, not yet a replacement at the trained spot",
+            "confirmed": [tt(k) + ", IMPROVEMENT_DETECTED" for k in ("TYP2", "T6P2") if r6[k]["test"].get("improvement_detected")]
+                         + ([tt("T0G") + ", no drop flagged (12-trial guard)"] if not r6["T0G"]["test"].get("drop_flagged") else []),
+            "open": [tt(k) + ", NOT_DETECTED" for k in ("TYP2", "T6P2") if not r6[k]["test"].get("improvement_detected")]
+                    + ([tt("T0G") + ", DROP FLAGGED"] if r6["T0G"]["test"].get("drop_flagged") else [])
+                    + ["non-inferiority at the training mark against the old policy (the guard detects only a large drop)",
+                       "FT did better in this session than before (7/12 and 2/12 against 0/12): the earlier gap was partly the scene (a knocked wrist camera)"],
+            "evidence": ["artifacts/reports/ft6_analysis.json", "artifacts/freeze/ft6_post.json", "artifacts/finetune/GEN3_modes.json",
+                         "artifacts/finetune/rejudge/TYP2_consensus.json", "docs/finetune_position_preregistration.md#22"],
+            "next_test": {"compare": "FT2-FP16 vs VC-025 (old FP16 policy) at the training mark, and FT2 at more objects and positions",
+                          "conditions": "training mark; the yellow can and the cola can between -6 and +7 cm; a session-start wrist-camera check",
+                          "measure": "success, failure mode, gripper chatter", "schedule": "sealed, interleaved, new tokens",
+                          "rule": "success non-inferiority at 10 pp (97.5% Newcombe) without the ceiling clause; a final GO also needs placement (E2, 5 px) and the preflight",
+                          "trials_per_arm": {"under the revised rule, if truly equal (about 96%)": n_for(0.96, 0.96, False)}}}
     P["INT8"] = {
         "candidate": "INT8 builds (24 calibration variants)", "status": "not first: slower and costlier per inference than FP16 on this device",
         "confirmed": ["16.8-17.1 ms and 101 mJ per inference for the 3 benched builds", "audit-picked cells 73/75 vs random 73/75: the offline score did not predict the arm"],

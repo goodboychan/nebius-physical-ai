@@ -78,7 +78,7 @@ compiler or device change makes a new artifact, and each artifact needs its own 
   - 26 TensorRT engines built on the Jetson with a frozen timing cache, so the same file always behaves the same.
 - **Offline audit**: 2,000 held-out states scored on 48 CPU jobs on Nebius Jobs. The ranking was frozen before any
   real trial.
-- **Real arm**: **673 trials** in 16 sessions, all under sealed, interleaved schedules.
+- **Real arm**: **745 trials** in 18 sessions, all under sealed, interleaved schedules.
   - The operator saw trial numbers only. In the fine-tune blocks the two policies moved visibly differently, so
     operator blinding there was partial; outcomes come from an automatic judge and a blind video re-judge.
   - Logs are hashed before they are unsealed, so no rule can change after the results are seen.
@@ -106,6 +106,9 @@ compiler or device change makes a new artifact, and each artifact needs its own 
     demonstrations, but **0/12 vs 0/12 at +6 cm** and **0/12 vs 3/12 with a smaller yellow can at +3 cm**. The review
     now states the range where the fine-tune is a candidate, and where it is not. A pre-registered re-test, after we
     found and removed a scene deviation (stray markers, a knocked wrist camera), gave the same no-gain readings.
+  - **Then we fixed those gaps too.** Fifty more demonstrations (the yellow can, starts at +5 and +7 cm) and a second
+    fine-tune: **12/12 vs 7/12 with the yellow can** and **12/12 vs 2/12 at +6 cm**, both at conditions never in
+    training, with no drop at the trained spot (12/12 vs 12/12).
   - At the trained spot it is still undecided (22/24 vs 23/24, with a pre-registered replication), so the review
     does not approve it there.
 
@@ -132,8 +135,9 @@ We keep these in the write-up on purpose; each one changed what the review says.
   software, found stray markers and a wrist camera knocked off-axis, and fixed the mount. A pre-registered health
   check then read "back to nominal" (gripper chatter 0.11, near the earlier 0.13). Six trials run in the bad scene
   were discarded unopened.
-- **The fix has a reach.** The position fine-tune works from −6 to +3 cm with the cola can, but not at +6 cm or with a
-  smaller yellow can (0/12 against 0/12 in a re-test).
+- **The fix has a reach, and the scene mattered.** The first fine-tune worked from −6 to +3 cm with the cola can, but
+  not at +6 cm or with a smaller yellow can. A second fine-tune fixed both (12/12). In that session the first
+  fine-tune also did better than before (7/12 and 2/12 against 0/12), so part of the earlier gap was the knocked camera.
 - **The first AI judge setup missed 20 of 21 failures.** After validation it still misses some: cans left standing at
   the start look like successes to it.
 - **An offline warning that the arm did not confirm.** A deliberately broken calibration scored badly offline but went

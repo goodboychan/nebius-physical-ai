@@ -25,7 +25,7 @@ Next test:
 - with the current ceiling rule, power at 200/arm: 0.32
 
 ## FT-FP16 (position fine-tune)
-**Status**: next candidate where the start varies between -6 and +3 cm with the cola can; not a replacement at the trained spot, not an object or +6 cm fix
+**Status**: next candidate where the start varies between -6 and +3 cm with the cola can; superseded for the yellow can and +6 cm by FT2-FP16 (amendment 9); not a replacement at the trained spot
 
 Confirmed:
 - fine-tune vs old, start +3 cm (held out, primary): 12/12 vs old 3/12, IMPROVEMENT_DETECTED
@@ -61,6 +61,33 @@ Next test:
 - trials per arm for 80% power on the success criterion (not the chance of a final GO), under the revised rule, if truly equal (95.8%): 120
 - trials per arm for 80% power on the success criterion (not the chance of a final GO), under the revised rule, if the observed 4 pp gap is real: 400
 - with the current ceiling rule, power at 120/arm if truly equal: 0.32
+
+## FT2-FP16 (fine-tune v2: yellow can and far starts)
+**Status**: next candidate for the yellow can and starts up to +6 cm; not approved, not yet a replacement at the trained spot
+
+Confirmed:
+- yellow can at +3 cm (held out, primary): 12/12 vs FT 7/12, IMPROVEMENT_DETECTED
+- start +6 cm (held out, secondary): 12/12 vs FT 2/12, IMPROVEMENT_DETECTED
+- training mark (guard): 12/12 vs FT 12/12, no drop flagged (12-trial guard)
+
+Open:
+- non-inferiority at the training mark against the old policy (the guard detects only a large drop)
+- FT did better in this session than before (7/12 and 2/12 against 0/12): the earlier gap was partly the scene (a knocked wrist camera)
+
+Evidence:
+- `artifacts/reports/ft6_analysis.json`
+- `artifacts/freeze/ft6_post.json`
+- `artifacts/finetune/GEN3_modes.json`
+- `artifacts/finetune/rejudge/TYP2_consensus.json`
+- `docs/finetune_position_preregistration.md#22`
+
+Next test:
+- compare: FT2-FP16 vs VC-025 (old FP16 policy) at the training mark, and FT2 at more objects and positions
+- conditions: training mark; the yellow can and the cola can between -6 and +7 cm; a session-start wrist-camera check
+- measure: success, failure mode, gripper chatter
+- schedule: sealed, interleaved, new tokens
+- rule: success non-inferiority at 10 pp (97.5% Newcombe) without the ceiling clause; a final GO also needs placement (E2, 5 px) and the preflight
+- trials per arm for 80% power on the success criterion (not the chance of a final GO), under the revised rule, if truly equal (about 96%): 120
 
 ## INT8 builds (24 calibration variants)
 **Status**: not first: slower and costlier per inference than FP16 on this device

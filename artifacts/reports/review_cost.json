@@ -44,16 +44,16 @@
  },
  "cloud_total_usd": 30.905619248919443,
  "real_arm": {
-  "trials": 673,
-  "sessions": 16,
-  "hours": 16.447222222222223,
-  "minutes_per_trial": 1.466319960376424
+  "trials": 745,
+  "sessions": 18,
+  "hours": 18.610833333333332,
+  "minutes_per_trial": 1.4988590604026844
  },
  "brute_force_settle_all": {
   "candidates": 25,
   "trials_per_arm": 115,
   "trials": 2990,
-  "arm_hours": 73.07161135875846
+  "arm_hours": 74.69314317673378
  },
  "note": "Job cost assumes billing from creation to finish (an upper bound). Token Factory D3 calls are estimated from text length."
 }

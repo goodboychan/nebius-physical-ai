@@ -31,7 +31,7 @@ validating next", not "approved": in this study no INT8 build was approved again
 
 ```bash
 uv venv .venv && uv pip install --python .venv/bin/python -e ".[dev]"
-.venv/bin/python scripts/quantgate.py verify          # tests, runner harness, 19 sealed logs vs their post-lock hashes
+.venv/bin/python scripts/quantgate.py verify          # tests, runner harness, 22 sealed logs vs their post-lock hashes
 .venv/bin/python scripts/quantgate.py review --no-llm # verdict table, next-test plans, the full review as one HTML file
                                                       # (artifacts/reports/review_report.html), preflight demo, review cost
 .venv/bin/python scripts/quantgate.py plan FT-FP16    # from evidence to the next test: confirmed, open, evidence, plan
@@ -114,6 +114,12 @@ Numbers come from committed artifacts. The figure's script lists its sources.
        +6 cm reading stands. On the yellow can the old policy lost its 3 successes; which restored change mattered
        cannot be separated. The wrist camera seems to have shifted again early in the re-tests, so the restored view did not hold
        throughout (hardware note in the pre-registration §20).
+     - **Fine-tune v2 closed both gaps (amendment 9)**: 50 more demonstrations (the yellow can at −4…+4 cm, the cola
+       can at +5 and +7 cm), with the wrist mount fixed. Against FT, sealed and interleaved, 12 each: **yellow can at
+       +3 cm 12/12 vs 7/12**, +42 pp [+9, +68]; **+6 cm 12/12 vs 2/12**, +83 pp [+46, +95]; both improvements detected,
+       at conditions never in training. A guard at the training mark found no drop (12/12 vs 12/12).
+     - FT itself did better in this session than before (7/12 and 2/12 against 0/12), so part of the earlier gap was the
+       scene. FT2 is the next candidate for these conditions, not an approval.
    - Off the training position, the old policy's commanded gripper also chatters about 4× more (exploratory,
      pre-specified metric).
    - Caveat: the operator could see that the two policies moved differently, so operator blinding was partial.
@@ -134,7 +140,7 @@ Stress tests were unsealed on 2026-10-13. The stress protocol is
 | Nebius Managed MLflow | 1.5 h | 0.7 |
 | **Cloud total** | | **≈ 31** |
 
-- The real arm ran 673 trials in about 16.4 operator-hours.
+- The real arm ran 745 trials in about 18.6 operator-hours.
 - For scale, not as a saving: settling approval for all 25 candidates and FP32 at about 115 trials per arm would be
   about 2,990 trials and about 74 arm-hours, before any stress or position test. The two numbers answer different goals.
 - The review did not settle approval. It ranked what to validate first, blocked broken builds, found and fixed a
