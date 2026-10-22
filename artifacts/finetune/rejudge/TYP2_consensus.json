@@ -1,0 +1,141 @@
+{
+ "TYP2001_1022_163815": {
+  "success_geom": false,
+  "reason": "moving_or_not_standing",
+  "n_consensus_frames": 4
+ },
+ "TYP2002_1022_163937": {
+  "success_geom": true,
+  "reason": "ok",
+  "base_dist_px": 5.1,
+  "n_consensus_frames": 15
+ },
+ "TYP2003_1022_164053": {
+  "success_geom": false,
+  "reason": "moving_or_not_standing",
+  "n_consensus_frames": 3
+ },
+ "TYP2004_1022_164207": {
+  "success_geom": true,
+  "reason": "ok",
+  "base_dist_px": 2.4,
+  "n_consensus_frames": 15
+ },
+ "TYP2005_1022_164321": {
+  "success_geom": true,
+  "reason": "ok",
+  "base_dist_px": 4.3,
+  "n_consensus_frames": 15
+ },
+ "TYP2006_1022_164436": {
+  "success_geom": true,
+  "reason": "ok",
+  "base_dist_px": 9.7,
+  "n_consensus_frames": 15
+ },
+ "TYP2007_1022_164547": {
+  "success_geom": true,
+  "reason": "ok",
+  "base_dist_px": 2.4,
+  "n_consensus_frames": 15
+ },
+ "TYP2008_1022_164659": {
+  "success_geom": true,
+  "reason": "ok",
+  "base_dist_px": 10.7,
+  "n_consensus_frames": 15
+ },
+ "TYP2009_1022_164810": {
+  "success_geom": true,
+  "reason": "ok",
+  "base_dist_px": 7.7,
+  "n_consensus_frames": 15
+ },
+ "TYP2010_1022_164926": {
+  "success_geom": true,
+  "reason": "ok",
+  "base_dist_px": 7.6,
+  "n_consensus_frames": 15
+ },
+ "TYP2011_1022_165043": {
+  "success_geom": true,
+  "reason": "ok",
+  "base_dist_px": 14.6,
+  "n_consensus_frames": 15
+ },
+ "TYP2012_1022_165154": {
+  "success_geom": true,
+  "reason": "ok",
+  "base_dist_px": 6.1,
+  "n_consensus_frames": 15
+ },
+ "TYP2013_1022_165309": {
+  "success_geom": true,
+  "reason": "ok",
+  "base_dist_px": 9.7,
+  "n_consensus_frames": 15
+ },
+ "TYP2014_1022_165438": {
+  "success_geom": true,
+  "reason": "ok",
+  "base_dist_px": 12.8,
+  "n_consensus_frames": 15
+ },
+ "TYP2015_1022_165603": {
+  "success_geom": true,
+  "reason": "ok",
+  "base_dist_px": 3.6,
+  "n_consensus_frames": 15
+ },
+ "TYP2016_1022_165716": {
+  "success_geom": true,
+  "reason": "ok",
+  "base_dist_px": 7.6,
+  "n_consensus_frames": 15
+ },
+ "TYP2017_1022_165831": {
+  "success_geom": false,
+  "reason": "moving_or_not_standing",
+  "n_consensus_frames": 2
+ },
+ "TYP2018_1022_165943": {
+  "success_geom": true,
+  "reason": "ok",
+  "base_dist_px": 4.3,
+  "n_consensus_frames": 15
+ },
+ "TYP2019_1022_170057": {
+  "success_geom": false,
+  "reason": "moving_or_not_standing",
+  "n_consensus_frames": 1
+ },
+ "TYP2020_1022_170207": {
+  "success_geom": true,
+  "reason": "ok",
+  "base_dist_px": 4.3,
+  "n_consensus_frames": 15
+ },
+ "TYP2021_1022_170318": {
+  "success_geom": true,
+  "reason": "ok",
+  "base_dist_px": 4.3,
+  "n_consensus_frames": 15
+ },
+ "TYP2022_1022_170441": {
+  "success_geom": false,
+  "reason": "moving_or_not_standing",
+  "n_consensus_frames": 1
+ },
+ "TYP2023_1022_170551": {
+  "success_geom": true,
+  "reason": "ok",
+  "base_dist_px": 10.7,
+  "n_consensus_frames": 15
+ },
+ "TYP2024_1022_170708": {
+  "success_geom": true,
+  "reason": "ok",
+  "base_dist_px": 6.8,
+  "n_consensus_frames": 15
+ }
+}

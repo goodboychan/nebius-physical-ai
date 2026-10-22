@@ -1,0 +1,37 @@
+{
+ "labels": {
+  "TYP2/1": "grasp",
+  "TYP2/3": "grasp",
+  "TYP2/17": "grasp",
+  "TYP2/19": "grasp",
+  "TYP2/22": "grasp",
+  "T6P2/3": "grasp",
+  "T6P2/5": "grasp",
+  "T6P2/8": "grasp",
+  "T6P2/10": "grasp",
+  "T6P2/12": "grasp",
+  "T6P2/13": "grasp",
+  "T6P2/15": "grasp",
+  "T6P2/18": "grasp",
+  "T6P2/20": "grasp",
+  "T6P2/22": "grasp"
+ },
+ "sub_labels": {
+  "TYP2/1": "(a)",
+  "TYP2/3": "(a)",
+  "TYP2/17": "(a)",
+  "TYP2/19": "(a)",
+  "TYP2/22": "(a)",
+  "T6P2/3": "(a)",
+  "T6P2/5": "(a)",
+  "T6P2/8": "(a)",
+  "T6P2/10": "(a)",
+  "T6P2/12": "(a)",
+  "T6P2/13": "(a)",
+  "T6P2/15": "(a)",
+  "T6P2/18": "(a)",
+  "T6P2/20": "(a)",
+  "T6P2/22": "(a)"
+ },
+ "rule": "prereg \u00a721 (as \u00a717 / \u00a715) labels, written blind to cells before unsealing; sources: operator notes by trial number. TYP2 trials 8 and 23, failed by the live judge only, are successes in the consensus re-judge and get no label."
+}
