@@ -1119,3 +1119,14 @@ Wording, also from the review:
   저장은 마지막 1회. Nebius Jobs L40S
 - 파인튜닝 v2 학습 완료: Nebius Job `aijob-e00yvz0s3mkcx58s4k` (L40S, 20k 스텝, 1,525 s, 최종 loss 0.072).
   체크포인트 `g2/act_ft2_20k/020000`, model.safetensors sha256 `601758711ab55a66…` (엔진 빌드 전 고정). 정규화 통계(FT2 체크포인트 기준) `c79d64afc49fb2cd…`. ONNX `b078b053b9e43436…`(torch 대비 최대 1.25e-06)
+
+---
+
+## 2026-10-23 — LOCK-4: analysis complete, narrative and numbers frozen
+
+- Every pre-registered block is unsealed and analysed; `quantgate.py verify` checks all 22 sealed logs against their
+  post-lock hashes (189 tests pass). Real arm: 745 trials, 18 sessions, 18.6 operator-hours.
+- The narrative is fixed by video v11 (narration v9, `docs/narration/tts_input.json`) and the write-ups
+  (README, `docs/devpost_about.md`, `docs/submission_draft.md`, dashboard v38), as of commit `1dc3ee3` plus this entry.
+- No new real-arm block runs before submission. After this point a number or claim changes only to fix an error, and
+  each such change is logged here with its reason.

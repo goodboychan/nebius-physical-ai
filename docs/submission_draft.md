@@ -18,13 +18,20 @@ trials, and an honest verdict. Earn the next test, not the approval.
 
 (178 characters; chosen by the user 2026-10-16. It ends on the video's kick line.)
 
+Proposed for the second submission (199 characters), matching v11's opening ("for developers validating LeRobot
+policies on Jetson"):
+
+For developers shipping LeRobot policies to Jetson: QuantGate measures cost on the device, runs sealed real-arm
+trials, and says what to validate, hold or block. Earn the next test, not the approval.
+
 ## Links
 
-- Video: https://youtu.be/VJdYplrJfjo
+- Video: `[USER: new YouTube link for v11]` (first submission: https://youtu.be/VJdYplrJfjo)
 - Code: https://github.com/goodboychan/nebius-physical-ai (Apache 2.0)
 - Dashboard: https://claude.ai/artifact/2tUAoJHBeT8uLU96BmgPNK
 - Datasets: https://huggingface.co/datasets/chans/quantgate-so101-coaster,
-  https://huggingface.co/datasets/chans/quantgate-so101-coaster-positions
+  https://huggingface.co/datasets/chans/quantgate-so101-coaster-positions,
+  https://huggingface.co/datasets/chans/quantgate-so101-coaster-positions-v2 (public from 2026-10-26)
 
 ## The problem
 
@@ -146,7 +153,7 @@ The dashboard opens with this card (`dashboard/audit_gate.html`, "Deployment rev
 - **AI judge reliability**: not reliable in the first setup (1/21). The validated prompt caught 20/21 offline, and then
   22/24 with 2/72 false alarms live on 96 new trials. Other objects and scenes are still open.
 - **Next actions**: plan about 110–120 trials per arm (a planning estimate that assumes both true success rates are equal at about 96–97%; it is not a guarantee) to settle FP16 (or any cell) against FP32, settle the
-  fine-tuned policy at the training mark, test more positions and objects, and check grip friction on the deployed
+  fine-tuned policies at the training mark against the old policy (fine-tune v2 is the candidate for the yellow can and starts to +6 cm), test more positions and objects, and check grip friction on the deployed
   gripper.
 
 It is a review aid, not an automatic approval. The trial videos sit next to the numbers, so the reader can see each
@@ -161,7 +168,7 @@ failure.
 | Engines and cost | **TensorRT** 10.3 engines with a frozen timing cache (builds were otherwise nondeterministic); latency and power with trtexec and tegrastats | **Jetson Orin Nano Super** |
 | Offline audit | 25 cells × bootstrap scoring on 2,000 held-out states | **Nebius Jobs** fan-out with a quota-aware controller |
 | Real arm | 30 Hz TensorRT policy server with chunk prefetch and blending, so all engines have identical timing; blinded schedule | SO-101 + Jetson |
-| AI supervisor and judge | **Cosmos-Reason2-2B**, 2 Hz shadow mode, plus an end-of-trial question | **Nebius AI Endpoint** (L40S, vLLM), started per session |
+| AI judge | **Cosmos-Reason2-2B**, end-of-trial judge on the final frame (validated: 20/21 held out, 22/24 live); a 2 Hz shadow supervisor did not detect failures | **Nebius AI Endpoint** (L40S, vLLM), started per session |
 | Deployment report | Code writes every verdict, number, status and next action. **Nemotron 3 Super** writes only the explanation and the open questions, in words; code rejects that text if it contains digits, verdict labels, approval words or known misreadings (`d3_report_v3.md`) | **Nebius Token Factory** |
 | Ask the review | `quantgate_ask.py "Can I use the fine-tuned policy where the start varies?"`: **Nemotron 3 Super** picks the evidence rows and explains them in words, and code prints the verdicts and numbers from those rows. A human review of the examples is published with them (`ask_examples.md`) | **Nebius Token Factory**, structured output |
 | Errata, grounded | **Tavily** search with queries derived from the real build (snapshot hashed). **Nemotron 3 Super** labels each of the 25 results against our measured facts (matches / contrasts / applies but unverified / not applicable), with structured output; code checks that every quote is verbatim, and the report shows only those quotes and our own facts (`errata_grounding_preregistration.md`) | Tavily API + **Nebius Token Factory** |
@@ -236,7 +243,8 @@ suggested fix.
   memorization from slow reaction.
 - Re-validate the Cosmos judge prompt on other objects and scenes. The offline re-evaluation (1/21 → 20/21) and the live
   re-check on 96 fine-tune trials (22/24, 2/72 false alarms) are done.
-- Settle the fine-tuned policy at the training mark (pooled 22/24 vs 23/24 after the T0R replication, undecided) with a larger block. Then test more positions and objects.
+- Settle the fine-tuned policy at the training mark (pooled 22/24 vs 23/24 after the T0R replication, undecided) with a larger block. Fine-tune v2 then closed the yellow-can and +6 cm gaps (12/12 vs 7/12 and 12/12 vs 2/12 against FT); settle FT2 at the training mark against the old policy next, then test more positions and objects.
+- Automate the session-start check that found the knocked wrist camera: a rest-pose wrist frame compared with a reference, plus gripper chatter, before any block.
 - A pre-registered check of the post hoc observation that the INT8 build's gripper chatters about twice as much as
   FP16 at a similar success rate. Done (Q8B): not confirmed, p = 0.12; chatter rose for both engines in that session.
 - Hailo-8 in shadow mode first. The split pipeline misses the 200 ms deadline and the preflight blocks it. It runs
@@ -273,9 +281,9 @@ PyTorch · Hailo-8 (portability probe)
 
 ## Survey answers (draft)
 
-**Repository URL**: `[after making the repo public]`. Apache 2.0. README setup instructions are still to be written.
+**Repository URL**: https://github.com/goodboychan/nebius-physical-ai (public from 2026-10-26). Apache 2.0. Setup and reproduction are in the README (`quantgate.py verify | review | plan`; no GPU or API key needed to rebuild the review).
 
-**Demo URL**: not required (Physical AI). Video `[TODO]`.
+**Demo URL**: the dashboard, https://claude.ai/artifact/2tUAoJHBeT8uLU96BmgPNK (no robot needed). Video: `[USER: new YouTube link for v11]`.
 
 **Which model(s) did you use, and why that size/variant?**
 - `nvidia/nemotron-3-super-120b-a12b` for the deployment-report agent (D3). The report has to read a large evidence
@@ -283,7 +291,7 @@ PyTorch · Hailo-8 (portability probe)
   had **0 unmatched numbers** in every run, took 9–14 s per report, and always produced the complete four-section
   format (`artifacts/reports/d3_model_compare.json`). The larger and smaller variants either leaked reasoning text or
   truncated.
-- `nvidia/Cosmos-Reason2-2B` for vision supervision, because it is small enough for about 330 ms round trips at 2 Hz. In our setup (one frame, one-word answer, 8 output tokens) it did not detect failures, so we report it as a configuration that needs validation, not as a model verdict.
+- `nvidia/Cosmos-Reason2-2B` as the end-of-trial judge: it reads the final overhead frame and answers an explicit criterion (the can upright on the coaster). It is small enough to serve from one L40S endpoint. The first setup (one-word answer) caught 1/21 failures; after a dev/eval re-evaluation the validated prompt caught 20/21 on held-out recordings and then 22/24 with 2/72 false alarms on 96 new real-arm trials. A 2 Hz shadow supervisor (CONTINUE/ABORT) did not detect failures and is reported as such.
 
 **Nemotron output quality (1–10)**: `[USER]`.
 - Worked well: numeric fidelity to the evidence, section structure, and honest "cannot decide" when no threshold was
@@ -310,7 +318,7 @@ numbers and a complete format in every repeat. Ultra and the smaller variants le
 `[USER: add any personal comparison]`
 
 **Most valuable Nebius capabilities**:
-- **Jobs**: ACT training (L40S, 1 h 57 min) and the 25-cell bootstrap audit (CPU fan-out, with a controller under
+- **Jobs**: ACT training (L40S, 1 h 57 min), two fine-tunes (about 25 min each) and the 25-cell bootstrap audit (CPU fan-out, with a controller under
   the instance quota).
 - **AI Endpoints**: Cosmos-Reason2 on L40S with vLLM, started and stopped per robot session, with token auth and
   weights read from our Object Storage bucket.
