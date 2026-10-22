@@ -14,7 +14,7 @@ SHOTS, OUT = sys.argv[1:3]
 W, H, FPS = 1920, 1080, 30
 BG, INK, INK2, ACC = (16, 20, 19), (230, 234, 233), (174, 184, 183), (18, 160, 168)
 F = lambda s, b=False: ImageFont.truetype("/usr/share/fonts/truetype/dejavu/DejaVuSans%s.ttf" % ("-Bold" if b else ""), s)
-if os.environ.get("NARR", "v5") == "v6":   # v9: Noto Sans, the same family as the deck and closer to the dashboard
+if os.environ.get("NARR", "v5") in ("v6", "v7"):   # v9: Noto Sans, the same family as the deck and closer to the dashboard
     F = lambda s, b=False: ImageFont.truetype("/usr/share/fonts/opentype/noto/NotoSansCJK-%s.ttc" % ("Bold" if b else "Regular"), s, index=1)
 FONT_SUB, FONT_CHIP, FONT_CARD, FONT_BIG = F(34), F(28), F(46, True), F(80, True)
 R = "artifacts/reports/figures"; C = "dashboard/clips"; E = "video/edit"
@@ -65,7 +65,7 @@ REL = [   # v8 (external review 7): found -> fixed -> still not approved, in the
     ("6", 15.6, 23.4, "image", (f"{SHOTS}/review_compare.png",), "Not yet: the review lists the trials and rule changes still missing"),
     ("7", 0.0, 4.2, "endkick", ("Earn the next test, not the approval.",), None),
 ]
-if NARR == "v6":   # v9 (2026-10-21): audience line, 673 blinded trials, the fine-tune's reach, the hidden scene change
+if NARR in ("v6", "v7"):   # v9 (2026-10-21): audience line, 673 blinded trials, the fine-tune's reach, the hidden scene change
     A = os.path.expanduser("~/edgeqgate_data/seminar_assets")
     slot = lambda k: ST[str(int(k) + 1)] - ST[k]
     REL = [r for r in REL if r[0] not in ("1", "4", "5", "6")] + [
@@ -74,8 +74,10 @@ if NARR == "v6":   # v9 (2026-10-21): audience line, 673 blinded trials, the fin
         ("4", 0.0, 4.8, "chart", ("what_moved",), None),
         ("4", 4.8, 8.0, "clip", (f"{E}/yellow_can_2.mp4", 4.0, 1, 0), "Unseen yellow can · block result 48/48 (side view of a demonstration)"),
         ("4", 8.0, 12.3, "clip", (f"{C}/v1_nopad_drop.mp4", 4.0, 4, 0), "Gripper pads removed: the block finished 8/24 (overhead, 4×)"),
-        ("4", 12.3, 14.8, "image", (f"{SHOTS}/pos_strip.png",), "50 new demos at −4…+4 cm · fine-tuned 20k steps on Nebius Jobs"),
-        ("4", 14.8, slot("4"), "image", (f"{R}/fig_ft_reach.png",), "Reach, blinded, 12 vs 12 per condition · re-tested after a scene fix: same readings"),
+        *([("4", 12.3, 18.1, "image", (f"{R}/fig_ft_reach.png",), "First fine-tune: reach, blinded, 12 vs 12 per condition"),
+           ("4", 18.1, slot("4"), "image", (f"{R}/fig_ft2_reach.png",), "Fine-tune v2: 50 more demos (yellow can, +5/+7 cm) · 12/12 at both held-out conditions")] if NARR == "v7" else
+          [("4", 12.3, 14.8, "image", (f"{SHOTS}/pos_strip.png",), "50 new demos at −4…+4 cm · fine-tuned 20k steps on Nebius Jobs"),
+           ("4", 14.8, slot("4"), "image", (f"{R}/fig_ft_reach.png",), "Reach, blinded, 12 vs 12 per condition · re-tested after a scene fix: same readings")]),
         ("5", 0.0, 8.6, "clip", (f"{A}/wrist_before_after.mp4", 3.0, 1, 0), None),
         ("5", 8.6, 17.4, "table", ("Cosmos-Reason2 end-of-trial judge", [("first setup", "1/21 failures caught", "bad"), ("validated prompt, held-out recordings", "20/21 · 5/252 false alarms", "ok"), ("same prompt, live new trials", "22/24 · 2/72 false alarms", "ok")]), None),
         ("5", 17.4, slot("5"), "scroll", (f"{SHOTS}/report_meta.png",), "Deployment report: code writes verdicts and numbers; Nemotron (Token Factory) explains"),
@@ -236,8 +238,8 @@ for seg in SEG:
     for im in frames_of(seg):
         t = k / FPS; d = ImageDraw.Draw(im)
         if seg[4]: chip(d, seg[4])
-        if NARR == "v6" and 0.3 <= t < 3.3:   # v9: one number in the first seconds
-            a_ = min(1.0, (t - 0.3) / 0.4, (3.3 - t) / 0.4); hl = "673 blinded real-arm trials · evidence before deployment"; fh = F(52, True)
+        if NARR in ("v6", "v7") and 0.3 <= t < 3.3:   # v9: one number in the first seconds
+            a_ = min(1.0, (t - 0.3) / 0.4, (3.3 - t) / 0.4); hl = ("745" if NARR == "v7" else "673") + " blinded real-arm trials · evidence before deployment"; fh = F(52, True)
             w = d.textlength(hl, font=fh); x = (W - w) / 2; d.rounded_rectangle((x - 36, 120, x + w + 36, 220), 18, fill=(16, 20, 19))
             d.text((x, 136), hl, font=fh, fill=tuple(int(16 + (c - 16) * a_) for c in (240, 244, 244)))
         if seg[2] not in ("cardfade", "endkick"): subtitle(d, t)   # the card and the kick show the spoken line already

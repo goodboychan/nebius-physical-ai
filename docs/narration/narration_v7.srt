@@ -1,0 +1,159 @@
+1
+00:00:00,000 --> 00:00:00,717
+Same robot.
+
+2
+00:00:00,717 --> 00:00:01,370
+Same task.
+
+3
+00:00:01,370 --> 00:00:03,196
+One run succeeds, one fails.
+
+4
+00:00:03,196 --> 00:00:08,217
+Move the start three centimeters, and it failed all of its first three tries.
+
+5
+00:00:08,217 --> 00:00:10,239
+Our review found that weakness.
+
+6
+00:00:10,239 --> 00:00:19,630
+We fixed it with fifty new demonstrations, and re-tested it on a sealed schedule: twelve for twelve, where the old policy went three for twelve.
+
+7
+00:00:19,630 --> 00:00:23,412
+But at the trained spot, the evidence is still not enough.
+
+8
+00:00:23,412 --> 00:00:25,825
+So QuantGate does not approve it yet.
+
+9
+00:00:26,825 --> 00:00:33,287
+It started as a small gesture: an arm that brings a drink to someone working hard.
+
+10
+00:00:33,287 --> 00:00:38,172
+Setting it down on the coaster turned out to be the hard part.
+
+11
+00:00:38,172 --> 00:00:43,925
+That's why teams shipping robot policies to edge devices need Quant Gate.
+
+12
+00:00:44,225 --> 00:00:52,415
+This is an S O one oh one arm running an A C T policy, Action Chunking with Transformers, on a Jetson Orin Nano Super.
+
+13
+00:00:52,415 --> 00:00:59,495
+We taught it with one hundred and twenty teleoperated demonstrations, and trained it with Nebius Jobs.
+
+14
+00:00:59,495 --> 00:01:12,335
+From that one policy, we built twenty-six candidate engines with TensorRT: full precision, half precision, and twenty-four int eight builds that differ only in how they were calibrated.
+
+15
+00:01:12,335 --> 00:01:21,150
+Seven hundred and forty-five real trials, every one from a sealed, interleaved schedule, with the operator blind to the engine.
+
+16
+00:01:21,450 --> 00:01:23,791
+First, measure on the real device.
+
+17
+00:01:23,791 --> 00:01:30,744
+On this Jetson, half precision was the fastest engine, and the cheapest per inference, not int eight.
+
+18
+00:01:30,744 --> 00:01:36,114
+On the arm, every candidate succeeded ninety to a hundred percent of the time.
+
+19
+00:01:36,114 --> 00:01:40,658
+And the offline audit's top picks did no better than random picks.
+
+20
+00:01:40,658 --> 00:01:43,550
+Twenty-five trials cannot tell them apart.
+
+21
+00:01:43,850 --> 00:01:48,327
+What moved success was the deployment condition, not the precision.
+
+22
+00:01:48,327 --> 00:01:51,534
+A new can worked forty-eight out of forty-eight.
+
+23
+00:01:51,534 --> 00:01:56,011
+Without the gripper pads, success fell to eight out of twenty-four.
+
+24
+00:01:56,011 --> 00:02:01,758
+The first fine-tune held to minus six centimeters, but not plus six, or a smaller can.
+
+25
+00:02:01,758 --> 00:02:05,500
+Fifty more demonstrations fixed both: twelve for twelve.
+
+26
+00:02:05,800 --> 00:02:07,674
+The setup gets checked too.
+
+27
+00:02:07,674 --> 00:02:14,617
+When success suddenly dropped, we kept every result sealed, and traced it to a knocked wrist camera.
+
+28
+00:02:14,617 --> 00:02:20,170
+Cosmos Reason, on a Nebius A I Endpoint, first caught one failure in twenty-one.
+
+29
+00:02:20,170 --> 00:02:24,683
+Validated on held-out recordings, it caught twenty of twenty-one.
+
+30
+00:02:24,683 --> 00:02:31,625
+Nemotron Super on Token Factory explains the review, while every verdict and number comes from code.
+
+31
+00:02:31,925 --> 00:02:34,446
+So QuantGate answers three questions.
+
+32
+00:02:34,446 --> 00:02:36,899
+Which candidate do I validate first?
+
+33
+00:02:36,899 --> 00:02:37,921
+Half precision.
+
+34
+00:02:37,921 --> 00:02:39,284
+Which do I distrust?
+
+35
+00:02:39,284 --> 00:02:47,257
+Broken calibrations, which a simple input check catches, and any engine whose files no longer match what was audited.
+
+36
+00:02:47,257 --> 00:02:48,960
+Can I approve deployment?
+
+37
+00:02:48,960 --> 00:02:49,506
+Not yet.
+
+38
+00:02:49,506 --> 00:02:55,025
+The review lists exactly which trials, and which rule changes, are still missing.
+
+39
+00:02:55,325 --> 00:02:56,150
+Quant Gate.
+
+40
+00:02:56,150 --> 00:02:58,925
+Earn the next test, not the approval.
