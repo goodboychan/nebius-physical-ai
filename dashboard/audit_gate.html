@@ -160,6 +160,21 @@ footer{border-top:1px solid var(--rule); padding-top:18px; color:var(--ink-3); f
 .flow-legend span::before{content:""; display:inline-block; width:10px; height:10px; margin-right:6px; vertical-align:-1px; border-radius:2px; background:var(--k)}
 .loop{font-size:13px; color:var(--ink-2); border-top:1px dashed var(--rule); padding-top:10px}
 @media (max-width:760px){ .flow{grid-template-columns:minmax(0,1fr)} }
+
+a.step{color:inherit; text-decoration:none; cursor:pointer; transition:border-color .15s, background .15s, box-shadow .15s}
+a.step:hover, a.step:focus-visible{border-color:var(--signal); outline:none}
+.step .sn{display:inline-block; min-width:1.6em; font-family:var(--mono); font-size:11px; color:var(--ink-3)}
+.step .go{font-size:11px; color:var(--signal); opacity:0; transition:opacity .15s}
+a.step:hover .go, a.step:focus-visible .go, a.step.current .go{opacity:1}
+.step.current{background:var(--rule-2)}
+.step.rel{box-shadow:0 0 0 2px var(--signal) inset}
+.step.dim{opacity:.45}
+.loop a{color:var(--signal)}
+.wf-back{font-family:var(--mono); font-size:11px; color:var(--signal); text-decoration:none; white-space:nowrap}
+.wf-back:hover{text-decoration:underline}
+.flash{animation:wfflash 1.4s ease-out}
+@keyframes wfflash{0%{box-shadow:0 0 0 3px var(--signal)} 100%{box-shadow:0 0 0 0 transparent}}
+@media (prefers-reduced-motion:reduce){.flash{animation:none} a.step{transition:none}}
 </style>
 
 <div class="wrap">
@@ -189,28 +204,29 @@ footer{border-top:1px solid var(--rule); padding-top:18px; color:var(--ink-3); f
 
   <section class="panel" id="workflow">
     <div class="plate"><h2>How it works: the whole workflow</h2><span class="ref">where each step runs · which model does what</span></div>
-    <p class="note"><b>Models suggest and describe; code decides.</b> Every number and verdict comes from code over committed, hashed evidence.</p>
+    <p class="note"><b>Models suggest and describe; code decides.</b> Every number and verdict comes from code over committed, hashed evidence. Click a step to open its evidence; pick a candidate in the next panel to see which steps decided it.</p>
+    <p class="note" id="wf-cand" hidden></p>
     <div class="flow-legend"><span style="--k:var(--ember)">real arm or device</span><span style="--k:var(--plum)">an AI model</span><span style="--k:var(--signal)">plain code</span></div>
     <div class="flow">
       <div class="lane"><h3>1 · Build the candidates</h3>
-        <div class="step arm"><span class="t">Teleoperate demonstrations</span><span class="w">SO-101 leader arm · LeRobot</span><span class="n">120 demos, then 50 + 50 for the fine-tunes</span></div>
-        <div class="step model"><span class="t">Train the policy</span><span class="w">ACT 51.6M · Nebius Jobs (L40S)</span><span class="n">one checkpoint; fine-tunes in about 25 min</span></div>
-        <div class="step arm"><span class="t">Build engines</span><span class="w">TensorRT 10.3 · Jetson Orin Nano Super</span><span class="n">26 candidates: FP32, FP16, 24 INT8 calibrations</span></div>
+        <a class="step arm" href="#setup" data-step="1" data-target="setup"><span class="t"><span class="sn">1</span>Teleoperate demonstrations</span><span class="w">SO-101 leader arm · LeRobot</span><span class="n">120 demos, then 50 + 50 for the fine-tunes</span><span class="go">see the evidence →</span></a>
+        <a class="step model" href="#setup" data-step="2" data-target="setup"><span class="t"><span class="sn">2</span>Train the policy</span><span class="w">ACT 51.6M · Nebius Jobs (L40S)</span><span class="n">one checkpoint; fine-tunes in about 25 min</span><span class="go">see the evidence →</span></a>
+        <a class="step arm" href="#cost" data-step="3" data-target="cost"><span class="t"><span class="sn">3</span>Build engines</span><span class="w">TensorRT 10.3 · Jetson Orin Nano Super</span><span class="n">26 candidates: FP32, FP16, 24 INT8 calibrations</span><span class="go">see the evidence →</span></a>
       </div>
       <div class="lane"><h3>2 · Gather evidence</h3>
-        <div class="step arm"><span class="t">Measure cost on the device</span><span class="w">trtexec · 15 W</span><span class="n">FP16 11.6 ms and 82 mJ, faster than INT8 here</span></div>
-        <div class="step code"><span class="t">Offline audit</span><span class="w">48 CPU jobs · Nebius Jobs</span><span class="n">2,000 held-out states; ranking frozen before the arm</span></div>
-        <div class="step arm"><span class="t">Sealed real-arm trials</span><span class="w">interleaved · operator blind · hashed before unsealing</span><span class="n">673 trials so far</span></div>
-        <div class="step model"><span class="t">Judge each trial</span><span class="w">Cosmos-Reason2 · Nebius AI Endpoint</span><span class="n">validated first: 20/21 failures caught on held-out recordings</span></div>
+        <a class="step arm" href="#cost" data-step="4" data-target="cost"><span class="t"><span class="sn">4</span>Measure cost on the device</span><span class="w">trtexec · 15 W</span><span class="n">FP16 11.6 ms and 82 mJ, faster than INT8 here</span><span class="go">see the evidence →</span></a>
+        <a class="step code" href="#rankcheck" data-step="5" data-target="rankcheck"><span class="t"><span class="sn">5</span>Offline audit</span><span class="w">48 CPU jobs · Nebius Jobs</span><span class="n">2,000 held-out states; ranking frozen before the arm</span><span class="go">see the evidence →</span></a>
+        <a class="step arm" href="#success" data-step="6" data-target="success"><span class="t"><span class="sn">6</span>Sealed real-arm trials</span><span class="w">interleaved · operator blind · hashed before unsealing</span><span class="n">673 trials so far</span><span class="go">see the evidence →</span></a>
+        <a class="step model" href="#row-judge" data-step="7" data-target="row-judge"><span class="t"><span class="sn">7</span>Judge each trial</span><span class="w">Cosmos-Reason2 · Nebius AI Endpoint</span><span class="n">validated first: 20/21 failures caught on held-out recordings</span><span class="go">see the evidence →</span></a>
       </div>
       <div class="lane"><h3>3 · Decide</h3>
-        <div class="step code"><span class="t">Verdict</span><span class="w">Newcombe intervals · pre-registered rules</span><span class="n">GO · HOLD · BLOCK · INSUFFICIENT_EVIDENCE</span></div>
-        <div class="step model"><span class="t">Explain in words</span><span class="w">Nemotron 3 Super · Nebius Token Factory</span><span class="n">words only; code rejects any number or verdict in its text</span></div>
-        <div class="step code"><span class="t">Preflight before the arm</span><span class="w">engine hash · normalization manifest · 200 ms deadline</span><span class="n">only an explicit GO passes</span></div>
-        <div class="step code"><span class="t">Plan the next test</span><span class="w">scripts/next_test_plan.py</span><span class="n">what is confirmed, what is open, trials per arm</span></div>
+        <a class="step code" href="#review" data-step="8" data-target="review"><span class="t"><span class="sn">8</span>Verdict</span><span class="w">Newcombe intervals · pre-registered rules</span><span class="n">GO · HOLD · BLOCK · INSUFFICIENT_EVIDENCE</span><span class="go">see the evidence →</span></a>
+        <a class="step model" href="#report" data-step="9" data-target="report"><span class="t"><span class="sn">9</span>Explain in words</span><span class="w">Nemotron 3 Super · Nebius Token Factory</span><span class="n">words only; code rejects any number or verdict in its text</span><span class="go">see the evidence →</span></a>
+        <a class="step code" href="#preflight" data-step="10" data-target="preflight"><span class="t"><span class="sn">10</span>Preflight before the arm</span><span class="w">engine hash · normalization manifest · 200 ms deadline</span><span class="n">only an explicit GO passes</span><span class="go">see the evidence →</span></a>
+        <a class="step code" href="#nexttest" data-step="11" data-target="nexttest"><span class="t"><span class="sn">11</span>Plan the next test</span><span class="w">scripts/next_test_plan.py</span><span class="n">what is confirmed, what is open, trials per arm</span><span class="go">see the evidence →</span></a>
       </div>
     </div>
-    <p class="loop"><b>The loop:</b> when the evidence finds a weakness (a 3 cm start shift, a smaller can), new demonstrations go back into step 1 and the fix is re-tested under a new pre-registration — a fix earns its next test, not an approval.</p>
+    <p class="loop"><b>The loop:</b> when the evidence finds a weakness (<a href="#moved" data-target="moved">a 3 cm start shift, a smaller can</a>), new demonstrations go back into step 1 and the fix is <a href="#row-ft" data-target="row-ft">re-tested under a new pre-registration</a> — a fix earns its next test, not an approval.</p>
   </section>
 
 <!--NEXTTEST:BEGIN-->
@@ -278,8 +294,8 @@ footer{border-top:1px solid var(--rule); padding-top:18px; color:var(--ink-3); f
       <div class="row"><span class="k">Placement</span><span class="d">Mean placement error stays within the 5 px tolerance of FP32 for 8 of 10 INT8 cells. The other 2 are indeterminate. Best vs worst audit fidelity: −0.84 px, CI [−2.53, +0.88].</span><span class="v"><span class="chip ok">8 / 10 ok</span></span></div>
       <div class="row"><span class="k">Verified for</span><span class="d">The 268 g cola can at the trained start mark, the fixed coaster, locked camera exposure and indoor desk light, with anti-slip pads (G6) and with rubber bands (stress v2: nominal 23/24, unseen 190 g yellow can 48/48 with every engine 12/12).</span><span class="v">scope</span></div>
       <div class="row"><span class="k">Weak spots</span><span class="d">Grip friction: 8/24 with no pads. Start position: 0/3 in a small test with the start moved 3 cm, and the old policy went 3/12 at +3 cm and 2/12 at −3 cm in the blinded fine-tune evaluation. A new object of a different size succeeded 48/48.</span><span class="v"><span class="chip halt">observed</span></span></div>
-      <div class="row"><span class="k">Fine-tune</span><span class="d"><b>The position fine-tune fixed the shift</b>: 50 new demos at −4…+4 cm, 20k steps on Nebius Jobs. Blinded and interleaved, at positions not in training: <b>12/12 vs 3/12 at +3 cm</b> (+75 pp, Newcombe 95% [+38, +91]) and <b>10/12 vs 2/12 at −3 cm</b> (+67 pp [+27, +84]); improvement detected on both sides. At the training mark 10/12 vs 12/12, insufficient evidence; an independent replication (T0R, pre-registered) went 12/12 vs 11/12, so the two T0 failures did not repeat, but pooled 22/24 vs 23/24 is still insufficient evidence. <b>Reach</b> (amendment 7): −6 cm 8/12 vs 0/12 (improvement detected), but +6 cm 0/12 vs 0/12 and a smaller yellow can at +3 cm 0/12 vs 3/12 (not detected). <b>Re-test</b> (amendment 8) after removing a scene deviation (stray red markers, a knocked wrist camera): +6 cm 0/12 vs 0/12 and the yellow can 0/12 vs 0/12, the same no-gain readings. Operator blinding was partial: the two motions looked different.</span><span class="v"><span class="chip ok">improved</span></span></div>
-      <div class="row"><span class="k">AI judge</span><span class="d">First setup (final frame, one-word answer): 1 of 21 held-out failures caught. Re-evaluated with a dev/eval split: an explicit-criterion prompt caught <b>20/21</b> (95% 0.77–0.99) with 5/252 false alarms, concentrated on the unseen yellow can (4/33). It is wording-sensitive and judges the end state only, so re-validate before use. <b>Live and prospective check on 96 new fine-tune trials: 22/24 failures caught, 2/72 false alarms</b> (369 ms median). Other objects and scenes are still open.</span><span class="v"><span class="chip seal">conditional</span></span></div>
+      <div class="row" id="row-ft"><span class="k">Fine-tune</span><span class="d"><b>The position fine-tune fixed the shift</b>: 50 new demos at −4…+4 cm, 20k steps on Nebius Jobs. Blinded and interleaved, at positions not in training: <b>12/12 vs 3/12 at +3 cm</b> (+75 pp, Newcombe 95% [+38, +91]) and <b>10/12 vs 2/12 at −3 cm</b> (+67 pp [+27, +84]); improvement detected on both sides. At the training mark 10/12 vs 12/12, insufficient evidence; an independent replication (T0R, pre-registered) went 12/12 vs 11/12, so the two T0 failures did not repeat, but pooled 22/24 vs 23/24 is still insufficient evidence. <b>Reach</b> (amendment 7): −6 cm 8/12 vs 0/12 (improvement detected), but +6 cm 0/12 vs 0/12 and a smaller yellow can at +3 cm 0/12 vs 3/12 (not detected). <b>Re-test</b> (amendment 8) after removing a scene deviation (stray red markers, a knocked wrist camera): +6 cm 0/12 vs 0/12 and the yellow can 0/12 vs 0/12, the same no-gain readings. Operator blinding was partial: the two motions looked different.</span><span class="v"><span class="chip ok">improved</span></span></div>
+      <div class="row" id="row-judge"><span class="k">AI judge</span><span class="d">First setup (final frame, one-word answer): 1 of 21 held-out failures caught. Re-evaluated with a dev/eval split: an explicit-criterion prompt caught <b>20/21</b> (95% 0.77–0.99) with 5/252 false alarms, concentrated on the unseen yellow can (4/33). It is wording-sensitive and judges the end state only, so re-validate before use. <b>Live and prospective check on 96 new fine-tune trials: 22/24 failures caught, 2/72 false alarms</b> (369 ms median). Other objects and scenes are still open.</span><span class="v"><span class="chip seal">conditional</span></span></div>
       <div class="row"><span class="k">Review cost</span><span class="d">About <b>$31 of Nebius cloud</b> in total, mostly the Cosmos endpoint (16.5 h, $25.6); training and fine-tune on Jobs $4.5, Token Factory $0.1 (lower bound), MLflow $0.7. Real arm: 673 trials in about 16.4 operator-hours. For scale, not as a saving: settling approval for every candidate against FP32 would take about 2,990 trials and 73 arm-hours; this review did not settle approval.</span><span class="v">review_cost.md</span></div>
       <div class="row"><span class="k">Next</span><span class="d"> 1. To settle FP16 against FP32 on success: more trials alone will not do it, because the pre-registered ceiling rule keeps two arms both at ≥ 95% undecided. Pre-register a revised rule (for example a bound on the failure-rate difference), then plan about 110–120 trials per arm for a 10 pp interval (a planning estimate, not a guarantee). 2. Settle the position fine-tune's nominal performance at the training mark (pooled with the T0R replication: 22/24 vs 23/24, undecided) with a larger block, then test more positions and objects. 3. Re-validate the judge prompt on other objects and scenes. 4. Put a calibration-input check first in the pipeline.</span><span class="v">actions</span></div>
     </div>
@@ -452,7 +468,7 @@ footer{border-top:1px solid var(--rule); padding-top:18px; color:var(--ink-3); f
     </div>
   </section>
 
-  <section class="panel">
+  <section class="panel" id="success">
     <div class="plate"><h2>Closed-loop success by cell</h2><span class="ref">G6 · g6_analysis.json</span></div>
     <p class="note">FP32 and ten INT8 cells, interleaved in one blinded session. <b>Every interval overlaps FP32.</b> At these
       sample sizes no cell can be shown to be within 10 pp of FP32 either, so each one is "insufficient evidence", not "safe".
@@ -477,7 +493,7 @@ footer{border-top:1px solid var(--rule); padding-top:18px; color:var(--ink-3); f
     </figure>
   </section>
 
-  <section class="panel">
+  <section class="panel" id="rankcheck">
     <div class="plate"><h2>Did the offline rank predict the arm?</h2><span class="ref">EX-4 / AEP Q3 · 10,000 permutations</span></div>
     <div class="two">
       <figure>
@@ -492,7 +508,7 @@ footer{border-top:1px solid var(--rule); padding-top:18px; color:var(--ink-3); f
       indeterminate. The AEP claim is not falsified here.</p>
   </section>
 
-  <section class="panel">
+  <section class="panel" id="cost">
     <div class="plate"><h2>Engine cost on the deployment target</h2><span class="ref">trtexec · tegrastats 100 ms · power_bench/SUMMARY.md</span></div>
     <p class="note"><b>FP16 is the fastest and the cheapest per inference.</b> INT8 draws about 1 W less while it runs
       but takes 45% longer, so each inference costs more. The three INT8 calibrations cost the same.</p>
@@ -504,7 +520,7 @@ footer{border-top:1px solid var(--rule); padding-top:18px; color:var(--ink-3); f
       and FP32 79.0 ms (FP16 block). On the real arm FP16 succeeded 19/20, with placement within tolerance of FP32.</p>
   </section>
 
-  <section class="panel">
+  <section class="panel" id="moved">
     <div class="plate"><h2>What moved the success rate</h2><span class="ref">G6 + public stress tallies</span></div>
     <p class="note">The same arm and the same policy. Between precisions no success difference was detected. Grip friction and
       a 3 cm shift moved a lot. The gripper and shift blocks are separate sessions, so read them as observations, not
@@ -515,7 +531,7 @@ footer{border-top:1px solid var(--rule); padding-top:18px; color:var(--ink-3); f
     </figure>
   </section>
 
-  <section class="panel">
+  <section class="panel" id="footage">
     <div class="plate"><h2>Trial footage</h2><span class="ref">overhead camera · full 60 s trials · real time</span></div>
     <p class="note">Unedited overhead videos of single trials, re-encoded for the browser. The clips do not name the
       engine: stress-test cells are still sealed.</p>
@@ -679,5 +695,41 @@ bars("mj",[["FP16 VC-025",82,"var(--good)"],["INT8 VC-002",101,"var(--signal)"],
     g.appendChild(mk("text",{x:x+bw/2,y:Y0+18,"text-anchor":"middle",class:"lbl"},d[0]));
     g.appendChild(mk("text",{x:x+bw/2,y:Y0+34,"text-anchor":"middle",class:"ax"},d[1]));   // two short lines: no overlap between bars
     g.appendChild(mk("text",{x:x+bw/2,y:Y0+50,"text-anchor":"middle",class:"ax"},`${d[2]}/${d[3]}`));});
+})();
+</script>
+
+<script>
+/* workflow links (2026-10-22): step -> evidence panel, panel -> back to its step, current step while reading, candidate -> steps */
+(function(){
+  const wf = document.getElementById("workflow"); if (!wf) return;
+  const steps = [...wf.querySelectorAll("a.step")];
+  const go = (id, from) => { const el = document.getElementById(id); if (!el) return;
+    el.scrollIntoView({behavior: matchMedia("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth", block: "start"});
+    el.classList.remove("flash"); void el.offsetWidth; el.classList.add("flash"); };
+  wf.addEventListener("click", e => { const a = e.target.closest("[data-target]"); if (!a) return; e.preventDefault(); go(a.dataset.target, a.dataset.step); });
+  // a back link on every panel a step points to
+  const byTarget = {}; steps.forEach(s => (byTarget[s.dataset.target] = byTarget[s.dataset.target] || []).push(s));
+  Object.entries(byTarget).forEach(([id, ss]) => { const el = document.getElementById(id); if (!el) return;
+    const holder = el.querySelector(".plate") || el.querySelector(".d") || el;
+    const b = document.createElement("a"); b.href = "#workflow"; b.className = "wf-back";
+    b.textContent = "← workflow step " + ss.map(s => s.dataset.step).join(", ");
+    b.addEventListener("click", ev => { ev.preventDefault(); wf.scrollIntoView({behavior: "smooth", block: "start"});
+      ss.forEach(s => { s.classList.remove("flash"); void s.offsetWidth; s.classList.add("flash"); }); });
+    if (holder.classList && holder.classList.contains("plate")) { const ref = holder.querySelector(".ref"); holder.insertBefore(b, ref ? ref.nextSibling : null); b.style.marginLeft = "12px"; }
+    else { holder.appendChild(document.createTextNode(" ")); holder.appendChild(b); } });
+  // the step whose evidence is on screen
+  if ("IntersectionObserver" in window) {
+    const io = new IntersectionObserver(es => es.forEach(en => { (byTarget[en.target.id] || []).forEach(s => s.classList.toggle("current", en.isIntersecting)); }), {rootMargin: "-35% 0px -55% 0px"});
+    Object.keys(byTarget).forEach(id => { const el = document.getElementById(id); if (el) io.observe(el); }); }
+  // candidate picked in "Try it" -> the steps that decided it
+  const REL = {"VC-025": {s: [4, 6, 7, 8, 10], why: "FP16: cheapest on the device (step 4), 19/20 on the arm with FP32 at 10/10 (6–7), held as INSUFFICIENT_EVIDENCE (8), preflight HOLD (10)."},
+               "FT-FP16": {s: [1, 2, 6, 7, 8, 11], why: "Fine-tune: new demonstrations (1–2), sealed trials at new positions (6–7), improvement detected where the start varies (8), the open items set the next test (11)."},
+               "INT8": {s: [3, 4, 5, 6, 8], why: "INT8: 24 calibrations (3), slower than FP16 here (4), the offline rank did not predict the arm (5–6), every cell insufficient evidence (8)."},
+               "PC-B": {s: [3, 5, 10], why: "Black-frame calibration: built (3), flagged offline (5), blocked by the preflight (10)."}};
+  const note = document.getElementById("wf-cand"), pick = document.getElementById("nt-pick");
+  if (pick) pick.addEventListener("click", e => { const b = e.target.closest("button"); if (!b) return;
+    const k = Object.keys(REL).find(x => b.textContent.trim().startsWith(x)); if (!k) return;
+    steps.forEach(s => { const on = REL[k].s.includes(+s.dataset.step); s.classList.toggle("rel", on); s.classList.toggle("dim", !on); });
+    note.hidden = false; note.innerHTML = "<b>Steps behind " + k + ":</b> " + REL[k].why; });
 })();
 </script>
