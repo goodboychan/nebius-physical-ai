@@ -13,7 +13,7 @@ off = np.deg2rad([CAL["joint_offsets_deg"].get(j, 0.0) for j in J]); d = np.arra
 R = np.array(CAM["R_world_to_cam"]); t = np.array(CAM["t_world_to_cam"]); f = CAM["focal_px"]; cam = -R.T @ t; Z0 = CAL["table_z"]
 def backproj(u, v, z): r = R.T @ np.array([(u - 320) / f, (v - 240) / f, 1.0]); return cam + (z - cam[2]) / r[2] * r
 start = np.array(CAL["start_xyz"][:2]); out = []
-for ep in sorted(glob.glob(os.path.expanduser("~/edgeqgate_data/lablens/lablens_so101_episodes/rollout_*"))):
+for ep in sorted(glob.glob(os.path.join(os.environ.get("EPISODE_BUNDLE", os.path.expanduser("~/edgeqgate_data/episode_bundle")), "rollout_*"))):
     rows = list(csv.DictReader(open(f"{ep}/trajectory.csv")))
     c = av.open(f"{ep}/video/top.mp4"); g = cv2.cvtColor(next(c.decode(video=0)).to_ndarray(format="rgb24"), cv2.COLOR_RGB2GRAY); c.close()
     cs = cv2.HoughCircles(cv2.medianBlur(g, 5), cv2.HOUGH_GRADIENT, dp=1.2, minDist=20, param1=100, param2=22, minRadius=17, maxRadius=28)

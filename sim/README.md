@@ -116,7 +116,7 @@ Exploratory and not part of the hackathon evidence. Nothing here changes a Quant
 
 ## Sim-to-real agreement v1 (2026-10-16): not yet useful
 
-- One fixed physics setting, unassisted, on all 14 LabLens rollouts, with the can placed from each trial's first
+- One fixed physics setting, unassisted, on all 14 rollouts of the episode bundle, with the can placed from each trial's first
   overhead frame (`fidelity_run.sh`, `fidelity_report.py`, `fidelity_v1.json`).
 - Result: 10/14 "agreement", but **the sim predicted failure for every trial**. 0/4 real successes were reproduced,
   including T0 trial 1, which had succeeded with the start mark position.

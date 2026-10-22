@@ -1,11 +1,11 @@
 """Sim-to-real outcome agreement for the unassisted physics replay (exploratory, sim/README.md).
 Sim success: the can ends upright (tilt < 15 deg from the trace, or its centre height on the coaster) with its centre
-within 50 mm of the coaster centre. Real outcome: episode.json in the LabLens bundle (consensus re-judge rule).
+within 50 mm of the coaster centre. Real outcome: episode.json in the episode bundle (consensus re-judge rule).
 Conditions differ by block (gripper pads, rubber bands, start position); the sim uses one rubber-band setting, so the
 pads-removed trial is expected to disagree.
 Usage: python sim/fidelity_report.py <fidelity out dir> <out.json>"""
 import glob, json, math, os, sys
-OUT, DST = sys.argv[1:3]; L = os.path.expanduser("~/edgeqgate_data/lablens/lablens_so101_episodes"); rows = []
+OUT, DST = sys.argv[1:3]; L = os.environ.get("EPISODE_BUNDLE", os.path.expanduser("~/edgeqgate_data/episode_bundle")); rows = []
 for d in sorted(glob.glob(f"{OUT}/rollout_*/replay_log.json")):
     eid = d.split("/")[-2]; R = json.load(open(d)); c = R["can_xyz"][-1]; co = R["coaster"]
     ep = json.load(open(f"{L}/{eid}/episode.json")); real = bool(ep["outcome"]["success"])

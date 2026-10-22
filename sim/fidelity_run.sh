@@ -1,7 +1,7 @@
 #!/bin/bash
-# Sim-to-real outcome agreement (exploratory): replay every LabLens rollout with one fixed physics setting, unassisted.
+# Sim-to-real outcome agreement (exploratory): replay every rollout of the episode bundle with one fixed physics setting, unassisted.
 # Usage: [CALIB=...] [CAMERA=...] sim/fidelity_run.sh <out dir>
-OUT=${1:?out}; mkdir -p "$OUT"; L=~/edgeqgate_data/lablens/lablens_so101_episodes
+OUT=${1:?out}; mkdir -p "$OUT"; L=${EPISODE_BUNDLE:-~/edgeqgate_data/episode_bundle}
 for d in $L/rollout_*; do id=$(basename $d)
   [ -f "$OUT/$id/replay_log.json" ] && continue
   timeout 1800 sim/isaac.sh sim/build_scene.py ~/edgeqgate_data/sim_assets/so101_usd/so101_new_calib.usdc sim/scene_estimate.json $d/trajectory.csv "$OUT/$id" \
