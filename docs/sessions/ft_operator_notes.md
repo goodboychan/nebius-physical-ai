@@ -203,3 +203,4 @@ Outcomes are decided by the locked criterion (automatic judge and §11 consensus
   - trial 15: (a), the start position was not found and the can was grasped in the wrong place.
   - trial 18: (a), the start position was not found and the can was grasped in the wrong place. (The operator first typed 17 and corrected it to 18.)
   - trial 20: (a), the start position was not found and the can was grasped in the wrong place (typed "ㅁ", the a key on the Korean layout).
+  - trial 22: (a), the start position was not found and the can was grasped in the wrong place.
