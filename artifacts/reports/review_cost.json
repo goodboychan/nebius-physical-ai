@@ -32,17 +32,17 @@
   "usd": 25.589820375805555
  },
  "token_factory": {
-  "in": 169406,
-  "out": 87537,
-  "calls": 69,
-  "estimated_calls": 7,
-  "usd": 0.1296051
+  "in": 165735,
+  "out": 86295,
+  "calls": 68,
+  "estimated_calls": 6,
+  "usd": 0.127386
  },
  "mlflow": {
   "hours": 1.5,
   "usd": 0.72
  },
- "cloud_total_usd": 30.905619248919443,
+ "cloud_total_usd": 30.903400148919445,
  "real_arm": {
   "trials": 745,
   "sessions": 18,

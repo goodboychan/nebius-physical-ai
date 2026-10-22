@@ -1,18 +1,18 @@
 # QuantGate — deployment report v3 (auto-generated)
 
-> Sections 1–4 are written by code from the verdict table (`d3_v3_verdicts.json`, hash `5b8e3a365ba1d25c`). Sections 5–6 are written by Nemotron 3 Super (Token Factory) and checked by code: no digits, no verdict labels, no approval or safety words. They are never a source of verdicts or numbers; a qualitative misreading in plain words cannot be excluded by these rules. v2 is kept as history (`d3_report_v2.md`).
+> Sections 1–4 are written by code from the verdict table (`d3_v3_verdicts.json`, hash `55f0eeb76289c82d`). Sections 5–6 are written by Nemotron 3 Super (Token Factory) and checked by code: no digits, no verdict labels, no approval or safety words. They are never a source of verdicts or numbers; a qualitative misreading in plain words cannot be excluded by these rules. v2 is kept as history (`d3_report_v2.md`).
 
 | Item | Value |
 |---|---|
-| Model attempts | 2 |
-| Latency | 27.6 s |
+| Model attempts | 1 |
+| Latency | 35.3 s |
 | **Wording findings (final attempt)** | **0** |
 
 ---
 
 ## 1. Recommendation (written by code)
 
-FP16 is the recommended precision to validate first (cheapest on the device). The position fine-tune (FT-FP16, same FP16 engine cost) fixed the start-position weakness at both held-out shifts (IMPROVEMENT_DETECTED at +3 cm and -3 cm), so FT-FP16 is the candidate to validate next where start positions vary. Approval is a separate status: on hold, because every comparison against full precision is INSUFFICIENT_EVIDENCE and the fine-tune's nominal performance is undecided.
+FP16 is the recommended precision to validate first (cheapest on the device). The position fine-tune (FT-FP16, same FP16 engine cost) fixed the start-position weakness at both held-out shifts (IMPROVEMENT_DETECTED at +3 cm and -3 cm), so FT-FP16 is the candidate to validate next where start positions vary. Fine-tune v2 (FT2-FP16) then closed the two gaps the first fine-tune left, the yellow can and a start at +6 cm (IMPROVEMENT_DETECTED against FT-FP16 for both, in one session), so FT2-FP16 is the candidate to validate next for those conditions. Approval is a separate status: on hold, because every comparison against full precision is INSUFFICIENT_EVIDENCE and the fine-tunes' nominal performance is undecided.
 
 ## 2. Verdict per candidate (written by code)
 
@@ -37,6 +37,8 @@ Each success interval is a Newcombe interval for candidate minus reference, in p
 - **FT-FP16** · fine-tune vs old, start -3 cm (held out, symmetry) · `IMPROVEMENT_DETECTED` · success 10/12 against VC-025 (old policy) 2/12 · candidate − reference +66.7 pp, 95% interval [+26.9, +83.6] pp (improvement detected if the lower bound is above 0) · GPU time on device 11.6 ms (`artifacts/reports/ft_analysis.json#T2.primary`)
 - **FT-FP16** · fine-tune vs old, training start mark (secondary) · `INSUFFICIENT_EVIDENCE` · success 10/12 against VC-025 (old policy) 12/12 · candidate − reference -16.7 pp, 97.5% interval [-49.0, +15.4] pp (non-inferiority at a 10 pp tolerance: within tolerance if the lower bound is above -10 pp, degraded if the upper bound is below -10 pp, else undecided (the verdict also uses placement)) · placement: indeterminate · GPU time on device 11.6 ms (`artifacts/reports/ft_analysis.json#T0.secondary`)
 - **FT-FP16** · fine-tune vs old, training start mark, T0 + T0R pooled (replication) · `INSUFFICIENT_EVIDENCE` · success 22/24 against VC-025 (old policy) 23/24 · candidate − reference -4.2 pp, 97.5% interval [-25.3, +16.3] pp (non-inferiority at a 10 pp tolerance: within tolerance if the lower bound is above -10 pp, degraded if the upper bound is below -10 pp, else undecided (the verdict also uses placement)) · placement: indeterminate · GPU time on device 11.6 ms (`artifacts/reports/ft3_analysis.json#pooled_T0_T0R`)
+- **FT2-FP16** · fine-tune v2 vs fine-tune, yellow can at +3 cm (held out, primary) · `IMPROVEMENT_DETECTED` · success 12/12 against FT-FP16 (first fine-tune) 7/12 · candidate − reference +41.7 pp, 95% interval [+8.7, +68.0] pp (improvement detected if the lower bound is above 0) (`artifacts/reports/ft6_analysis.json#TYP2.test`)
+- **FT2-FP16** · fine-tune v2 vs fine-tune, start +6 cm (held out, secondary) · `IMPROVEMENT_DETECTED` · success 12/12 against FT-FP16 (first fine-tune) 2/12 · candidate − reference +83.3 pp, 95% interval [+46.2, +95.3] pp (improvement detected if the lower bound is above 0) (`artifacts/reports/ft6_analysis.json#T6P2.test`)
 
 ## 3. Flagged builds (written by code)
 
@@ -56,18 +58,19 @@ AI judge: Cosmos-Reason2 end-of-trial judge, held-out eval of 273 recorded trial
 - **Offline warning not confirmed on the arm in 12 trials (unresolved, not 'tolerated'); keep rejecting this build at the calibration-input check; do not read the offline audit as a predictor of closed-loop failure** — PC-B (positive control real arm)
 - **The candidate to validate next where the start position varies, not yet a replacement: settle the training mark, then confirm at more positions and objects** — FT-FP16 (fine-tune vs old, start +3 cm (held out, primary)), FT-FP16 (fine-tune vs old, start -3 cm (held out, symmetry))
 - **Nominal performance at the training mark is still undecided (pooled with the T0R replication: 22/24 vs 23/24); the two T0 failures did not repeat in 12 more trials. Plan a larger block at the training mark before replacing the old policy there** — FT-FP16 (fine-tune vs old, training start mark (secondary)), FT-FP16 (fine-tune vs old, training start mark, T0 + T0R pooled (replication))
+- **The candidate to validate next for the yellow can and starts up to +6 cm, not yet a replacement: a training-mark guard showed no drop in 12 trials; settle the training mark against the old policy, then test more objects and positions** — FT2-FP16 (fine-tune v2 vs fine-tune, yellow can at +3 cm (held out, primary)), FT2-FP16 (fine-tune v2 vs fine-tune, start +6 cm (held out, secondary))
 
 ## 5. Why the review looks like this
-The half precision engine needs the least energy per inference and has the lowest latency even though its running power draw is higher than that of the eight bit integer builds.  
-The position fine tune kept the same engine cost but removed the start position weakness seen in the original policy showing clear improvement when the start is shifted left or right yet at the trained start mark it still does not give enough evidence to claim it is better or worse than the old policy.  
-Success comparisons with the full precision reference cannot be decided yet because both arms sit at or above a high success rate which activates the pre registered ceiling rule leaving the outcome undecided no matter how many more trials are run unless the rule itself is changed.  
-Deliberately miscalibrated builds are stopped by a simple input check that flags any calibration value outside the allowed range before any arm test occurs.  
-The AI judge record shows it catches many failures but also raises false alarms on new objects depends only on the end state and is sensitive to wording so it must be re validated before anyone relies on its output.  
+The sixteen-bit floating point candidate is chosen for initial validation because it delivers the lowest energy per inference and the shortest latency on the device, even though it draws more power while running than the eight-bit integer builds.  
+The position fine‑tune removed the start‑position weakness at both held‑out shifts of plus three centimeters and minus three centimeters, showing a clear improvement, but it has not yet demonstrated nominal performance at the training mark, which remains undecided.  
+Success comparisons with full precision cannot be settled yet because both arms achieve high success rates that trigger the pre‑registered ceiling rule, leaving the outcome undecided no matter how many trials are added; a new rule must be introduced to resolve the comparison.  
+Deliberately miscalibrated builds are stopped at the input check because a simple input check detects the calibration error and flags them before any further testing proceeds.  
+The AI judge’s record shows it is wording‑sensitive, looks only at the end state, produces more false alarms on novel objects, was re‑checked on live fine‑tune trials and performed well there, but still requires additional validation on other objects and scenes before it can be relied upon.  
 
 ## 6. Questions to resolve before deployment
-- How many trials per arm are needed to show the difference stays within the ten percentage point tolerance after revising the ceiling rule?  
-- How many trials at the trained start mark are required to move the verdict from undecided to a clear statement about non inferiority or superiority?  
-- What additional checks on unseen objects and novel scenes are needed to lower the false alarm rate of the AI judge before it can be relied upon?
+- How many trials are required to narrow the confidence interval around the success difference at the training mark to within ten percentage points so that the undecided verdict can be resolved?  
+- Does the improvement observed at plus three centimeters and minus three centimeters persist when the start position is varied across a broader range of values?  
+- Will the AI judge maintain a low false‑alarm rate when presented with objects that were not included in the fine‑tune evaluation set?
 
 
 ## Figures (drawn by code from the verdict table)

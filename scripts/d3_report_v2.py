@@ -94,11 +94,22 @@ def verdict_table():
                      "reference": q["ref_k_n"], "reference_name": "VC-025 (old policy)", "e1_ci_pp": [round(x, 1) for x in q["E1"]["ci_pp"]],
                      "e1_level_pct": round(q["conf"] * 100, 2), "e2": q["E2"]["decision"], "verdict": q["verdict"],
                      "replication": F3["T0R"]["primary_reading"], "evidence_path": f"{R}/ft3_analysis.json#pooled_T0_T0R"})
+    F6 = _ld(f"{R}/ft6_analysis.json")   # fine-tune v2, amendment 9 (prereg §21-22): FT2 vs FT in one session
+    if F6:
+        for blk, ctx in (("TYP2", "fine-tune v2 vs fine-tune, yellow can at +3 cm (held out, primary)"), ("T6P2", "fine-tune v2 vs fine-tune, start +6 cm (held out, secondary)")):
+            p = F6[blk]["test"]
+            rows.append({"candidate": "FT2-FP16", "context": ctx, "success": p["ft2"], "reference": p["ft"], "reference_name": "FT-FP16 (first fine-tune)",
+                         "improvement_ci_pp": [round(x, 1) for x in p["newcombe95_pp"]], "improvement_pp": round(p["diff_pp"], 1), "comparison": "improvement (lower bound > 0)",
+                         "verdict": "IMPROVEMENT_DETECTED" if p["improvement_detected"] else "NOT_DETECTED", "e2e_ms": None,
+                         "evidence_path": f"{R}/ft6_analysis.json#{blk}.test"})
     cost = {"VC-025": 11.6, "VC-002": 16.8, "VC-020": 16.8, "VC-005": 17.1, "VC-000": 53.4, "FT-FP16": 11.6}
     for r in rows:   # next actions are decided by code, not by the model
         if r["candidate"] == "PC-B" and r["context"] == "positive control real arm":
             r["next_action"] = ("Offline warning not confirmed on the arm in 12 trials (unresolved, not 'tolerated'); keep rejecting this build at the "
                                 "calibration-input check; do not read the offline audit as a predictor of closed-loop failure")
+        elif r["verdict"] == "IMPROVEMENT_DETECTED" and r["candidate"] == "FT2-FP16":
+            r["next_action"] = ("The candidate to validate next for the yellow can and starts up to +6 cm, not yet a replacement: a training-mark guard showed "
+                                "no drop in 12 trials; settle the training mark against the old policy, then test more objects and positions")
         elif r["verdict"] == "IMPROVEMENT_DETECTED":
             r["next_action"] = ("The candidate to validate next where the start position varies, not yet a replacement: settle the training mark, "
                                 "then confirm at more positions and objects")
@@ -124,8 +135,10 @@ def verdict_table():
     return {"rows": rows, "notes": {
         "recommendation_vs_approval": ("FP16 is the recommended precision to validate first (cheapest on the device). The position fine-tune (FT-FP16, same FP16 engine "
                                        "cost) fixed the start-position weakness at both held-out shifts (IMPROVEMENT_DETECTED at +3 cm and -3 cm), so FT-FP16 is the "
-                                       "candidate to validate next where start positions vary. Approval is a separate status: on hold, because every comparison "
-                                       "against full precision is INSUFFICIENT_EVIDENCE and the fine-tune's nominal performance is undecided."),
+                                       "candidate to validate next where start positions vary. Fine-tune v2 (FT2-FP16) then closed the two gaps the first fine-tune left, the yellow "
+                                       "can and a start at +6 cm (IMPROVEMENT_DETECTED against FT-FP16 for both, in one session), so FT2-FP16 is the candidate to validate "
+                                       "next for those conditions. Approval is a separate status: on hold, because every comparison against full precision is "
+                                       "INSUFFICIENT_EVIDENCE and the fine-tunes' nominal performance is undecided."),
         "gpu_ms_source": f"{R}/power_bench/SUMMARY.md (trtexec, 15 W)",
         "simple_checks_scope": "The action-MSE and audit-score thresholds were set on the same 24 normal cells, so '0 normal cells flagged' holds by construction; only the input check is independent of that set.",
         "ai_judge": ("Cosmos-Reason2 end-of-trial judge, held-out eval of 273 recorded trials (artifacts/cosmos_judge/eval_scores.jsonl): "
