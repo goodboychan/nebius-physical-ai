@@ -28,8 +28,8 @@ slide("03_what_it_tells_you", "What QuantGate tells the developer", "For develop
       [(f"{VF}/s03_split.png", 64, 200, 1672, 940, False)])
 slide("04_workflow", "How it works: models suggest and describe, code decides", "Build the candidates → gather evidence on the real arm → decide · where each step runs and which model does it",
       [(f"{CAP}/cap_workflow.png", 64, 200, 1672, 940, True)])
-slide("05_try_it_fp16", "Pick a candidate: confirmed, open, evidence, next test", "FP16 (VC-025): cheapest on the device, 19/20 vs FP32 10/10 on the arm · approval on hold · the plan to pre-register",
-      [(crop(f"{CAP}/cap_nexttest_fp16.png", (0, 0, 2160, 1584)), 64, 200, 1672, 940, True)])
+slide("05_review_fp16", "The review: validate first, the deployment decision, the next test", "FP16 (VC-025): recommended to validate first · deployment HOLD and why · 11.6 ms, 82 mJ, 19/20 · the plan to view or copy",
+      [(f"{CAP}/cap_nexttest_fp16.png", 64, 200, 1672, 940, True)])
 slide("06_preflight", "Before the arm: HOLD or BLOCK, never a silent GO", "Engine hash · normalization manifest · 200 ms chunk deadline · code-decided verdict · FAULT INJECTION rows are deliberate",
       [(f"{CAP}/cap_preflight.png", 64, 200, 1672, 940, True)])
 slide("07_engine_cost", "Measured on the Jetson, not assumed", "FP16 11.6 ms and 82 mJ per inference; INT8 16.8 ms and 101 mJ; FP32 53.4 ms and 403 mJ (trtexec, 15 W)",
