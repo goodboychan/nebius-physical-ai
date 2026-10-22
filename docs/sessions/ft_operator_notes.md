@@ -187,3 +187,4 @@ Outcomes are decided by the locked criterion (automatic judge and §11 consensus
   - From trial 2 on, the operator reports failures only; a trial not mentioned is one the operator saw succeed (operator's convention, 2026-10-22). The counted outcome is still the judge and the blind re-judge.
   - trial 3: (a), the start position was not found and the can was grasped in the wrong place.
   - trial 17: (a), the start position was not found and the can was grasped in the wrong place. (Trials 4-16 not mentioned: seen as successes by the operator.)
+  - trial 19: (a), the start position was not found and the can was grasped in the wrong place.
