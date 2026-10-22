@@ -54,9 +54,12 @@
    "artifacts/finetune/GEN2_modes.json",
    "T0 failures: trials 18 and 22 (placement disturbance, docs/sessions/ft_operator_notes.md); clip: dashboard/clips/t1_old_vs_ft.mp4"
   ],
+  "completed": [
+   "the plan for the gaps (a new fine-tune with demonstrations at +6 cm and with the yellow can, re-tested under a new pre-registration): completed as FT2-FP16, amendment 9"
+  ],
   "next_test": {
-   "compare": "FT-FP16 vs VC-025 (old FP16 policy) at the training mark; for the gaps, a new fine-tune with demonstrations at +6 cm and with the yellow can, re-tested at TYP/T6P under a new pre-registration",
-   "conditions": "training start mark (nominal); +6 cm and the yellow can at +3 cm (generalization gaps, amendment 7)",
+   "compare": "FT-FP16 vs VC-025 (old FP16 policy) at the training mark",
+   "conditions": "training start mark (nominal), cola can",
    "measure": "success, failure mode (placement disturbance), gripper chatter",
    "schedule": "sealed, interleaved, new tokens (operator blinding stays partial: the motions differ)",
    "rule": "success non-inferiority at 10 pp (97.5% Newcombe), pre-registered without the ceiling clause (if both arms land at or above 95%, the current ceiling clause would hold it undecided); a final GO also needs placement (E2, 5 px) and the preflight",

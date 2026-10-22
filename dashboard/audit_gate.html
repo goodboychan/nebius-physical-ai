@@ -53,7 +53,7 @@ h1{font-size:clamp(28px,4.4vw,42px); font-weight:600; letter-spacing:-.02em; lin
 .banner p{color:var(--ink-2); font-size:14px; max-width:72ch}
 .panel{display:flex; flex-direction:column; gap:18px}
 .plate{display:flex; align-items:baseline; gap:12px; border-bottom:1px solid var(--rule); padding-bottom:8px; flex-wrap:wrap}
-.plate h2{font-family:var(--cond); font-weight:600; font-size:13px; letter-spacing:.13em; text-transform:uppercase}
+.plate h2{font-family:var(--sans); font-weight:600; font-size:23px; letter-spacing:0; line-height:1.25}
 .plate .ref{font-family:var(--mono); font-size:11px; color:var(--ink-3); margin-left:auto}
 .note{color:var(--ink-2); font-size:14px; max-width:70ch}
 .note b{color:var(--ink)}
@@ -197,102 +197,178 @@ a.step:hover .go, a.step:focus-visible .go, a.step.current .go{opacity:1}
 .gcard .gn{font-family:var(--mono); font-size:12px; color:var(--halt)}
 .gcard .gl{font-size:13px; color:var(--ink-2)}
 @media (max-width:760px){ .hero-clips, .gallery{grid-template-columns:minmax(0,1fr)} }
+
+[hidden]{display:none!important}
+/* board review (2026-10-23): the decision first, then evidence, how it works and the audit record */
+.toc{display:flex; gap:8px; flex-wrap:wrap; margin-top:6px}
+.toc a{font-size:14px; color:var(--ink); text-decoration:none; border:1px solid var(--rule); border-radius:999px; padding:6px 14px}
+.toc a:hover{border-color:var(--signal)}
+.group{display:flex; align-items:baseline; gap:12px; flex-wrap:wrap; border-top:2px solid var(--ink); padding-top:14px; margin-top:8px}
+.group .g-k{font-family:var(--cond); font-weight:600; font-size:13px; letter-spacing:.14em; text-transform:uppercase; color:var(--ink-3)}
+.group .g-s{font-size:14px; color:var(--ink-3)}
+.banner.history{background:var(--plate)} .banner.history .bar{background:var(--rule)} .banner.history .t{color:var(--ink-2)}
+.fig-h{margin:0 0 6px; font-size:16px; font-weight:600} .fig-h small{font-weight:400; color:var(--ink-3); font-size:13px}
+.rv-pick{display:flex; gap:8px; flex-wrap:wrap}
+.rv-pick button{font:inherit; font-size:14px; color:var(--ink); background:transparent; border:1px solid var(--rule); border-radius:10px; padding:8px 14px; cursor:pointer; text-align:left}
+.rv-pick button small{color:var(--ink-3); font-size:12px} .rv-pick button.on{border-color:var(--signal); box-shadow:0 0 0 2px var(--signal) inset}
+.rv-card{background:var(--plate); border:1px solid var(--rule); border-radius:12px; padding:22px 24px; display:flex; flex-direction:column; gap:18px}
+.rv-tl{display:block; font-size:13px; color:var(--ink-3); margin-bottom:4px}
+.rv-ts{display:block; font-size:13px; color:var(--ink-3); margin-top:4px}
+.rv-top{display:flex; justify-content:space-between; gap:16px; flex-wrap:wrap; align-items:flex-start}
+.rv-name{font-size:30px; font-weight:600; line-height:1.15} .rv-name small{font-family:var(--mono); font-size:13px; color:var(--ink-3); font-weight:400}
+.rv-prio{display:inline-block; margin-top:6px; color:var(--good); font-size:14px; font-weight:600} .rv-prio.muted{color:var(--ink-3)} .rv-prio.halt{color:var(--halt)}
+.rv-dec{text-align:right; min-width:0} .rv-badge{display:inline-block; font-family:var(--cond); font-weight:600; font-size:24px; letter-spacing:.08em; padding:8px 18px; border-radius:8px}
+.rv-badge.hold{background:var(--warn-bg); color:var(--warn)} .rv-badge.block{background:var(--halt-bg); color:var(--halt)} .rv-badge.go{background:var(--good-bg); color:var(--good)}
+.rv-why p{margin:0; font-size:16px; max-width:75ch}
+.rv-tiles{display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); border:1px solid var(--rule); border-radius:10px; overflow:hidden}
+.rv-tile{padding:14px 16px; min-width:0} .rv-tile + .rv-tile{border-left:1px solid var(--rule)}
+.rv-tv{display:block; font-size:28px; font-variant-numeric:tabular-nums} .rv-tv small{font-size:15px; color:var(--ink-3)}
+.rv-next{display:flex; justify-content:space-between; gap:16px; flex-wrap:wrap; align-items:center; border-top:1px solid var(--rule); padding-top:16px}
+.rv-next b{font-size:18px} .rv-btns{display:flex; gap:8px; flex-wrap:wrap}
+.rv-btn{font:inherit; font-size:15px; font-weight:600; min-height:42px; padding:8px 18px; border-radius:10px; border:1px solid var(--signal); background:var(--signal); color:#fff; cursor:pointer}
+.rv-btn.ghost{background:transparent; color:var(--signal)}
+.rv-plan{border:1px solid var(--rule); border-radius:10px; padding:16px 18px; display:flex; flex-direction:column; gap:12px}
+.rv-plan-h{display:flex; justify-content:space-between; gap:10px; flex-wrap:wrap; font-size:17px} .rv-status{font-size:13px; color:var(--warn)}
+.rv-grid{display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:14px 22px} .rv-grid p{margin:0; font-size:14px}
+.rv-est .rv-tv{font-size:30px}
+.rv-done{margin:0; font-size:14px; color:var(--ink-2); border-left:3px solid var(--good); padding-left:10px}
+.rv-ev summary{cursor:pointer; font-weight:600; font-size:15px} .rv-ev ul{margin:6px 0 10px; padding-left:20px; font-size:14px}
+.rv-files code{font-size:12px; color:var(--ink-3); overflow-wrap:anywhere}
+.rv-scope{margin:0; font-size:13px; color:var(--ink-3)}
+@media (max-width:760px){ .rv-tiles,.rv-grid{grid-template-columns:minmax(0,1fr)} .rv-tile + .rv-tile{border-left:0; border-top:1px solid var(--rule)} .rv-dec{text-align:left} }
 </style>
 
 <div class="wrap">
   <header class="mast">
-    <div class="eyebrow">Pre-registered audit gate · Nebius × NVIDIA Physical AI</div>
+    <div class="eyebrow">QuantGate · Deployment review</div>
     <h1>QuantGate audit board</h1>
+    <p class="sub">For developers validating LeRobot policies on Jetson: choose what to validate first, see what still blocks deployment, and plan the next test.</p>
+    <div class="mast-meta">
+      <span>745 real-arm trials</span><span>Jetson Orin Nano Super · 15 W · TRT 10.3</span><span>ACT 51.6M · SO-101</span><span>G6 trials completed: 245</span><span>measured snapshot 2026-10-22</span>
+    </div>
+    <nav class="toc" aria-label="Sections"><a href="#nexttest">Review</a><a href="#g-evidence">Evidence</a><a href="#g-how">How it works</a><a href="#g-audit">Audit record</a></nav>
+  </header>
+
+<!--NEXTTEST:BEGIN-->
+  <section class="panel" id="nexttest">
+    <div class="plate"><h2>Review: what to validate, whether it can deploy, what to test next</h2><span class="ref">written by code from committed evidence · measured snapshot 2026-10-22</span></div>
+    <div id="nt-pick" class="rv-pick" role="tablist" aria-label="Candidate"></div>
+    <div id="nt-card" class="rv-card"></div>
+    <div id="nt-body" hidden></div>
+  </section>
+  <script>
+  (function(){
+    const D = {"VC-025": {"candidate": "VC-025 (FP16, old policy)", "status": "recommended to validate first; approval on hold", "confirmed": ["cheapest engine on the device: 11.6 ms and 82 mJ per inference (power_bench/SUMMARY.md)", "real arm 19/20 against FP32 10/10 (fp16_analysis.json)"], "open": ["success against FP32 within 10 pp: INSUFFICIENT_EVIDENCE, and both arms are at or above 95%, so the pre-registered ceiling rule keeps it undecided"], "evidence": ["artifacts/reports/fp16_analysis.json#primary_fp16_vs_fp32", "artifacts/freeze/fp16_post.json", "artifacts/trials/fp16_unsealed/stress_fp16_F0_sealed.jsonl"], "next_test": {"compare": "VC-025 (FP16) vs VC-000 (FP32), same old policy", "conditions": "training start mark, rubber-band gripper, cola can", "measure": "success (consensus re-judge), placement error, gripper chatter", "schedule": "sealed, interleaved, new tokens", "rule": "pre-register a revised E1 (success) rule without the ceiling clause: the success criterion is met if the 97.5% Newcombe upper bound of the degradation is below 10 pp; a final GO also needs placement (E2, 5 px) and the preflight", "trials_per_arm": {"under the revised rule, if equal at 96%": 120, "with the current ceiling rule, power at 200/arm": 0.32}}, "md": "# From evidence to the next test (written by code)\n\n## VC-025 (FP16, old policy)\n**Status**: recommended to validate first; approval on hold\n\nConfirmed:\n- cheapest engine on the device: 11.6 ms and 82 mJ per inference (power_bench/SUMMARY.md)\n- real arm 19/20 against FP32 10/10 (fp16_analysis.json)\n\nOpen:\n- success against FP32 within 10 pp: INSUFFICIENT_EVIDENCE, and both arms are at or above 95%, so the pre-registered ceiling rule keeps it undecided\n\nEvidence:\n- `artifacts/reports/fp16_analysis.json#primary_fp16_vs_fp32`\n- `artifacts/freeze/fp16_post.json`\n- `artifacts/trials/fp16_unsealed/stress_fp16_F0_sealed.jsonl`\n\nNext test:\n- compare: VC-025 (FP16) vs VC-000 (FP32), same old policy\n- conditions: training start mark, rubber-band gripper, cola can\n- measure: success (consensus re-judge), placement error, gripper chatter\n- schedule: sealed, interleaved, new tokens\n- rule: pre-register a revised E1 (success) rule without the ceiling clause: the success criterion is met if the 97.5% Newcombe upper bound of the degradation is below 10 pp; a final GO also needs placement (E2, 5 px) and the preflight\n- trials per arm for 80% power on the success criterion (not the chance of a final GO), under the revised rule, if equal at 96%: 120\n- with the current ceiling rule, power at 200/arm: 0.32\n", "clip": null, "card": {"name": "FP16", "role": "original policy", "priority": "Recommended to validate first", "decision": "HOLD", "finding": "INSUFFICIENT_EVIDENCE", "why": "<b>Success evidence is insufficient.</b> The comparison with FP32 does not establish the 10 pp tolerance, and both arms reached at least 95%, so the current ceiling rule also keeps the result undecided.", "tiles": [["GPU compute", "11.6", "ms", "median per 100-step action chunk"], ["Inference energy", "82", "mJ", "above idle, per chunk"], ["Real-arm successes", "19", "/ 20", "FP32: 10 / 10 \u00b7 nominal session"]], "next": "Pre-register a revised success rule.", "next_sub": "Plan a new FP16\u2013FP32 comparison before collecting more trials."}, "evn": ["Analysis", "Committed evidence record (post-lock hash)", "Trial log"]}, "FT-FP16": {"candidate": "FT-FP16 (position fine-tune)", "status": "next candidate where the start varies between -6 and +3 cm with the cola can; superseded for the yellow can and +6 cm by FT2-FP16 (amendment 9); not a replacement at the trained spot", "confirmed": ["fine-tune vs old, start +3 cm (held out, primary): 12/12 vs old 3/12, IMPROVEMENT_DETECTED", "fine-tune vs old, start -3 cm (held out, symmetry): 10/12 vs old 2/12, IMPROVEMENT_DETECTED", "start -6 cm (beyond the demonstrations): 8/12 vs old 0/12, IMPROVEMENT_DETECTED"], "open": ["training mark, T0 + T0R pooled: 22/24 vs old 23/24, INSUFFICIENT_EVIDENCE", "yellow can at +3 cm (held-out object, primary): 0/12 vs old 3/12, NOT_DETECTED", "start +6 cm (beyond the demonstrations): 0/12 vs old 0/12, NOT_DETECTED", "start +6 cm re-test without the red markers (amendment 8, H1 'unclear'): 0/12 vs old 0/12, NOT_DETECTED", "yellow can at +3 cm re-test without the red markers (amendment 8, H1 'unclear'): 0/12 vs old 0/12, NOT_DETECTED"], "evidence": ["artifacts/reports/ft3_analysis.json#pooled_T0_T0R", "artifacts/freeze/ft_post.json", "artifacts/freeze/ft3_post.json", "artifacts/finetune/T0R_modes.json", "artifacts/reports/ft4_analysis.json", "artifacts/freeze/ft4_post.json", "artifacts/finetune/GEN_modes.json", "artifacts/reports/ft5_analysis.json", "artifacts/freeze/ft5_post.json", "artifacts/finetune/GEN2_modes.json", "T0 failures: trials 18 and 22 (placement disturbance, docs/sessions/ft_operator_notes.md); clip: dashboard/clips/t1_old_vs_ft.mp4"], "completed": ["the plan for the gaps (a new fine-tune with demonstrations at +6 cm and with the yellow can, re-tested under a new pre-registration): completed as FT2-FP16, amendment 9"], "next_test": {"compare": "FT-FP16 vs VC-025 (old FP16 policy) at the training mark", "conditions": "training start mark (nominal), cola can", "measure": "success, failure mode (placement disturbance), gripper chatter", "schedule": "sealed, interleaved, new tokens (operator blinding stays partial: the motions differ)", "rule": "success non-inferiority at 10 pp (97.5% Newcombe), pre-registered without the ceiling clause (if both arms land at or above 95%, the current ceiling clause would hold it undecided); a final GO also needs placement (E2, 5 px) and the preflight", "trials_per_arm": {"under the revised rule, if truly equal (95.8%)": 120, "under the revised rule, if the observed 4 pp gap is real": 400, "with the current ceiling rule, power at 120/arm if truly equal": 0.32}}, "md": "# From evidence to the next test (written by code)\n\n## FT-FP16 (position fine-tune)\n**Status**: next candidate where the start varies between -6 and +3 cm with the cola can; superseded for the yellow can and +6 cm by FT2-FP16 (amendment 9); not a replacement at the trained spot\n\nConfirmed:\n- fine-tune vs old, start +3 cm (held out, primary): 12/12 vs old 3/12, IMPROVEMENT_DETECTED\n- fine-tune vs old, start -3 cm (held out, symmetry): 10/12 vs old 2/12, IMPROVEMENT_DETECTED\n- start -6 cm (beyond the demonstrations): 8/12 vs old 0/12, IMPROVEMENT_DETECTED\n\nOpen:\n- training mark, T0 + T0R pooled: 22/24 vs old 23/24, INSUFFICIENT_EVIDENCE\n- yellow can at +3 cm (held-out object, primary): 0/12 vs old 3/12, NOT_DETECTED\n- start +6 cm (beyond the demonstrations): 0/12 vs old 0/12, NOT_DETECTED\n- start +6 cm re-test without the red markers (amendment 8, H1 'unclear'): 0/12 vs old 0/12, NOT_DETECTED\n- yellow can at +3 cm re-test without the red markers (amendment 8, H1 'unclear'): 0/12 vs old 0/12, NOT_DETECTED\n\nCompleted since the plan was made:\n- the plan for the gaps (a new fine-tune with demonstrations at +6 cm and with the yellow can, re-tested under a new pre-registration): completed as FT2-FP16, amendment 9\n\nEvidence:\n- `artifacts/reports/ft3_analysis.json#pooled_T0_T0R`\n- `artifacts/freeze/ft_post.json`\n- `artifacts/freeze/ft3_post.json`\n- `artifacts/finetune/T0R_modes.json`\n- `artifacts/reports/ft4_analysis.json`\n- `artifacts/freeze/ft4_post.json`\n- `artifacts/finetune/GEN_modes.json`\n- `artifacts/reports/ft5_analysis.json`\n- `artifacts/freeze/ft5_post.json`\n- `artifacts/finetune/GEN2_modes.json`\n- T0 failures: trials 18 and 22 (placement disturbance, docs/sessions/ft_operator_notes.md); clip: dashboard/clips/t1_old_vs_ft.mp4\n\nNext test:\n- compare: FT-FP16 vs VC-025 (old FP16 policy) at the training mark\n- conditions: training start mark (nominal), cola can\n- measure: success, failure mode (placement disturbance), gripper chatter\n- schedule: sealed, interleaved, new tokens (operator blinding stays partial: the motions differ)\n- rule: success non-inferiority at 10 pp (97.5% Newcombe), pre-registered without the ceiling clause (if both arms land at or above 95%, the current ceiling clause would hold it undecided); a final GO also needs placement (E2, 5 px) and the preflight\n- trials per arm for 80% power on the success criterion (not the chance of a final GO), under the revised rule, if truly equal (95.8%): 120\n- trials per arm for 80% power on the success criterion (not the chance of a final GO), under the revised rule, if the observed 4 pp gap is real: 400\n- with the current ceiling rule, power at 120/arm if truly equal: 0.32\n", "clip": "clips/t1_old_vs_ft.mp4", "card": {"name": "Fine-tune v1", "role": "start positions", "priority": "Candidate where the start varies (\u22126 to +3 cm, cola can)", "decision": "HOLD", "finding": "IMPROVEMENT_DETECTED off the mark \u00b7 INSUFFICIENT_EVIDENCE at the mark", "why": "<b>An improvement is not an approval.</b> Off the training mark the fine-tune beat the old policy (+3 cm 12/12 vs 3/12, \u22123 cm 10/12 vs 2/12, \u22126 cm 8/12 vs 0/12), but at the training mark it is still undecided (22/24 vs 23/24).", "tiles": [["At +3 cm", "12", "/ 12", "old policy 3 / 12"], ["At \u22126 cm", "8", "/ 12", "old policy 0 / 12"], ["At the training mark", "22", "/ 24", "old policy 23 / 24"]], "next": "Settle the training mark against the old policy.", "next_sub": "A larger sealed block at the mark. The +6 cm and yellow-can gaps were completed by fine-tune v2."}, "evn": ["Analysis", "Committed evidence record (post-lock hash)", "Committed evidence record (post-lock hash)", "Failure-mode labels (blind)", "Analysis", "Committed evidence record (post-lock hash)", "Failure-mode labels (blind)", "Analysis", "Committed evidence record (post-lock hash)", "Failure-mode labels (blind)", "Note"]}, "FT2-FP16": {"candidate": "FT2-FP16 (fine-tune v2: yellow can and far starts)", "status": "next candidate for the yellow can and starts up to +6 cm; not approved, not yet a replacement at the trained spot", "confirmed": ["yellow can at +3 cm (held out, primary): 12/12 vs FT 7/12, IMPROVEMENT_DETECTED", "start +6 cm (held out, secondary): 12/12 vs FT 2/12, IMPROVEMENT_DETECTED", "training mark (guard): 12/12 vs FT 12/12, no drop flagged (12-trial guard)"], "open": ["non-inferiority at the training mark against the old policy (the guard detects only a large drop)", "FT did better in this session than before (7/12 and 2/12 against 0/12): the earlier gap was partly the scene (a knocked wrist camera)"], "evidence": ["artifacts/reports/ft6_analysis.json", "artifacts/freeze/ft6_post.json", "artifacts/finetune/GEN3_modes.json", "artifacts/finetune/rejudge/TYP2_consensus.json", "docs/finetune_position_preregistration.md#22"], "next_test": {"compare": "FT2-FP16 vs VC-025 (old FP16 policy) at the training mark, and FT2 at more objects and positions", "conditions": "training mark; the yellow can and the cola can between -6 and +7 cm; a session-start wrist-camera check", "measure": "success, failure mode, gripper chatter", "schedule": "sealed, interleaved, new tokens", "rule": "success non-inferiority at 10 pp (97.5% Newcombe) without the ceiling clause; a final GO also needs placement (E2, 5 px) and the preflight", "trials_per_arm": {"under the revised rule, if truly equal (about 96%)": 120}}, "md": "# From evidence to the next test (written by code)\n\n## FT2-FP16 (fine-tune v2: yellow can and far starts)\n**Status**: next candidate for the yellow can and starts up to +6 cm; not approved, not yet a replacement at the trained spot\n\nConfirmed:\n- yellow can at +3 cm (held out, primary): 12/12 vs FT 7/12, IMPROVEMENT_DETECTED\n- start +6 cm (held out, secondary): 12/12 vs FT 2/12, IMPROVEMENT_DETECTED\n- training mark (guard): 12/12 vs FT 12/12, no drop flagged (12-trial guard)\n\nOpen:\n- non-inferiority at the training mark against the old policy (the guard detects only a large drop)\n- FT did better in this session than before (7/12 and 2/12 against 0/12): the earlier gap was partly the scene (a knocked wrist camera)\n\nEvidence:\n- `artifacts/reports/ft6_analysis.json`\n- `artifacts/freeze/ft6_post.json`\n- `artifacts/finetune/GEN3_modes.json`\n- `artifacts/finetune/rejudge/TYP2_consensus.json`\n- `docs/finetune_position_preregistration.md#22`\n\nNext test:\n- compare: FT2-FP16 vs VC-025 (old FP16 policy) at the training mark, and FT2 at more objects and positions\n- conditions: training mark; the yellow can and the cola can between -6 and +7 cm; a session-start wrist-camera check\n- measure: success, failure mode, gripper chatter\n- schedule: sealed, interleaved, new tokens\n- rule: success non-inferiority at 10 pp (97.5% Newcombe) without the ceiling clause; a final GO also needs placement (E2, 5 px) and the preflight\n- trials per arm for 80% power on the success criterion (not the chance of a final GO), under the revised rule, if truly equal (about 96%): 120\n", "clip": null, "card": {"name": "Fine-tune v2", "role": "yellow can and far starts", "priority": "Candidate for the yellow can and starts to +6 cm", "decision": "HOLD", "finding": "IMPROVEMENT_DETECTED against fine-tune v1", "why": "<b>Fixed in one sealed session, not yet compared with the old policy.</b> Against fine-tune v1 it improved with the yellow can and at +6 cm, and a 12-trial guard found no drop at the training mark.", "tiles": [["Yellow can, +3 cm", "12", "/ 12", "fine-tune v1: 7 / 12"], ["Start +6 cm", "12", "/ 12", "fine-tune v1: 2 / 12"], ["Training mark (guard)", "12", "/ 12", "fine-tune v1: 12 / 12"]], "next": "Settle fine-tune v2 at the training mark.", "next_sub": "Compare with the old FP16 policy under the revised rule, then more objects and positions."}, "evn": ["Analysis", "Committed evidence record (post-lock hash)", "Failure-mode labels (blind)", "Blind video re-judge", "Pre-registration"]}, "INT8": {"candidate": "INT8 builds (24 calibration variants)", "status": "not first: slower and costlier per inference than FP16 on this device", "confirmed": ["16.8-17.1 ms and 101 mJ per inference for the 3 benched builds", "audit-picked cells 73/75 vs random 73/75: the offline score did not predict the arm"], "open": ["success against FP32: INSUFFICIENT_EVIDENCE for every cell, under the ceiling rule", "chatter re-test (Q8B, pre-registered): VC-002 median 0.497 vs FP16 0.391, MWU p = 0.12, the post hoc 2x pattern NOT confirmed; chatter rose for both engines in that session (unexplained)", "Q8B success, descriptive: VC-002 23/24 vs FP16 20/24 (FP16 below its earlier level at the mark; no approval follows)"], "evidence": ["artifacts/reports/g6_analysis.json", "artifacts/freeze/lock3.json", "artifacts/reports/ft_chatter.json", "artifacts/reports/int8c2_analysis.json", "artifacts/freeze/int8c2_post.json"], "next_test": {"compare": "only if memory or power forces INT8: VC-002 vs FP16 (VC-025) against FP32 under the revised success rule; first find why chatter rose for every engine between sessions (FP16-only check at the mark)", "conditions": "training start mark, the pre-registered scene (no extra markers)", "measure": "success, placement, gripper chatter as a session-level health check", "schedule": "sealed, interleaved", "rule": "success non-inferiority at 10 pp (97.5% Newcombe) without the ceiling clause; chatter compared with the earlier nominal blocks before any engine comparison", "trials_per_arm": {"chatter re-test done (Q8B, block size)": 24}}, "md": "# From evidence to the next test (written by code)\n\n## INT8 builds (24 calibration variants)\n**Status**: not first: slower and costlier per inference than FP16 on this device\n\nConfirmed:\n- 16.8-17.1 ms and 101 mJ per inference for the 3 benched builds\n- audit-picked cells 73/75 vs random 73/75: the offline score did not predict the arm\n\nOpen:\n- success against FP32: INSUFFICIENT_EVIDENCE for every cell, under the ceiling rule\n- chatter re-test (Q8B, pre-registered): VC-002 median 0.497 vs FP16 0.391, MWU p = 0.12, the post hoc 2x pattern NOT confirmed; chatter rose for both engines in that session (unexplained)\n- Q8B success, descriptive: VC-002 23/24 vs FP16 20/24 (FP16 below its earlier level at the mark; no approval follows)\n\nEvidence:\n- `artifacts/reports/g6_analysis.json`\n- `artifacts/freeze/lock3.json`\n- `artifacts/reports/ft_chatter.json`\n- `artifacts/reports/int8c2_analysis.json`\n- `artifacts/freeze/int8c2_post.json`\n\nNext test:\n- compare: only if memory or power forces INT8: VC-002 vs FP16 (VC-025) against FP32 under the revised success rule; first find why chatter rose for every engine between sessions (FP16-only check at the mark)\n- conditions: training start mark, the pre-registered scene (no extra markers)\n- measure: success, placement, gripper chatter as a session-level health check\n- schedule: sealed, interleaved\n- rule: success non-inferiority at 10 pp (97.5% Newcombe) without the ceiling clause; chatter compared with the earlier nominal blocks before any engine comparison\n- chatter re-test done (Q8B, block size): 24\n", "clip": null, "card": {"name": "INT8", "role": "24 calibrations", "priority": "Not first on this device", "tone": "muted", "decision": "HOLD", "finding": "INSUFFICIENT_EVIDENCE for every cell", "why": "<b>Slower and costlier than FP16 here, and not separated on the arm.</b> Every INT8 cell is undecided against FP32, and the offline audit's top picks did no better than random picks (73/75 vs 73/75).", "tiles": [["GPU compute", "16.8\u201317.1", "ms", "3 benched builds, per chunk"], ["Inference energy", "101", "mJ", "above idle, per chunk"], ["Real-arm successes", "194", "/ 200", "10 cells, G6 nominal tests"]], "next": "Only if memory or power forces INT8.", "next_sub": "Then compare one build with FP16 against FP32 under the revised rule."}, "evn": ["Analysis", "Order lock record (LOCK-3)", "Gripper chatter measurement", "Analysis", "Committed evidence record (post-lock hash)"]}, "PC-B": {"candidate": "PC-B (black-frame calibration)", "status": "rejected", "confirmed": ["flagged offline by the input check, action error and audit score"], "open": ["the offline warning was not confirmed on the arm in 12 trials (unresolved)"], "evidence": ["artifacts/reports/simple_checks_vs_audit.json", "artifacts/reports/positive_control_analysis.json"], "next_test": {"compare": "none: block it at the calibration-input check", "conditions": "-", "measure": "-", "schedule": "-", "rule": "preflight BLOCK (FLAGGED)", "trials_per_arm": {}}, "md": "# From evidence to the next test (written by code)\n\n## PC-B (black-frame calibration)\n**Status**: rejected\n\nConfirmed:\n- flagged offline by the input check, action error and audit score\n\nOpen:\n- the offline warning was not confirmed on the arm in 12 trials (unresolved)\n\nEvidence:\n- `artifacts/reports/simple_checks_vs_audit.json`\n- `artifacts/reports/positive_control_analysis.json`\n\nNext test:\n- compare: none: block it at the calibration-input check\n- conditions: -\n- measure: -\n- schedule: -\n- rule: preflight BLOCK (FLAGGED)\n", "clip": null, "card": {"name": "Black-frame calibration", "role": "control", "priority": "Rejected", "tone": "halt", "decision": "BLOCK", "finding": "FLAGGED offline", "why": "<b>A deliberately broken calibration.</b> The calibration-input check flags it and the preflight blocks it. On the arm it went 11/12 against FP32 10/12 in 12 trials, so the offline warning was not confirmed there (unresolved).", "tiles": [["Input check", "FLAGGED", "", "calibration frames are black"], ["Preflight", "BLOCK", "", "before it reaches the arm"], ["Real arm", "11", "/ 12", "FP32: 10 / 12"]], "next": "Keep blocking it at the calibration-input check.", "next_sub": "No real-arm test is planned for this build."}, "evn": ["Simple-checks comparison", "Analysis"]}}, ORDER = ["VC-025", "FT-FP16", "FT2-FP16", "INT8", "PC-B"];
+    const pick = document.getElementById("nt-pick"), card = document.getElementById("nt-card"), body = document.getElementById("nt-body");
+    const esc = s => String(s).replace(/[&<>]/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;"}[c]));
+    const li = xs => "<ul>" + xs.map(x => "<li>" + esc(x) + "</li>").join("") + "</ul>";
+    function show(k){
+      const p = D[k], c = p.card, nt = p.next_test;
+      [...pick.children].forEach(b => { const on = b.dataset.k === k; b.classList.toggle("on", on); b.setAttribute("aria-selected", on); });
+      const tiles = c.tiles.map(([l, v, u, s]) => "<div class='rv-tile'><span class='rv-tl'>" + esc(l) + "</span><span class='rv-tv'>" + esc(v) + (u ? " <small>" + esc(u) + "</small>" : "") + "</span><span class='rv-ts'>" + esc(s) + "</span></div>").join("");
+      const tpa = Object.entries(nt.trials_per_arm).filter(([a]) => !/power at|block size/.test(a));
+      const est = tpa.length ? "<div class='rv-est'><span class='rv-tl'>Planning estimate</span><span class='rv-tv'>" + esc(tpa[0][1]) + " <small>trials per arm</small></span>" +
+          "<span class='rv-ts'>80% power on the success criterion, " + esc(tpa[0][0]) + ". A planning estimate, not a guarantee and not the chance of a final GO.</span></div>" : "";
+      const done = (p.completed || []).length ? "<p class='rv-done'><b>Completed since this plan was made:</b> " + p.completed.map(esc).join("; ") + "</p>" : "";
+      card.innerHTML =
+        "<div class='rv-top'><div><span class='rv-tl'>Selected candidate</span><div class='rv-name'>" + esc(c.name) + " <small>" + esc(k) + "</small></div>" +
+        "<span class='rv-prio " + (c.tone || "") + "'>" + esc(c.priority) + "</span></div><div class='rv-dec'><span class='rv-tl'>Deployment decision</span><span class='rv-badge " + c.decision.toLowerCase() + "'>" + c.decision + "</span>" +
+        "<span class='rv-ts'>evidence finding: " + esc(c.finding) + "</span></div></div>" +
+        "<div class='rv-why'><span class='rv-tl'>Why " + c.decision + "</span><p>" + c.why + "</p></div>" +
+        "<div class='rv-tiles'>" + tiles + "</div>" +
+        "<div class='rv-next'><div><span class='rv-tl'>Next step</span><b>" + esc(c.next) + "</b><span class='rv-ts'>" + esc(c.next_sub) + "</span></div>" +
+        "<div class='rv-btns'><button id='nt-view' class='rv-btn'>View next-test plan ↓</button><button id='nt-copy' class='rv-btn ghost'>Copy test plan</button></div></div>" +
+        "<div id='nt-plan' class='rv-plan' hidden><div class='rv-plan-h'><b>Proposed next test</b><span class='rv-status'>planned · not yet pre-registered</span></div>" +
+        "<div class='rv-grid'><div><span class='rv-tl'>Comparison</span><p>" + esc(nt.compare) + " · " + esc(nt.conditions) + "</p></div>" + est +
+        "<div><span class='rv-tl'>Before collecting data</span><p>" + esc(nt.rule) + "</p></div><div><span class='rv-tl'>Measure · schedule</span><p>" + esc(nt.measure) + " · " + esc(nt.schedule) + "</p></div></div>" + done +
+        (p.clip ? "<video src='" + p.clip + "' controls muted playsinline preload='metadata' style='max-width:100%;border-radius:8px'></video>" : "") + "</div>" +
+        "<details class='rv-ev'><summary>Evidence and provenance</summary><div class='rv-grid'><div><span class='rv-tl'>Confirmed</span>" + li(p.confirmed) + "</div><div><span class='rv-tl'>Still open</span>" + li(p.open) + "</div></div>" +
+        "<span class='rv-tl'>Records</span><ul class='rv-files'>" + p.evidence.map((x, i) => "<li><b>" + esc(p.evn[i]) + "</b> <code>" + esc(x) + "</code></li>").join("") + "</ul></details>" +
+        "<p class='rv-scope'>Scope: this recorded policy, device and test configuration. Validation priority is separate from deployment approval.</p>" +
+        "<textarea id='nt-md' readonly hidden style='width:100%;height:200px;margin-top:8px'>" + esc(p.md) + "</textarea>";
+      body.textContent = p.md;
+      document.getElementById("nt-view").onclick = e => { const pl = document.getElementById("nt-plan"); pl.hidden = !pl.hidden; e.target.textContent = pl.hidden ? "View next-test plan ↓" : "Hide next-test plan ↑"; };
+      document.getElementById("nt-copy").onclick = () => {
+        const ta = document.getElementById("nt-md");
+        const done_ = () => { document.getElementById("nt-copy").textContent = "Copied"; };
+        try { navigator.clipboard.writeText(p.md).then(done_).catch(() => { ta.hidden = false; ta.select(); }); } catch (e) { ta.hidden = false; ta.select(); }
+      };
+    }
+    ORDER.forEach(k => { const c = D[k].card, b = document.createElement("button"); b.dataset.k = k; b.setAttribute("role", "tab");
+      b.innerHTML = "<b>" + esc(c.name) + "</b> <small>" + esc(c.role) + "</small>"; b.onclick = () => show(k); pick.appendChild(b); });
+    show("VC-025");
+  })();
+  </script>
+<!--NEXTTEST:END-->
+
+  <div class="group" id="g-evidence"><span class="g-k">Evidence</span><span class="g-s">what the arm and the device showed</span></div>
+
+  <section class="panel" id="arm">
+    <div class="plate"><h2>On the real arm</h2><span class="ref">overhead camera · real SO-101 · why this task</span></div>
+    <p class="origin"><b>Why a can on a coaster?</b> It started as a small gesture: an arm that brings a drink to someone working hard. Setting it down properly on the coaster turned out to be the hard part. Then the policy had to run on a small edge device, and we wanted to know whether it would still put the can down right, and how sure we could be.</p>
     <p class="sub"><b>Evidence before deployment.</b> QuantGate helps a robot developer decide which precision of a policy
       to ship on an edge device. It shows the engine's cost, its real-arm behavior and the strength of the evidence side
-      by side. Everything below was measured on a real SO-101 arm: <b>745 blinded, pre-registered trials</b>, engine costs on the
-      Jetson, and how well the offline audit and the AI judge predicted what happened. No robot needed to try it: pick a
-      candidate in the first panel.</p>
+      by side. Everything below was measured on a real SO-101 arm: <b>745 real-arm trials</b> from sealed, interleaved schedules (operator blinding partial in the fine-tune blocks), engine costs on the
+      Jetson, and how well the offline audit and the AI judge predicted what happened. No robot needed to try it: pick a candidate in the Review panel above.</p>
     <p class="sub"><b>For teams shipping learned robot policies to edge devices.</b> Every new build is checked before it reaches the arm: the preflight (<code>quantgate.py preflight</code>) blocks a build whose engine hash, normalization files or timing do not match what was audited, with no GPU or API key.</p>
-    <div class="mast-meta">
-      <span>status 2026-10-22</span><span>SO-101 · ACT 51.6M</span><span>Jetson Orin Nano Super · 15 W · TRT 10.3</span>
-      <span>745 real-arm trials · G6 245 / 245</span>
-    </div>
-    <p class="origin"><b>Why a can on a coaster?</b> It started as a small gesture: an arm that brings a drink to someone working hard. Setting it down properly on the coaster turned out to be the hard part. Then the policy had to run on a small edge device, and we wanted to know whether it would still put the can down right, and how sure we could be.</p>
     <div class="hero-clips">
       <figure><video src="clips/g6_success.mp4" poster="setup/poster_success.jpg" autoplay muted loop playsinline preload="metadata" aria-label="Overhead view: the arm sets the can upright on the coaster"></video>
         <figcaption><span class="tag" style="color:var(--good)">success</span>the can ends upright on the coaster (overhead camera, 4× speed)</figcaption></figure>
       <figure><video src="clips/g6_fail_knock.mp4" poster="setup/poster_fail.jpg" autoplay muted loop playsinline preload="metadata" aria-label="Overhead view: same robot and task, the can is knocked over"></video>
         <figcaption><span class="tag" style="color:var(--halt)">failure</span>same robot, same task: the can is knocked over (overhead camera, 4× speed)</figcaption></figure>
     </div>
-  </header>
+  </section>
 
-  <section class="banner" role="status">
-    <div class="bar"></div>
-    <div class="body">
-      <div class="t"><span class="code">LOCK-3</span><span>passed. G6, the stress tests, FP16, the positive control and the position fine-tune are unsealed and analyzed.</span></div>
-      <p>The cell-to-engine map was opened only after all 245 trials were logged and hashed. The stress tests and the FP16
-        run were unsealed on 10-13, the position fine-tune (T1, T0 and T2) on 10-14 after all three blocks were hashed, its replication (T0R) on 10-15 the reach blocks (TYP, T6P, T6M) on 10-18, the INT8 chatter block (Q8B) on 10-20 and the reach re-tests (T6PR, TYPR) on 10-21 and fine-tune v2 (TYP2, T6P2, T0G) on 10-22, each after its post-run hash was committed.</p>
+  <section class="panel" id="cost">
+    <div class="plate"><h2>Engine cost on the deployment target</h2><span class="ref">Jetson Orin Nano Super, 15 W · trtexec · tegrastats 100 ms · power_bench/SUMMARY.md</span></div>
+    <p class="note"><b>FP16 is the fastest and the cheapest per inference.</b> INT8 draws about 1 W less while it runs
+      but takes 45% longer, so each inference costs more. The three INT8 calibrations cost the same.</p>
+    <div class="two">
+      <figure><h3 class="fig-h">GPU compute <small>median ms per 100-step chunk</small></h3><svg viewBox="0 0 400 200" role="img" aria-label="GPU compute time per inference"><g id="ms"></g></svg></figure>
+      <figure><h3 class="fig-h">Inference energy <small>mJ per inference, above idle (4.86 W)</small></h3><svg viewBox="0 0 400 200" role="img" aria-label="Energy per inference above idle"><g id="mj"></g></svg></figure>
     </div>
+    <p class="note">End to end in the trial runner, including preprocessing and the socket round trip, the same order holds: FP16 24.7 ms, INT8 34.3 ms
+      and FP32 79.0 ms (FP16 block). On the real arm FP16 succeeded 19/20, with placement within tolerance of FP32.</p>
   </section>
 
-  <section class="panel" id="workflow">
-    <div class="plate"><h2>How it works: the whole workflow</h2><span class="ref">where each step runs · which model does what</span></div>
-    <p class="note"><b>Models suggest and describe; code decides.</b> Every number and verdict comes from code over committed, hashed evidence. Click a step to open its evidence; pick a candidate in the next panel to see which steps decided it.</p>
-    <p class="note" id="wf-cand" hidden></p>
-    <div class="flow-legend"><span style="--k:var(--ember)">real arm or device</span><span style="--k:var(--plum)">an AI model</span><span style="--k:var(--signal)">plain code</span></div>
-    <div class="flow">
-      <div class="lane"><h3>1 · Build the candidates</h3>
-        <a class="step arm" href="#setup" data-step="1" data-target="setup"><span class="t"><span class="sn">1</span>Teleoperate demonstrations</span><span class="w">SO-101 leader arm · LeRobot</span><span class="n">120 demos, then 50 + 50 for the fine-tunes</span><span class="go">see the evidence →</span></a>
-        <a class="step model" href="#setup" data-step="2" data-target="setup"><span class="t"><span class="sn">2</span>Train the policy</span><span class="w">ACT 51.6M · Nebius Jobs (L40S)</span><span class="n">one checkpoint; fine-tunes in about 25 min</span><span class="go">see the evidence →</span></a>
-        <a class="step arm" href="#cost" data-step="3" data-target="cost"><span class="t"><span class="sn">3</span>Build engines</span><span class="w">TensorRT 10.3 · Jetson Orin Nano Super</span><span class="n">26 candidates: FP32, FP16, 24 INT8 calibrations</span><span class="go">see the evidence →</span></a>
-      </div>
-      <div class="lane"><h3>2 · Gather evidence</h3>
-        <a class="step arm" href="#cost" data-step="4" data-target="cost"><span class="t"><span class="sn">4</span>Measure cost on the device</span><span class="w">trtexec · 15 W</span><span class="n">FP16 11.6 ms and 82 mJ, faster than INT8 here</span><span class="go">see the evidence →</span></a>
-        <a class="step code" href="#rankcheck" data-step="5" data-target="rankcheck"><span class="t"><span class="sn">5</span>Offline audit</span><span class="w">48 CPU jobs · Nebius Jobs</span><span class="n">2,000 held-out states; ranking frozen before the arm</span><span class="go">see the evidence →</span></a>
-        <a class="step arm" href="#success" data-step="6" data-target="success"><span class="t"><span class="sn">6</span>Sealed real-arm trials</span><span class="w">interleaved · operator blind · hashed before unsealing</span><span class="n">745 trials so far</span><span class="go">see the evidence →</span></a>
-        <a class="step model" href="#row-judge" data-step="7" data-target="row-judge"><span class="t"><span class="sn">7</span>Judge each trial</span><span class="w">Cosmos-Reason2 · Nebius AI Endpoint</span><span class="n">validated first: 20/21 failures caught on held-out recordings</span><span class="go">see the evidence →</span></a>
-      </div>
-      <div class="lane"><h3>3 · Decide</h3>
-        <a class="step code" href="#review" data-step="8" data-target="review"><span class="t"><span class="sn">8</span>Verdict</span><span class="w">Newcombe intervals · pre-registered rules</span><span class="n">GO · HOLD · BLOCK · INSUFFICIENT_EVIDENCE</span><span class="go">see the evidence →</span></a>
-        <a class="step model" href="#report" data-step="9" data-target="report"><span class="t"><span class="sn">9</span>Explain in words</span><span class="w">Nemotron 3 Super · Nebius Token Factory</span><span class="n">words only; code rejects any number or verdict in its text</span><span class="go">see the evidence →</span></a>
-        <a class="step code" href="#preflight" data-step="10" data-target="preflight"><span class="t"><span class="sn">10</span>Preflight before the arm</span><span class="w">engine hash · normalization manifest · 200 ms deadline</span><span class="n">only an explicit GO passes</span><span class="go">see the evidence →</span></a>
-        <a class="step code" href="#nexttest" data-step="11" data-target="nexttest"><span class="t"><span class="sn">11</span>Plan the next test</span><span class="w">scripts/next_test_plan.py</span><span class="n">what is confirmed, what is open, trials per arm</span><span class="go">see the evidence →</span></a>
-      </div>
+  <section class="panel" id="success">
+    <div class="plate"><h2>Closed-loop success by cell</h2><span class="ref">G6 · g6_analysis.json</span></div>
+    <p class="note">FP32 and ten INT8 cells, interleaved in one blinded session. <b>Every interval overlaps FP32.</b> At these
+      sample sizes no cell can be shown to be within 10 pp of FP32 either, so each one is "insufficient evidence", not "safe".
+      The INT8 cells differ only in calibration: sample count, data composition and per-tensor or per-channel scaling.</p>
+    <div class="legend" id="armlegend"></div>
+    <figure>
+      <div class="fig-scroll"><svg viewBox="0 0 720 400" role="img" aria-label="Per-cell success rate with Wilson 95% intervals" style="min-width:560px"><g id="cells"></g></svg></div>
+      <figcaption>Dot = success rate, whisker = Wilson 95% CI. Right columns: successes / trials and mean placement
+        error (base distance from coaster center, px).</figcaption>
+    </figure>
+  </section>
+
+  <section class="panel" id="rankcheck">
+    <div class="plate"><h2>Did the offline rank predict the arm?</h2><span class="ref">EX-4 / AEP Q3 · 10,000 permutations</span></div>
+    <div class="two">
+      <figure>
+        <svg viewBox="0 0 400 270" role="img" aria-label="score_mag rank versus mean placement error"><g id="scatter"></g></svg>
+        <figcaption>Each point is one INT8 cell: frozen score_mag rank (1 = best fidelity) against its real mean
+          placement error.</figcaption>
+      </figure>
+      <div class="rows" id="rho"></div>
     </div>
-    <p class="loop"><b>The loop:</b> when the evidence finds a weakness (<a href="#moved" data-target="moved">a 3 cm start shift, a smaller can</a>), new demonstrations go back into step 1 and the fix is <a href="#row-ft" data-target="row-ft">re-tested under a new pre-registration</a> — a fix earns its next test, not an approval.</p>
+    <p class="note">Best vs worst fidelity on placement (AEP Q1, E2): <b>−0.84 px</b>, 97.5% CI <span class="num">[−2.53, +0.88]</span>,
+      <b>tolerance-compatible</b> with the 5 px tolerance. On success (E1) the ceiling rule applies, so the decision is
+      indeterminate. The AEP claim is not falsified here.</p>
   </section>
 
-<!--NEXTTEST:BEGIN-->
-  <section class="panel" id="nexttest">
-    <div class="plate"><h2>Try it: from evidence to the next test</h2><span class="ref">scripts/next_test_plan.py · written by code</span></div>
-    <p class="note"><b>No robot needed, about 30 seconds.</b> Pick a candidate: what is confirmed, what is still open, the evidence behind both, and the plan for the next test,
-      with trials per arm from a simulated power calculation under the same Newcombe rule. Copy the plan to pre-register it.</p>
-    <div id="nt-pick" style="display:flex;gap:8px;flex-wrap:wrap"></div>
-    <div id="nt-body"></div>
+  <section class="panel" id="moved">
+    <div class="plate"><h2>What moved the success rate</h2><span class="ref">G6 + public stress tallies</span></div>
+    <p class="note">The same arm and the same policy. Between precisions no success difference was detected. Grip friction and
+      a 3 cm shift moved a lot. The gripper and shift blocks are separate sessions, so read them as observations, not
+      as a randomized comparison.</p>
+    <figure>
+      <div class="fig-scroll"><svg viewBox="0 0 720 290" role="img" aria-label="Success rate by condition" style="min-width:540px"><g id="margin"></g></svg></div>
+      <figcaption>Wilson 95% CI. Unseen can: a 190 g, 50 mm yellow can never seen in training, at the trained start mark; all four engines 12/12. Outcomes use the consensus re-judge (protocol §11).</figcaption>
+    </figure>
   </section>
-  <script>
-  (function(){
-    const D = {"VC-025": {"candidate": "VC-025 (FP16, old policy)", "status": "recommended to validate first; approval on hold", "confirmed": ["cheapest engine on the device: 11.6 ms and 82 mJ per inference (power_bench/SUMMARY.md)", "real arm 19/20 against FP32 10/10 (fp16_analysis.json)"], "open": ["success against FP32 within 10 pp: INSUFFICIENT_EVIDENCE, and both arms are at or above 95%, so the pre-registered ceiling rule keeps it undecided"], "evidence": ["artifacts/reports/fp16_analysis.json#primary_fp16_vs_fp32", "artifacts/freeze/fp16_post.json", "artifacts/trials/fp16_unsealed/stress_fp16_F0_sealed.jsonl"], "next_test": {"compare": "VC-025 (FP16) vs VC-000 (FP32), same old policy", "conditions": "training start mark, rubber-band gripper, cola can", "measure": "success (consensus re-judge), placement error, gripper chatter", "schedule": "sealed, interleaved, new tokens", "rule": "pre-register a revised E1 (success) rule without the ceiling clause: the success criterion is met if the 97.5% Newcombe upper bound of the degradation is below 10 pp; a final GO also needs placement (E2, 5 px) and the preflight", "trials_per_arm": {"under the revised rule, if equal at 96%": 120, "with the current ceiling rule, power at 200/arm": 0.32}}, "md": "# From evidence to the next test (written by code)\n\n## VC-025 (FP16, old policy)\n**Status**: recommended to validate first; approval on hold\n\nConfirmed:\n- cheapest engine on the device: 11.6 ms and 82 mJ per inference (power_bench/SUMMARY.md)\n- real arm 19/20 against FP32 10/10 (fp16_analysis.json)\n\nOpen:\n- success against FP32 within 10 pp: INSUFFICIENT_EVIDENCE, and both arms are at or above 95%, so the pre-registered ceiling rule keeps it undecided\n\nEvidence:\n- `artifacts/reports/fp16_analysis.json#primary_fp16_vs_fp32`\n- `artifacts/freeze/fp16_post.json`\n- `artifacts/trials/fp16_unsealed/stress_fp16_F0_sealed.jsonl`\n\nNext test:\n- compare: VC-025 (FP16) vs VC-000 (FP32), same old policy\n- conditions: training start mark, rubber-band gripper, cola can\n- measure: success (consensus re-judge), placement error, gripper chatter\n- schedule: sealed, interleaved, new tokens\n- rule: pre-register a revised E1 (success) rule without the ceiling clause: the success criterion is met if the 97.5% Newcombe upper bound of the degradation is below 10 pp; a final GO also needs placement (E2, 5 px) and the preflight\n- trials per arm for 80% power on the success criterion (not the chance of a final GO), under the revised rule, if equal at 96%: 120\n- with the current ceiling rule, power at 200/arm: 0.32\n", "clip": null}, "FT-FP16": {"candidate": "FT-FP16 (position fine-tune)", "status": "next candidate where the start varies between -6 and +3 cm with the cola can; superseded for the yellow can and +6 cm by FT2-FP16 (amendment 9); not a replacement at the trained spot", "confirmed": ["fine-tune vs old, start +3 cm (held out, primary): 12/12 vs old 3/12, IMPROVEMENT_DETECTED", "fine-tune vs old, start -3 cm (held out, symmetry): 10/12 vs old 2/12, IMPROVEMENT_DETECTED", "start -6 cm (beyond the demonstrations): 8/12 vs old 0/12, IMPROVEMENT_DETECTED"], "open": ["training mark, T0 + T0R pooled: 22/24 vs old 23/24, INSUFFICIENT_EVIDENCE", "yellow can at +3 cm (held-out object, primary): 0/12 vs old 3/12, NOT_DETECTED", "start +6 cm (beyond the demonstrations): 0/12 vs old 0/12, NOT_DETECTED", "start +6 cm re-test without the red markers (amendment 8, H1 'unclear'): 0/12 vs old 0/12, NOT_DETECTED", "yellow can at +3 cm re-test without the red markers (amendment 8, H1 'unclear'): 0/12 vs old 0/12, NOT_DETECTED"], "evidence": ["artifacts/reports/ft3_analysis.json#pooled_T0_T0R", "artifacts/freeze/ft_post.json", "artifacts/freeze/ft3_post.json", "artifacts/finetune/T0R_modes.json", "artifacts/reports/ft4_analysis.json", "artifacts/freeze/ft4_post.json", "artifacts/finetune/GEN_modes.json", "artifacts/reports/ft5_analysis.json", "artifacts/freeze/ft5_post.json", "artifacts/finetune/GEN2_modes.json", "T0 failures: trials 18 and 22 (placement disturbance, docs/sessions/ft_operator_notes.md); clip: dashboard/clips/t1_old_vs_ft.mp4"], "next_test": {"compare": "FT-FP16 vs VC-025 (old FP16 policy) at the training mark; for the gaps, a new fine-tune with demonstrations at +6 cm and with the yellow can, re-tested at TYP/T6P under a new pre-registration", "conditions": "training start mark (nominal); +6 cm and the yellow can at +3 cm (generalization gaps, amendment 7)", "measure": "success, failure mode (placement disturbance), gripper chatter", "schedule": "sealed, interleaved, new tokens (operator blinding stays partial: the motions differ)", "rule": "success non-inferiority at 10 pp (97.5% Newcombe), pre-registered without the ceiling clause (if both arms land at or above 95%, the current ceiling clause would hold it undecided); a final GO also needs placement (E2, 5 px) and the preflight", "trials_per_arm": {"under the revised rule, if truly equal (95.8%)": 120, "under the revised rule, if the observed 4 pp gap is real": 400, "with the current ceiling rule, power at 120/arm if truly equal": 0.32}}, "md": "# From evidence to the next test (written by code)\n\n## FT-FP16 (position fine-tune)\n**Status**: next candidate where the start varies between -6 and +3 cm with the cola can; superseded for the yellow can and +6 cm by FT2-FP16 (amendment 9); not a replacement at the trained spot\n\nConfirmed:\n- fine-tune vs old, start +3 cm (held out, primary): 12/12 vs old 3/12, IMPROVEMENT_DETECTED\n- fine-tune vs old, start -3 cm (held out, symmetry): 10/12 vs old 2/12, IMPROVEMENT_DETECTED\n- start -6 cm (beyond the demonstrations): 8/12 vs old 0/12, IMPROVEMENT_DETECTED\n\nOpen:\n- training mark, T0 + T0R pooled: 22/24 vs old 23/24, INSUFFICIENT_EVIDENCE\n- yellow can at +3 cm (held-out object, primary): 0/12 vs old 3/12, NOT_DETECTED\n- start +6 cm (beyond the demonstrations): 0/12 vs old 0/12, NOT_DETECTED\n- start +6 cm re-test without the red markers (amendment 8, H1 'unclear'): 0/12 vs old 0/12, NOT_DETECTED\n- yellow can at +3 cm re-test without the red markers (amendment 8, H1 'unclear'): 0/12 vs old 0/12, NOT_DETECTED\n\nEvidence:\n- `artifacts/reports/ft3_analysis.json#pooled_T0_T0R`\n- `artifacts/freeze/ft_post.json`\n- `artifacts/freeze/ft3_post.json`\n- `artifacts/finetune/T0R_modes.json`\n- `artifacts/reports/ft4_analysis.json`\n- `artifacts/freeze/ft4_post.json`\n- `artifacts/finetune/GEN_modes.json`\n- `artifacts/reports/ft5_analysis.json`\n- `artifacts/freeze/ft5_post.json`\n- `artifacts/finetune/GEN2_modes.json`\n- T0 failures: trials 18 and 22 (placement disturbance, docs/sessions/ft_operator_notes.md); clip: dashboard/clips/t1_old_vs_ft.mp4\n\nNext test:\n- compare: FT-FP16 vs VC-025 (old FP16 policy) at the training mark; for the gaps, a new fine-tune with demonstrations at +6 cm and with the yellow can, re-tested at TYP/T6P under a new pre-registration\n- conditions: training start mark (nominal); +6 cm and the yellow can at +3 cm (generalization gaps, amendment 7)\n- measure: success, failure mode (placement disturbance), gripper chatter\n- schedule: sealed, interleaved, new tokens (operator blinding stays partial: the motions differ)\n- rule: success non-inferiority at 10 pp (97.5% Newcombe), pre-registered without the ceiling clause (if both arms land at or above 95%, the current ceiling clause would hold it undecided); a final GO also needs placement (E2, 5 px) and the preflight\n- trials per arm for 80% power on the success criterion (not the chance of a final GO), under the revised rule, if truly equal (95.8%): 120\n- trials per arm for 80% power on the success criterion (not the chance of a final GO), under the revised rule, if the observed 4 pp gap is real: 400\n- with the current ceiling rule, power at 120/arm if truly equal: 0.32\n", "clip": "clips/t1_old_vs_ft.mp4"}, "FT2-FP16": {"candidate": "FT2-FP16 (fine-tune v2: yellow can and far starts)", "status": "next candidate for the yellow can and starts up to +6 cm; not approved, not yet a replacement at the trained spot", "confirmed": ["yellow can at +3 cm (held out, primary): 12/12 vs FT 7/12, IMPROVEMENT_DETECTED", "start +6 cm (held out, secondary): 12/12 vs FT 2/12, IMPROVEMENT_DETECTED", "training mark (guard): 12/12 vs FT 12/12, no drop flagged (12-trial guard)"], "open": ["non-inferiority at the training mark against the old policy (the guard detects only a large drop)", "FT did better in this session than before (7/12 and 2/12 against 0/12): the earlier gap was partly the scene (a knocked wrist camera)"], "evidence": ["artifacts/reports/ft6_analysis.json", "artifacts/freeze/ft6_post.json", "artifacts/finetune/GEN3_modes.json", "artifacts/finetune/rejudge/TYP2_consensus.json", "docs/finetune_position_preregistration.md#22"], "next_test": {"compare": "FT2-FP16 vs VC-025 (old FP16 policy) at the training mark, and FT2 at more objects and positions", "conditions": "training mark; the yellow can and the cola can between -6 and +7 cm; a session-start wrist-camera check", "measure": "success, failure mode, gripper chatter", "schedule": "sealed, interleaved, new tokens", "rule": "success non-inferiority at 10 pp (97.5% Newcombe) without the ceiling clause; a final GO also needs placement (E2, 5 px) and the preflight", "trials_per_arm": {"under the revised rule, if truly equal (about 96%)": 120}}, "md": "# From evidence to the next test (written by code)\n\n## FT2-FP16 (fine-tune v2: yellow can and far starts)\n**Status**: next candidate for the yellow can and starts up to +6 cm; not approved, not yet a replacement at the trained spot\n\nConfirmed:\n- yellow can at +3 cm (held out, primary): 12/12 vs FT 7/12, IMPROVEMENT_DETECTED\n- start +6 cm (held out, secondary): 12/12 vs FT 2/12, IMPROVEMENT_DETECTED\n- training mark (guard): 12/12 vs FT 12/12, no drop flagged (12-trial guard)\n\nOpen:\n- non-inferiority at the training mark against the old policy (the guard detects only a large drop)\n- FT did better in this session than before (7/12 and 2/12 against 0/12): the earlier gap was partly the scene (a knocked wrist camera)\n\nEvidence:\n- `artifacts/reports/ft6_analysis.json`\n- `artifacts/freeze/ft6_post.json`\n- `artifacts/finetune/GEN3_modes.json`\n- `artifacts/finetune/rejudge/TYP2_consensus.json`\n- `docs/finetune_position_preregistration.md#22`\n\nNext test:\n- compare: FT2-FP16 vs VC-025 (old FP16 policy) at the training mark, and FT2 at more objects and positions\n- conditions: training mark; the yellow can and the cola can between -6 and +7 cm; a session-start wrist-camera check\n- measure: success, failure mode, gripper chatter\n- schedule: sealed, interleaved, new tokens\n- rule: success non-inferiority at 10 pp (97.5% Newcombe) without the ceiling clause; a final GO also needs placement (E2, 5 px) and the preflight\n- trials per arm for 80% power on the success criterion (not the chance of a final GO), under the revised rule, if truly equal (about 96%): 120\n", "clip": null}, "INT8": {"candidate": "INT8 builds (24 calibration variants)", "status": "not first: slower and costlier per inference than FP16 on this device", "confirmed": ["16.8-17.1 ms and 101 mJ per inference for the 3 benched builds", "audit-picked cells 73/75 vs random 73/75: the offline score did not predict the arm"], "open": ["success against FP32: INSUFFICIENT_EVIDENCE for every cell, under the ceiling rule", "chatter re-test (Q8B, pre-registered): VC-002 median 0.497 vs FP16 0.391, MWU p = 0.12, the post hoc 2x pattern NOT confirmed; chatter rose for both engines in that session (unexplained)", "Q8B success, descriptive: VC-002 23/24 vs FP16 20/24 (FP16 below its earlier level at the mark; no approval follows)"], "evidence": ["artifacts/reports/g6_analysis.json", "artifacts/freeze/lock3.json", "artifacts/reports/ft_chatter.json", "artifacts/reports/int8c2_analysis.json", "artifacts/freeze/int8c2_post.json"], "next_test": {"compare": "only if memory or power forces INT8: VC-002 vs FP16 (VC-025) against FP32 under the revised success rule; first find why chatter rose for every engine between sessions (FP16-only check at the mark)", "conditions": "training start mark, the pre-registered scene (no extra markers)", "measure": "success, placement, gripper chatter as a session-level health check", "schedule": "sealed, interleaved", "rule": "success non-inferiority at 10 pp (97.5% Newcombe) without the ceiling clause; chatter compared with the earlier nominal blocks before any engine comparison", "trials_per_arm": {"chatter re-test done (Q8B, block size)": 24}}, "md": "# From evidence to the next test (written by code)\n\n## INT8 builds (24 calibration variants)\n**Status**: not first: slower and costlier per inference than FP16 on this device\n\nConfirmed:\n- 16.8-17.1 ms and 101 mJ per inference for the 3 benched builds\n- audit-picked cells 73/75 vs random 73/75: the offline score did not predict the arm\n\nOpen:\n- success against FP32: INSUFFICIENT_EVIDENCE for every cell, under the ceiling rule\n- chatter re-test (Q8B, pre-registered): VC-002 median 0.497 vs FP16 0.391, MWU p = 0.12, the post hoc 2x pattern NOT confirmed; chatter rose for both engines in that session (unexplained)\n- Q8B success, descriptive: VC-002 23/24 vs FP16 20/24 (FP16 below its earlier level at the mark; no approval follows)\n\nEvidence:\n- `artifacts/reports/g6_analysis.json`\n- `artifacts/freeze/lock3.json`\n- `artifacts/reports/ft_chatter.json`\n- `artifacts/reports/int8c2_analysis.json`\n- `artifacts/freeze/int8c2_post.json`\n\nNext test:\n- compare: only if memory or power forces INT8: VC-002 vs FP16 (VC-025) against FP32 under the revised success rule; first find why chatter rose for every engine between sessions (FP16-only check at the mark)\n- conditions: training start mark, the pre-registered scene (no extra markers)\n- measure: success, placement, gripper chatter as a session-level health check\n- schedule: sealed, interleaved\n- rule: success non-inferiority at 10 pp (97.5% Newcombe) without the ceiling clause; chatter compared with the earlier nominal blocks before any engine comparison\n- chatter re-test done (Q8B, block size): 24\n", "clip": null}, "PC-B": {"candidate": "PC-B (black-frame calibration)", "status": "rejected", "confirmed": ["flagged offline by the input check, action error and audit score"], "open": ["the offline warning was not confirmed on the arm in 12 trials (unresolved)"], "evidence": ["artifacts/reports/simple_checks_vs_audit.json", "artifacts/reports/positive_control_analysis.json"], "next_test": {"compare": "none: block it at the calibration-input check", "conditions": "-", "measure": "-", "schedule": "-", "rule": "preflight BLOCK (FLAGGED)", "trials_per_arm": {}}, "md": "# From evidence to the next test (written by code)\n\n## PC-B (black-frame calibration)\n**Status**: rejected\n\nConfirmed:\n- flagged offline by the input check, action error and audit score\n\nOpen:\n- the offline warning was not confirmed on the arm in 12 trials (unresolved)\n\nEvidence:\n- `artifacts/reports/simple_checks_vs_audit.json`\n- `artifacts/reports/positive_control_analysis.json`\n\nNext test:\n- compare: none: block it at the calibration-input check\n- conditions: -\n- measure: -\n- schedule: -\n- rule: preflight BLOCK (FLAGGED)\n", "clip": null}};
-    const pick = document.getElementById("nt-pick"), body = document.getElementById("nt-body");
-    const esc = s => String(s).replace(/[&<>]/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;"}[c]));
-    const list = (t, xs) => "<h3 style='margin:14px 0 6px;font-size:14px'>" + t + "</h3><ul>" + xs.map(x => "<li>" + esc(x) + "</li>").join("") + "</ul>";
-    function show(k){
-      const p = D[k]; [...pick.children].forEach(b => b.style.outline = b.dataset.k === k ? "2px solid var(--acc, #12a0a8)" : "none");
-      const nt = p.next_test, tpa = Object.entries(nt.trials_per_arm).map(([a, v]) => (/power at|block size/.test(a) ? a : "trials per arm for 80% power on the success criterion (not the chance of a final GO), " + a) + ": " + v);
-      body.innerHTML = "<p><b>" + esc(p.candidate) + "</b> · " + esc(p.status) + "</p>" + list("Confirmed", p.confirmed) + list("Open", p.open) +
-        list("Evidence", p.evidence) + (p.clip ? "<video src='" + p.clip + "' controls muted playsinline preload='metadata' style='max-width:100%;border-radius:8px'></video>" : "") +
-        list("Next test", ["compare: " + nt.compare, "conditions: " + nt.conditions, "measure: " + nt.measure, "schedule: " + nt.schedule, "rule: " + nt.rule].concat(tpa)) +
-        "<button id='nt-copy' style='margin-top:8px;padding:6px 12px;border-radius:8px;border:1px solid var(--rule,#999);background:transparent;color:inherit;cursor:pointer'>Copy plan as Markdown</button>" +
-        "<textarea id='nt-md' readonly style='display:none;width:100%;height:220px;margin-top:8px'>" + esc(p.md) + "</textarea>";
-      document.getElementById("nt-copy").onclick = () => {
-        const ta = document.getElementById("nt-md");
-        navigator.clipboard.writeText(p.md).then(() => { document.getElementById("nt-copy").textContent = "Copied"; })
-          .catch(() => { ta.style.display = "block"; ta.select(); });
-      };
-    }
-    Object.keys(D).forEach(k => { const b = document.createElement("button"); b.dataset.k = k; b.textContent = k;
-      b.style.cssText = "padding:6px 12px;border-radius:999px;border:1px solid var(--rule,#999);background:transparent;color:inherit;cursor:pointer;font:inherit";
-      b.onclick = () => show(k); pick.appendChild(b); });
-    show("FT-FP16");
-  })();
-  </script>
-<!--NEXTTEST:END-->
 
   <section class="panel" id="reach">
     <div class="plate"><h2>Where the fine-tune works, on the table</h2><span class="ref">overhead camera · blinded, pre-registered · 12 vs 12 per mark</span></div>
@@ -310,6 +386,98 @@ a.step:hover .go, a.step:focus-visible .go, a.step.current .go{opacity:1}
       <div class="gcard"><img src="setup/fail_shift.jpg" alt="The gripper closes beside the can after the start moved 3 cm" loading="lazy"><div class="gb"><span class="gt">A 3 cm start shift</span><span class="gn">0/3 in the first tries · fixed: 12/12 vs 3/12</span><span class="gl">The policy had memorized one spot. Fifty new demonstrations fixed it, within a range.</span></div></div>
       <div class="gcard"><img src="setup/fail_yellow.jpg" alt="A smaller yellow can at the +3 cm mark" loading="lazy"><div class="gb"><span class="gt">A smaller can, off the mark</span><span class="gn">first fine-tune 0/12 · fine-tune v2 12/12 (vs FT 7/12)</span><span class="gl" style="font-size:12px">Photo from the first block, when stray red markers were on the table; the re-test removed them.</span><span class="gl">At the trained mark the same can worked 48/48; off the mark it did not, until 50 more demonstrations with this can.</span></div></div>
       <div class="gcard"><img src="setup/fail_wrist.jpg" style="object-fit:contain; background:#fafbfa" alt="Wrist camera at rest: reference, knocked off-axis, re-aimed" loading="lazy"><div class="gb"><span class="gt">A knocked wrist camera</span><span class="gn">chatter 0.39 knocked · 0.11 after fixing the mount</span><span class="gl">Success fell with no software change. Results stayed sealed while we found the cause.</span></div></div>
+    </div>
+  </section>
+
+  <section class="panel" id="footage">
+    <div class="plate"><h2>Trial footage</h2><span class="ref">overhead camera · full 60 s trials · real time</span></div>
+    <p class="note">Unedited overhead videos of single trials, re-encoded for the browser. The clips do not name the
+      engine. Every block shown here has been unsealed; outcomes are in the panels above.</p>
+    <figure class="clip"><video src="clips/demos_top_wrist.mp4" controls muted playsinline preload="metadata"></video>
+      <div class="ct"><strong>How the policy learned: teleoperated demonstrations</strong><span class="chip ok">training data</span></div>
+      <p>Three of the 120 real demonstrations in the locked dataset (LOCK-1), at real time: the overhead camera (left)
+        and the wrist camera (right). The ACT policy is trained on both views.</p><span class="src">LOCK-1 dataset · episodes 0, 47, 102 · 1×</span></figure>
+    <div class="clips">
+      <figure class="clip"><video src="clips/g6_success.mp4" controls muted playsinline preload="metadata"></video>
+        <div class="ct"><strong>Nominal success</strong><span class="chip ok">success</span></div>
+        <p>A G6 blinded trial. The can stands 6.8 px from the coaster center.</p><span class="src">G6 main trial 12</span></figure>
+      <figure class="clip"><video src="clips/g6_fail_knock.mp4" controls muted playsinline preload="metadata"></video>
+        <div class="ct"><strong>Knocked over on withdrawal</strong><span class="chip halt">failure</span></div>
+        <p>The can was placed, then the gripper tipped it over while pulling back. Shown the final frame, Cosmos-Reason2
+          answered "Yes", meaning the can is standing.</p><span class="src">G6 main trial 186</span></figure>
+      <figure class="clip"><video src="clips/v1_nopad_drop.mp4" controls muted playsinline preload="metadata"></video>
+        <div class="ct"><strong>No anti-slip pads</strong><span class="chip halt">failure</span></div>
+        <p>Nominal scene with the gripper pads removed. The can drops while being carried. The block finished 8/24.</p><span class="src">stress v1 S0 trial 5</span></figure>
+      <figure class="clip"><video src="clips/v2_rubber_success.mp4" controls muted playsinline preload="metadata"></video>
+        <div class="ct"><strong>Rubber-band gripper</strong><span class="chip ok">success</span></div>
+        <p>The same scene with rubber bands on the fingers. The can sits about 20 px off center, inside the 35 px target.
+          The block finished 23/24.</p><span class="src">stress v2 S0 trial 1</span></figure>
+      <figure class="clip"><video src="clips/t1_old_vs_ft.mp4" controls muted playsinline preload="metadata"></video>
+        <div class="ct"><strong>Position fine-tune at +3 cm</strong><span class="chip ok">counted trials</span></div>
+        <p>Side view of two consecutive counted trials in the blinded T1 block. The old policy (left) leaves the can tilted on the coaster edge and keeps moving. The fine-tuned policy (right) stands it upright in about 17 s. Block result: 12/12 vs 3/12.</p><span class="src">T1 trials 2 (old) and 1 (fine-tuned) · phone side view · 1×</span></figure>
+      <figure class="clip"><video src="clips/v2_shift_regrasp.mp4" controls muted playsinline preload="metadata"></video>
+        <div class="ct"><strong>Start moved 3 cm</strong><span class="chip halt">failure</span></div>
+        <p>The policy first closes on empty air at the trained start spot, then knocks the can over while re-grasping.</p><span class="src">stress v2 S1 trial 1</span></figure>
+    </div>
+    <figure class="clip"><video src="clips/v2_s0_vs_s4.mp4" controls muted playsinline preload="metadata"></video>
+      <div class="ct"><strong>Cola can vs unseen yellow can, side by side</strong><span class="chip ok">S4 48/48</span></div>
+      <p>Stress v2 with the rubber-band gripper: S0 trial i (left) next to S4 trial i (right), each full trial at 4× speed.
+        Shown: the first 11 pairs. All 48 S4 trials succeeded.</p><span class="src">stress v2 S0 + S4 trials 1–11 · 4×</span></figure>
+  </section>
+
+  <div class="group" id="g-how"><span class="g-k">How it works</span><span class="g-s">which model does what, and the checks before the arm</span></div>
+
+  <section class="panel" id="workflow">
+    <div class="plate"><h2>How it works: the whole workflow</h2><span class="ref">where each step runs · which model does what</span></div>
+    <p class="note"><b>Models suggest and describe; code decides.</b> Every number and verdict comes from code over committed, hashed evidence. Click a step to open its evidence; pick a candidate in the Review panel to see which steps decided it.</p>
+    <p class="note" id="wf-cand" hidden></p>
+    <div class="flow-legend"><span style="--k:var(--ember)">real arm or device</span><span style="--k:var(--plum)">an AI model</span><span style="--k:var(--signal)">plain code</span></div>
+    <div class="flow">
+      <div class="lane"><h3>1 · Build the candidates</h3>
+        <a class="step arm" href="#setup" data-step="1" data-target="setup"><span class="t"><span class="sn">1</span>Teleoperate demonstrations</span><span class="w">SO-101 leader arm · LeRobot</span><span class="n">120 demos, then 50 + 50 for the fine-tunes</span><span class="go">see the evidence →</span></a>
+        <a class="step model" href="#setup" data-step="2" data-target="setup"><span class="t"><span class="sn">2</span>Train the policy</span><span class="w">ACT 51.6M · Nebius Jobs (L40S)</span><span class="n">one checkpoint; fine-tunes in about 25 min</span><span class="go">see the evidence →</span></a>
+        <a class="step arm" href="#cost" data-step="3" data-target="cost"><span class="t"><span class="sn">3</span>Build engines</span><span class="w">TensorRT 10.3 · Jetson Orin Nano Super</span><span class="n">26 candidates: FP32, FP16, 24 INT8 calibrations</span><span class="go">see the evidence →</span></a>
+      </div>
+      <div class="lane"><h3>2 · Gather evidence</h3>
+        <a class="step arm" href="#cost" data-step="4" data-target="cost"><span class="t"><span class="sn">4</span>Measure cost on the device</span><span class="w">trtexec · 15 W</span><span class="n">FP16 11.6 ms and 82 mJ, faster than INT8 here</span><span class="go">see the evidence →</span></a>
+        <a class="step code" href="#rankcheck" data-step="5" data-target="rankcheck"><span class="t"><span class="sn">5</span>Offline audit</span><span class="w">48 CPU jobs · Nebius Jobs</span><span class="n">2,000 held-out states; ranking frozen before the arm</span><span class="go">see the evidence →</span></a>
+        <a class="step arm" href="#success" data-step="6" data-target="success"><span class="t"><span class="sn">6</span>Sealed real-arm trials</span><span class="w">interleaved · operator blind · hashed before unsealing</span><span class="n">745 trials so far</span><span class="go">see the evidence →</span></a>
+        <a class="step model" href="#row-judge" data-step="7" data-target="row-judge"><span class="t"><span class="sn">7</span>Judge each trial</span><span class="w">Cosmos-Reason2 · Nebius AI Endpoint</span><span class="n">validated first: 20/21 failures caught on held-out recordings</span><span class="go">see the evidence →</span></a>
+      </div>
+      <div class="lane"><h3>3 · Decide</h3>
+        <a class="step code" href="#review" data-step="8" data-target="review"><span class="t"><span class="sn">8</span>Verdict</span><span class="w">Newcombe intervals · pre-registered rules</span><span class="n">evidence finding: INSUFFICIENT_EVIDENCE · IMPROVEMENT_DETECTED · FLAGGED<br>deployment decision: GO · HOLD · BLOCK (an improvement can still be HOLD)</span><span class="go">see the evidence →</span></a>
+        <a class="step model" href="#report" data-step="9" data-target="report"><span class="t"><span class="sn">9</span>Explain in words</span><span class="w">Nemotron 3 Super · Nebius Token Factory</span><span class="n">words only; code rejects any number or verdict in its text</span><span class="go">see the evidence →</span></a>
+        <a class="step code" href="#preflight" data-step="10" data-target="preflight"><span class="t"><span class="sn">10</span>Preflight before the arm</span><span class="w">engine hash · normalization manifest · 200 ms deadline</span><span class="n">only an explicit GO passes</span><span class="go">see the evidence →</span></a>
+        <a class="step code" href="#nexttest" data-step="11" data-target="nexttest"><span class="t"><span class="sn">11</span>Plan the next test</span><span class="w">scripts/next_test_plan.py</span><span class="n">what is confirmed, what is open, trials per arm</span><span class="go">see the evidence →</span></a>
+      </div>
+    </div>
+    <p class="loop"><b>The loop:</b> when the evidence finds a weakness (<a href="#moved" data-target="moved">a 3 cm start shift, a smaller can</a>), new demonstrations go back into step 1 and the fix is <a href="#row-ft" data-target="row-ft">re-tested under a new pre-registration</a> — a fix earns its next test, not an approval.</p>
+  </section>
+
+  <section class="panel" id="preflight">
+    <div class="plate"><h2>Deployment preflight</h2><span class="ref">scripts/deploy_preflight.py · fault-injection demo</span></div>
+    <p class="note">One candidate card, four checks in order: the engine hash against the recorded build, the runner's own
+      normalization guard, the runner's chunk deadline (10−4 steps at 30 Hz = <b>200 ms</b>), and the
+      code-decided evidence verdict. Only an explicit GO passes. <b>BLOCK</b> stops the deployment (also for any unknown verdict). <b>HOLD</b> means "run the trials listed"; an improvement is not approval. Rows marked FAULT INJECTION are deliberately broken copies, not observed failures.</p>
+    <div class="tbl-scroll"><table class="res"><thead><tr><th>Case</th><th>Deployment decision</th><th>Checks · evidence finding</th></tr></thead><tbody>
+<tr><td>nominal<br><span class="lbl-s" style="font-size:12px;color:var(--ink-3)">FP16 (VC-025) as measured</span></td><td><span class="chip seal">HOLD</span></td><td>✓ engine integrity → ✓ normalization → ✓ timing contract → <b style="color:var(--warn)">evidence: insufficient under the current rule</b><br><span style="color:var(--ink-2);font-size:12.5px">INSUFFICIENT_EVIDENCE: Settle success against FP32 at 10 pp: plan about 110-120 trials per arm (planning estimate, assumes equal true rates near 96-97 percent; not a guarantee); also validate start-position changes before deployment</span></td></tr>
+<tr><td>fault: normalization file swapped<br><span class="lbl-s" style="font-size:12px;color:var(--ink-3)">FAULT INJECTION</span></td><td><span class="chip halt">BLOCK</span></td><td>✓ engine integrity → ✗ normalization<br><span style="color:var(--ink-2);font-size:12.5px">runner refuses: manifest missing or normalization file mismatched</span></td></tr>
+<tr><td>fault: manifest missing<br><span class="lbl-s" style="font-size:12px;color:var(--ink-3)">FAULT INJECTION</span></td><td><span class="chip halt">BLOCK</span></td><td>✓ engine integrity → ✗ normalization<br><span style="color:var(--ink-2);font-size:12.5px">runner refuses: manifest missing or normalization file mismatched</span></td></tr>
+<tr><td>fault: engine replaced after the audit<br><span class="lbl-s" style="font-size:12px;color:var(--ink-3)">FAULT INJECTION</span></td><td><span class="chip halt">BLOCK</span></td><td>✗ engine integrity<br><span style="color:var(--ink-2);font-size:12.5px">engine file differs from the recorded build</span></td></tr>
+<tr><td>timing: Hailo-8 split pipeline<br><span class="lbl-s" style="font-size:12px;color:var(--ink-3)">measured offline (hailo_probe_v1.json, p95 264 ms)</span></td><td><span class="chip halt">BLOCK</span></td><td>✓ engine integrity → ✓ normalization → ✗ timing contract<br><span style="color:var(--ink-2);font-size:12.5px">p95 on the Pi 5 264 ms vs chunk deadline 200 ms</span></td></tr>
+<tr><td>evidence: fine-tuned policy, improvement at +3 cm<br><span class="lbl-s" style="font-size:12px;color:var(--ink-3)">FT-FP16, improvement detected; training mark undecided</span></td><td><span class="chip seal">HOLD</span></td><td>✓ engine integrity → ✓ normalization → ✓ timing contract → <b style="color:var(--warn)">evidence: improvement detected, not approval</b><br><span style="color:var(--ink-2);font-size:12.5px">IMPROVEMENT_DETECTED is not approval: The candidate to validate next where the start position varies, not yet a replacement: settle the training mark, then confirm at more positions and objects</span></td></tr>
+<tr><td>evidence: black-frame calibration<br><span class="lbl-s" style="font-size:12px;color:var(--ink-3)">PC-B, flagged offline</span></td><td><span class="chip halt">BLOCK</span></td><td>✓ engine integrity → ✓ normalization → ✓ timing contract → <b style="color:var(--halt)">✗ evidence: flagged</b><br><span style="color:var(--ink-2);font-size:12.5px">FLAGGED: Do not deploy; fix the calibration input (a simple input check catches it); see the real-arm check of PC-B</span></td></tr>
+    </tbody></table></div>
+  </section>
+
+  <div class="group" id="g-audit"><span class="g-k">Audit record</span><span class="g-s">the full review, the report, locks, setup and provenance</span></div>
+
+  <section class="banner history" role="note">
+    <div class="bar"></div>
+    <div class="body">
+      <div class="t"><span class="code">Experiment record</span><span>LOCK-3 passed. G6, the stress tests, FP16, the positive control and the position fine-tune are unsealed and analyzed.</span></div>
+      <p>The cell-to-engine map was opened only after all 245 trials were logged and hashed. The stress tests and the FP16
+        run were unsealed on 10-13, the position fine-tune (T1, T0 and T2) on 10-14 after all three blocks were hashed, its replication (T0R) on 10-15 the reach blocks (TYP, T6P, T6M) on 10-18, the INT8 chatter block (Q8B) on 10-20 and the reach re-tests (T6PR, TYPR) on 10-21 and fine-tune v2 (TYP2, T6P2, T0G) on 10-22, each after its post-run hash was committed.</p>
     </div>
   </section>
 
@@ -350,24 +518,9 @@ a.step:hover .go, a.step:focus-visible .go, a.step.current .go{opacity:1}
     </div>
   </section>
 
-  <section class="panel" id="preflight">
-    <div class="plate"><h2>Deployment preflight</h2><span class="ref">scripts/deploy_preflight.py · fault-injection demo</span></div>
-    <p class="note">One candidate card, four checks in order: the engine hash against the recorded build, the runner's own
-      normalization guard, the runner's chunk deadline (10−4 steps at 30 Hz = <b>200 ms</b>), and the
-      code-decided evidence verdict. Only an explicit GO passes. <b>BLOCK</b> stops the deployment (also for any unknown verdict). <b>HOLD</b> means "run the trials listed"; an improvement is not approval. Rows marked FAULT INJECTION are deliberately broken copies, not observed failures.</p>
-    <div class="tbl-scroll"><table class="res"><thead><tr><th>Case</th><th>Outcome</th><th>Checks</th></tr></thead><tbody>
-<tr><td>nominal<br><span class="lbl-s" style="font-size:12px;color:var(--ink-3)">FP16 (VC-025) as measured</span></td><td><span class="chip seal">HOLD</span></td><td>✓ engine integrity → ✓ normalization → ✓ timing contract → ✓ evidence<br><span style="color:var(--ink-2);font-size:12.5px">INSUFFICIENT_EVIDENCE: Settle success against FP32 at 10 pp: plan about 110-120 trials per arm (planning estimate, assumes equal true rates near 96-97 percent; not a guarantee); also validate start-position changes before deployment</span></td></tr>
-<tr><td>fault: normalization file swapped<br><span class="lbl-s" style="font-size:12px;color:var(--ink-3)">FAULT INJECTION</span></td><td><span class="chip halt">BLOCK</span></td><td>✓ engine integrity → ✗ normalization<br><span style="color:var(--ink-2);font-size:12.5px">runner refuses: manifest missing or normalization file mismatched</span></td></tr>
-<tr><td>fault: manifest missing<br><span class="lbl-s" style="font-size:12px;color:var(--ink-3)">FAULT INJECTION</span></td><td><span class="chip halt">BLOCK</span></td><td>✓ engine integrity → ✗ normalization<br><span style="color:var(--ink-2);font-size:12.5px">runner refuses: manifest missing or normalization file mismatched</span></td></tr>
-<tr><td>fault: engine replaced after the audit<br><span class="lbl-s" style="font-size:12px;color:var(--ink-3)">FAULT INJECTION</span></td><td><span class="chip halt">BLOCK</span></td><td>✗ engine integrity<br><span style="color:var(--ink-2);font-size:12.5px">engine file differs from the recorded build</span></td></tr>
-<tr><td>timing: Hailo-8 split pipeline<br><span class="lbl-s" style="font-size:12px;color:var(--ink-3)">measured offline (hailo_probe_v1.json, p95 264 ms)</span></td><td><span class="chip halt">BLOCK</span></td><td>✓ engine integrity → ✓ normalization → ✗ timing contract<br><span style="color:var(--ink-2);font-size:12.5px">p95 on the Pi 5 264 ms vs chunk deadline 200 ms</span></td></tr>
-<tr><td>evidence: fine-tuned policy, improvement at +3 cm<br><span class="lbl-s" style="font-size:12px;color:var(--ink-3)">FT-FP16, improvement detected; training mark undecided</span></td><td><span class="chip seal">HOLD</span></td><td>✓ engine integrity → ✓ normalization → ✓ timing contract → ✓ evidence<br><span style="color:var(--ink-2);font-size:12.5px">IMPROVEMENT_DETECTED is not approval: The candidate to validate next where the start position varies, not yet a replacement: settle the training mark, then confirm at more positions and objects</span></td></tr>
-<tr><td>evidence: black-frame calibration<br><span class="lbl-s" style="font-size:12px;color:var(--ink-3)">PC-B, flagged offline</span></td><td><span class="chip halt">BLOCK</span></td><td>✓ engine integrity → ✓ normalization → ✓ timing contract → ✗ evidence<br><span style="color:var(--ink-2);font-size:12.5px">FLAGGED: Do not deploy; fix the calibration input (a simple input check catches it); see the real-arm check of PC-B</span></td></tr>
-    </tbody></table></div>
-  </section>
-
   <section class="panel" id="report">
     <div class="plate"><h2>Deployment report</h2><span class="ref">D3 v3 · code writes verdicts and numbers, Nemotron explains in words</span></div>
+<details class='rv-ev'><summary>Read the full report (sections 1–6)</summary>
 <!--REPORT:BEGIN-->
 <p class="note">Generated by <span class="num">scripts/d3_report_v3.py</span>: sections 1–4 (verdicts, numbers, status, next actions) are written by code from the verdict table (hash <span class="num">55f0eeb76289c82d</span>). Sections 5–6 are written by Nemotron 3 Super on Token Factory (35.3 s) and checked by code for digits, verdict labels, approval words and known misreadings: <b>0</b> findings. They are never a source of verdicts or numbers. Figures are drawn by code.</p>
 <div class="report"><h3>1. Recommendation (written by code)</h3>
@@ -437,6 +590,41 @@ a.step:hover .go, a.step:focus-visible .go, a.step.current .go{opacity:1}
 <img class="rep-fig" src="report/figures/fig_ft_position.png" alt="Position fine-tune: fine-tuned vs old policy at -3 and +3 cm (12 vs 12 each) and at the training mark (T0 + T0R pooled, 24 vs 24); interleaved under sealed schedules, operator blinding partial.">
 <p><i>Position fine-tune: fine-tuned vs old policy at -3 and +3 cm (12 vs 12 each) and at the training mark (T0 + T0R pooled, 24 vs 24); interleaved under sealed schedules, operator blinding partial.</i></p></div>
 <!--REPORT:END-->
+</details>
+  </section>
+
+<section class="panel">
+    <div class="plate"><h2>Pre-registered contrasts</h2><span class="ref">§7.2–7.4 · Newcombe 95%</span></div>
+    <p class="note">The primary endpoint is EP-1. <b>No gap was detected.</b> The noise floor sits in the same picture:
+      the same cell measured on another day has a wider interval than any between-cell contrast.</p>
+    <figure>
+      <div class="fig-scroll"><svg viewBox="0 0 720 250" role="img" aria-label="Contrast differences in percentage points with confidence intervals" style="min-width:560px"><g id="forest"></g></svg></div>
+      <figcaption>Difference in success rate, group 1 − group 2, in percentage points. ES-1 is absent: score_align and
+        score_mag picked the same three cells, so there is no contrast (a valid negative result under §7.3). Holm-adjusted
+        p = 1.0 for EP-1, ES-2 and ES-3.</figcaption>
+    </figure>
+  </section>
+
+<section class="panel">
+    <div class="plate"><h2>Order locks</h2><span class="ref">preregistration §8</span></div>
+    <p class="note">Each lock is a real dependency. Its record was committed and pushed before the next step ran, so the
+      git history proves the order. CI checks the integrity of the LOCK-2 record. The trial runner's own pre-run check (schedule seal
+      and LOCK-2) was added after all real-arm blocks had finished; during the experiments the order was enforced by the commits.</p>
+    <div class="locks">
+      <div class="lock"><div class="lock-id">LOCK-1</div><div class="lock-txt"><strong>Data split fixed → policy training</strong><span>120 demos, 80/20/20 from a seeded hash</span></div><span class="chip ok">done 10-07</span></div>
+      <div class="lock"><div class="lock-id">LOCK-2</div><div class="lock-txt"><strong>All audit scores frozen → first real trial</strong><span>5 predictors over 24 INT8 cells, rankings hashed</span></div><span class="chip ok">done</span></div>
+      <div class="lock"><div class="lock-id">LOCK-3</div><div class="lock-txt"><strong>225 main + 20 retest trials logged → first analysis run</strong><span>sealed log hashes fixed before unsealing</span></div><span class="chip ok">done 10-11</span></div>
+      <div class="lock"><div class="lock-id">STRESS v1</div><div class="lock-txt"><strong>Pads removed: stopped by the S0 rule (8/24 &lt; 12)</strong><span>no pattern by fidelity: worst-fidelity cell 3/6, FP32 1/6 (descriptive)</span></div><span class="chip ok">unsealed 10-13</span></div>
+      <div class="lock"><div class="lock-id">STRESS v2</div><div class="lock-txt"><strong>Rubber-band gripper: S0 23/24, S1 0/3 (stopped), S4 48/48</strong><span>outcome re-judged offline from video (§9); success decisions use Newcombe intervals, fixed before unsealing (§10)</span></div><span class="chip ok">unsealed 10-13</span></div>
+      <div class="lock"><div class="lock-id">FP16</div><div class="lock-txt"><strong>FP16 19/20 · FP32 10/10 · INT8 10/10, interleaved</strong><span>pre-registered; unsealed after the post-lock hash</span></div><span class="chip ok">unsealed 10-13</span></div>
+      <div class="lock"><div class="lock-id">POS. CTRL</div><div class="lock-txt"><strong>PC-B 11/12 · FP32 10/12, interleaved</strong><span>offline NO-GO; real arm insufficient evidence, warning not confirmed</span></div><span class="chip ok">unsealed 10-13</span></div>
+      <div class="lock"><div class="lock-id">FINE-TUNE</div><div class="lock-txt"><strong>+3 cm 12/12 vs 3/12 · −3 cm 10/12 vs 2/12 · mark 22/24 vs 23/24 (T0 + T0R)</strong><span>improvement detected off the mark; the training mark undecided</span></div><span class="chip ok">unsealed 10-14 / 10-15</span></div>
+      <div class="lock"><div class="lock-id">REACH</div><div class="lock-txt"><strong>−6 cm 8/12 vs 0/12 · +6 cm 0/12 vs 0/12 · yellow can 0/12 vs 3/12; re-test without the markers: 0/12 vs 0/12 twice</strong><span>amendments 7 and 8; a knocked wrist camera noted</span></div><span class="chip ok">unsealed 10-18 / 10-21</span></div>
+      <div class="lock"><div class="lock-id">INT8 CHATTER</div><div class="lock-txt"><strong>Q8B: VC-002 0.497 vs FP16 0.391, p = 0.12</strong><span>the post hoc 2× pattern not confirmed; six Q8 trials discarded unopened (scene deviation)</span></div><span class="chip ok">unsealed 10-20</span></div>
+      <div class="lock"><div class="lock-id">HEALTH</div><div class="lock-txt"><strong>H1 chatter 0.242 (unclear) · H2 0.106 after fixing the wrist mount (back to nominal)</strong><span>non-blind checks with readings fixed before each run</span></div><span class="chip ok">done 10-20 / 10-21</span></div>
+      <div class="lock"><div class="lock-id">FINE-TUNE v2</div><div class="lock-txt"><strong>Yellow can 12/12 vs 7/12 · +6 cm 12/12 vs 2/12 · mark 12/12 vs 12/12 (against FT)</strong><span>amendment 9; improvement detected for both gaps, no drop at the mark</span></div><span class="chip ok">unsealed 10-22</span></div>
+      <div class="lock"><div class="lock-id">LOCK-4</div><div class="lock-txt"><strong>Analysis complete → video and narrative</strong><span>all 22 sealed logs unsealed and verified before the final video (v11) and write-up; no new real-arm block before submission</span></div><span class="chip ok">done 10-23</span></div>
+    </div>
   </section>
 
   <section class="panel" id="setup">
@@ -503,128 +691,7 @@ a.step:hover .go, a.step:focus-visible .go, a.step.current .go{opacity:1}
     </div>
   </section>
 
-  <section class="panel">
-    <div class="plate"><h2>Order locks</h2><span class="ref">preregistration §8</span></div>
-    <p class="note">Each lock is a real dependency. Its record was committed and pushed before the next step ran, so the
-      git history proves the order. CI checks the integrity of the LOCK-2 record. The trial runner's own pre-run check (schedule seal
-      and LOCK-2) was added after all real-arm blocks had finished; during the experiments the order was enforced by the commits.</p>
-    <div class="locks">
-      <div class="lock"><div class="lock-id">LOCK-1</div><div class="lock-txt"><strong>Data split fixed → policy training</strong><span>120 demos, 80/20/20 from a seeded hash</span></div><span class="chip ok">done 10-07</span></div>
-      <div class="lock"><div class="lock-id">LOCK-2</div><div class="lock-txt"><strong>All audit scores frozen → first real trial</strong><span>5 predictors over 24 INT8 cells, rankings hashed</span></div><span class="chip ok">done</span></div>
-      <div class="lock"><div class="lock-id">LOCK-3</div><div class="lock-txt"><strong>225 main + 20 retest trials logged → first analysis run</strong><span>sealed log hashes fixed before unsealing</span></div><span class="chip ok">done 10-11</span></div>
-      <div class="lock"><div class="lock-id">STRESS v1</div><div class="lock-txt"><strong>Pads removed: stopped by the S0 rule (8/24 &lt; 12)</strong><span>no pattern by fidelity: worst-fidelity cell 3/6, FP32 1/6 (descriptive)</span></div><span class="chip ok">unsealed 10-13</span></div>
-      <div class="lock"><div class="lock-id">STRESS v2</div><div class="lock-txt"><strong>Rubber-band gripper: S0 23/24, S1 0/3 (stopped), S4 48/48</strong><span>outcome re-judged offline from video (§9); success decisions use Newcombe intervals, fixed before unsealing (§10)</span></div><span class="chip ok">unsealed 10-13</span></div>
-      <div class="lock"><div class="lock-id">FP16</div><div class="lock-txt"><strong>FP16 19/20 · FP32 10/10 · INT8 10/10, interleaved</strong><span>pre-registered; unsealed after the post-lock hash</span></div><span class="chip ok">unsealed 10-13</span></div>
-      <div class="lock"><div class="lock-id">POS. CTRL</div><div class="lock-txt"><strong>PC-B 11/12 · FP32 10/12, interleaved</strong><span>offline NO-GO; real arm insufficient evidence, warning not confirmed</span></div><span class="chip ok">unsealed 10-13</span></div>
-      <div class="lock"><div class="lock-id">FINE-TUNE</div><div class="lock-txt"><strong>+3 cm 12/12 vs 3/12 · −3 cm 10/12 vs 2/12 · mark 22/24 vs 23/24 (T0 + T0R)</strong><span>improvement detected off the mark; the training mark undecided</span></div><span class="chip ok">unsealed 10-14 / 10-15</span></div>
-      <div class="lock"><div class="lock-id">REACH</div><div class="lock-txt"><strong>−6 cm 8/12 vs 0/12 · +6 cm 0/12 vs 0/12 · yellow can 0/12 vs 3/12; re-test without the markers: 0/12 vs 0/12 twice</strong><span>amendments 7 and 8; a knocked wrist camera noted</span></div><span class="chip ok">unsealed 10-18 / 10-21</span></div>
-      <div class="lock"><div class="lock-id">INT8 CHATTER</div><div class="lock-txt"><strong>Q8B: VC-002 0.497 vs FP16 0.391, p = 0.12</strong><span>the post hoc 2× pattern not confirmed; six Q8 trials discarded unopened (scene deviation)</span></div><span class="chip ok">unsealed 10-20</span></div>
-      <div class="lock"><div class="lock-id">HEALTH</div><div class="lock-txt"><strong>H1 chatter 0.242 (unclear) · H2 0.106 after fixing the wrist mount (back to nominal)</strong><span>non-blind checks with readings fixed before each run</span></div><span class="chip ok">done 10-20 / 10-21</span></div>
-      <div class="lock"><div class="lock-id">FINE-TUNE v2</div><div class="lock-txt"><strong>Yellow can 12/12 vs 7/12 · +6 cm 12/12 vs 2/12 · mark 12/12 vs 12/12 (against FT)</strong><span>amendment 9; improvement detected for both gaps, no drop at the mark</span></div><span class="chip ok">unsealed 10-22</span></div>
-      <div class="lock"><div class="lock-id">LOCK-4</div><div class="lock-txt"><strong>Analysis complete → video and narrative</strong><span>all 22 sealed logs unsealed and verified before the final video (v11) and write-up; no new real-arm block before submission</span></div><span class="chip ok">done 10-23</span></div>
-    </div>
-  </section>
-
-  <section class="panel" id="success">
-    <div class="plate"><h2>Closed-loop success by cell</h2><span class="ref">G6 · g6_analysis.json</span></div>
-    <p class="note">FP32 and ten INT8 cells, interleaved in one blinded session. <b>Every interval overlaps FP32.</b> At these
-      sample sizes no cell can be shown to be within 10 pp of FP32 either, so each one is "insufficient evidence", not "safe".
-      The INT8 cells differ only in calibration: sample count, data composition and per-tensor or per-channel scaling.</p>
-    <div class="legend" id="armlegend"></div>
-    <figure>
-      <div class="fig-scroll"><svg viewBox="0 0 720 400" role="img" aria-label="Per-cell success rate with Wilson 95% intervals" style="min-width:560px"><g id="cells"></g></svg></div>
-      <figcaption>Dot = success rate, whisker = Wilson 95% CI. Right columns: successes / trials and mean placement
-        error (base distance from coaster center, px).</figcaption>
-    </figure>
-  </section>
-
-  <section class="panel">
-    <div class="plate"><h2>Pre-registered contrasts</h2><span class="ref">§7.2–7.4 · Newcombe 95%</span></div>
-    <p class="note">The primary endpoint is EP-1. <b>No gap was detected.</b> The noise floor sits in the same picture:
-      the same cell measured on another day has a wider interval than any between-cell contrast.</p>
-    <figure>
-      <div class="fig-scroll"><svg viewBox="0 0 720 250" role="img" aria-label="Contrast differences in percentage points with confidence intervals" style="min-width:560px"><g id="forest"></g></svg></div>
-      <figcaption>Difference in success rate, group 1 − group 2, in percentage points. ES-1 is absent: score_align and
-        score_mag picked the same three cells, so there is no contrast (a valid negative result under §7.3). Holm-adjusted
-        p = 1.0 for EP-1, ES-2 and ES-3.</figcaption>
-    </figure>
-  </section>
-
-  <section class="panel" id="rankcheck">
-    <div class="plate"><h2>Did the offline rank predict the arm?</h2><span class="ref">EX-4 / AEP Q3 · 10,000 permutations</span></div>
-    <div class="two">
-      <figure>
-        <svg viewBox="0 0 400 270" role="img" aria-label="score_mag rank versus mean placement error"><g id="scatter"></g></svg>
-        <figcaption>Each point is one INT8 cell: frozen score_mag rank (1 = best fidelity) against its real mean
-          placement error.</figcaption>
-      </figure>
-      <div class="rows" id="rho"></div>
-    </div>
-    <p class="note">Best vs worst fidelity on placement (AEP Q1, E2): <b>−0.84 px</b>, 97.5% CI <span class="num">[−2.53, +0.88]</span>,
-      <b>tolerance-compatible</b> with the 5 px tolerance. On success (E1) the ceiling rule applies, so the decision is
-      indeterminate. The AEP claim is not falsified here.</p>
-  </section>
-
-  <section class="panel" id="cost">
-    <div class="plate"><h2>Engine cost on the deployment target</h2><span class="ref">trtexec · tegrastats 100 ms · power_bench/SUMMARY.md</span></div>
-    <p class="note"><b>FP16 is the fastest and the cheapest per inference.</b> INT8 draws about 1 W less while it runs
-      but takes 45% longer, so each inference costs more. The three INT8 calibrations cost the same.</p>
-    <div class="two">
-      <figure><svg viewBox="0 0 400 200" role="img" aria-label="GPU compute time per inference"><g id="ms"></g></svg><figcaption>GPU compute per 100-step chunk, median ms.</figcaption></figure>
-      <figure><svg viewBox="0 0 400 200" role="img" aria-label="Energy per inference above idle"><g id="mj"></g></svg><figcaption>Energy per inference above idle (4.86 W), mJ.</figcaption></figure>
-    </div>
-    <p class="note">End to end in the trial runner, including preprocessing and the socket round trip, the same order holds: FP16 24.7 ms, INT8 34.3 ms
-      and FP32 79.0 ms (FP16 block). On the real arm FP16 succeeded 19/20, with placement within tolerance of FP32.</p>
-  </section>
-
-  <section class="panel" id="moved">
-    <div class="plate"><h2>What moved the success rate</h2><span class="ref">G6 + public stress tallies</span></div>
-    <p class="note">The same arm and the same policy. Between precisions no success difference was detected. Grip friction and
-      a 3 cm shift moved a lot. The gripper and shift blocks are separate sessions, so read them as observations, not
-      as a randomized comparison.</p>
-    <figure>
-      <div class="fig-scroll"><svg viewBox="0 0 720 290" role="img" aria-label="Success rate by condition" style="min-width:540px"><g id="margin"></g></svg></div>
-      <figcaption>Wilson 95% CI. Unseen can: a 190 g, 50 mm yellow can never seen in training, at the trained start mark; all four engines 12/12. Outcomes use the consensus re-judge (protocol §11).</figcaption>
-    </figure>
-  </section>
-
-  <section class="panel" id="footage">
-    <div class="plate"><h2>Trial footage</h2><span class="ref">overhead camera · full 60 s trials · real time</span></div>
-    <p class="note">Unedited overhead videos of single trials, re-encoded for the browser. The clips do not name the
-      engine. Every block shown here has been unsealed; outcomes are in the panels above.</p>
-    <figure class="clip"><video src="clips/demos_top_wrist.mp4" controls muted playsinline preload="metadata"></video>
-      <div class="ct"><strong>How the policy learned: teleoperated demonstrations</strong><span class="chip ok">training data</span></div>
-      <p>Three of the 120 real demonstrations in the locked dataset (LOCK-1), at real time: the overhead camera (left)
-        and the wrist camera (right). The ACT policy is trained on both views.</p><span class="src">LOCK-1 dataset · episodes 0, 47, 102 · 1×</span></figure>
-    <div class="clips">
-      <figure class="clip"><video src="clips/g6_success.mp4" controls muted playsinline preload="metadata"></video>
-        <div class="ct"><strong>Nominal success</strong><span class="chip ok">success</span></div>
-        <p>A G6 blinded trial. The can stands 6.8 px from the coaster center.</p><span class="src">G6 main trial 12</span></figure>
-      <figure class="clip"><video src="clips/g6_fail_knock.mp4" controls muted playsinline preload="metadata"></video>
-        <div class="ct"><strong>Knocked over on withdrawal</strong><span class="chip halt">failure</span></div>
-        <p>The can was placed, then the gripper tipped it over while pulling back. Shown the final frame, Cosmos-Reason2
-          answered "Yes", meaning the can is standing.</p><span class="src">G6 main trial 186</span></figure>
-      <figure class="clip"><video src="clips/v1_nopad_drop.mp4" controls muted playsinline preload="metadata"></video>
-        <div class="ct"><strong>No anti-slip pads</strong><span class="chip halt">failure</span></div>
-        <p>Nominal scene with the gripper pads removed. The can drops while being carried. The block finished 8/24.</p><span class="src">stress v1 S0 trial 5</span></figure>
-      <figure class="clip"><video src="clips/v2_rubber_success.mp4" controls muted playsinline preload="metadata"></video>
-        <div class="ct"><strong>Rubber-band gripper</strong><span class="chip ok">success</span></div>
-        <p>The same scene with rubber bands on the fingers. The can sits about 20 px off center, inside the 35 px target.
-          The block finished 23/24.</p><span class="src">stress v2 S0 trial 1</span></figure>
-      <figure class="clip"><video src="clips/t1_old_vs_ft.mp4" controls muted playsinline preload="metadata"></video>
-        <div class="ct"><strong>Position fine-tune at +3 cm</strong><span class="chip ok">counted trials</span></div>
-        <p>Side view of two consecutive counted trials in the blinded T1 block. The old policy (left) leaves the can tilted on the coaster edge and keeps moving. The fine-tuned policy (right) stands it upright in about 17 s. Block result: 12/12 vs 3/12.</p><span class="src">T1 trials 2 (old) and 1 (fine-tuned) · phone side view · 1×</span></figure>
-      <figure class="clip"><video src="clips/v2_shift_regrasp.mp4" controls muted playsinline preload="metadata"></video>
-        <div class="ct"><strong>Start moved 3 cm</strong><span class="chip halt">failure</span></div>
-        <p>The policy first closes on empty air at the trained start spot, then knocks the can over while re-grasping.</p><span class="src">stress v2 S1 trial 1</span></figure>
-    </div>
-    <figure class="clip"><video src="clips/v2_s0_vs_s4.mp4" controls muted playsinline preload="metadata"></video>
-      <div class="ct"><strong>Cola can vs unseen yellow can, side by side</strong><span class="chip ok">S4 48/48</span></div>
-      <p>Stress v2 with the rubber-band gripper: S0 trial i (left) next to S4 trial i (right), each full trial at 4× speed.
-        Shown: the first 11 pairs. All 48 S4 trials succeeded.</p><span class="src">stress v2 S0 + S4 trials 1–11 · 4×</span></figure>
-  </section>
-
-  <section class="panel">
+<section class="panel">
     <div class="plate"><h2>Agent layer</h2><span class="ref">§6 · product components, not hypothesis tests</span></div>
     <div class="rows">
       <div class="row"><span class="k">D4</span><span class="d"><b>Live supervisor</b> · Cosmos-Reason2-2B on a Nebius AI Endpoint (L40S, vLLM), 2 Hz, shadow mode. Across the 215 G6 trials it watched live (the first 30 ran before it was deployed) it never left CONTINUE and flagged <b>0 of 7</b> failures.</span><span class="v">~330 ms RTT</span></div>
@@ -634,7 +701,7 @@ a.step:hover .go, a.step:focus-visible .go, a.step.current .go{opacity:1}
     </div>
   </section>
 
-  <section class="panel">
+<section class="panel">
     <div class="plate"><h2>Provenance</h2><span class="ref">every number above comes from these records</span></div>
     <dl class="hashes">
       <div class="hrow"><dt>LOCK-2 record</dt><dd>5fb513a435b3b7b9…</dd></div>
@@ -786,7 +853,7 @@ bars("mj",[["FP16 VC-025",82,"var(--good)"],["INT8 VC-002",101,"var(--signal)"],
                "PC-B": {s: [3, 5, 10], why: "Black-frame calibration: built (3), flagged offline (5), blocked by the preflight (10)."}};
   const note = document.getElementById("wf-cand"), pick = document.getElementById("nt-pick");
   if (pick) pick.addEventListener("click", e => { const b = e.target.closest("button"); if (!b) return;
-    const k = Object.keys(REL).find(x => b.textContent.trim().startsWith(x)); if (!k) return;
+    const k = b.dataset.k in REL ? b.dataset.k : null; if (!k) return;
     steps.forEach(s => { const on = REL[k].s.includes(+s.dataset.step); s.classList.toggle("rel", on); s.classList.toggle("dim", !on); });
     note.hidden = false; note.innerHTML = "<b>Steps behind " + k + ":</b> " + REL[k].why; });
 })();

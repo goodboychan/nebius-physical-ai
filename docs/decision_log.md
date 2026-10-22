@@ -1130,3 +1130,9 @@ Wording, also from the review:
   (README, `docs/devpost_about.md`, `docs/submission_draft.md`, dashboard v38), as of commit `1dc3ee3` plus this entry.
 - No new real-arm block runs before submission. After this point a number or claim changes only to fix an error, and
   each such change is logged here with its reason.
+- 2026-10-23, after LOCK-4, presentation only (board review): the dashboard leads with a Review panel (candidate by
+  name, validate-first, deployment decision and why, three key numbers, next step with the plan to view or copy, then
+  evidence with readable record names), groups the page into Review / Evidence / How it works / Audit record, separates
+  the evidence finding from the deployment decision in the preflight and the workflow, and folds the full report. The
+  first-visit candidate is FP16 (VC-025). FT-FP16's plan marks the +6 cm and yellow-can fine-tune as completed by FT2. No
+  number, verdict or rule changed; the decision text restates committed results (`scripts/build_dashboard_nexttest.py`).

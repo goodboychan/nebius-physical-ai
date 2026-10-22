@@ -62,8 +62,9 @@ def plans(T):
                      "artifacts/reports/ft4_analysis.json", "artifacts/freeze/ft4_post.json", "artifacts/finetune/GEN_modes.json",
                      "artifacts/reports/ft5_analysis.json", "artifacts/freeze/ft5_post.json", "artifacts/finetune/GEN2_modes.json",
                      "T0 failures: trials 18 and 22 (placement disturbance, docs/sessions/ft_operator_notes.md); clip: dashboard/clips/t1_old_vs_ft.mp4"],
-        "next_test": {"compare": "FT-FP16 vs VC-025 (old FP16 policy) at the training mark; for the gaps, a new fine-tune with demonstrations at +6 cm and with the yellow can, re-tested at TYP/T6P under a new pre-registration",
-                      "conditions": "training start mark (nominal); +6 cm and the yellow can at +3 cm (generalization gaps, amendment 7)",
+        "completed": ["the plan for the gaps (a new fine-tune with demonstrations at +6 cm and with the yellow can, re-tested under a new pre-registration): completed as FT2-FP16, amendment 9"] if os.path.exists("artifacts/reports/ft6_analysis.json") else [],
+        "next_test": {"compare": "FT-FP16 vs VC-025 (old FP16 policy) at the training mark",
+                      "conditions": "training start mark (nominal), cola can",
                       "measure": "success, failure mode (placement disturbance), gripper chatter", "schedule": "sealed, interleaved, new tokens (operator blinding stays partial: the motions differ)",
                       "rule": "success non-inferiority at 10 pp (97.5% Newcombe), pre-registered without the ceiling clause (if both arms land at or above 95%, the current ceiling clause would hold it undecided); a final GO also needs placement (E2, 5 px) and the preflight",
                       "trials_per_arm": {"under the revised rule, if truly equal (95.8%)": n_for(23 / 24, 23 / 24, False),
@@ -109,6 +110,7 @@ def md(P):
     L = ["# From evidence to the next test (written by code)", ""]
     for k, p in P.items():
         L += [f"## {p['candidate']}", f"**Status**: {p['status']}", "", "Confirmed:"] + [f"- {x}" for x in p["confirmed"]] + ["", "Open:"] + [f"- {x}" for x in p["open"]]
+        if p.get("completed"): L += ["", "Completed since the plan was made:"] + [f"- {x}" for x in p["completed"]]
         L += ["", "Evidence:"] + [f"- `{x}`" if "/" in x and " " not in x else f"- {x}" for x in p["evidence"]]
         nt = p["next_test"]; L += ["", "Next test:"] + [f"- {a}: {nt[a]}" for a in ("compare", "conditions", "measure", "schedule", "rule")]
         L += [(f"- {a}: {v}" if ("power at" in a or "block size" in a) else f"- trials per arm for 80% power on the success criterion (not the chance of a final GO), {a}: {v}") for a, v in nt["trials_per_arm"].items()] + [""]
