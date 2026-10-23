@@ -117,6 +117,7 @@ svg{display:block; width:100%; height:auto}
 @media (max-width:760px){.setup{grid-template-columns:1fr}}
 .anno{position:relative; margin:0; max-width:100%}
 .anno img{width:100%; height:auto; display:block; border:1px solid var(--rule)}
+.ring{position:absolute; transform:translate(-50%,-50%); border:2px dashed var(--signal); border-radius:6px; pointer-events:none}
 .pin{position:absolute; transform:translate(-50%,-50%); width:24px; height:24px; border-radius:50%; background:var(--signal); color:var(--paper);
   font-family:var(--mono); font-size:12px; font-weight:600; display:grid; place-items:center; box-shadow:0 0 0 2px var(--paper)}
 .pins{margin:0; padding:0; list-style:none; display:flex; flex-direction:column; gap:6px; font-size:13px; color:var(--ink-2)}
@@ -639,13 +640,16 @@ a.step:hover .go, a.step:focus-visible .go, a.step.current .go{opacity:1}
           <span class="pin" style="left:31%;top:3%" aria-hidden="true">1</span>
           <span class="pin" style="left:59%;top:39%" aria-hidden="true">2</span>
           <span class="pin" style="left:20%;top:64%" aria-hidden="true">3</span>
+          <span class="ring" style="left:87%;top:44.4%;width:6.6%;height:6.6%" aria-hidden="true"></span>
+          <span class="pin" style="left:80.5%;top:44.4%" aria-hidden="true">4</span>
         </div>
         <ol class="pins">
           <li><span class="n">1</span><span>Overhead camera, Logitech C922, 640×480, exposure and white balance locked</span></li>
           <li><span class="n">2</span><span>SO-101 follower arm (Feetech STS3215), driven by the policy. OpenMV AE3 wrist camera, 320×200; rubber-band grip since stress v2</span></li>
           <li><span class="n">3</span><span>SO-101 leader arm, used only to teleoperate the demonstrations</span></li>
+          <li><span class="n">4</span><span>Jetson Orin Nano Super, behind the chair (green power light): runs the TensorRT policy at 30 Hz in 15 W mode, plus the trial runner and the preflight</span></li>
         </ol>
-        <figcaption>The rig. An annotated close-up of the work area and the Jetson will replace this photo.</figcaption>
+        <figcaption>The rig: cameras, the two arms and the Jetson that runs the policy.</figcaption>
       </figure>
       <div class="panel" style="gap:14px">
         <div class="frames">
