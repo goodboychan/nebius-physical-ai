@@ -1,4 +1,23 @@
 <p align="center"><img src="docs/assets/quantgate_logo.png" alt="QuantGate" width="420"></p>
+<p align="center">
+  <a href="https://github.com/goodboychan/nebius-physical-ai/actions/workflows/ci.yml"><img alt="CI" src="https://github.com/goodboychan/nebius-physical-ai/actions/workflows/ci.yml/badge.svg"></a>
+  <a href="LICENSE"><img alt="License: Apache 2.0" src="https://img.shields.io/badge/license-Apache%202.0-blue"></a>
+  <img alt="Python 3.12" src="https://img.shields.io/badge/python-3.12-3776AB?logo=python&logoColor=white">
+  <a href="https://www.youtube.com/watch?v=z80w9vig-qA"><img alt="Video: 3 min" src="https://img.shields.io/badge/video-3%20min-FF0000?logo=youtube&logoColor=white"></a>
+  <a href="https://claude.ai/artifact/2tUAoJHBeT8uLU96BmgPNK"><img alt="Dashboard" src="https://img.shields.io/badge/dashboard-try%20it-00909B"></a>
+  <a href="https://huggingface.co/datasets/chans/quantgate-so101-coaster"><img alt="Datasets on Hugging Face" src="https://img.shields.io/badge/%F0%9F%A4%97%20datasets-3%20public-FFD21E"></a>
+  <br>
+  <img alt="Real arm: 745 trials" src="https://img.shields.io/badge/real%20arm-745%20sealed%20trials-A8430F">
+  <img alt="Jetson Orin Nano Super" src="https://img.shields.io/badge/Jetson-Orin%20Nano%20Super-76B900?logo=nvidia&logoColor=white">
+  <img alt="LeRobot ACT on SO-101" src="https://img.shields.io/badge/LeRobot-ACT%20on%20SO--101-6B4C9A">
+  <img alt="Nebius x NVIDIA Physical AI" src="https://img.shields.io/badge/Nebius%20%C3%97%20NVIDIA-Physical%20AI%20track-0B1D2E">
+</p>
+
+<p align="center">
+  <a href="https://www.youtube.com/watch?v=z80w9vig-qA"><img src="docs/assets/video_thumbnail.jpg" alt="QuantGate video (3 min): validate FP16 first, deployment HOLD, the next test planned" width="720"></a>
+</p>
+<p align="center"><img src="docs/assets/quantgate_preview.gif" alt="Same robot, same task: one run succeeds, one fails; move the can 3 cm and it misses" width="720"><br>
+<sub>Same robot, same task: one run succeeds, one fails. Move the can 3 cm and it misses (overhead camera, 4×).</sub></p>
 
 # QuantGate — a robot deployment review
 
