@@ -21,7 +21,10 @@ edge device. It shows the engine's measured cost, its real-arm behavior and how 
 **Links** · Datasets on the Hugging Face Hub (LeRobot v3):
 [`chans/quantgate-so101-coaster`](https://huggingface.co/datasets/chans/quantgate-so101-coaster) (120 teleoperated
 demonstrations) · [`chans/quantgate-so101-coaster-positions`](https://huggingface.co/datasets/chans/quantgate-so101-coaster-positions)
-(50 demonstrations at shifted start positions, used for the position fine-tune)
+(50 demonstrations at shifted start positions, used for the position fine-tune) ·
+[`chans/quantgate-so101-coaster-positions-v2`](https://huggingface.co/datasets/chans/quantgate-so101-coaster-positions-v2)
+(50 demonstrations with the yellow can and far starts, used for fine-tune v2). How each one trained a policy and where
+it was evaluated: [Data and lineage](#data-and-lineage).
 
 The logo's Q stands for QuantGate and quantization. The open passage at the lower right is the gate, and the small
 square leaving it is a candidate that has cleared review for its next test. Passing the gate means "worth
@@ -235,14 +238,24 @@ The hypotheses, endpoints and analysis code were fixed and hashed **before** any
 - [`docs/sessions/`](docs/sessions/): operator observations, which contain no cell information.
 - [`docs/related_work.md`](docs/related_work.md): closest prior work and how this project is positioned.
 
-## Data
+## Data and lineage
 
-- [`chans/quantgate-so101-coaster`](https://huggingface.co/datasets/chans/quantgate-so101-coaster): 120 teleoperated
-  demos with the LOCK-1 split manifest (train 80 / val 20 / audit 20) and file hashes.
-- [`chans/quantgate-so101-coaster-positions`](https://huggingface.co/datasets/chans/quantgate-so101-coaster-positions):
-  50 demos at start offsets −4…+4 cm. The +3 cm position is held out.
+All three datasets are public LeRobot v3.0 datasets under CC BY 4.0, with two camera videos, joint states and actions.
+Together they are the whole training input of every policy evaluated here.
 
-Both are LeRobot v3.0 datasets under CC BY 4.0.
+| Dataset | Demos | Trained | Held out | Evaluated on the arm (sealed, interleaved) |
+|---|---|---|---|---|
+| [`quantgate-so101-coaster`](https://huggingface.co/datasets/chans/quantgate-so101-coaster) | 120, cola can at the training mark | the base ACT policy on the **80 train** episodes (100k steps, Nebius Jobs) | **val 20** chose the checkpoint (100k, val L1 0.271; `artifacts/manifests/g2_val_select.json`); **audit 20** are the offline audit's held-out states | the 26 engines (G6, stress, FP16, positive control) |
+| [`quantgate-so101-coaster-positions`](https://huggingface.co/datasets/chans/quantgate-so101-coaster-positions) | 50, cola can at −4, −2, 0, +2, +4 cm | **fine-tune v1** (FT-FP16): 80 train + 50 = 130 episodes, 20k steps from the base, final checkpoint | +3 and −3 cm never in training; −6 and +6 cm beyond the range | +3 cm 12/12 vs 3/12, −3 cm 10/12 vs 2/12, −6 cm 8/12 vs 0/12; +6 cm and the yellow can no gain |
+| [`quantgate-so101-coaster-positions-v2`](https://huggingface.co/datasets/chans/quantgate-so101-coaster-positions-v2) | 50: yellow can at −4…+4 cm, cola can at +5 and +7 cm | **fine-tune v2** (FT2-FP16): 130 + 50 = 180 episodes, 20k steps from v1, final checkpoint | the yellow can at +3 cm and the cola can at +6 cm never in training | yellow can 12/12 vs 7/12, +6 cm 12/12 vs 2/12, training mark 12/12 vs 12/12 (against v1) |
+
+- **Counts, kept apart**: 220 demonstrations collected; at most 180 in any training set (the 40 val and audit episodes
+  never train a policy); 745 real-arm trials, separate from the demonstrations.
+- **How to check it**: the split manifest and file hashes are on the Hub (`splits/`); `scripts/make_train_dataset.py`
+  keeps only the 80 train episodes and records the episode mapping; `scripts/val_select.py` picks the checkpoint on
+  val; `scripts/job/train_act.sh` and `scripts/job/finetune_act.sh` are the Nebius Jobs; the demo orders, held-out
+  conditions and analysis rules are in the pre-registrations (`docs/finetune_position_preregistration.md` §2–3 and §21).
+- No outside team has re-trained from these data yet; they are published so that one can.
 
 ## Hardware
 

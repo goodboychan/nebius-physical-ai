@@ -91,6 +91,13 @@ compiler or device change makes a new artifact, and each artifact needs its own 
     approval words.
 - **Cost of one review**: about **\$31** of Nebius cloud.
 
+### Open data, end to end
+
+The training input of every policy is public: 120 base demonstrations with their train/val/audit split, 50 position
+demonstrations (fine-tune v1) and 50 yellow-can and far-start demonstrations (fine-tune v2), all LeRobot v3 under
+CC BY 4.0. The split, the checkpoint choice on the validation set, the held-out conditions and the sealed evaluations
+are linked in the README's "Data and lineage" table, so the path from a demonstration to an arm result can be checked.
+
 ## What we found
 
 - **The offline audit did not predict the arm.**
