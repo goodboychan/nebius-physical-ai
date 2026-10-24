@@ -23,8 +23,14 @@ It only depends on numpy, scipy and PyYAML (pytest for the tests).
 
 ```bash
 .venv/bin/python scripts/quantgate.py verify          # expect: 201 passed, then 22 "ok" lines (sealed logs vs their hashes)
-.venv/bin/python scripts/quantgate.py review --no-llm # rebuilds the review; open artifacts/reports/review_report.html
+.venv/bin/python scripts/quantgate.py review --no-llm # rebuilds the review as one HTML file (below)
 .venv/bin/python scripts/quantgate.py plan FP16       # what is confirmed, what is open, and the next test (also FT1, FT2, INT8, PC-B)
+```
+
+Open the review in a browser:
+
+```bash
+xdg-open artifacts/reports/review_report.html     # Linux;  macOS: open ...;  Windows: start ...
 ```
 
 `git status` stays clean after `review --no-llm`. The rebuilt files are byte-identical to the committed ones.
@@ -32,10 +38,19 @@ It only depends on numpy, scipy and PyYAML (pytest for the tests).
 ## 3. Judge your own results
 
 Open [`examples/my_results.csv`](../examples/my_results.csv) and add a row for your own builds: how many times each
-build succeeded out of how many trials.
+build succeeded out of how many trials. Only six columns are required; the rest can stay empty.
+
+| Column | Meaning | Example |
+| --- | --- | --- |
+| `candidate`, `reference` | the build you want to ship and the one it must not be worse than | `my INT8`, `my FP32` |
+| `cand_successes`, `cand_trials` | successes and trials of the candidate | `18`, `20` |
+| `ref_successes`, `ref_trials` | successes and trials of the reference | `19`, `20` |
+| `placement_ok`, `preflight_ok` | did the build pass your placement check and the preflight (`yes`, `no`, empty) | `yes` |
+
+Any pass/fail outcome works (grasp, reach the goal, no collision), as long as each trial counts as one success or
+one failure. For a first try, copy this line to the end of the file, then change `18` and `20` to your own numbers:
 
 ```csv
-candidate,reference,cand_successes,cand_trials,ref_successes,ref_trials,gpu_ms,energy_mj,placement_ok,preflight_ok,mode,assumed_rate
 my INT8,my FP32,18,20,19,20,,,yes,yes,,
 ```
 

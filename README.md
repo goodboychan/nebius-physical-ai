@@ -112,7 +112,7 @@ finite number.
 ## Quickstart: one command for the review
 
 ```bash
-uv venv .venv && uv pip install --python .venv/bin/python -e ".[dev]"
+python3 -m venv .venv && .venv/bin/pip install -e ".[dev]"   # or: uv venv .venv && uv pip install --python .venv/bin/python -e ".[dev]"
 .venv/bin/python scripts/quantgate.py verify          # tests, runner harness, 22 sealed logs vs their post-lock hashes
 .venv/bin/python scripts/quantgate.py review --no-llm # verdict table, next-test plans, the full review as one HTML file
                                                       # (artifacts/reports/review_report.html), preflight demo, review cost
@@ -351,7 +351,7 @@ Together they are the whole training input of every policy evaluated here.
 Every reported number can be recomputed from the committed sealed logs:
 
 ```bash
-uv venv .venv && uv pip install --python .venv/bin/python -e ".[dev]"
+python3 -m venv .venv && .venv/bin/pip install -e ".[dev]"   # or: uv venv .venv && uv pip install --python .venv/bin/python -e ".[dev]"
 .venv/bin/python -m pytest -q                                   # 187 tests
 python tests/runner_abort_harness.py                            # runner abort/timeout/manifest harness
 .venv/bin/python -m edgeqgate.grid                              # 26-cell grid and hash
