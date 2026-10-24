@@ -1,0 +1,6 @@
+candidate,reference,cand_successes,cand_trials,ref_successes,ref_trials,gpu_ms,energy_mj,placement_ok,preflight_ok,mode,assumed_rate
+FP16 (this study),FP32 (this study),19,20,10,10,11.6,82,yes,yes,,0.96
+INT8 build,FP32,46,50,48,50,16.8,101,yes,yes,,
+FP16 after a larger block,FP32,118,120,117,120,11.6,82,yes,yes,,
+FP16 with a swapped engine file,FP32,118,120,117,120,11.6,82,yes,no,,
+Fine-tune,old policy,12,12,3,12,11.6,82,,yes,improvement,

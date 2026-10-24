@@ -8,6 +8,7 @@
                                    (VC-025, FT-FP16, INT8, PC-B; all when omitted), written by code
   quantgate.py ask "<question>"    ask the review (Nemotron picks the rows, code prints verdicts and numbers)
   quantgate.py preflight           the four-check preflight and its fault-injection demo
+  quantgate.py judge <csv>         your own results under the same rules: decision, why, next test (examples/my_results.csv)
   quantgate.py cost                what the review cost (Nebius list prices, real-arm hours)
   quantgate.py verify              tests, runner harness, and the sealed-log hashes against the post-lock records
   quantgate.py stages              the hardware and cloud stages that produce the evidence, with their commands
@@ -64,6 +65,7 @@ if __name__ == "__main__":
         keys = [k for k in P if not a[1:] or k.lower() == a[1].lower()] or sys.exit(f"unknown candidate; one of {list(P)}")
         sys.path.insert(0, HERE); import next_test_plan as ntp; print(ntp.md({k: P[k] for k in keys}))
     elif a[0] == "preflight": run("scripts/deploy_preflight.py")
+    elif a[0] == "judge": run("scripts/quantgate_judge.py", *a[1:])
     elif a[0] == "cost": run("scripts/review_cost.py")
     elif a[0] == "verify": verify()
     elif a[0] == "stages": print(STAGES)

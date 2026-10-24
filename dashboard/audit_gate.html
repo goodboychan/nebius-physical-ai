@@ -285,7 +285,7 @@ a.step:hover .go, a.step:focus-visible .go, a.step.current .go{opacity:1}
         (p.clip ? "<video src='" + p.clip + "' controls muted playsinline preload='metadata' style='max-width:100%;border-radius:8px'></video>" : "") + "</div>" +
         "<details class='rv-ev'><summary>Evidence and provenance</summary><div class='rv-grid'><div><span class='rv-tl'>Confirmed</span>" + li(p.confirmed) + "</div><div><span class='rv-tl'>Still open</span>" + li(p.open) + "</div></div>" +
         "<span class='rv-tl'>Records</span><ul class='rv-files'>" + p.evidence.map((x, i) => "<li><b>" + esc(p.evn[i]) + "</b> <code>" + esc(x) + "</code></li>").join("") + "</ul></details>" +
-        "<p class='rv-scope'>Scope: this recorded policy, device and test configuration. Validation priority is separate from deployment approval.</p>" +
+        "<p class='rv-scope'>Scope: this recorded policy, device and test configuration. Validation priority is separate from deployment approval. Your own builds: <code>quantgate.py judge your_results.csv</code> applies the same rules.</p>" +
         "<textarea id='nt-md' readonly hidden style='width:100%;height:200px;margin-top:8px'>" + esc(p.md) + "</textarea>";
       body.textContent = p.md;
       document.getElementById("nt-view").onclick = e => { const pl = document.getElementById("nt-plan"); pl.hidden = !pl.hidden; e.target.textContent = pl.hidden ? "View next-test plan ↓" : "Hide next-test plan ↑"; };

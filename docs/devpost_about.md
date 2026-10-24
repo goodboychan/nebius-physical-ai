@@ -43,6 +43,9 @@ For every candidate engine, QuantGate answers three questions.
 A one-command CLI (`quantgate.py review | ask | preflight | cost | verify`) rebuilds the whole review from
 committed, hashed evidence.
 
+**Bring your own results**: `quantgate.py judge your_results.csv` reads another team's success counts with the same
+rules and returns a deployment decision, the reason and the next test (example: `examples/my_results.csv`).
+
 ### What is new here
 
 A gate in front of deployment, or a model that proposes while code decides, is not new on its own. What QuantGate adds

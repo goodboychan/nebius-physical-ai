@@ -63,6 +63,22 @@ is the combination, measured on a real arm:
 4. **The line between "better" and "approved".** An improvement, a cheaper build or a passing check is reported as what
    it is; deployment stays HOLD until the pre-registered rule says otherwise.
 
+## Judge your own results
+
+Bring the success counts of your own builds, and QuantGate reads them with the same rules this study used (Newcombe
+intervals, a 10 pp tolerance, the ceiling clause or the revised rule, and the sample-size plan):
+
+```bash
+.venv/bin/python scripts/quantgate.py judge examples/my_results.csv             # the study's rule, with the ceiling clause
+.venv/bin/python scripts/quantgate.py judge examples/my_results.csv --rule revised
+```
+
+One row per comparison: `candidate, reference, cand_successes, cand_trials, ref_successes, ref_trials`, optionally
+`gpu_ms, energy_mj, placement_ok, preflight_ok, mode (improvement), assumed_rate`. Each row gets a deployment decision
+(GO / HOLD / BLOCK), the evidence finding, why, and the next test with trials per arm. A GO needs the success criterion,
+the placement check and the preflight; an improvement alone is never a GO. The first example row is this study's FP16
+result and reproduces its reading (19/20 vs 10/10: degradation 5.0 pp, 97.5% interval [−28.7, +27.3], HOLD).
+
 ## Quickstart: one command for the review
 
 ```bash
