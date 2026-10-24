@@ -1142,3 +1142,13 @@ Wording, also from the review:
   Face datasets are public (checked anonymously). Before the repository goes public, three internal files (a company
   seminar deck builder, an internal-hackathon episode bundler and an ideation note) were removed from the tree and kept
   locally; their past versions remain in the git history. Secret check: see below.
+- 2026-10-24, after LOCK-4, presentation only (no number changed). The dashboard gets two panels, after the user asked
+  which concepts from another project's page could be reused. The concepts were taken; the visual style was not.
+  - "The build passed. Did the robot do the same thing?" opens the Evidence group. It collects four changes that raise
+    no error: the normalization fault injection, the 3 cm shift (12/12 → 3/12), the knocked wrist camera
+    (chatter 0.13 → 0.39) and the duplicated trial log found in usability review 4. Each row names its record.
+  - "Four rules the code enforces" opens How it works. Each rule links the code and tests that enforce it.
+  - Every number was checked against `ft_analysis.json`, `fp16_real_arm_preregistration.md` §15, the existing
+    failure-gallery cards and `preflight_demo.json`.
+  - The developer tools added on 10/24 are logged in their commits: judge validation, `preflight --card`,
+    `--checks-only` / `--judge`, `tally`, the CI example and `TRY_IT.md`. User tests are in `docs/user_tests.md`.
