@@ -70,8 +70,26 @@ Expected for the first row (this study's FP16):
 - Use `mode` = `improvement` for a fine-tune compared with the policy it replaces; leave it empty for "is the cheaper
   build as good as the reference".
 - `--tol 5` makes the tolerance stricter, and the next test's trials per arm grow with it (about 400 per arm).
-- Try a typo, such as `mode` = `improvment` or a column named `mod`. QuantGate refuses it with the row or column
-  instead of guessing. Cells with only spaces count as empty, so a CSV saved from a spreadsheet works.
+- See it refuse bad input. In the last row (`Fine-tune`), change `improvement` in the `mode` column to `typo`, or in
+  the first row change `11.6` in the `gpu_ms` column to `-5`, then run judge again: it stops with the row number and
+  exit 2 instead of guessing. Renaming the `mode` header to `mod` is refused too. Cells with only spaces count as
+  empty, so a CSV saved from a spreadsheet works.
+
+### From trial logs to the CSV row
+
+If your runs are logged one JSON object per trial (JSONL), `tally` counts them per build and prints the row. Say
+what counts as a success, because the count depends on it. This study's FP16 log gives 18/20 vs 9/10 with the live
+automatic judge, and 19/20 vs 10/10 (the published result) with the pre-registered outcome:
+
+```bash
+.venv/bin/python scripts/quantgate.py tally artifacts/trials/fp16_unsealed/stress_fp16_F0_sealed.jsonl \
+    --candidate VC-025 --reference VC-000 \
+    --success artifacts/fp16/rejudge/F0_consensus.json:success_geom --and released --not human_contact
+```
+
+For your own log: `--group` is the field naming the build (default `cell`), `--success` the outcome field (default
+`success`; dotted paths work), `--append my_results.csv` adds the row, and `--set placement_ok=yes` fills other columns.
+Trials marked `invalid` or `aborted` are left out by default (`--drop`).
 
 ## 4. Preflight a build
 
@@ -88,11 +106,23 @@ Edit [`examples/candidate/candidate.json`](../examples/candidate/candidate.json)
 | `"verdict": "GO"` | OK, exit 0 (synthetic card: this only tests the pass branch, it is not an approval) |
 | `"latency_ms": -1` | refused, exit 2 |
 
+Or change one byte of a file next to the card: `printf x >> examples/candidate/policy.engine` blocks at the engine
+check, and the same on `policy.norm_stats.npz` blocks at the normalization check. This is the swapped-file mistake the
+preflight exists to catch. Run `git checkout examples/candidate` afterwards.
+
 The example card uses stand-in files, so these edits only exercise each branch of the preflight. In a real deployment
 the verdict comes from the judge's output (`judge ... --json out.json`) and the engine hash from the build that was
 audited; copy both from those files rather than typing them.
 
 The fields are explained in the README under [Preflight your own build](../README.md#preflight-your-own-build).
+
+## 5. Use it as a release gate in CI
+
+[`.github/workflows/quantgate-gate.yml`](../.github/workflows/quantgate-gate.yml) runs judge and the preflight when
+the results CSV or the card changes. It writes the decision to the job summary and, on a pull request, as a comment.
+`judge --gate` turns the decision into the exit code (0 all GO, 3 any HOLD, 4 any BLOCK). Copy the file into your
+repository, point `RESULTS` and `CARD` at your files, pin `QUANTGATE_REF` to a commit, and pick `FAIL_ON` (`block`,
+`hold` or `none`).
 
 ## What needs more than a laptop
 

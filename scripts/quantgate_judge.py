@@ -21,7 +21,9 @@ Rules (the pre-registered ones, see docs/fp16_real_arm_preregistration.md and ne
     preflight_ok is no; otherwise HOLD. An improvement is never a GO by itself.
   - next test: trials per arm for 80% power on the success criterion at the same tolerance under the revised rule,
     assuming both builds truly succeed at the pooled observed rate (a planning estimate, not a guarantee).
-Usage: python scripts/quantgate_judge.py <results.csv> [--rule current|revised] [--tol 10] [--json out.json]"""
+With --gate the exit code carries the decision for CI: 0 every row GO, 3 any HOLD (none blocked), 4 any BLOCK; bad input
+exits 2 either way.
+Usage: python scripts/quantgate_judge.py <results.csv> [--rule current|revised] [--tol 10] [--json out.json] [--md out.md] [--gate]"""
 import argparse, csv, json, math, os, sys
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 from g6_analysis import newcombe
@@ -134,6 +136,11 @@ def judge(rows, rule="current", tol=10.0, lines=None):
         best = min(ok, key=lambda x: (x["gpu_ms"], x.get("energy_mj", math.inf))); best["priority"] = "validate first (cheapest build that is not blocked)"
     return res
 
+def gate(res):
+    d = {x["decision"] for x in res}
+    return 4 if "BLOCK" in d else 3 if "HOLD" in d else 0
+
+
 def md(res, rule, tol):
     L = [f"# QuantGate judge ({'current rule, with the ceiling clause' if rule == 'current' else 'revised rule'}, tolerance {tol:g} pp)", ""]
     for x in res:
@@ -148,10 +155,13 @@ def md(res, rule, tol):
 
 if __name__ == "__main__":
     ap = argparse.ArgumentParser(); ap.add_argument("csv"); ap.add_argument("--rule", choices=["current", "revised"], default="current")
-    ap.add_argument("--tol", type=float, default=10.0); ap.add_argument("--json"); a = ap.parse_args()
+    ap.add_argument("--tol", type=float, default=10.0); ap.add_argument("--json"); ap.add_argument("--md", help="also write the report as Markdown (e.g. for a PR comment)")
+    ap.add_argument("--gate", action="store_true", help="exit 0 if every row is GO, 3 if any is HOLD, 4 if any is BLOCK"); a = ap.parse_args()
     try:
         rows, lines = read_csv(a.csv); res = judge(rows, a.rule, a.tol, lines)
     except FileNotFoundError: print(f"error: file not found: {a.csv}", file=sys.stderr); sys.exit(2)
     except InputError as e: print(f"error: {a.csv}: {e}", file=sys.stderr); sys.exit(2)
     if a.json: json.dump(res, open(a.json, "w"), indent=1)
-    print(md(res, a.rule, a.tol))
+    text = md(res, a.rule, a.tol); print(text)
+    if a.md: open(a.md, "w").write(text + "\n")
+    if a.gate: sys.exit(gate(res))

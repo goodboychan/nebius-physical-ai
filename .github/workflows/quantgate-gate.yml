@@ -1,0 +1,74 @@
+# QuantGate as a release gate: when results or a candidate card change, judge them and preflight the card, write the
+# decision to the job summary and, on a pull request, as a comment.
+# To use it in your own repository, copy this file and set RESULTS, CARD and FAIL_ON. It checks out QuantGate at a
+# pinned commit next to your code (QUANTGATE_REF), so a QuantGate change never moves your gate by itself.
+name: quantgate-gate
+
+on:
+  pull_request:
+    paths: ["examples/my_results.csv", "examples/candidate/**", ".github/workflows/quantgate-gate.yml"]
+  push:
+    branches: [main]
+    paths: ["examples/my_results.csv", "examples/candidate/**", ".github/workflows/quantgate-gate.yml"]
+
+permissions:
+  contents: read
+  pull-requests: write      # for the PR comment only
+
+env:
+  RESULTS: examples/my_results.csv              # your judge CSV (quantgate.py tally can write it from trial logs)
+  CARD: examples/candidate/candidate.json       # your candidate card
+  FAIL_ON: none   # block: fail the check on any BLOCK; hold: fail on HOLD or BLOCK; none: report only
+                  # (none here, because the example CSV contains blocked rows on purpose)
+  QUANTGATE_REPO: goodboychan/nebius-physical-ai
+  QUANTGATE_REF: main                           # pin a commit sha in your copy
+
+jobs:
+  gate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/checkout@v4
+        with:
+          repository: ${{ env.QUANTGATE_REPO }}
+          ref: ${{ env.QUANTGATE_REF }}
+          path: .quantgate
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: pip install -q numpy scipy PyYAML
+
+      - name: Judge and preflight
+        id: q
+        run: |
+          set +e
+          python .quantgate/scripts/quantgate.py judge "$RESULTS" --rule revised --md judge.md --json judge.json --gate > /dev/null
+          j=$?
+          python .quantgate/scripts/quantgate.py preflight --card "$CARD" --json preflight.json > preflight.txt
+          p=$?
+          set -e
+          [ "$j" -le 4 ] && [ "$j" -ne 1 ] && [ "$j" -ne 2 ] || { cat judge.md 2>/dev/null; echo "judge failed (exit $j)"; exit 1; }
+          [ "$p" -ne 1 ] && [ "$p" -ne 2 ] || { cat preflight.txt; echo "preflight failed (exit $p)"; exit 1; }
+          name() { case $1 in 0) echo GO;; 3) echo HOLD;; 4) echo BLOCK;; esac; }
+          pf=$(case $p in 0) echo OK;; 3) echo HOLD;; 4) echo BLOCK;; esac)
+          { echo "## QuantGate: judge (worst row) $(name $j), preflight $pf"
+            echo; echo "Results: \`$RESULTS\` · card: \`$CARD\` · QuantGate \`$(git -C .quantgate rev-parse --short HEAD)\`"; echo
+            cat judge.md; echo; echo "### Preflight"; echo '```'; cat preflight.txt; echo '```'; } > report.md
+          cat report.md >> "$GITHUB_STEP_SUMMARY"
+          echo "judge=$j" >> "$GITHUB_OUTPUT"; echo "preflight=$p" >> "$GITHUB_OUTPUT"
+
+      - name: Comment on the pull request
+        if: github.event_name == 'pull_request'
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const body = require('fs').readFileSync('report.md', 'utf8');
+            await github.rest.issues.createComment({ ...context.repo, issue_number: context.issue.number, body });
+
+      - name: Apply the gate
+        run: |
+          worst=$(( ${{ steps.q.outputs.judge }} > ${{ steps.q.outputs.preflight }} ? ${{ steps.q.outputs.judge }} : ${{ steps.q.outputs.preflight }} ))
+          case "$FAIL_ON:$worst" in
+            block:4|hold:3|hold:4) echo "gate closed (FAIL_ON=$FAIL_ON)"; exit 1;;
+            *) echo "gate: worst exit $worst, FAIL_ON=$FAIL_ON";;
+          esac

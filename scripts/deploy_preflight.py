@@ -44,6 +44,8 @@ def preflight(card):
         G["resolve_norm"](card["engine"], require_manifest=True); steps.append(("normalization", True, "manifest and hash match"))
     except SystemExit:
         steps.append(("normalization", False, "runner refuses: manifest missing or normalization file mismatched")); return "BLOCK", steps
+    except (ValueError, KeyError, TypeError, AttributeError, OSError):   # a corrupted manifest must block, not crash
+        steps.append(("normalization", False, "norm_manifest.json is unreadable or malformed")); return "BLOCK", steps
     L = card["latency_ms"]   # a measured latency is a positive finite number; anything else cannot meet the contract
     ok = not isinstance(L, bool) and isinstance(L, (int, float)) and math.isfinite(L) and 0 < L <= DEADLINE_MS
     steps.append(("timing contract", ok, f"{card['latency_label']} {card['latency_ms']} ms vs chunk deadline {DEADLINE_MS:.0f} ms"))

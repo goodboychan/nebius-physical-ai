@@ -85,6 +85,9 @@ result and reproduces its reading (19/20 vs 10/10: degradation 5.0 pp, 97.5% int
 120 at 10 pp, 50 at 20 pp). Input the rules do not define is refused with the row number and exit 2: an unknown `mode`
 (only `non-inferiority`, empty, or `improvement`), a yes/no typo, counts that are not whole numbers, a bad number, or an
 unknown, duplicate or missing column name (a misspelled `mode` column must not turn an improvement test into a GO).
+From per-trial JSONL logs, `quantgate.py tally` writes the row with an explicit success definition; `judge --gate`
+makes the exit code the decision for CI ([`quantgate-gate.yml`](.github/workflows/quantgate-gate.yml) comments it on a
+pull request). Walkthrough: [docs/TRY_IT.md](docs/TRY_IT.md); what testers found: [docs/user_tests.md](docs/user_tests.md).
 
 ## Preflight your own build
 

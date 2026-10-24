@@ -9,7 +9,9 @@
   quantgate.py ask "<question>"    ask the review (Nemotron picks the rows, code prints verdicts and numbers)
   quantgate.py preflight [--card c.json]  the four-check preflight on your own candidate card (exit 0 OK, 3 HOLD,
                                    4 BLOCK), or without --card its fault-injection demo
-  quantgate.py judge <csv>         your own results under the same rules: decision, why, next test (examples/my_results.csv)
+  quantgate.py judge <csv>         your own results under the same rules: decision, why, next test (examples/my_results.csv);
+                                   --gate makes the exit code the decision (0 GO, 3 HOLD, 4 BLOCK) for CI
+  quantgate.py tally <log.jsonl>   per-trial logs -> the judge CSV row, with an explicit success definition
   quantgate.py cost                what the review cost (Nebius list prices, real-arm hours)
   quantgate.py verify              tests, runner harness, and the sealed-log hashes against the post-lock records
   quantgate.py stages              the hardware and cloud stages that produce the evidence, with their commands
@@ -75,7 +77,7 @@ def need_key(cmd):
 def main(argv=None):
     import argparse
     ap = argparse.ArgumentParser(prog="quantgate.py", description="QuantGate: the deployment review of quantized robot policies.",
-                                 epilog="Exit codes: 0 ok; 1 a step failed or NEBIUS_API_KEY is missing; 2 usage error (unknown command, option, candidate or bad card); preflight --card: 3 HOLD, 4 BLOCK.")
+                                 epilog="Exit codes: 0 ok; 1 a step failed or NEBIUS_API_KEY is missing; 2 usage error (unknown command, option, candidate or bad card); preflight --card and judge --gate: 3 HOLD, 4 BLOCK.")
     sub = ap.add_subparsers(dest="cmd", required=True, metavar="<command>")
     r = sub.add_parser("review", help="rebuild the decision layer from committed evidence")
     r.add_argument("--no-llm", action="store_true", help="skip the Nemotron report (no key, no network)")
@@ -87,6 +89,11 @@ def main(argv=None):
     f.add_argument("--json", help="with --card: also write the result as JSON")
     j = sub.add_parser("judge", help="your own results under the same rules (examples/my_results.csv)")
     j.add_argument("csv"); j.add_argument("--rule", choices=["current", "revised"], default="current"); j.add_argument("--tol", type=float, default=10.0); j.add_argument("--json")
+    j.add_argument("--md", help="also write the report as Markdown"); j.add_argument("--gate", action="store_true", help="exit 0 all GO, 3 any HOLD, 4 any BLOCK (for CI)")
+    sub.add_parser("tally", help="per-trial JSONL logs -> one judge CSV row (quantgate.py tally -h)")
+    argv = sys.argv[1:] if argv is None else argv
+    if argv[:1] == ["tally"]:   # its own parser, so `tally -h` shows the tally options
+        sys.path.insert(0, HERE); import quantgate_tally; sys.exit(quantgate_tally.main(argv[1:]))
     sub.add_parser("cost", help="what the review cost (Nebius list prices, real-arm hours)")
     sub.add_parser("verify", help="tests, runner harness, and the sealed-log hashes against the post-lock records")
     sub.add_parser("stages", help="the hardware and cloud stages that produce the evidence")
@@ -107,7 +114,10 @@ def main(argv=None):
             sys.path.insert(0, HERE); import deploy_preflight as dp; sys.exit(dp.run_card(a.card, a.json))
         if a.json: ap.error("preflight --json needs --card")
         run("scripts/deploy_preflight.py")
-    elif a.cmd == "judge": run("scripts/quantgate_judge.py", a.csv, "--rule", a.rule, "--tol", str(a.tol), *(["--json", a.json] if a.json else []))
+    elif a.cmd == "judge":   # the step runs from the repo root, so the user's paths are made absolute first
+        ab = os.path.abspath
+        run("scripts/quantgate_judge.py", ab(a.csv), "--rule", a.rule, "--tol", str(a.tol), *(["--json", ab(a.json)] if a.json else []),
+            *(["--md", ab(a.md)] if a.md else []), *(["--gate"] if a.gate else []))
     elif a.cmd == "cost": run("scripts/review_cost.py")
     elif a.cmd == "verify": verify()
     elif a.cmd == "stages": print(STAGES)
@@ -115,4 +125,4 @@ def main(argv=None):
 
 if __name__ == "__main__":
     try: main()
-    except subprocess.CalledProcessError as e: sys.exit(e.returncode)   # the step already printed its error; no second traceback
+    except subprocess.CalledProcessError as e: sys.exit(e.returncode)   # the step already printed its error (or its gate code); no traceback

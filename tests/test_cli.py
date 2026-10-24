@@ -55,3 +55,33 @@ def test_card_latency_must_be_positive_and_finite(tmp_path):
         r = q("preflight", "--card", str(d / "candidate.json")); assert r.returncode == 2 and "latency_ms" in r.stderr, bad
     sys.path.insert(0, str(ROOT / "scripts")); import deploy_preflight as dp   # the check itself also refuses, not only the loader
     assert dp.preflight({**dp.load_card(str(ROOT / "examples/candidate/candidate.json")), "latency_ms": -1, "verdict": "GO"})[0] == "BLOCK"
+
+
+def test_tally_reproduces_the_study_from_the_sealed_log(tmp_path):
+    """Tester feedback (2026-10-24): logs -> judge row. The success definition decides the count."""
+    log = "artifacts/trials/fp16_unsealed/stress_fp16_F0_sealed.jsonl"; base = ["tally", log, "--candidate", "VC-025", "--reference", "VC-000"]
+    assert q(*base).stdout.splitlines()[1] == "VC-025,VC-000,18,20,9,10"     # live automatic judge
+    r = q(*base, "--success", "artifacts/fp16/rejudge/F0_consensus.json:success_geom", "--and", "released", "--not", "human_contact")
+    assert r.stdout.splitlines()[1] == "VC-025,VC-000,19,20,10,10"            # pre-registered outcome, as in fp16_analysis.json
+    out = tmp_path / "r.csv"
+    assert q(*base, "--set", "placement_ok=yes", "--append", str(out)).returncode == 0
+    assert q("judge", str(out)).returncode == 0
+    for bad in (["--candidate", "VC-999"], ["--set", "mode=improvment"], ["--success", "nope.json:x"], ["--success", "steps"]):
+        r = q(*base, *bad); assert r.returncode == 2 and "Traceback" not in r.stderr, (bad, r.stderr)
+
+
+def test_judge_gate_and_paths_from_another_folder(tmp_path):
+    """judge --gate: 0 all GO, 3 any HOLD, 4 any BLOCK; a relative path is the caller's, not the repo's."""
+    H = "candidate,reference,cand_successes,cand_trials,ref_successes,ref_trials,placement_ok,preflight_ok\n"
+    for rows, want in (("A,B,118,120,117,120,yes,yes\n", 0), ("A,B,19,20,10,10,yes,yes\n", 3), ("A,B,118,120,117,120,yes,no\nA,B,19,20,10,10,yes,yes\n", 4)):
+        (tmp_path / "r.csv").write_text(H + rows)
+        r = subprocess.run([*CLI, "judge", "r.csv", "--rule", "revised", "--gate", "--md", "r.md"], cwd=tmp_path, capture_output=True, text=True)
+        assert r.returncode == want, (rows, r.returncode, r.stderr)
+        assert (tmp_path / "r.md").read_text().startswith("# QuantGate judge")
+
+
+def test_malformed_manifest_blocks_not_crashes(tmp_path):
+    d = tmp_path / "c"; shutil.copytree(ROOT / "examples/candidate", d)
+    for text in ("{broken", '["x"]', '{"policy": 3}'):
+        (d / "norm_manifest.json").write_text(text)
+        r = q("preflight", "--card", str(d / "candidate.json")); assert r.returncode == 4 and "Traceback" not in r.stderr, (text, r.stderr)
