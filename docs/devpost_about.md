@@ -43,6 +43,20 @@ For every candidate engine, QuantGate answers three questions.
 A one-command CLI (`quantgate.py review | ask | preflight | cost | verify`) rebuilds the whole review from
 committed, hashed evidence.
 
+### What is new here
+
+A gate in front of deployment, or a model that proposes while code decides, is not new on its own. What QuantGate adds
+is the combination, measured on a real arm:
+
+1. **The same policy, compared across its deployable builds.** FP32, FP16 and 24 INT8 calibrations of one checkpoint,
+   with cost measured on the Jetson and behaviour measured on the arm, side by side.
+2. **Physical causes kept apart from the build.** Grip friction, the start position, a smaller can and a knocked wrist
+   camera are tracked as deployment conditions, so a failure is not blamed on the precision by default.
+3. **A fix that was checked, twice.** Failure found → new demonstrations → fine-tune → sealed comparison at conditions
+   never in training, then the same again for the gaps the first fix left.
+4. **The line between "better" and "approved".** An improvement, a cheaper build or a passing check is reported as what
+   it is; deployment stays HOLD until the pre-registered rule says otherwise.
+
 ### Which model does what
 
 | Part | Model or tool | Its job | What it is not allowed to do |
