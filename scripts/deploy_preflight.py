@@ -9,6 +9,10 @@ For a candidate, four checks run in order. The first failing check decides the o
                          NOT_DETECTED -> HOLD (with the next action); any other label -> BLOCK (external review 6)
 A card of your own (examples/candidate/candidate.json) runs the same four checks:
   python scripts/deploy_preflight.py --card examples/candidate/candidate.json      exit 0 OK, 3 HOLD, 4 BLOCK, 2 bad card
+Linked with the judge, so the readiness result and the evidence come from files, not hand copies (examples/gate/):
+  1. --card c.json --checks-only --json pre.json      engine, normalization, timing only
+  2. quantgate.py judge results.csv --preflight pre.json --json judge.json    fills preflight_ok for the card's candidate
+  3. --card c.json --judge judge.json                 all four checks, the verdict taken from the judge row
 The demo builds a scratch folder with stand-in engine and normalization files, then runs a nominal case and
 deliberately broken cases. The broken cases are labelled FAULT INJECTION; they are not observed failures.
 Usage: python scripts/deploy_preflight.py [--out artifacts/reports] | --card <candidate.json> [--json out.json]"""
@@ -35,7 +39,8 @@ sha = lambda p: hashlib.sha256(open(p, "rb").read()).hexdigest()
 HOLD_VERDICTS = ("INSUFFICIENT_EVIDENCE", "IMPROVEMENT_DETECTED", "NOT_DETECTED")
 
 
-def preflight(card):
+def preflight(card, evidence=True):
+    """evidence=False runs only the readiness checks (engine, normalization, timing); judge reads that as preflight_ok."""
     steps = []
     ok = os.path.exists(card["engine"]) and sha(card["engine"]) == card["engine_sha256"]
     steps.append(("engine integrity", ok, "hash matches the recorded build" if ok else "engine file differs from the recorded build"))
@@ -50,6 +55,7 @@ def preflight(card):
     ok = not isinstance(L, bool) and isinstance(L, (int, float)) and math.isfinite(L) and 0 < L <= DEADLINE_MS
     steps.append(("timing contract", ok, f"{card['latency_label']} {card['latency_ms']} ms vs chunk deadline {DEADLINE_MS:.0f} ms"))
     if not ok: return "BLOCK", steps
+    if not evidence: return "OK", steps
     v = card["verdict"]   # only an explicit GO is approval; every other known label holds, anything unknown blocks
     if v == "GO": steps.append(("evidence", True, "GO within the validated conditions")); return "OK", steps
     if v in ("FLAGGED", "NO-GO"): steps.append(("evidence", False, f"{v}: {card['next_action']}")); return "BLOCK", steps
@@ -70,21 +76,40 @@ EXIT = {"OK": 0, "HOLD": 3, "BLOCK": 4}
 class CardError(ValueError): pass
 
 
-def load_card(path):
-    """Read and check a candidate card; the engine path is resolved relative to the card's folder."""
+def load_card(path, evidence_from_card=True):
+    """Read and check a candidate card; the engine path is resolved relative to the card's folder.
+    evidence_from_card=False (--checks-only, or --judge): verdict and next_action may be absent."""
     try: card = json.load(open(path))
     except FileNotFoundError: raise CardError(f"card not found: {path}")
     except json.JSONDecodeError as e: raise CardError(f"{path} is not valid JSON: {e}")
     if not isinstance(card, dict): raise CardError(f"{path}: expected a JSON object")
-    missing = [k for k in CARD_FIELDS if k not in card]
+    need = [k for k in CARD_FIELDS if evidence_from_card or k not in ("verdict", "next_action")]
+    missing = [k for k in need if k not in card]
     if missing: raise CardError(f"{path}: missing field(s) {', '.join(missing)}\n" + "\n".join(f"  {k}: {CARD_FIELDS[k]}" for k in missing))
     L = card["latency_ms"]
     if isinstance(L, bool) or not isinstance(L, (int, float)) or not math.isfinite(L) or L <= 0: raise CardError(f"{path}: latency_ms must be a positive number of ms, not {L!r}")
-    for k in ("engine", "engine_sha256", "latency_label", "verdict", "next_action"):
+    for k in [k for k in need if k != "latency_ms"] + (["candidate"] if "candidate" in card else []):
         if not isinstance(card[k], str): raise CardError(f"{path}: {k} must be a string")
     if not os.path.isabs(card["engine"]): card = {**card, "engine": os.path.join(os.path.dirname(os.path.abspath(path)), card["engine"])}
     if not os.path.exists(card["engine"]): raise CardError(f"{path}: engine file not found: {card['engine']}")
     return card
+
+
+def evidence_from_judge(card, judge_json):
+    """Take the verdict from the judge's output for this card's candidate (no hand copying), and refuse a judge row
+    that names a different build (engine_sha256 column) or a card without a candidate name."""
+    if not card.get("candidate"): raise CardError("--judge needs the card's `candidate` field: the judge CSV row it belongs to")
+    try: res = json.load(open(judge_json))
+    except FileNotFoundError: raise CardError(f"judge output not found: {judge_json}")
+    except json.JSONDecodeError as e: raise CardError(f"{judge_json} is not valid JSON: {e}")
+    rows = [x for x in res if isinstance(x, dict) and x.get("candidate") == card["candidate"]] if isinstance(res, list) else []
+    if len(rows) != 1: raise CardError(f"{judge_json}: expected one row for candidate {card['candidate']!r}, found {len(rows)}")
+    x = rows[0]
+    if x.get("engine_sha256") and x["engine_sha256"] != card["engine_sha256"]:
+        raise CardError(f"judge row {card['candidate']!r} is for engine {x['engine_sha256'][:12]}, the card for {card['engine_sha256'][:12]}: not the same build")
+    nt = x.get("next_test")
+    return {**card, "verdict": x["finding"], "next_action": (f"next test: about {nt['trials_per_arm']} trials per arm" if nt else x.get("why", "")),
+            "evidence_source": f"{judge_json} ({x['decision']})"}
 
 
 def demo(out):
@@ -118,13 +143,18 @@ def demo(out):
     return {"deadline_ms": DEADLINE_MS, "runner_constants": {k: CONST[k] for k in ("PREF", "BLEND", "FPS")}, "cases": res}
 
 
-def run_card(path, out_json=None):
-    try: card = load_card(path)
+def run_card(path, out_json=None, checks_only=False, judge_json=None):
+    try:
+        card = load_card(path, evidence_from_card=not (checks_only or judge_json))
+        if judge_json: card = evidence_from_judge(card, judge_json)
     except CardError as e: print(f"error: {e}", file=sys.stderr); return 2
-    outcome, steps = preflight(card)
+    outcome, steps = preflight(card, evidence=not checks_only)
     for name, ok, detail in steps: print(f"  {'pass' if ok else 'FAIL'}  {name:17} {detail}")
-    print(f"preflight: {outcome}" + ("" if outcome == "OK" else f" (exit {EXIT[outcome]})"))
-    if out_json: json.dump({"card": path, "outcome": outcome, "deadline_ms": DEADLINE_MS, "steps": [{"check": a, "pass": b, "detail": c} for a, b, c in steps]}, open(out_json, "w"), indent=1)
+    label = ("readiness checks" if checks_only else "preflight") + (f" (evidence: {card['evidence_source']})" if judge_json else "")
+    print(f"{label}: {outcome}" + ("" if outcome == "OK" else f" (exit {EXIT[outcome]})"))
+    if out_json:
+        json.dump({"card": path, "candidate": card.get("candidate"), "engine_sha256": card["engine_sha256"], "checks_only": checks_only,
+                   "outcome": outcome, "deadline_ms": DEADLINE_MS, "steps": [{"check": a, "pass": b, "detail": c} for a, b, c in steps]}, open(out_json, "w"), indent=1)
     return EXIT[outcome]
 
 
@@ -132,9 +162,12 @@ if __name__ == "__main__":
     ap = argparse.ArgumentParser(description="Deployment preflight: the built-in fault-injection demo, or your own candidate card.")
     ap.add_argument("--out", default="artifacts/reports", help="demo: folder with d3_v3_verdicts.json, where preflight_demo.json is written")
     ap.add_argument("--card", help="check your own candidate card instead of the demo (see examples/candidate/candidate.json)")
-    ap.add_argument("--json", help="with --card: also write the result as JSON"); a = ap.parse_args()
-    if a.card: sys.exit(run_card(a.card, a.json))
-    if a.json: ap.error("--json needs --card")
+    ap.add_argument("--json", help="with --card: also write the result as JSON")
+    ap.add_argument("--checks-only", action="store_true", help="with --card: engine, normalization and timing only (judge --preflight reads it)")
+    ap.add_argument("--judge", help="with --card: take the evidence verdict from this judge --json output, for the card's candidate"); a = ap.parse_args()
+    if (a.json or a.checks_only or a.judge) and not a.card: ap.error("--json, --checks-only and --judge need --card")
+    if a.checks_only and a.judge: ap.error("--checks-only skips the evidence check; --judge supplies it: use one")
+    if a.card: sys.exit(run_card(a.card, a.json, a.checks_only, a.judge))
     R = demo(a.out)
     json.dump(R, open(os.path.join(a.out, "preflight_demo.json"), "w"), indent=1)
     for c in R["cases"]:

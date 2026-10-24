@@ -1,27 +1,36 @@
-# QuantGate as a release gate: when results or a candidate card change, judge them and preflight the card, write the
-# decision to the job summary and, on a pull request, as a comment.
-# To use it in your own repository, copy this file and set RESULTS, CARD and FAIL_ON. It checks out QuantGate at a
-# pinned commit next to your code (QUANTGATE_REF), so a QuantGate change never moves your gate by itself.
+# QuantGate CI integration example (configurable; it blocks only if you set FAIL_ON).
+# When the results CSV or the candidate card changes, it runs the linked flow:
+#   1. preflight --checks-only   engine hash, normalization, timing of the card's build
+#   2. judge --preflight         the evidence decision, with preflight_ok taken from step 1 for the card's candidate
+#                                (and the CSV row's engine_sha256 must be the card's engine)
+#   3. preflight --judge         all four checks, the verdict taken from the judge row
+# It writes the result to the job summary and, on a pull request, as a comment.
+#
+# To use it in your repository: copy this file, then
+#   - set RESULTS and CARD to your files,
+#   - put the same paths under on.pull_request.paths and on.push.paths (the first step refuses a config where they
+#     are missing, because then a change to your files would not run the gate),
+#   - pin QUANTGATE_REF to a commit, and choose FAIL_ON.
 name: quantgate-gate
 
 on:
   pull_request:
-    paths: ["examples/my_results.csv", "examples/candidate/**", ".github/workflows/quantgate-gate.yml"]
+    paths: ["examples/gate/**", "examples/candidate/**", ".github/workflows/quantgate-gate.yml"]
   push:
     branches: [main]
-    paths: ["examples/my_results.csv", "examples/candidate/**", ".github/workflows/quantgate-gate.yml"]
+    paths: ["examples/gate/**", "examples/candidate/**", ".github/workflows/quantgate-gate.yml"]
 
 permissions:
   contents: read
   pull-requests: write      # for the PR comment only
 
 env:
-  RESULTS: examples/my_results.csv              # your judge CSV (quantgate.py tally can write it from trial logs)
-  CARD: examples/candidate/candidate.json       # your candidate card
-  FAIL_ON: none   # block: fail the check on any BLOCK; hold: fail on HOLD or BLOCK; none: report only
-                  # (none here, because the example CSV contains blocked rows on purpose)
+  RESULTS: examples/gate/results.csv            # judge CSV (quantgate.py tally can write it from trial logs)
+  CARD: examples/gate/candidate.json            # candidate card; its `candidate` names the CSV row
+  FAIL_ON: block    # block: fail the check on BLOCK; hold: fail on HOLD or BLOCK; none: report only
   QUANTGATE_REPO: goodboychan/nebius-physical-ai
   QUANTGATE_REF: main                           # pin a commit sha in your copy
+  WORKFLOW_FILE: .github/workflows/quantgate-gate.yml
 
 jobs:
   gate:
@@ -38,21 +47,23 @@ jobs:
           python-version: "3.12"
       - run: pip install -q numpy scipy PyYAML
 
-      - name: Judge and preflight
+      - name: Check the gate configuration
+        run: python .quantgate/scripts/gate_config_check.py "$WORKFLOW_FILE"
+
+      - name: Readiness checks, judge, full preflight
         id: q
         run: |
           set +e
-          python .quantgate/scripts/quantgate.py judge "$RESULTS" --rule revised --md judge.md --json judge.json --gate > /dev/null
-          j=$?
-          python .quantgate/scripts/quantgate.py preflight --card "$CARD" --json preflight.json > preflight.txt
-          p=$?
+          python .quantgate/scripts/quantgate.py preflight --card "$CARD" --checks-only --json pre.json > checks.txt; c=$?
+          [ "$c" = 0 ] || [ "$c" = 4 ] || { cat checks.txt; echo "readiness checks failed to run (exit $c)"; exit 1; }
+          python .quantgate/scripts/quantgate.py judge "$RESULTS" --rule revised --preflight pre.json --md judge.md --json judge.json --gate > /dev/null; j=$?
+          case $j in 0|3|4) ;; *) echo "judge failed to run (exit $j)"; exit 1;; esac
+          python .quantgate/scripts/quantgate.py preflight --card "$CARD" --judge judge.json --json preflight.json > preflight.txt; p=$?
+          case $p in 0|3|4) ;; *) cat preflight.txt; echo "preflight failed to run (exit $p)"; exit 1;; esac
           set -e
-          [ "$j" -le 4 ] && [ "$j" -ne 1 ] && [ "$j" -ne 2 ] || { cat judge.md 2>/dev/null; echo "judge failed (exit $j)"; exit 1; }
-          [ "$p" -ne 1 ] && [ "$p" -ne 2 ] || { cat preflight.txt; echo "preflight failed (exit $p)"; exit 1; }
-          name() { case $1 in 0) echo GO;; 3) echo HOLD;; 4) echo BLOCK;; esac; }
-          pf=$(case $p in 0) echo OK;; 3) echo HOLD;; 4) echo BLOCK;; esac)
-          { echo "## QuantGate: judge (worst row) $(name $j), preflight $pf"
-            echo; echo "Results: \`$RESULTS\` · card: \`$CARD\` · QuantGate \`$(git -C .quantgate rev-parse --short HEAD)\`"; echo
+          name() { case $1 in 0) echo "$2";; 3) echo HOLD;; 4) echo BLOCK;; esac; }
+          { echo "## QuantGate: judge (worst row) $(name $j GO), preflight $(name $p OK)"
+            echo; echo "Results: \`$RESULTS\` · card: \`$CARD\` · QuantGate \`$(git -C .quantgate rev-parse --short HEAD)\` · FAIL_ON=\`$FAIL_ON\`"; echo
             cat judge.md; echo; echo "### Preflight"; echo '```'; cat preflight.txt; echo '```'; } > report.md
           cat report.md >> "$GITHUB_STEP_SUMMARY"
           echo "judge=$j" >> "$GITHUB_OUTPUT"; echo "preflight=$p" >> "$GITHUB_OUTPUT"
@@ -66,9 +77,4 @@ jobs:
             await github.rest.issues.createComment({ ...context.repo, issue_number: context.issue.number, body });
 
       - name: Apply the gate
-        run: |
-          worst=$(( ${{ steps.q.outputs.judge }} > ${{ steps.q.outputs.preflight }} ? ${{ steps.q.outputs.judge }} : ${{ steps.q.outputs.preflight }} ))
-          case "$FAIL_ON:$worst" in
-            block:4|hold:3|hold:4) echo "gate closed (FAIL_ON=$FAIL_ON)"; exit 1;;
-            *) echo "gate: worst exit $worst, FAIL_ON=$FAIL_ON";;
-          esac
+        run: python .quantgate/scripts/gate_config_check.py --apply "$FAIL_ON" ${{ steps.q.outputs.judge }} ${{ steps.q.outputs.preflight }}

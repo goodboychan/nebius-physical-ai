@@ -16,6 +16,8 @@ Options:
   --and FIELD          also require FIELD to be true (repeatable)
   --not FIELD          also require FIELD to be false or absent (repeatable)
   --drop FIELD         leave out trials where FIELD is true, e.g. invalid or aborted (default: invalid, aborted)
+  --id FIELD           unique trial id (default: trial_id; with the log's `session` field when present). A trial
+                       that appears twice, in one file or across files, or a file given twice, stops with exit 2
   --append CSV         append the row to a judge CSV (writes the header if the file is new)
 Any judge column can be added with --set column=value (e.g. --set placement_ok=yes --set mode=improvement).
 Usage: python scripts/quantgate_tally.py <log.jsonl> [<log.jsonl> ...] --candidate C --reference R [options]"""
@@ -64,15 +66,28 @@ def tally(trials, candidate, reference, group="cell", success="success", require
             "ref_successes": out[reference][0], "ref_trials": out[reference][1]}
 
 
-def read_jsonl(paths):
-    rows = []
+def read_jsonl(paths, id_field="trial_id", session_field="session"):
+    """Read the logs and refuse any trial counted twice: the same file given twice, or the same trial in two places
+    (a copied file, overlapping exports). A trial is keyed by session + id when the log has a session field, else by id.
+    A duplicate would shrink the interval without a new trial and can turn HOLD into GO (usability review 4)."""
+    rows, first, files = [], {}, {}
     for p in paths:
+        rp = os.path.realpath(p)
+        if rp in files: raise TallyError(f"log given twice: {p} (same file as {files[rp]})")
+        files[rp] = p
         try: f = open(p)
         except FileNotFoundError: raise TallyError(f"log not found: {p}")
         for n, line in enumerate(f, 1):
             if not line.strip(): continue
-            try: rows.append(json.loads(line))
+            try: r = json.loads(line)
             except json.JSONDecodeError as e: raise TallyError(f"{p} line {n}: not JSON ({e.msg})")
+            if not isinstance(r, dict): raise TallyError(f"{p} line {n}: expected one JSON object per trial")
+            t = get(r, id_field)
+            if t in (None, ""): raise TallyError(f"{p} line {n}: no {id_field!r}; every trial needs a unique id (--id FIELD)")
+            key = (get(r, session_field), t)
+            if key in first: raise TallyError(f"duplicate trial {t!r}" + (f" (session {key[0]!r})" if key[0] is not None else "") +
+                                              f": {p} line {n} and {first[key]}; each trial may be counted once")
+            first[key] = f"{p} line {n}"; rows.append(r)
     return rows
 
 
@@ -84,7 +99,7 @@ def main(argv=None):
     ap.add_argument("--drop", action="append"); ap.add_argument("--set", action="append", default=[], metavar="COLUMN=VALUE")
     ap.add_argument("--append", metavar="CSV"); a = ap.parse_args(argv)
     try:
-        row = tally(read_jsonl(a.logs), a.candidate, a.reference, a.group, a.success, a.require, a.forbid,
+        row = tally(read_jsonl(a.logs, a.id), a.candidate, a.reference, a.group, a.success, a.require, a.forbid,
                     ("invalid", "aborted") if a.drop is None else a.drop, a.id)
         for s in a.set:
             k, eq, v = s.partition("=")

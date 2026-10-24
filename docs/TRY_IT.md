@@ -116,13 +116,39 @@ audited; copy both from those files rather than typing them.
 
 The fields are explained in the README under [Preflight your own build](../README.md#preflight-your-own-build).
 
-## 5. Use it as a release gate in CI
+## 5. Link the judge and the preflight
 
-[`.github/workflows/quantgate-gate.yml`](../.github/workflows/quantgate-gate.yml) runs judge and the preflight when
-the results CSV or the card changes. It writes the decision to the job summary and, on a pull request, as a comment.
-`judge --gate` turns the decision into the exit code (0 all GO, 3 any HOLD, 4 any BLOCK). Copy the file into your
-repository, point `RESULTS` and `CARD` at your files, pin `QUANTGATE_REF` to a commit, and pick `FAIL_ON` (`block`,
-`hold` or `none`).
+On their own, judge asks whether the preflight passed (`preflight_ok`) and the preflight asks for the judge's verdict.
+Linked, each takes the other's answer from a file instead of a hand copy. They are tied together by the card's
+`candidate` (its CSV row) and `engine_sha256` (the CSV row's build):
+
+```bash
+cd examples/gate
+Q=../../scripts/quantgate.py
+python $Q preflight --card candidate.json --checks-only --json pre.json               # engine, normalization, timing -> OK
+python $Q judge results.csv --rule revised --preflight pre.json --json judge.json     # preflight_ok filled from pre.json -> GO
+python $Q preflight --card candidate.json --judge judge.json                          # all four checks, verdict from judge.json -> OK
+```
+
+(Use `../../.venv/bin/python` if the venv is not active.) Then try `printf x >> ../candidate/policy.engine`: the
+checks block, judge turns the row into BLOCK, and so does the preflight. Run `git checkout ../candidate` afterwards.
+A CSV row whose `engine_sha256` is another build, or a hand-typed `preflight_ok` that disagrees with the checks, is
+refused with exit 2.
+
+### In CI (a configurable example)
+
+[`.github/workflows/quantgate-gate.yml`](../.github/workflows/quantgate-gate.yml) runs these three steps when the
+results or the card change. It writes the outcome to the job summary and, on a pull request, as a comment. In this
+repository it gates the `examples/gate/` files with `FAIL_ON: block`. To use it in yours:
+
+1. Set `RESULTS` and `CARD` to your files.
+2. Put the same paths under `on.pull_request.paths` and `on.push.paths`.
+3. Pin `QUANTGATE_REF` to a commit.
+4. Choose `FAIL_ON`: `block` fails on BLOCK, `hold` fails on HOLD or BLOCK, `none` reports only.
+
+The first step refuses a misconfiguration with exit 2 instead of letting the gate open silently: a `FAIL_ON` that is
+not one of the three, or `RESULTS`/`CARD` not covered by the path filters. The PR comment step has not yet run on a
+real pull request in this repository.
 
 ## What needs more than a laptop
 

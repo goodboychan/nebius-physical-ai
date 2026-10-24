@@ -1,0 +1,7 @@
+{
+ "candidate": "my build",
+ "engine": "../candidate/policy.engine",
+ "engine_sha256": "69ed240a720d3275972b0300bec49ecdb4af1b649606c03d8711f5c64081dc21",
+ "latency_ms": 96.4,
+ "latency_label": "max round trip over 120 trials (example value)"
+}

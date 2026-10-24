@@ -1,0 +1,2 @@
+candidate,reference,cand_successes,cand_trials,ref_successes,ref_trials,placement_ok,preflight_ok,engine_sha256
+my build,FP32,118,120,117,120,yes,,69ed240a720d3275972b0300bec49ecdb4af1b649606c03d8711f5c64081dc21

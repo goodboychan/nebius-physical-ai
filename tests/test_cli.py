@@ -85,3 +85,45 @@ def test_malformed_manifest_blocks_not_crashes(tmp_path):
     for text in ("{broken", '["x"]', '{"policy": 3}'):
         (d / "norm_manifest.json").write_text(text)
         r = q("preflight", "--card", str(d / "candidate.json")); assert r.returncode == 4 and "Traceback" not in r.stderr, (text, r.stderr)
+
+
+def test_tally_refuses_counting_a_trial_twice(tmp_path):
+    """Usability review 4: the same log 20 times read 380/400 vs 200/200 and turned HOLD into GO."""
+    log = "artifacts/trials/fp16_unsealed/stress_fp16_F0_sealed.jsonl"
+    (tmp_path / "copy.jsonl").write_text(open(ROOT / log).read())
+    (tmp_path / "part.jsonl").write_text("".join(open(ROOT / log).readlines()[5:8]))
+    (tmp_path / "noid.jsonl").write_text('{"cell": "VC-025", "success": true}\n')
+    base = ["--candidate", "VC-025", "--reference", "VC-000"]
+    for logs, msg in (([log, log], "log given twice"), ([log, "./" + log], "log given twice"), ([log, str(tmp_path / "copy.jsonl")], "duplicate trial"),
+                      ([log, str(tmp_path / "part.jsonl")], "duplicate trial"), ([str(tmp_path / "noid.jsonl")], "no 'trial_id'")):
+        r = q("tally", *logs, *base); assert r.returncode == 2 and msg in r.stderr, (logs, r.stderr)
+
+
+def test_linked_checks_judge_preflight(tmp_path):
+    """Usability review 4: readiness checks -> judge preflight_ok -> full preflight, tied by candidate name and engine hash."""
+    d = tmp_path / "ex"; shutil.copytree(ROOT / "examples", d); card, res = d / "gate/candidate.json", d / "gate/results.csv"
+    pre, jj = tmp_path / "pre.json", tmp_path / "judge.json"
+    def flow():
+        c = q("preflight", "--card", str(card), "--checks-only", "--json", str(pre)).returncode
+        j = q("judge", str(res), "--rule", "revised", "--preflight", str(pre), "--json", str(jj), "--gate")
+        p = q("preflight", "--card", str(card), "--judge", str(jj)).returncode if j.returncode in (0, 3, 4) else None
+        return c, j.returncode, p, j.stderr
+    assert flow()[:3] == (0, 0, 0)                                   # intact build: GO end to end
+    assert json.load(open(jj))[0]["engine_sha256"] == json.load(open(card))["engine_sha256"]
+    (d / "candidate/policy.engine").write_bytes(b"tampered")
+    c, j, p, _ = flow(); assert (c, j, p) == (4, 4, 4)               # tampered engine: blocked at every stage
+    shutil.copy(ROOT / "examples/candidate/policy.engine", d / "candidate/policy.engine")
+    res.write_text(res.read_text().replace(",yes,,", ",yes,no,")); assert flow()[1] == 2   # hand-entered preflight_ok disagrees
+    res.write_text(open(ROOT / "examples/gate/results.csv").read().replace(json.load(open(card))["engine_sha256"], "0" * 64))
+    c, j, p, err = flow(); assert j == 2 and "not the same build" in err  # CSV row names another engine
+    assert q("judge", str(res), "--preflight", str(ROOT / "examples/candidate/candidate.json")).returncode == 2   # not a checks-only output
+
+
+def test_gate_config_refuses_silent_misconfig(tmp_path):
+    """Usability review 4: FAIL_ON=holdd passed a BLOCK; RESULTS outside on.paths would never run the gate."""
+    G = [sys.executable, str(ROOT / "scripts/gate_config_check.py")]; W = ".github/workflows/quantgate-gate.yml"
+    env = lambda **kw: {**os.environ, **kw}
+    run = lambda *a, **kw: subprocess.run([*G, *a], cwd=ROOT, capture_output=True, text=True, env=env(**kw)).returncode
+    assert run(W) == 0 and run(W, FAIL_ON="holdd") == 2 and run(W, RESULTS="examples/my_results.csv") == 2
+    assert [run("--apply", f, "4", "0") for f in ("block", "hold", "none", "holdd")] == [1, 1, 0, 2]
+    assert [run("--apply", f, "3", "0") for f in ("block", "hold")] == [0, 1]

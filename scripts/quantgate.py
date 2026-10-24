@@ -87,9 +87,12 @@ def main(argv=None):
     f = sub.add_parser("preflight", help="the four-check preflight: your own card, or the fault-injection demo")
     f.add_argument("--card", help="your candidate card, e.g. examples/candidate/candidate.json (exit 0 OK, 3 HOLD, 4 BLOCK)")
     f.add_argument("--json", help="with --card: also write the result as JSON")
+    f.add_argument("--checks-only", action="store_true", help="with --card: engine, normalization and timing only (for judge --preflight)")
+    f.add_argument("--judge", help="with --card: take the verdict from this judge --json output for the card's candidate")
     j = sub.add_parser("judge", help="your own results under the same rules (examples/my_results.csv)")
     j.add_argument("csv"); j.add_argument("--rule", choices=["current", "revised"], default="current"); j.add_argument("--tol", type=float, default=10.0); j.add_argument("--json")
     j.add_argument("--md", help="also write the report as Markdown"); j.add_argument("--gate", action="store_true", help="exit 0 all GO, 3 any HOLD, 4 any BLOCK (for CI)")
+    j.add_argument("--preflight", help="fill preflight_ok from `preflight --card c.json --checks-only --json pre.json`")
     sub.add_parser("tally", help="per-trial JSONL logs -> one judge CSV row (quantgate.py tally -h)")
     argv = sys.argv[1:] if argv is None else argv
     if argv[:1] == ["tally"]:   # its own parser, so `tally -h` shows the tally options
@@ -111,13 +114,14 @@ def main(argv=None):
     elif a.cmd == "plan": plan(a.candidate)
     elif a.cmd == "preflight":
         if a.card:
-            sys.path.insert(0, HERE); import deploy_preflight as dp; sys.exit(dp.run_card(a.card, a.json))
-        if a.json: ap.error("preflight --json needs --card")
+            if a.checks_only and a.judge: ap.error("preflight: use --checks-only or --judge, not both")
+            sys.path.insert(0, HERE); import deploy_preflight as dp; sys.exit(dp.run_card(a.card, a.json, a.checks_only, a.judge))
+        if a.json or a.checks_only or a.judge: ap.error("preflight --json, --checks-only and --judge need --card")
         run("scripts/deploy_preflight.py")
     elif a.cmd == "judge":   # the step runs from the repo root, so the user's paths are made absolute first
         ab = os.path.abspath
         run("scripts/quantgate_judge.py", ab(a.csv), "--rule", a.rule, "--tol", str(a.tol), *(["--json", ab(a.json)] if a.json else []),
-            *(["--md", ab(a.md)] if a.md else []), *(["--gate"] if a.gate else []))
+            *(["--md", ab(a.md)] if a.md else []), *(["--gate"] if a.gate else []), *(["--preflight", ab(a.preflight)] if a.preflight else []))
     elif a.cmd == "cost": run("scripts/review_cost.py")
     elif a.cmd == "verify": verify()
     elif a.cmd == "stages": print(STAGES)

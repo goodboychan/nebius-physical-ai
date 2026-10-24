@@ -10,6 +10,8 @@ Input CSV columns (one row per comparison; the last four are optional):
     Values are stripped of spaces first; a value of only spaces counts as empty.
   - placement_ok / preflight_ok: yes, no or empty (not checked). A GO needs both to be yes.
   - assumed_rate: the true success rate to plan the next test with (default: the pooled observed rate).
+  - engine_sha256: the build the row's trials ran on; with --preflight it must match the card's engine.
+  --preflight pre.json fills preflight_ok for the card's candidate from `preflight --card c.json --checks-only --json`.
 
 Rules (the pre-registered ones, see docs/fp16_real_arm_preregistration.md and next_test_plan.py):
   - non-inferiority: degradation = reference - candidate. The success criterion is met when the upper bound of its
@@ -33,7 +35,7 @@ Z975 = ntp.Z                     # two-sided 97.5% (the non-inferiority interval
 Z95 = 1.959963984540054          # two-sided 95% (the improvement rule)
 MODES = ("non-inferiority", "improvement")
 REQUIRED = ("candidate", "reference", "cand_successes", "cand_trials", "ref_successes", "ref_trials")
-OPTIONAL = ("gpu_ms", "energy_mj", "placement_ok", "preflight_ok", "mode", "assumed_rate")
+OPTIONAL = ("gpu_ms", "energy_mj", "placement_ok", "preflight_ok", "mode", "assumed_rate", "engine_sha256")
 GRID = (50, 75, 100, 120, 150, 200, 300, 400, 600, 800, 1000, 1500, 2000)   # trials per arm searched for the next test
 
 
@@ -79,6 +81,8 @@ def check_row(r, where="row"):
     if mode not in MODES: raise InputError(f"{where}: unknown mode {r.get('mode')!r}; use non-inferiority (or leave it empty) or improvement")
     for k in ("placement_ok", "preflight_ok"):
         if (r.get(k) or "").strip() and yes(r[k]) is None: raise InputError(f"{where}: {k} must be yes, no or empty, not {r[k]!r}")
+    h = r.get("engine_sha256", "")
+    if h and not (len(h) == 64 and all(c in "0123456789abcdef" for c in h.lower())): raise InputError(f"{where}: engine_sha256 must be 64 hex characters")
     for k in ("gpu_ms", "energy_mj", "assumed_rate"):
         v = (r.get(k) or "").strip()
         if not v: continue
@@ -126,6 +130,7 @@ def judge_row(r, rule="current", tol=10.0, where="row"):
     if pre is False: out["why"] += "; the preflight failed"
     for k in ("gpu_ms", "energy_mj"):
         if r.get(k) not in (None, ""): out[k] = float(r[k])
+    if r.get("engine_sha256"): out["engine_sha256"] = r["engine_sha256"].lower()
     return out
 
 def judge(rows, rule="current", tol=10.0, lines=None):
@@ -135,6 +140,26 @@ def judge(rows, rule="current", tol=10.0, lines=None):
     if ok:   # validation priority: the cheapest build that is not blocked (cost first, energy second)
         best = min(ok, key=lambda x: (x["gpu_ms"], x.get("energy_mj", math.inf))); best["priority"] = "validate first (cheapest build that is not blocked)"
     return res
+
+def apply_preflight(rows, pre):
+    """Fill preflight_ok for the card's candidate from `preflight --checks-only --json` output, so it is not typed by
+    hand. Refuses a result that is not checks-only, a candidate missing from the CSV, a row naming another engine, and a
+    hand-entered preflight_ok that disagrees with the checks."""
+    if not isinstance(pre, dict) or not pre.get("checks_only"): raise InputError("--preflight needs the output of `preflight --card c.json --checks-only --json pre.json`")
+    c = pre.get("candidate")
+    if not c: raise InputError("--preflight: the card has no `candidate` field naming its CSV row")
+    hit = [r for r in rows if (r.get("candidate") or "").strip() == c]
+    if not hit: raise InputError(f"--preflight: no row for candidate {c!r} in the CSV")
+    ok = "yes" if pre.get("outcome") == "OK" else "no"
+    for r in hit:
+        h = (r.get("engine_sha256") or "").strip().lower()
+        if h and h != pre.get("engine_sha256"): raise InputError(f"--preflight: row {c!r} is for engine {h[:12]}, the card for {pre.get('engine_sha256', '')[:12]}: not the same build")
+        manual = (r.get("preflight_ok") or "").strip()
+        if manual and yes(manual) != (ok == "yes"): raise InputError(f"--preflight: row {c!r} says preflight_ok={manual} but the checks say {ok}")
+        r["preflight_ok"] = ok
+        if not h: r["engine_sha256"] = pre.get("engine_sha256", "")
+    return rows
+
 
 def gate(res):
     d = {x["decision"] for x in res}
@@ -156,9 +181,15 @@ def md(res, rule, tol):
 if __name__ == "__main__":
     ap = argparse.ArgumentParser(); ap.add_argument("csv"); ap.add_argument("--rule", choices=["current", "revised"], default="current")
     ap.add_argument("--tol", type=float, default=10.0); ap.add_argument("--json"); ap.add_argument("--md", help="also write the report as Markdown (e.g. for a PR comment)")
-    ap.add_argument("--gate", action="store_true", help="exit 0 if every row is GO, 3 if any is HOLD, 4 if any is BLOCK"); a = ap.parse_args()
+    ap.add_argument("--gate", action="store_true", help="exit 0 if every row is GO, 3 if any is HOLD, 4 if any is BLOCK")
+    ap.add_argument("--preflight", help="fill preflight_ok for the card's candidate from `preflight --checks-only --json` output"); a = ap.parse_args()
     try:
-        rows, lines = read_csv(a.csv); res = judge(rows, a.rule, a.tol, lines)
+        rows, lines = read_csv(a.csv)
+        if a.preflight:
+            try: pre = json.load(open(a.preflight))
+            except (FileNotFoundError, json.JSONDecodeError) as e: raise InputError(f"--preflight {a.preflight}: {e}")
+            rows = apply_preflight(rows, pre)
+        res = judge(rows, a.rule, a.tol, lines)
     except FileNotFoundError: print(f"error: file not found: {a.csv}", file=sys.stderr); sys.exit(2)
     except InputError as e: print(f"error: {a.csv}: {e}", file=sys.stderr); sys.exit(2)
     if a.json: json.dump(res, open(a.json, "w"), indent=1)
