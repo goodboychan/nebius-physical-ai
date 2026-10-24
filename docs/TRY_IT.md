@@ -55,7 +55,8 @@ Expected for the first row (this study's FP16):
 - Use `mode` = `improvement` for a fine-tune compared with the policy it replaces; leave it empty for "is the cheaper
   build as good as the reference".
 - `--tol 5` makes the tolerance stricter, and the next test's trials per arm grow with it (about 400 per arm).
-- Try a typo, such as `mode` = `improvment`. QuantGate refuses it with the row number instead of guessing.
+- Try a typo, such as `mode` = `improvment` or a column named `mod`. QuantGate refuses it with the row or column
+  instead of guessing. Cells with only spaces count as empty, so a CSV saved from a spreadsheet works.
 
 ## 4. Preflight a build
 
@@ -69,8 +70,12 @@ Edit [`examples/candidate/candidate.json`](../examples/candidate/candidate.json)
 | --- | --- |
 | `"latency_ms": 264` | BLOCK, exit 4: misses the 200 ms chunk deadline |
 | `"engine_sha256"` changed | BLOCK, exit 4: not the audited build |
-| `"verdict": "GO"` | OK, exit 0 |
+| `"verdict": "GO"` | OK, exit 0 (synthetic card: this only tests the pass branch, it is not an approval) |
 | `"latency_ms": -1` | refused, exit 2 |
+
+The example card uses stand-in files, so these edits only exercise each branch of the preflight. In a real deployment
+the verdict comes from the judge's output (`judge ... --json out.json`) and the engine hash from the build that was
+audited; copy both from those files rather than typing them.
 
 The fields are explained in the README under [Preflight your own build](../README.md#preflight-your-own-build).
 

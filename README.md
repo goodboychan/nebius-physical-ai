@@ -83,7 +83,8 @@ the placement check and the preflight; an improvement alone is never a GO. The f
 result and reproduces its reading (19/20 vs 10/10: degradation 5.0 pp, 97.5% interval [−28.7, +27.3], HOLD).
 `--tol` sets the tolerance for both the decision and the next test's trials per arm (at 96%: about 400 per arm at 5 pp,
 120 at 10 pp, 50 at 20 pp). Input the rules do not define is refused with the row number and exit 2: an unknown `mode`
-(only `non-inferiority`, empty, or `improvement`), a yes/no typo, counts that are not whole numbers, or a bad number.
+(only `non-inferiority`, empty, or `improvement`), a yes/no typo, counts that are not whole numbers, a bad number, or an
+unknown, duplicate or missing column name (a misspelled `mode` column must not turn an improvement test into a GO).
 
 ## Preflight your own build
 

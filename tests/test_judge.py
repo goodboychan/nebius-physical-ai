@@ -54,3 +54,31 @@ def test_judge_cli_bad_input_exits_2(tmp_path):
     f = tmp_path / "r.csv"; f.write_text("candidate,reference,cand_successes,cand_trials,ref_successes,ref_trials,mode\nFT,OLD,12,12,3,12,improvment\n")
     r = subprocess.run([sys.executable, "scripts/quantgate.py", "judge", str(f)], cwd=ROOT, capture_output=True, text=True)
     assert r.returncode == 2 and "unknown mode 'improvment'" in r.stderr and "Traceback" not in r.stderr
+
+
+def _csv(tmp_path, text):
+    f = tmp_path / "r.csv"; f.write_text(text); return f
+
+
+def test_unknown_or_duplicate_column_is_refused(tmp_path):
+    """Usability review 3 (2026-10-24): a column named `mod` was ignored, so the row fell back to non-inferiority and read GO."""
+    import pytest
+    B = "candidate,reference,cand_successes,cand_trials,ref_successes,ref_trials,placement_ok,preflight_ok"
+    rows, lines = qj.read_csv(_csv(tmp_path, f"{B},mode\nFT,OLD,12,12,3,12,yes,yes,improvement\n"))
+    assert qj.judge(rows, "revised", lines=lines)[0]["decision"] == "HOLD"
+    for text, msg in ((f"{B},mod\nFT,OLD,12,12,3,12,yes,yes,improvement\n", "unknown column"),
+                      (f"{B},mode,mode\nFT,OLD,12,12,3,12,yes,yes,improvement,\n", "duplicate"),
+                      ("candidate,reference,cand_successes,cand_trials,ref_successes\nFT,OLD,12,12,3\n", "missing column"),
+                      (f"{B}\nFT,OLD,12,12,3,12,yes,yes,extra\n", "line 2"), ("", "empty")):
+        with pytest.raises(qj.InputError, match=msg): qj.read_csv(_csv(tmp_path, text))
+    with pytest.raises(qj.InputError, match="unknown column"): qj.judge([{**_row(), "mod": "improvement"}], "revised")
+
+
+def test_spaces_only_counts_as_empty(tmp_path):
+    """Usability review 3: gpu_ms or assumed_rate of " " passed the check and then crashed with ValueError."""
+    B = "candidate,reference,cand_successes,cand_trials,ref_successes,ref_trials,gpu_ms,assumed_rate,mode"
+    rows, lines = qj.read_csv(_csv(tmp_path, f"{B}\n FP16 , FP32 , 19 ,20,10,10, , ,  \n"))
+    x = qj.judge(rows, lines=lines)[0]
+    assert x["candidate"] == "FP16" and x["mode"] == "non-inferiority" and "gpu_ms" not in x and x["decision"] == "HOLD"
+    rows, _ = qj.read_csv(_csv(tmp_path, f"{B}\nFP16,FP32,19,20,10,10, 11.6 , 0.96 ,\n"))
+    x = qj.judge(rows)[0]; assert x["gpu_ms"] == 11.6 and x["next_test"]["trials_per_arm"] == 120

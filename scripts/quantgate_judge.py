@@ -5,7 +5,9 @@ same reading the review would give it. Nothing here is tuned to the SO-101 data.
 Input CSV columns (one row per comparison; the last four are optional):
   candidate, reference, cand_successes, cand_trials, ref_successes, ref_trials[, gpu_ms, energy_mj, placement_ok, preflight_ok]
   - mode is "non-inferiority" (a build vs its reference, e.g. FP16 vs FP32; also when empty) or "improvement"
-    (e.g. a fine-tune vs the policy it replaces). Any other value, a yes/no typo or a bad number stops with exit 2.
+    (e.g. a fine-tune vs the policy it replaces). Any other value, a yes/no typo or a bad number stops with exit 2,
+    and so does an unknown or duplicate column name (a misspelled `mode` column must not fall back to non-inferiority).
+    Values are stripped of spaces first; a value of only spaces counts as empty.
   - placement_ok / preflight_ok: yes, no or empty (not checked). A GO needs both to be yes.
   - assumed_rate: the true success rate to plan the next test with (default: the pooled observed rate).
 
@@ -28,6 +30,8 @@ import next_test_plan as ntp
 Z975 = ntp.Z                     # two-sided 97.5% (the non-inferiority interval of the plans)
 Z95 = 1.959963984540054          # two-sided 95% (the improvement rule)
 MODES = ("non-inferiority", "improvement")
+REQUIRED = ("candidate", "reference", "cand_successes", "cand_trials", "ref_successes", "ref_trials")
+OPTIONAL = ("gpu_ms", "energy_mj", "placement_ok", "preflight_ok", "mode", "assumed_rate")
 GRID = (50, 75, 100, 120, 150, 200, 300, 400, 600, 800, 1000, 1500, 2000)   # trials per arm searched for the next test
 
 
@@ -36,9 +40,35 @@ class InputError(ValueError): pass
 
 yes = lambda v: {"yes": True, "y": True, "true": True, "1": True, "no": False, "n": False, "false": False, "0": False}.get(str(v or "").strip().lower())
 
+def check_columns(cols):
+    """A misspelled column (e.g. `mod`) would otherwise be ignored and silently change the test, so refuse it."""
+    cols = [(c or "").strip() for c in cols]
+    dup = sorted({c for c in cols if cols.count(c) > 1})
+    if dup: raise InputError(f"header: duplicate column(s) {', '.join(dup)}")
+    unknown = [c for c in cols if c not in REQUIRED + OPTIONAL]
+    if unknown: raise InputError(f"header: unknown column(s) {', '.join(repr(c) for c in unknown)}; allowed: {', '.join(REQUIRED + OPTIONAL)}")
+    missing = [c for c in REQUIRED if c not in cols]
+    if missing: raise InputError(f"header: missing column(s) {', '.join(missing)}")
+
+
+def read_csv(path):
+    with open(path, encoding="utf-8-sig", newline="") as f:
+        rd = csv.reader(f); header = next(rd, None)
+        if header is None: raise InputError("empty file")
+        check_columns(header); header = [c.strip() for c in header]; rows, lines = [], []
+        for line, vals in enumerate(rd, 2):
+            if not any(v.strip() for v in vals): continue          # blank line
+            if len(vals) != len(header): raise InputError(f"line {line}: {len(vals)} values for {len(header)} columns")
+            rows.append(dict(zip(header, vals))); lines.append(line)
+    return rows, lines
+
+
 def check_row(r, where="row"):
-    """Refuse anything the rules do not define: a typo must stop the run, never change what is tested."""
-    for k in ("candidate", "reference", "cand_successes", "cand_trials", "ref_successes", "ref_trials"):
+    """Refuse anything the rules do not define: a typo must stop the run, never change what is tested.
+    Returns the row with every value stripped, so later steps only see normalized values."""
+    check_columns(list(r))
+    r = {k: (v if v is not None else "").strip() if isinstance(v, str) or v is None else str(v).strip() for k, v in r.items()}
+    for k in REQUIRED:
         if (r.get(k) or "").strip() == "": raise InputError(f"{where}: missing {k}")
     try: kc, nc, kr, nr = (int(r[k]) for k in ("cand_successes", "cand_trials", "ref_successes", "ref_trials"))
     except ValueError: raise InputError(f"{where}: success and trial counts must be whole numbers")
@@ -53,12 +83,12 @@ def check_row(r, where="row"):
         try: x = float(v)
         except ValueError: raise InputError(f"{where}: {k} must be a number, not {v!r}")
         if not math.isfinite(x) or x < 0 or (k == "assumed_rate" and not 0 < x < 1): raise InputError(f"{where}: {k} out of range: {v}")
-    return kc, nc, kr, nr, mode
+    return r, kc, nc, kr, nr, mode
 
 
 def judge_row(r, rule="current", tol=10.0, where="row"):
     if not (math.isfinite(tol) and 0 < tol < 100): raise InputError(f"tolerance must be between 0 and 100 pp, not {tol}")
-    kc, nc, kr, nr, mode = check_row(r, where)
+    r, kc, nc, kr, nr, mode = check_row(r, where)
     pc, pr = kc / nc, kr / nr; place, pre = yes(r.get("placement_ok")), yes(r.get("preflight_ok"))
     out = {"candidate": r["candidate"], "reference": r["reference"], "mode": mode, "candidate_k_n": [kc, nc], "reference_k_n": [kr, nr]}
     missing = []
@@ -96,9 +126,9 @@ def judge_row(r, rule="current", tol=10.0, where="row"):
         if r.get(k) not in (None, ""): out[k] = float(r[k])
     return out
 
-def judge(rows, rule="current", tol=10.0):
+def judge(rows, rule="current", tol=10.0, lines=None):
     if not rows: raise InputError("no rows")
-    res = [judge_row(r, rule, tol, f"row {i} (line {i + 1})") for i, r in enumerate(rows, 1)]
+    res = [judge_row(r, rule, tol, f"row {i}" + (f" (line {lines[i - 1]})" if lines else "")) for i, r in enumerate(rows, 1)]
     ok = [x for x in res if x["decision"] != "BLOCK" and "gpu_ms" in x]
     if ok:   # validation priority: the cheapest build that is not blocked (cost first, energy second)
         best = min(ok, key=lambda x: (x["gpu_ms"], x.get("energy_mj", math.inf))); best["priority"] = "validate first (cheapest build that is not blocked)"
@@ -120,7 +150,7 @@ if __name__ == "__main__":
     ap = argparse.ArgumentParser(); ap.add_argument("csv"); ap.add_argument("--rule", choices=["current", "revised"], default="current")
     ap.add_argument("--tol", type=float, default=10.0); ap.add_argument("--json"); a = ap.parse_args()
     try:
-        rows = list(csv.DictReader(open(a.csv, encoding="utf-8-sig"))); res = judge(rows, a.rule, a.tol)
+        rows, lines = read_csv(a.csv); res = judge(rows, a.rule, a.tol, lines)
     except FileNotFoundError: print(f"error: file not found: {a.csv}", file=sys.stderr); sys.exit(2)
     except InputError as e: print(f"error: {a.csv}: {e}", file=sys.stderr); sys.exit(2)
     if a.json: json.dump(res, open(a.json, "w"), indent=1)
