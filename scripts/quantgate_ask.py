@@ -131,6 +131,10 @@ EXAMPLES = ["Can I use the fine-tuned policy where the can's start position vari
             "Can I rely on the AI judge's verdict for a new object?"]
 
 if __name__ == "__main__":
+    if not os.environ.get("NEBIUS_API_KEY"):
+        sys.exit("ask needs a Nebius Token Factory key: export NEBIUS_API_KEY=... (https://studio.nebius.com)\n"
+                 "Without a key: `quantgate.py plan [FP16|FT1|FT2|INT8|PC-B]` prints the evidence and the next test, and\n"
+                 "`quantgate.py review --no-llm` rebuilds the whole review (artifacts/reports/review_report.html).")
     T = verdict_table()
     if sys.argv[1:] == ["--examples"]:
         out, log = ["# Asking the deployment review (examples)", "",

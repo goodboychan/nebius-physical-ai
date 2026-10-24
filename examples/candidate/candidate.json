@@ -1,0 +1,8 @@
+{
+ "engine": "policy.engine",
+ "engine_sha256": "69ed240a720d3275972b0300bec49ecdb4af1b649606c03d8711f5c64081dc21",
+ "latency_ms": 96.4,
+ "latency_label": "max round trip over 20 trials (example value)",
+ "verdict": "INSUFFICIENT_EVIDENCE",
+ "next_action": "run the next test from `quantgate.py judge` (about 120 trials per arm)"
+}

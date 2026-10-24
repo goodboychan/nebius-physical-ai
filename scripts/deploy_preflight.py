@@ -7,9 +7,11 @@ For a candidate, four checks run in order. The first failing check decides the o
   4. evidence          : the code-decided verdict (d3_v3_verdicts.json)
                          only an explicit GO -> OK; FLAGGED/NO-GO -> BLOCK; INSUFFICIENT_EVIDENCE, IMPROVEMENT_DETECTED and
                          NOT_DETECTED -> HOLD (with the next action); any other label -> BLOCK (external review 6)
+A card of your own (examples/candidate/candidate.json) runs the same four checks:
+  python scripts/deploy_preflight.py --card examples/candidate/candidate.json      exit 0 OK, 3 HOLD, 4 BLOCK, 2 bad card
 The demo builds a scratch folder with stand-in engine and normalization files, then runs a nominal case and
 deliberately broken cases. The broken cases are labelled FAULT INJECTION; they are not observed failures.
-Usage: python scripts/deploy_preflight.py [--out artifacts/reports]"""
+Usage: python scripts/deploy_preflight.py [--out artifacts/reports] | --card <candidate.json> [--json out.json]"""
 import argparse, ast, hashlib, json, os, shutil, sys, tempfile
 
 HERE = os.path.dirname(os.path.abspath(__file__))
@@ -52,6 +54,33 @@ def preflight(card):
     steps.append(("evidence", False, f"unknown verdict {v!r}: refused")); return "BLOCK", steps
 
 
+# card fields: what each one is and how to get it (README "Preflight your own build")
+CARD_FIELDS = {"engine": "path to the engine file, relative to the card; norm_manifest.json and the normalization file sit next to it",
+               "engine_sha256": "sha256 of the engine as built and audited (sha256sum <engine>)",
+               "latency_ms": "worst-case end-to-end latency on the target device, p95 or max over real runs",
+               "latency_label": "what latency_ms is, e.g. 'max round trip over 20 trials'",
+               "verdict": "the evidence finding, e.g. from `quantgate.py judge` (GO, INSUFFICIENT_EVIDENCE, IMPROVEMENT_DETECTED, NO-GO, ...)",
+               "next_action": "what to do next if the build is held or blocked"}
+EXIT = {"OK": 0, "HOLD": 3, "BLOCK": 4}
+
+
+class CardError(ValueError): pass
+
+
+def load_card(path):
+    """Read and check a candidate card; the engine path is resolved relative to the card's folder."""
+    try: card = json.load(open(path))
+    except FileNotFoundError: raise CardError(f"card not found: {path}")
+    except json.JSONDecodeError as e: raise CardError(f"{path} is not valid JSON: {e}")
+    if not isinstance(card, dict): raise CardError(f"{path}: expected a JSON object")
+    missing = [k for k in CARD_FIELDS if k not in card]
+    if missing: raise CardError(f"{path}: missing field(s) {', '.join(missing)}\n" + "\n".join(f"  {k}: {CARD_FIELDS[k]}" for k in missing))
+    if isinstance(card["latency_ms"], bool) or not isinstance(card["latency_ms"], (int, float)): raise CardError(f"{path}: latency_ms must be a number (ms)")
+    if not os.path.isabs(card["engine"]): card = {**card, "engine": os.path.join(os.path.dirname(os.path.abspath(path)), card["engine"])}
+    if not os.path.exists(card["engine"]): raise CardError(f"{path}: engine file not found: {card['engine']}")
+    return card
+
+
 def demo(out):
     T = json.load(open(os.path.join(out, "d3_v3_verdicts.json")))
     row = lambda c, ctx: next(r for r in T["rows"] if r["candidate"] == c and ctx in r["context"])
@@ -83,8 +112,23 @@ def demo(out):
     return {"deadline_ms": DEADLINE_MS, "runner_constants": {k: CONST[k] for k in ("PREF", "BLEND", "FPS")}, "cases": res}
 
 
+def run_card(path, out_json=None):
+    try: card = load_card(path)
+    except CardError as e: print(f"error: {e}", file=sys.stderr); return 2
+    outcome, steps = preflight(card)
+    for name, ok, detail in steps: print(f"  {'pass' if ok else 'FAIL'}  {name:17} {detail}")
+    print(f"preflight: {outcome}" + ("" if outcome == "OK" else f" (exit {EXIT[outcome]})"))
+    if out_json: json.dump({"card": path, "outcome": outcome, "deadline_ms": DEADLINE_MS, "steps": [{"check": a, "pass": b, "detail": c} for a, b, c in steps]}, open(out_json, "w"), indent=1)
+    return EXIT[outcome]
+
+
 if __name__ == "__main__":
-    ap = argparse.ArgumentParser(); ap.add_argument("--out", default="artifacts/reports"); a = ap.parse_args()
+    ap = argparse.ArgumentParser(description="Deployment preflight: the built-in fault-injection demo, or your own candidate card.")
+    ap.add_argument("--out", default="artifacts/reports", help="demo: folder with d3_v3_verdicts.json, where preflight_demo.json is written")
+    ap.add_argument("--card", help="check your own candidate card instead of the demo (see examples/candidate/candidate.json)")
+    ap.add_argument("--json", help="with --card: also write the result as JSON"); a = ap.parse_args()
+    if a.card: sys.exit(run_card(a.card, a.json))
+    if a.json: ap.error("--json needs --card")
     R = demo(a.out)
     json.dump(R, open(os.path.join(a.out, "preflight_demo.json"), "w"), indent=1)
     for c in R["cases"]:

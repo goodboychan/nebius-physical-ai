@@ -79,6 +79,28 @@ One row per comparison: `candidate, reference, cand_successes, cand_trials, ref_
 the placement check and the preflight; an improvement alone is never a GO. The first example row is this study's FP16
 result and reproduces its reading (19/20 vs 10/10: degradation 5.0 pp, 97.5% interval [−28.7, +27.3], HOLD).
 
+## Preflight your own build
+
+Before a build goes on a robot, the preflight checks one candidate card: the engine is the audited build, the runner
+accepts its normalization, it meets the 200 ms chunk deadline, and the evidence allows it. A runnable example (stand-in
+engine and normalization files) is in [`examples/candidate/`](examples/candidate/):
+
+```bash
+.venv/bin/python scripts/quantgate.py preflight --card examples/candidate/candidate.json   # -> HOLD, exit 3
+```
+
+| Field | What it is | How to get it |
+| --- | --- | --- |
+| `engine` | engine file, relative to the card | your TensorRT build (`trtexec --saveEngine`) |
+| `engine_sha256` | hash of the build that was audited | `sha256sum policy.engine` when the audit ran |
+| `latency_ms`, `latency_label` | worst-case end-to-end latency on the device and what it is (p95 or max) | real runs on the target, e.g. the runner's `rtt_ms_max` |
+| `verdict` | evidence finding | `quantgate.py judge` (GO, INSUFFICIENT_EVIDENCE, IMPROVEMENT_DETECTED, NO-GO, …) |
+| `next_action` | what to do if held or blocked | the judge's next test |
+
+Next to the engine: `<name>.norm_stats.npz` and `norm_manifest.json` (`{"<name>": {"file": "<name>.norm_stats.npz",
+"sha256": "…"}}`), the same guard the runner uses. Exit codes: 0 OK, 3 HOLD, 4 BLOCK, 2 bad card or usage; `--json out.json`
+writes the result for CI. Only an explicit GO passes; an unknown verdict label blocks.
+
 ## Quickstart: one command for the review
 
 ```bash
@@ -86,7 +108,7 @@ uv venv .venv && uv pip install --python .venv/bin/python -e ".[dev]"
 .venv/bin/python scripts/quantgate.py verify          # tests, runner harness, 22 sealed logs vs their post-lock hashes
 .venv/bin/python scripts/quantgate.py review --no-llm # verdict table, next-test plans, the full review as one HTML file
                                                       # (artifacts/reports/review_report.html), preflight demo, review cost
-.venv/bin/python scripts/quantgate.py plan FT-FP16    # from evidence to the next test: confirmed, open, evidence, plan
+.venv/bin/python scripts/quantgate.py plan FT1        # from evidence to the next test (FP16, FT1, FT2, INT8, PC-B)
 NEBIUS_API_KEY=... .venv/bin/python scripts/quantgate.py review   # + D3 report v3 by Nemotron on Token Factory, dashboard
 NEBIUS_API_KEY=... .venv/bin/python scripts/quantgate.py ask "Can I use the fine-tuned policy where the start varies?"
 .venv/bin/python scripts/quantgate.py stages          # the robot and cloud stages that produce the evidence

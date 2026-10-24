@@ -54,7 +54,10 @@ def evname(x):   # a readable name first, the path second
                       ("ft_chatter", "Gripper chatter measurement"), ("T0R_modes", "Failure-mode labels (blind)")):
         if key in x: return name
     return "Note"
-data = {k: {**v, "md": ntp.md({k: v}), "clip": CLIP.get(k), "card": CARD[k], "evn": [evname(x) for x in v["evidence"]]} for k, v in P.items()}
+import html as _html, dash_links
+SHA = dash_links.commit(open(page).read(), json.dumps(P)); FILES = dash_links.tracked(SHA)   # evidence links open the file on GitHub at this commit
+data = {k: {**v, "md": ntp.md({k: v}), "clip": CLIP.get(k), "card": CARD[k], "evn": [evname(x) for x in v["evidence"]],
+            "evh": [dash_links.link_text(_html.escape(x), SHA, FILES) for x in v["evidence"]]} for k, v in P.items()}
 ORDER = ["VC-025", "FT-FP16", "FT2-FP16", "INT8", "PC-B"]
 sec = '''<!--NEXTTEST:BEGIN-->
   <section class="panel" id="nexttest">
@@ -65,7 +68,7 @@ sec = '''<!--NEXTTEST:BEGIN-->
   </section>
   <script>
   (function(){
-    const D = ''' + json.dumps(data) + ''', ORDER = ''' + json.dumps(ORDER) + ''';
+    const D = ''' + json.dumps(data) + ''', ORDER = ''' + json.dumps(ORDER) + ''', SHA = ''' + json.dumps(SHA) + ''';
     const pick = document.getElementById("nt-pick"), card = document.getElementById("nt-card"), body = document.getElementById("nt-body");
     const esc = s => String(s).replace(/[&<>]/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;"}[c]));
     const li = xs => "<ul>" + xs.map(x => "<li>" + esc(x) + "</li>").join("") + "</ul>";
@@ -90,7 +93,7 @@ sec = '''<!--NEXTTEST:BEGIN-->
         "<div><span class='rv-tl'>Before collecting data</span><p>" + esc(nt.rule) + "</p></div><div><span class='rv-tl'>Measure · schedule</span><p>" + esc(nt.measure) + " · " + esc(nt.schedule) + "</p></div></div>" + done +
         (p.clip ? "<video src='" + p.clip + "' controls muted playsinline preload='metadata' style='max-width:100%;border-radius:8px'></video>" : "") + "</div>" +
         "<details class='rv-ev'><summary>Evidence and provenance</summary><div class='rv-grid'><div><span class='rv-tl'>Confirmed</span>" + li(p.confirmed) + "</div><div><span class='rv-tl'>Still open</span>" + li(p.open) + "</div></div>" +
-        "<span class='rv-tl'>Records</span><ul class='rv-files'>" + p.evidence.map((x, i) => "<li><b>" + esc(p.evn[i]) + "</b> <code>" + esc(x) + "</code></li>").join("") + "</ul></details>" +
+        "<span class='rv-tl'>Records</span> <span class='rv-pin'>links open the file on GitHub at commit " + SHA.slice(0, 7) + "</span><ul class='rv-files'>" + p.evidence.map((x, i) => "<li><b>" + esc(p.evn[i]) + "</b> <code>" + p.evh[i] + "</code></li>").join("") + "</ul></details>" +
         "<p class='rv-scope'>Scope: this recorded policy, device and test configuration. Validation priority is separate from deployment approval. Your own builds: <code>quantgate.py judge your_results.csv</code> applies the same rules.</p>" +
         "<textarea id='nt-md' readonly hidden style='width:100%;height:200px;margin-top:8px'>" + esc(p.md) + "</textarea>";
       body.textContent = p.md;
@@ -113,4 +116,5 @@ if "<!--NEXTTEST:BEGIN-->" in s:
     s = s[:s.index("<!--NEXTTEST:BEGIN-->")] + sec.lstrip() + s[s.index("<!--NEXTTEST:END-->") + len("<!--NEXTTEST:END-->\n"):]
 else:
     anchor = '  <section class="panel" id="review">'; assert anchor in s; s = s.replace(anchor, sec + anchor, 1)
-open(page, "w").write(s); print("review section written:", ORDER)
+s = dash_links.link_html(s, SHA)   # repository paths elsewhere on the page link to the same commit
+open(page, "w").write(s); print("review section written:", ORDER, "links at", SHA[:7])

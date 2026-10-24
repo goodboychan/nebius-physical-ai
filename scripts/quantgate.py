@@ -5,9 +5,10 @@
                                    -> next-test plans -> the full review as one HTML file (artifacts/reports/review_report.html,
                                    no API key needed) -> dashboard report section -> deployment preflight demo -> review cost
   quantgate.py plan [candidate]    from evidence to the next test: confirmed, open, evidence, and the next test's plan
-                                   (VC-025, FT-FP16, INT8, PC-B; all when omitted), written by code
+                                   (FP16, FT1, FT2, INT8, PC-B; all when omitted), written by code
   quantgate.py ask "<question>"    ask the review (Nemotron picks the rows, code prints verdicts and numbers)
-  quantgate.py preflight           the four-check preflight and its fault-injection demo
+  quantgate.py preflight [--card c.json]  the four-check preflight on your own candidate card (exit 0 OK, 3 HOLD,
+                                   4 BLOCK), or without --card its fault-injection demo
   quantgate.py judge <csv>         your own results under the same rules: decision, why, next test (examples/my_results.csv)
   quantgate.py cost                what the review cost (Nebius list prices, real-arm hours)
   quantgate.py verify              tests, runner harness, and the sealed-log hashes against the post-lock records
@@ -15,7 +16,7 @@
 
 `review`, `preflight`, `cost` and `verify` need no robot, no GPU and no network (except `review` without --no-llm and
 `ask`, which call Nebius Token Factory with NEBIUS_API_KEY).
-Usage: python scripts/quantgate.py <command> [...]"""
+Usage: python scripts/quantgate.py <command> [...]   (quantgate.py <command> -h for its options; bad input exits 2)"""
 import hashlib, json, os, subprocess, sys
 
 HERE = os.path.dirname(os.path.abspath(__file__)); ROOT = os.path.dirname(HERE); PY = sys.executable
@@ -49,24 +50,69 @@ def verify():
     if bad: sys.exit(f"{bad} sealed log(s) do not match their post-lock record")
 
 
-if __name__ == "__main__":
-    a = sys.argv[1:] or ["-h"]
-    if a[0] == "review":
-        run("scripts/d3_report_v3.py", *(["--dry"] if "--no-llm" in a else []))
-        if "--no-llm" not in a: run("scripts/build_dashboard_report.py")
+# names people use for the plan candidates -> the ids in next_test_plans.json
+ALIASES = {"fp16": "VC-025", "vc025": "VC-025", "ft": "FT-FP16", "ft1": "FT-FP16", "finetune": "FT-FP16", "finetunev1": "FT-FP16",
+           "ftfp16": "FT-FP16", "ft2": "FT2-FP16", "finetunev2": "FT2-FP16", "ft2fp16": "FT2-FP16", "int8": "INT8",
+           "pcb": "PC-B", "blackframe": "PC-B", "blackframecalibration": "PC-B"}
+
+
+def plan(name):
+    P = json.load(open(os.path.join(ROOT, "artifacts/reports/next_test_plans.json")))
+    if name:
+        k = ALIASES.get("".join(c for c in name.lower() if c.isalnum()))
+        if k not in P:
+            print(f"quantgate.py plan: unknown candidate {name!r}; use one of FP16 (VC-025), FT1 (FT-FP16), FT2 (FT2-FP16), INT8, PC-B", file=sys.stderr); sys.exit(2)
+        P = {k: P[k]}
+    sys.path.insert(0, HERE); import next_test_plan as ntp; print(ntp.md(P))
+
+
+def need_key(cmd):
+    if not os.environ.get("NEBIUS_API_KEY"):
+        sys.exit(f"quantgate.py {cmd}: needs a Nebius Token Factory key: export NEBIUS_API_KEY=... (https://studio.nebius.com)\n"
+                 "Without a key: `quantgate.py review --no-llm` rebuilds the whole review, `quantgate.py plan FP16` prints one plan.")
+
+
+def main(argv=None):
+    import argparse
+    ap = argparse.ArgumentParser(prog="quantgate.py", description="QuantGate: the deployment review of quantized robot policies.",
+                                 epilog="Exit codes: 0 ok; 1 a step failed or NEBIUS_API_KEY is missing; 2 usage error (unknown command, option, candidate or bad card); preflight --card: 3 HOLD, 4 BLOCK.")
+    sub = ap.add_subparsers(dest="cmd", required=True, metavar="<command>")
+    r = sub.add_parser("review", help="rebuild the decision layer from committed evidence")
+    r.add_argument("--no-llm", action="store_true", help="skip the Nemotron report (no key, no network)")
+    p = sub.add_parser("plan", help="from evidence to the next test, written by code")
+    p.add_argument("candidate", nargs="?", help="FP16, FT1, FT2, INT8 or PC-B (or VC-025, FT-FP16, FT2-FP16); all when omitted")
+    q = sub.add_parser("ask", help="ask the review a question (needs NEBIUS_API_KEY)"); q.add_argument("question", nargs="+")
+    f = sub.add_parser("preflight", help="the four-check preflight: your own card, or the fault-injection demo")
+    f.add_argument("--card", help="your candidate card, e.g. examples/candidate/candidate.json (exit 0 OK, 3 HOLD, 4 BLOCK)")
+    f.add_argument("--json", help="with --card: also write the result as JSON")
+    j = sub.add_parser("judge", help="your own results under the same rules (examples/my_results.csv)")
+    j.add_argument("csv"); j.add_argument("--rule", choices=["current", "revised"], default="current"); j.add_argument("--tol", type=float, default=10.0); j.add_argument("--json")
+    sub.add_parser("cost", help="what the review cost (Nebius list prices, real-arm hours)")
+    sub.add_parser("verify", help="tests, runner harness, and the sealed-log hashes against the post-lock records")
+    sub.add_parser("stages", help="the hardware and cloud stages that produce the evidence")
+    a = ap.parse_args(argv)
+    if a.cmd == "review":
+        if not a.no_llm: need_key("review (without --no-llm)")
+        run("scripts/d3_report_v3.py", *(["--dry"] if a.no_llm else []))
+        if not a.no_llm: run("scripts/build_dashboard_report.py")
         run("scripts/next_test_plan.py"); run("scripts/build_review_html.py"); run("scripts/build_dashboard_nexttest.py")
         run("scripts/deploy_preflight.py"); run("scripts/review_cost.py")
-        print("review rebuilt: artifacts/reports/" + ("{d3_v3_verdicts.json" if "--no-llm" in a else "{d3_report_v3.md, d3_v3_verdicts.json") +
-              ", next_test_plans.md, review_report.html, preflight_demo.json, review_cost.md}" + ("" if "--no-llm" in a else "; dashboard/audit_gate.html"))
+        print("review rebuilt: artifacts/reports/" + ("{d3_v3_verdicts.json" if a.no_llm else "{d3_report_v3.md, d3_v3_verdicts.json") +
+              ", next_test_plans.md, review_report.html, preflight_demo.json, review_cost.md}" + ("" if a.no_llm else "; dashboard/audit_gate.html"))
         print("open artifacts/reports/review_report.html in a browser: the whole review, no key needed")
-    elif a[0] == "ask": run("scripts/quantgate_ask.py", *a[1:])
-    elif a[0] == "plan":
-        P = json.load(open(os.path.join(ROOT, "artifacts/reports/next_test_plans.json")))
-        keys = [k for k in P if not a[1:] or k.lower() == a[1].lower()] or sys.exit(f"unknown candidate; one of {list(P)}")
-        sys.path.insert(0, HERE); import next_test_plan as ntp; print(ntp.md({k: P[k] for k in keys}))
-    elif a[0] == "preflight": run("scripts/deploy_preflight.py")
-    elif a[0] == "judge": run("scripts/quantgate_judge.py", *a[1:])
-    elif a[0] == "cost": run("scripts/review_cost.py")
-    elif a[0] == "verify": verify()
-    elif a[0] == "stages": print(STAGES)
-    else: print(__doc__)
+    elif a.cmd == "ask": need_key("ask"); run("scripts/quantgate_ask.py", *a.question)
+    elif a.cmd == "plan": plan(a.candidate)
+    elif a.cmd == "preflight":
+        if a.card:
+            sys.path.insert(0, HERE); import deploy_preflight as dp; sys.exit(dp.run_card(a.card, a.json))
+        if a.json: ap.error("preflight --json needs --card")
+        run("scripts/deploy_preflight.py")
+    elif a.cmd == "judge": run("scripts/quantgate_judge.py", a.csv, "--rule", a.rule, "--tol", str(a.tol), *(["--json", a.json] if a.json else []))
+    elif a.cmd == "cost": run("scripts/review_cost.py")
+    elif a.cmd == "verify": verify()
+    elif a.cmd == "stages": print(STAGES)
+
+
+if __name__ == "__main__":
+    try: main()
+    except subprocess.CalledProcessError as e: sys.exit(e.returncode)   # the step already printed its error; no second traceback
