@@ -12,7 +12,7 @@ A card of your own (examples/candidate/candidate.json) runs the same four checks
 The demo builds a scratch folder with stand-in engine and normalization files, then runs a nominal case and
 deliberately broken cases. The broken cases are labelled FAULT INJECTION; they are not observed failures.
 Usage: python scripts/deploy_preflight.py [--out artifacts/reports] | --card <candidate.json> [--json out.json]"""
-import argparse, ast, hashlib, json, os, shutil, sys, tempfile
+import argparse, ast, hashlib, json, math, os, shutil, sys, tempfile
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 SRC = open(os.path.join(HERE, "so101_trial.py")).read()
@@ -44,7 +44,8 @@ def preflight(card):
         G["resolve_norm"](card["engine"], require_manifest=True); steps.append(("normalization", True, "manifest and hash match"))
     except SystemExit:
         steps.append(("normalization", False, "runner refuses: manifest missing or normalization file mismatched")); return "BLOCK", steps
-    ok = card["latency_ms"] <= DEADLINE_MS
+    L = card["latency_ms"]   # a measured latency is a positive finite number; anything else cannot meet the contract
+    ok = not isinstance(L, bool) and isinstance(L, (int, float)) and math.isfinite(L) and 0 < L <= DEADLINE_MS
     steps.append(("timing contract", ok, f"{card['latency_label']} {card['latency_ms']} ms vs chunk deadline {DEADLINE_MS:.0f} ms"))
     if not ok: return "BLOCK", steps
     v = card["verdict"]   # only an explicit GO is approval; every other known label holds, anything unknown blocks
@@ -75,7 +76,10 @@ def load_card(path):
     if not isinstance(card, dict): raise CardError(f"{path}: expected a JSON object")
     missing = [k for k in CARD_FIELDS if k not in card]
     if missing: raise CardError(f"{path}: missing field(s) {', '.join(missing)}\n" + "\n".join(f"  {k}: {CARD_FIELDS[k]}" for k in missing))
-    if isinstance(card["latency_ms"], bool) or not isinstance(card["latency_ms"], (int, float)): raise CardError(f"{path}: latency_ms must be a number (ms)")
+    L = card["latency_ms"]
+    if isinstance(L, bool) or not isinstance(L, (int, float)) or not math.isfinite(L) or L <= 0: raise CardError(f"{path}: latency_ms must be a positive number of ms, not {L!r}")
+    for k in ("engine", "engine_sha256", "latency_label", "verdict", "next_action"):
+        if not isinstance(card[k], str): raise CardError(f"{path}: {k} must be a string")
     if not os.path.isabs(card["engine"]): card = {**card, "engine": os.path.join(os.path.dirname(os.path.abspath(path)), card["engine"])}
     if not os.path.exists(card["engine"]): raise CardError(f"{path}: engine file not found: {card['engine']}")
     return card

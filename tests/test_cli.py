@@ -45,3 +45,13 @@ def test_dashboard_links_known_files_only():
     out = L.link_html(doc)
     assert out.count('class="gh"') == 1 and "/blob/" in out and "nope.json</p>" in out and "x='artifacts" in out
     assert L.link_html(out) == out
+
+
+def test_card_latency_must_be_positive_and_finite(tmp_path):
+    """Usability review 2: latency_ms = -1 passed the timing check (OK, exit 0)."""
+    d = tmp_path / "c"; shutil.copytree(ROOT / "examples/candidate", d); card = json.load(open(d / "candidate.json"))
+    for bad in (-1, 0, float("nan"), float("inf"), "96", True):
+        json.dump({**card, "verdict": "GO", "latency_ms": bad}, open(d / "candidate.json", "w"))
+        r = q("preflight", "--card", str(d / "candidate.json")); assert r.returncode == 2 and "latency_ms" in r.stderr, bad
+    sys.path.insert(0, str(ROOT / "scripts")); import deploy_preflight as dp   # the check itself also refuses, not only the loader
+    assert dp.preflight({**dp.load_card(str(ROOT / "examples/candidate/candidate.json")), "latency_ms": -1, "verdict": "GO"})[0] == "BLOCK"

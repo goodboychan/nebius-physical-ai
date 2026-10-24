@@ -78,6 +78,9 @@ One row per comparison: `candidate, reference, cand_successes, cand_trials, ref_
 (GO / HOLD / BLOCK), the evidence finding, why, and the next test with trials per arm. A GO needs the success criterion,
 the placement check and the preflight; an improvement alone is never a GO. The first example row is this study's FP16
 result and reproduces its reading (19/20 vs 10/10: degradation 5.0 pp, 97.5% interval [−28.7, +27.3], HOLD).
+`--tol` sets the tolerance for both the decision and the next test's trials per arm (at 96%: about 400 per arm at 5 pp,
+120 at 10 pp, 50 at 20 pp). Input the rules do not define is refused with the row number and exit 2: an unknown `mode`
+(only `non-inferiority`, empty, or `improvement`), a yes/no typo, counts that are not whole numbers, or a bad number.
 
 ## Preflight your own build
 
@@ -99,7 +102,8 @@ engine and normalization files) is in [`examples/candidate/`](examples/candidate
 
 Next to the engine: `<name>.norm_stats.npz` and `norm_manifest.json` (`{"<name>": {"file": "<name>.norm_stats.npz",
 "sha256": "…"}}`), the same guard the runner uses. Exit codes: 0 OK, 3 HOLD, 4 BLOCK, 2 bad card or usage; `--json out.json`
-writes the result for CI. Only an explicit GO passes; an unknown verdict label blocks.
+writes the result for CI. Only an explicit GO passes; an unknown verdict label blocks; `latency_ms` must be a positive,
+finite number.
 
 ## Quickstart: one command for the review
 

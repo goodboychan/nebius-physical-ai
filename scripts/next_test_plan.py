@@ -14,17 +14,17 @@ from g6_analysis import newcombe
 from scipy.stats import norm
 R = "artifacts/reports"; Z = float(norm.ppf(1 - 0.025 / 2))
 
-def power(n, p_ref, p_c, ceiling, sims=3000, seed=0):
+def power(n, p_ref, p_c, ceiling, sims=3000, seed=0, tol=10.0):
     rng = np.random.default_rng(seed); ok = 0
     for _ in range(sims):
         kr, kc = rng.binomial(n, p_ref), rng.binomial(n, p_c)
         if ceiling and kr / n >= 0.95 and kc / n >= 0.95: continue
-        ok += newcombe(kr, n, kc, n, Z)[1] * 100 < 10
+        ok += newcombe(kr, n, kc, n, Z)[1] * 100 < tol
     return round(ok / sims, 2)
 
-def n_for(p_ref, p_c, ceiling, target=0.8, grid=(50, 75, 100, 120, 150, 200, 300, 400, 600)):
+def n_for(p_ref, p_c, ceiling, target=0.8, grid=(50, 75, 100, 120, 150, 200, 300, 400, 600), tol=10.0):
     for n in grid:
-        if power(n, p_ref, p_c, ceiling) >= target: return n
+        if power(n, p_ref, p_c, ceiling, tol=tol) >= target: return n
     return None
 
 def plans(T):
