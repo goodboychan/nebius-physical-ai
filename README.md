@@ -37,6 +37,9 @@ edge device. It shows the engine's measured cost, its real-arm behavior and how 
 
 **Video (3 min):** https://www.youtube.com/watch?v=z80w9vig-qA · **Dashboard:** https://claude.ai/artifact/2tUAoJHBeT8uLU96BmgPNK
 
+**Try it in 5 minutes** (no robot, no GPU, no key): [docs/TRY_IT.md](docs/TRY_IT.md): check the study, judge your own
+results, preflight a build, then tell us how it went.
+
 **Links** · Datasets on the Hugging Face Hub (LeRobot v3):
 [`chans/quantgate-so101-coaster`](https://huggingface.co/datasets/chans/quantgate-so101-coaster) (120 teleoperated
 demonstrations) · [`chans/quantgate-so101-coaster-positions`](https://huggingface.co/datasets/chans/quantgate-so101-coaster-positions)
