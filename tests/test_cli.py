@@ -190,7 +190,10 @@ def test_external_log_conversion(tmp_path):
     assert run(*base[:1], "raw.jsonl", *base[1:], "--id", "attempt_id", "--success", "judge.success", "--missing", "drop").returncode == 0
     r = run(*base[:1], "trials.jsonl", *base[1:], "--id", "task_id"); assert r.returncode == 2 and "use --pair FIELD" in r.stderr
     r = run(*base[:1], "trials.jsonl", *base[1:], "--pair", "task_id", "--set", "mode=improvement")
-    assert r.returncode == 0 and "40 pairs with both builds" in r.stderr and r.stdout.splitlines()[1].endswith(",improvement,paired")
+    import csv as _csv
+    row = list(_csv.DictReader(r.stdout.splitlines()))[0]
+    assert r.returncode == 0 and "40 pairs with both builds" in r.stderr and row["mode"] == "improvement" and row["design"] == "paired"
+    assert int(row["pairs_improved"]) + int(row["pairs_regressed"]) <= 40 and "safety: not provided" in r.stderr
     (d / "results.csv").write_text(r.stdout)
     j = run("judge", "results.csv", "--gate"); assert j.returncode == 3 and "PREVIEW ONLY" in j.stdout
     r = run(*base[:1], "trials.jsonl", "--group", "config", "--candidate", "three", "--reference", "1", "--pair", "task_id")
@@ -247,3 +250,22 @@ def test_csv_text_outcomes_conditions_and_audit(tmp_path):
     assert len(A) == 160 and sum(a["status"] == "counted" for a in A) == 60
     assert any(a["status"] == "excluded" and a["reason"].startswith("condition not met: object is 'towels'") for a in A)
     assert all({"source", "line", "id", "build", "status", "reason"} <= set(a) for a in A)
+
+
+def test_regressions_and_safety_are_shown(tmp_path):
+    """User test 5 (2026-10-26): the average improvement hid per-seed regressions; missing safety must read "not provided"."""
+    d = tmp_path / "ext"; shutil.copytree(ROOT / "examples/external", d)
+    run = lambda *a: subprocess.run([*CLI, *a], cwd=d, capture_output=True, text=True)
+    base = ["tally", "seeds.csv", "--id", "run_id", "--group", "version", "--candidate", "after", "--reference", "before", "--success", "outcome",
+            "--map", "success=true", "--map", "collision=false", "--map", "dropped=false", "--map", "timeout=false", "--pair", "seed", "--set", "mode=improvement"]
+    r = run(*base, "--safety", "near_miss", "--detail", "outcome", "--regressions", "reg.jsonl")
+    assert r.returncode == 0 and "26 improved, 5 regressed, 22 both succeed, 7 both fail" in r.stderr and "2 with no safety record" in r.stderr
+    R = [json.loads(l) for l in open(d / "reg.jsonl")]
+    assert len(R) == 5 and {x["candidate_safety_event"] for x in R} == {None, False} and all(x["reference_detail"] == "success" for x in R)
+    (d / "r.csv").write_text(r.stdout); j = run("judge", "r.csv")
+    assert "5 regressed (0 with a safety event, 2 with no safety record)" in j.stdout and "7 in 51 recorded trials" in j.stdout
+    r = run(*base); (d / "r2.csv").write_text(r.stdout); j = run("judge", "r2.csv")
+    assert "safety: not provided" in r.stderr and "safety events: not provided" in j.stdout and "safety of the regressions: not provided" in j.stdout
+    assert run(*base[:-4], "--detail", "outcome").returncode == 2   # --detail without --pair
+    (d / "bad.csv").write_text("candidate,reference,cand_successes,cand_trials,ref_successes,ref_trials,pairs_regressed\nA,B,1,2,1,2,1\n")
+    assert run("judge", "bad.csv").returncode == 2                   # pair counts need design=paired

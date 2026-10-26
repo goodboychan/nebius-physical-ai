@@ -27,6 +27,8 @@ Options:
   --audit FILE         one JSON line per input trial: source file, line, id, build, counted or excluded and the reason
   Logs may be JSONL or CSV (one row per trial; empty cells are null). A field name is first matched exactly (a CSV
   column `eval.outcome`), then as a nested path (`eval` -> `outcome`).
+  --safety FIELD       per-trial safety event (true/false; empty = not recorded, never counted as "none")
+  --detail FIELD       with --pair: shown for each regressed pair (e.g. the failure reason); --regressions FILE lists them
   --pair FIELD         paired design: the field naming the same task across builds; see judge's `design` column
   --engine FILE        the candidate's engine: writes its sha256 to engine_sha256, so preflight can tie the row to it
 Any judge column can be added with --set column=value (e.g. --set placement_ok=yes --set mode=improvement).
@@ -72,7 +74,8 @@ def name(v):
 
 
 def tally(trials, candidate, reference, group="cell", success="success", require=(), forbid=(), drop=("invalid", "aborted"), id_field="trial_id",
-          placement=None, missing="error", pair=None, notes=None, valmap=None, where_eq=(), audit=None, srcs=None):
+          placement=None, missing="error", pair=None, notes=None, valmap=None, where_eq=(), audit=None, srcs=None,
+          safety=None, detail=None, regressions=None):
     """missing: what a trial whose outcome is null or absent means. error (default) stops; fail counts it as a failure;
     drop leaves it out. Decide it from the source's own definition and write it down, since it changes the count.
     pair: the field linking the same task across builds (a paired design): reported, and marked design=paired."""
@@ -90,6 +93,9 @@ def tally(trials, candidate, reference, group="cell", success="success", require
     candidate, reference = str(candidate), str(reference)
     out, seen, place = {candidate: [0, 0], reference: [0, 0]}, {}, {candidate: [], reference: []}
     n_missing, pairs = 0, {candidate: {}, reference: {}}
+    by_pair = {candidate: {}, reference: {}}            # pair id -> (ok, safety event or None, detail, trial id, audit index)
+    saf = {candidate: [0, 0], reference: [0, 0]}        # [events, trials with a safety record]
+    regressions = [] if regressions is None else regressions
     def note(i, status, reason, g=None, ok=None, raw_out=None):
         src = srcs[i - 1] or ("", i)
         audit.append({"source": src[0], "line": src[1], "id": get(trials[i - 1], id_field), "build": g, "status": status, "reason": reason,
@@ -127,10 +133,16 @@ def tally(trials, candidate, reference, group="cell", success="success", require
         ok = ok and all(truth(get(r, k), f"{where}: {k}") for k in require) and not any(get(r, k) is True for k in forbid)
         out[g][0] += ok; out[g][1] += 1
         note(i, "counted", "counted" + (" (null outcome as failure, --missing fail)" if raw_out is None and missing == "fail" else ""), g, ok, raw_out)
+        ev = None
+        if safety:   # a safety event (true), none (false), or not recorded (absent or null): absent is never "none"
+            fs, ev = lookup(r, safety)
+            if ev is not None and not isinstance(ev, bool): raise TallyError(f"{where}: {safety} must be true, false or empty, not {ev!r}")
+            if ev is not None: saf[g][1] += 1; saf[g][0] += ev
         if pair:
             pk = get(r, pair)
             if pk in (None, ""): raise TallyError(f"{where}: no {pair!r} to pair on")
             pairs[g][pk] = pairs[g].get(pk, 0) + 1
+            by_pair[g][pk] = (ok, ev, get(r, detail) if detail else None, get(r, id_field), len(audit) - 1)
         if placement and ok:   # placement error is measured on successful trials only, as in the study (E2)
             if pext is not None:
                 t = get(r, id_field)
@@ -147,6 +159,25 @@ def tally(trials, candidate, reference, group="cell", success="success", require
             kinds = ", ".join(f"{k!r} ({'/'.join(sorted(t))})" for k, t in sorted(seen.items(), key=lambda x: str(x[0])))
             raise TallyError(f"no trials for {b!r} in field {group!r}; builds seen: {kinds}")
     if missing != "error" and n_missing: notes.append(f"{n_missing} trial(s) with a null or missing {success} {'counted as failures' if missing == 'fail' else 'left out'} (--missing {missing})")
+    trans = None
+    if pair:
+        trans = {"both_success": 0, "improved": 0, "regressed": 0, "both_fail": 0}
+        for pk in sorted(set(by_pair[candidate]) & set(by_pair[reference]), key=str):
+            c, rf = by_pair[candidate][pk], by_pair[reference][pk]
+            t = "both_success" if c[0] and rf[0] else "improved" if c[0] else "regressed" if rf[0] else "both_fail"
+            trans[t] += 1
+            for x in (c, rf): audit[x[4]].update({"pair": pk, "transition": t})
+            if t == "regressed":
+                regressions.append({"pair": pk, "candidate_trial": c[3], "reference_trial": rf[3], "candidate_safety_event": c[1],
+                                    **({"candidate_detail": c[2], "reference_detail": rf[2]} if detail else {})})
+        sreg = sum(x["candidate_safety_event"] is True for x in regressions); sunk = sum(x["candidate_safety_event"] is None for x in regressions)
+        notes.append(f"pairs: {trans['improved']} improved, {trans['regressed']} regressed, {trans['both_success']} both succeed, {trans['both_fail']} both fail"
+                     + (f"; of the regressions, {sreg} with a safety event" + (f", {sunk} with no safety record" if sunk else "") if safety else
+                        "; safety: not provided (--safety FIELD)"))
+        for x in regressions:
+            notes.append(f"  regressed: pair {x['pair']!r}: candidate trial {x['candidate_trial']!r} failed, reference trial {x['reference_trial']!r} succeeded"
+                         + (f"; safety event: {'yes' if x['candidate_safety_event'] else 'no' if x['candidate_safety_event'] is False else 'not recorded'}" if safety else "")
+                         + (f"; {detail}: {x['candidate_detail']!r}" if detail else ""))
     if pair:
         both = set(pairs[candidate]) & set(pairs[reference]); once = all(v == 1 for b in pairs for v in pairs[b].values())
         notes.append(f"paired on {pair!r}: {len(both)} pairs with both builds, {len(set(pairs[candidate]) ^ set(pairs[reference]))} unpaired"
@@ -154,7 +185,13 @@ def tally(trials, candidate, reference, group="cell", success="success", require
     row = {"candidate": candidate, "reference": reference, "cand_successes": out[candidate][0], "cand_trials": out[candidate][1],
             "ref_successes": out[reference][0], "ref_trials": out[reference][1]}
     if placement: row["_placement"] = place
-    if pair: row["design"] = "paired"
+    if pair:
+        row["design"] = "paired"; row["pairs_improved"] = trans["improved"]; row["pairs_regressed"] = trans["regressed"]
+        if safety:
+            row["safety_regressions"] = sum(x["candidate_safety_event"] is True for x in regressions)
+            row["safety_unrecorded_regressions"] = sum(x["candidate_safety_event"] is None for x in regressions)
+    if safety:
+        row["safety_events_cand"], row["safety_recorded_cand"] = saf[candidate]; row["safety_events_ref"], row["safety_recorded_ref"] = saf[reference]
     return row
 
 
@@ -218,11 +255,14 @@ def main(argv=None):
     ap.add_argument("--missing", choices=["error", "fail", "drop"], default="error", help="a null or missing outcome: stop (default), count as a failure, or leave out")
     ap.add_argument("--map", action="append", default=[], metavar="VALUE=true|false|missing", help="turn a text outcome into one, e.g. --map Success=true --map Stalled=false; any unmapped value stops")
     ap.add_argument("--where", action="append", default=[], metavar="FIELD=VALUE", help="count only trials where FIELD equals VALUE (as text); the rest are excluded with the reason")
+    ap.add_argument("--safety", metavar="FIELD", help="per-trial safety event: true, false, or empty when not recorded (never read as none)")
+    ap.add_argument("--detail", metavar="FIELD", help="with --pair: a field to show for each regressed pair, e.g. the failure reason")
+    ap.add_argument("--regressions", metavar="JSONL", help="with --pair: write each regressed pair (trial ids, safety, detail)")
     ap.add_argument("--audit", metavar="JSONL", help="write one line per input trial: source, line, id, counted or excluded, and why")
     ap.add_argument("--pair", metavar="FIELD", help="the field naming the same task across builds (paired design): ids are then unique per build, and the row is marked design=paired")
     ap.add_argument("--append", metavar="CSV"); a = ap.parse_args(argv)
     try:
-        notes, audit, srcs = [], [], []
+        notes, audit, srcs, regs = [], [], [], []
         valmap = None
         if a.map:
             valmap = {}
@@ -236,7 +276,11 @@ def main(argv=None):
             if not eq or not k.strip(): raise TallyError(f"--where needs FIELD=VALUE, not {w!r}")
             where_eq.append((k.strip(), v.strip()))
         row = tally(read_jsonl(a.logs, a.id, also=a.group if a.pair else None, srcs=srcs), a.candidate, a.reference, a.group, a.success, a.require, a.forbid,
-                    ("invalid", "aborted") if a.drop is None else a.drop, a.id, a.placement, a.missing, a.pair, notes, valmap, where_eq, audit, srcs)
+                    ("invalid", "aborted") if a.drop is None else a.drop, a.id, a.placement, a.missing, a.pair, notes, valmap, where_eq, audit, srcs,
+                    a.safety, a.detail, regs)
+        if (a.detail or a.regressions) and not a.pair: raise TallyError("--detail and --regressions need --pair (a regression is a pair that went from success to failure)")
+        if a.regressions:
+            with open(a.regressions, "w") as fr: fr.write("".join(json.dumps(x, default=str) + "\n" for x in regs))
         if a.audit:
             with open(a.audit, "w") as fa: fa.write("".join(json.dumps(x, default=str) + "\n" for x in audit))
             ex = {}

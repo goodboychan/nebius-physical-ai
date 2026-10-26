@@ -127,3 +127,28 @@ SmolVLA 0/28, all HOLD. Partial successes, safety stops and timeouts stayed in t
    - `--where FIELD=VALUE` filters to one condition.
    - `--audit` writes one line per input row: source, line, id, build, counted or excluded, and why.
    - [`examples/external/`](../examples/external/) shows it on a synthetic per-episode CSV.
+
+## Session 5, 2026-10-26 (a public before/after log on fixed seeds, AI-run usability test)
+
+An AI reviewer ran this at `02808fa`, installing the dependencies and running with `PYTHONPATH=src` (no editable
+install).
+- They rebuilt 400 rows (200 seeds, before and after) from Wind Tunnel's public `run.json` and its storage rules. The
+  rows are reconstructed from the complete list of failures, not from a raw success log, and are labelled so.
+- CSV input, text-outcome mapping, `--pair` and `--audit` all passed on the first tally run.
+- judge returned PREVIEW ONLY / HOLD with no sample size for the unsupported design.
+- Success went from 73/200 to 154/200. Per seed: 70 both succeed, 84 improved, 3 regressed (one dropped object, two
+  near misses) and 43 both fail.
+- The 50% planning label fix was checked in the source, not run: this preview prints no plan.
+
+**Found, and what changed.**
+- **The average hid the regressions, and a `safety_regressions` column was refused.**
+  - With `--pair`, tally now counts the four transitions per pair. It lists each regressed pair with both trial ids
+    (`--detail FIELD` adds, e.g., the failure reason) and writes them with `--regressions FILE`.
+  - The audit marks each trial's pair and transition.
+  - `--safety FIELD` counts safety events only where they were recorded. An empty field is "no safety record", never
+    "none".
+  - judge takes and shows these counts next to the decision: pairs improved and regressed, regressions with a safety
+    event or without a record, and safety events per build. It says `not provided` when they are absent. They are
+    shown and not used in the decision; a rule on them has to be pre-registered.
+  - [`examples/external/`](../examples/external/) adds a seed-paired example in which `near_miss` is recorded only
+    for some endings.

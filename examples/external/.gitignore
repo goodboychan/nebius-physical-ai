@@ -2,3 +2,4 @@ trials.jsonl
 results.csv
 judge.json
 audit.jsonl
+regressions.jsonl

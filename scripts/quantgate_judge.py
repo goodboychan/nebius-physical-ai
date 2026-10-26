@@ -52,7 +52,10 @@ RULE_HELP = ("revised (default): for a new project; study: reproduces this study
 
 def _bad_rule(rule): raise InputError(f"unknown rule {rule!r}; use revised or study")
 REQUIRED = ("candidate", "reference", "cand_successes", "cand_trials", "ref_successes", "ref_trials")
-OPTIONAL = ("gpu_ms", "energy_mj", "placement_ok", "preflight_ok", "mode", "assumed_rate", "engine_sha256", "design", "collection")
+OPTIONAL = ("gpu_ms", "energy_mj", "placement_ok", "preflight_ok", "mode", "assumed_rate", "engine_sha256", "design", "collection",
+            "pairs_improved", "pairs_regressed", "safety_regressions", "safety_unrecorded_regressions",
+            "safety_events_cand", "safety_recorded_cand", "safety_events_ref", "safety_recorded_ref")
+COUNTS = OPTIONAL[-8:]   # shown next to the decision, never used in it
 # how the trials were collected, apart from how they are analysed (design): controlled = both builds under the same
 # conditions on a pre-set (interleaved or randomized) schedule; observational = anything else, or not verified
 COLLECTIONS = ("controlled", "observational")
@@ -106,6 +109,15 @@ def check_row(r, where="row"):
         if (r.get(k) or "").strip() and yes(r[k]) is None: raise InputError(f"{where}: {k} must be yes, no or empty, not {r[k]!r}")
     h = r.get("engine_sha256", "")
     if h and not (len(h) == 64 and all(c in "0123456789abcdef" for c in h.lower())): raise InputError(f"{where}: engine_sha256 must be 64 hex characters")
+    for k in COUNTS:
+        v = r.get(k, "")
+        if v and not v.isdigit(): raise InputError(f"{where}: {k} must be a whole number, not {v!r}")
+    if r.get("pairs_improved") or r.get("pairs_regressed"):
+        if r.get("design", "").lower() != "paired": raise InputError(f"{where}: pairs_improved / pairs_regressed need design=paired")
+    for a_, b_ in (("safety_events_cand", "safety_recorded_cand"), ("safety_events_ref", "safety_recorded_ref")):
+        if r.get(a_) and r.get(b_) and int(r[a_]) > int(r[b_]): raise InputError(f"{where}: {a_} is larger than {b_}")
+    if r.get("safety_regressions") and r.get("pairs_regressed") and int(r["safety_regressions"]) > int(r["pairs_regressed"]):
+        raise InputError(f"{where}: safety_regressions is larger than pairs_regressed")
     for k in ("gpu_ms", "energy_mj", "assumed_rate"):
         v = (r.get(k) or "").strip()
         if not v: continue
@@ -163,6 +175,8 @@ def judge_row(r, rule="revised", tol=10.0, where="row"):
     for k in ("gpu_ms", "energy_mj"):
         if r.get(k) not in (None, ""): out[k] = float(r[k])
     if r.get("engine_sha256"): out["engine_sha256"] = r["engine_sha256"].lower()
+    for k in COUNTS:
+        if r.get(k): out[k] = int(r[k])
     out["design"] = r.get("design", "").lower() or "independent"; out["collection"] = r.get("collection", "").lower() or "controlled"
     why = []   # supported for counting, not for deciding
     if out["design"] == "paired":
@@ -209,6 +223,24 @@ def apply_preflight(rows, pre):
     return rows
 
 
+def shown_counts(x):
+    """What the average hides, shown next to the decision and never used in it: per-pair changes and safety events.
+    Missing information is said to be missing, not read as none."""
+    L = []
+    if x.get("design") == "paired":
+        if "pairs_regressed" in x:
+            L.append(f"pairs: {x.get('pairs_improved', 0)} improved, {x['pairs_regressed']} regressed" +
+                     ((f" ({x['safety_regressions']} with a safety event" + (f", {x['safety_unrecorded_regressions']} with no safety record" if x.get("safety_unrecorded_regressions") else "") + ")")
+                      if "safety_regressions" in x else "; safety of the regressions: not provided") +
+                     " · regressed trial ids: tally --regressions")
+        else: L.append("pairs: per-pair changes not provided (tally --pair counts them)")
+    if "safety_events_cand" in x:
+        L.append(f"safety events: {x['safety_events_cand']} in {x.get('safety_recorded_cand', '?')} recorded trials of {x['candidate']}, "
+                 f"{x.get('safety_events_ref', '?')} in {x.get('safety_recorded_ref', '?')} of {x['reference']} (trials without a record are not counted as none)")
+    else: L.append("safety events: not provided")
+    return [l + " · shown, not used in the decision" for l in L]
+
+
 def gate(res):
     d = {x["decision"] for x in res}
     return 4 if "BLOCK" in d else 3 if "HOLD" in d else 0
@@ -227,6 +259,7 @@ def md(res, rule, tol):
               f"- **Deployment decision: {x['decision']}** · evidence finding: {x['finding']}" + ((f" (the preview reading would be {x['preview_finding']}; not for deployment)" if x['preview_finding'] != x['finding'] else " (preview only, not for deployment)") if x.get("preview_only") else ""),
               f"- observed: {k}/{n} vs {kr}/{nr}" + (f" · degradation {x['degradation_pp']} pp, 97.5% interval {x['interval97_5_pp']}" if "degradation_pp" in x else
                                                       f" · difference {x['difference_pp']} pp, 95% interval {x['interval95_pp']}"), f"- why: {x['why']}"]
+        L += [f"- {line}" for line in shown_counts(x)]
         if x.get("priority"): L += [f"- priority: {x['priority']}"]
         if x.get("next_test"): nt = x["next_test"]; L += [f"- next test: {nt['compare']}; {nt['rule']}; about {nt['trials_per_arm']} trials per arm ({nt['assumption']})"]
         L += [""]

@@ -125,3 +125,37 @@ operator as much as from the model. `collection=observational` keeps the counts 
     interleaved or randomized schedule, or `observational`, meaning anything else or not verified.
 - A row is a full reading only when it is independent and controlled. Anything else is a preview: never GO, no
   next-test size, and the preflight treats it as not evidence.
+
+# Before and after on fixed seeds: what the average hides
+
+`seeds.csv` (**synthetic**, `make_seeds.py`) has 60 seeds, each run by version `before` and `after`. `near_miss` is
+recorded only when an episode ends in success or timeout; otherwise it is empty.
+
+```bash
+$P make_seeds.py
+$P $Q tally seeds.csv --id run_id --group version --candidate after --reference before --success outcome \
+    --map success=true --map collision=false --map dropped=false --map timeout=false \
+    --pair seed --safety near_miss --detail outcome --regressions regressions.jsonl --set mode=improvement > results.csv
+$P $Q judge results.csv
+```
+
+```
+pairs: 26 improved, 5 regressed, 22 both succeed, 7 both fail; of the regressions, 0 with a safety event, 2 with no safety record
+  regressed: pair '20': candidate trial 'after-020' failed, reference trial 'before-020' succeeded; safety event: not recorded; outcome: 'dropped'
+  ...
+- pairs: 26 improved, 5 regressed (0 with a safety event, 2 with no safety record) · regressed trial ids: tally --regressions · shown, not used in the decision
+- safety events: 7 in 51 recorded trials of after, 0 in 38 of before (trials without a record are not counted as none) · shown, not used in the decision
+```
+
+- **Per pair, not only the average.** Success went from 27/60 to 48/60, but five seeds that succeeded before fail
+  after.
+  - `--pair` counts the four transitions.
+  - `--detail outcome` shows how each regression failed.
+  - `--regressions` writes each regressed pair with both trial ids, so you can open the two episodes.
+- **Not recorded is not "none".**
+  - `--safety near_miss` counts a trial only when the field is true or false. An empty field is reported as "no
+    safety record".
+  - Without `--safety`, judge says `safety events: not provided` rather than staying silent.
+- **Shown, not decided.** These counts sit next to the decision and do not change it. A rule that blocks on
+  regressions or safety events has to be pre-registered like any other. This log is also a tuning set, so it says
+  nothing about generalization.
