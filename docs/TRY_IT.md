@@ -22,7 +22,7 @@ It only depends on numpy, scipy and PyYAML (pytest for the tests).
 ## 2. Check the study yourself
 
 ```bash
-.venv/bin/python scripts/quantgate.py verify          # expect: 201 passed, then 22 "ok" lines (sealed logs vs their hashes)
+.venv/bin/python scripts/quantgate.py verify          # expect: all tests passed, then 22 "ok" lines (sealed logs vs their hashes)
 .venv/bin/python scripts/quantgate.py review --no-llm # rebuilds the review as one HTML file (below)
 .venv/bin/python scripts/quantgate.py plan FP16       # what is confirmed, what is open, and the next test (also FT1, FT2, INT8, PC-B)
 ```

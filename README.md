@@ -54,6 +54,10 @@ validating next", not "approved": in this study no INT8 build was approved again
 
 ## What is new here
 
+**Which build to deploy, not which plan to run.** Plan checkers decide whether one plan may run now. QuantGate
+decides whether a build of a policy (FP32, FP16, INT8, a fine-tune) may replace another on the device. It compares
+them by measured edge cost and real-arm behaviour, and holds approval when the evidence is not enough.
+
 A gate in front of deployment, or a model that proposes while code decides, is not new on its own. What QuantGate adds
 is the combination, measured on a real arm:
 
@@ -357,7 +361,7 @@ Every reported number can be recomputed from the committed sealed logs:
 
 ```bash
 python3 -m venv .venv && .venv/bin/pip install -e ".[dev]"   # or: uv venv .venv && uv pip install --python .venv/bin/python -e ".[dev]"
-.venv/bin/python -m pytest -q                                   # 187 tests
+.venv/bin/python -m pytest -q                                   # all tests pass (CI runs the same on every push)
 python tests/runner_abort_harness.py                            # runner abort/timeout/manifest harness
 .venv/bin/python -m edgeqgate.grid                              # 26-cell grid and hash
 .venv/bin/python scripts/g6_analysis.py --sealed-dir artifacts/trials/g6_unsealed --out /tmp/g6.json

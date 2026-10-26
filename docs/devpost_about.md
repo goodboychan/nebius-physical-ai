@@ -48,6 +48,10 @@ rules and returns a deployment decision, the reason and the next test (example: 
 
 ### What is new here
 
+**Which build to deploy, not which plan to run.** Plan checkers decide whether one plan may run now. QuantGate
+decides whether a build of a policy (FP32, FP16, INT8, a fine-tune) may replace another on the device. It compares
+them by measured edge cost and real-arm behaviour, and holds approval when the evidence is not enough.
+
 A gate in front of deployment, or a model that proposes while code decides, is not new on its own. What QuantGate adds
 is the combination, measured on a real arm:
 
