@@ -16,8 +16,9 @@ Input CSV columns (one row per comparison; the last four are optional):
 Rules (the pre-registered ones, see docs/fp16_real_arm_preregistration.md and next_test_plan.py):
   - non-inferiority: degradation = reference - candidate. The success criterion is met when the upper bound of its
     two-sided 97.5% Newcombe interval is below the tolerance (default 10 pp); "degraded" when the lower bound is above it.
-    With --rule current (the study's rule) two arms both at or above 95% stay undecided at any sample size (ceiling
-    clause); --rule revised drops that clause.
+    With --rule study (alias current: this study's pre-registered rule) two arms both at or above 95% stay undecided at
+    any sample size (ceiling clause); --rule revised (the default, for a new project) drops that clause. Choose the rule
+    before the trials and write it down; never choose it after seeing which one reads better.
   - improvement: detected when the lower bound of the 95% Newcombe interval of candidate - reference is above 0.
   - deployment decision: GO only if the success criterion is met AND placement_ok AND preflight_ok; BLOCK if degraded or
     preflight_ok is no; otherwise HOLD. An improvement is never a GO by itself.
@@ -25,7 +26,7 @@ Rules (the pre-registered ones, see docs/fp16_real_arm_preregistration.md and ne
     assuming both builds truly succeed at the pooled observed rate (a planning estimate, not a guarantee).
 With --gate the exit code carries the decision for CI: 0 every row GO, 3 any HOLD (none blocked), 4 any BLOCK; bad input
 exits 2 either way.
-Usage: python scripts/quantgate_judge.py <results.csv> [--rule current|revised] [--tol 10] [--json out.json] [--md out.md] [--gate]"""
+Usage: python scripts/quantgate_judge.py <results.csv> [--rule revised|study] [--tol 10] [--json out.json] [--md out.md] [--gate]"""
 import argparse, csv, json, math, os, sys
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 from g6_analysis import newcombe
@@ -34,6 +35,14 @@ import next_test_plan as ntp
 Z975 = ntp.Z                     # two-sided 97.5% (the non-inferiority interval of the plans)
 Z95 = 1.959963984540054          # two-sided 95% (the improvement rule)
 MODES = ("non-inferiority", "improvement")
+# "study" (alias "current"): this study's pre-registered rule, with the ceiling clause; use it only to reproduce this
+# study. "revised": the rule for a new project (no ceiling clause). Pick it and write it down before the trials run.
+RULES = {"revised": "revised", "study": "current", "current": "current"}
+RULE_HELP = ("revised (default): for a new project; study: reproduces this study's pre-registered rule with the ceiling "
+             "clause (alias: current). Choose before the trials, never after seeing which one gives the better reading.")
+
+
+def _bad_rule(rule): raise InputError(f"unknown rule {rule!r}; use revised or study")
 REQUIRED = ("candidate", "reference", "cand_successes", "cand_trials", "ref_successes", "ref_trials")
 OPTIONAL = ("gpu_ms", "energy_mj", "placement_ok", "preflight_ok", "mode", "assumed_rate", "engine_sha256")
 GRID = (50, 75, 100, 120, 150, 200, 300, 400, 600, 800, 1000, 1500, 2000)   # trials per arm searched for the next test
@@ -92,11 +101,12 @@ def check_row(r, where="row"):
     return r, kc, nc, kr, nr, mode
 
 
-def judge_row(r, rule="current", tol=10.0, where="row"):
+def judge_row(r, rule="revised", tol=10.0, where="row"):
+    rule = RULES.get(rule) or _bad_rule(rule)
     if not (math.isfinite(tol) and 0 < tol < 100): raise InputError(f"tolerance must be between 0 and 100 pp, not {tol}")
     r, kc, nc, kr, nr, mode = check_row(r, where)
     pc, pr = kc / nc, kr / nr; place, pre = yes(r.get("placement_ok")), yes(r.get("preflight_ok"))
-    out = {"candidate": r["candidate"], "reference": r["reference"], "mode": mode, "candidate_k_n": [kc, nc], "reference_k_n": [kr, nr]}
+    out = {"candidate": r["candidate"], "reference": r["reference"], "mode": mode, "rule": "study" if rule == "current" else rule, "tolerance_pp": tol, "candidate_k_n": [kc, nc], "reference_k_n": [kr, nr]}
     missing = []
     if mode == "improvement":
         lo, hi = newcombe(kc, nc, kr, nr, Z95); out["difference_pp"] = round((pc - pr) * 100, 1); out["interval95_pp"] = [round(lo * 100, 1), round(hi * 100, 1)]
@@ -133,7 +143,7 @@ def judge_row(r, rule="current", tol=10.0, where="row"):
     if r.get("engine_sha256"): out["engine_sha256"] = r["engine_sha256"].lower()
     return out
 
-def judge(rows, rule="current", tol=10.0, lines=None):
+def judge(rows, rule="revised", tol=10.0, lines=None):
     if not rows: raise InputError("no rows")
     res = [judge_row(r, rule, tol, f"row {i}" + (f" (line {lines[i - 1]})" if lines else "")) for i, r in enumerate(rows, 1)]
     ok = [x for x in res if x["decision"] != "BLOCK" and "gpu_ms" in x]
@@ -167,7 +177,10 @@ def gate(res):
 
 
 def md(res, rule, tol):
-    L = [f"# QuantGate judge ({'current rule, with the ceiling clause' if rule == 'current' else 'revised rule'}, tolerance {tol:g} pp)", ""]
+    rule = RULES.get(rule, rule)
+    name = "study rule: the pre-registered rule of this study, with the ceiling clause" if rule == "current" else "revised rule, for a new project"
+    L = [f"# QuantGate judge ({name}, tolerance {tol:g} pp)",
+         "", "_The rule and tolerance are part of the plan: fix them before the trials, not after seeing the results._", ""]
     for x in res:
         k, n = x["candidate_k_n"]; kr, nr = x["reference_k_n"]
         L += [f"## {x['candidate']} vs {x['reference']} ({x['mode']})", f"- **Deployment decision: {x['decision']}** · evidence finding: {x['finding']}",
@@ -179,7 +192,7 @@ def md(res, rule, tol):
     return "\n".join(L)
 
 if __name__ == "__main__":
-    ap = argparse.ArgumentParser(); ap.add_argument("csv"); ap.add_argument("--rule", choices=["current", "revised"], default="current")
+    ap = argparse.ArgumentParser(); ap.add_argument("csv"); ap.add_argument("--rule", choices=["revised", "study", "current"], default="revised", help=RULE_HELP)
     ap.add_argument("--tol", type=float, default=10.0); ap.add_argument("--json"); ap.add_argument("--md", help="also write the report as Markdown (e.g. for a PR comment)")
     ap.add_argument("--gate", action="store_true", help="exit 0 if every row is GO, 3 if any is HOLD, 4 if any is BLOCK")
     ap.add_argument("--preflight", help="fill preflight_ok for the card's candidate from `preflight --checks-only --json` output"); a = ap.parse_args()

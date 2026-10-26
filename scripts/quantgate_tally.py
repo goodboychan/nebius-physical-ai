@@ -19,6 +19,9 @@ Options:
   --id FIELD           unique trial id (default: trial_id; with the log's `session` field when present). A trial
                        that appears twice, in one file or across files, or a file given twice, stops with exit 2
   --append CSV         append the row to a judge CSV (writes the header if the file is new)
+  --placement SPEC     FIELD or FILE.json:FIELD (like --success), the placement error per successful trial: sets placement_ok by the study's placement rule (E2: mean
+                       error of candidate minus reference, 97.5% bootstrap, yes if below --placement-tol, default 5)
+  --engine FILE        the candidate's engine: writes its sha256 to engine_sha256, so preflight can tie the row to it
 Any judge column can be added with --set column=value (e.g. --set placement_ok=yes --set mode=improvement).
 Usage: python scripts/quantgate_tally.py <log.jsonl> [<log.jsonl> ...] --candidate C --reference R [options]"""
 import argparse, csv, json, os, sys
@@ -41,13 +44,17 @@ def truth(v, what):
     raise TallyError(f"{what} must be true or false, not {v!r}")
 
 
-def tally(trials, candidate, reference, group="cell", success="success", require=(), forbid=(), drop=("invalid", "aborted"), id_field="trial_id"):
-    ext = None
-    if ":" in success and success.split(":", 1)[0].endswith(".json"):
-        f, field = success.split(":", 1)
-        try: ext = json.load(open(f))
-        except FileNotFoundError: raise TallyError(f"outcome file not found: {f}")
-    out, seen = {candidate: [0, 0], reference: [0, 0]}, set()
+def tally(trials, candidate, reference, group="cell", success="success", require=(), forbid=(), drop=("invalid", "aborted"), id_field="trial_id",
+          placement=None):
+    def source(spec, what):   # FIELD, or FILE.json:FIELD keyed by trial id
+        if spec and ":" in spec and spec.split(":", 1)[0].endswith(".json"):
+            f, fld = spec.split(":", 1)
+            try: return json.load(open(f)), f, fld
+            except FileNotFoundError: raise TallyError(f"{what} file not found: {f}")
+        return None, None, spec
+    ext, f, field = source(success, "outcome")
+    pext, pf, pfield = source(placement, "placement")
+    out, seen, place = {candidate: [0, 0], reference: [0, 0]}, set(), {candidate: [], reference: []}
     for i, r in enumerate(trials, 1):
         g = get(r, group)
         seen.add(g)
@@ -60,10 +67,33 @@ def tally(trials, candidate, reference, group="cell", success="success", require
         else: ok = truth(get(r, success), f"{where}: {success}")
         ok = ok and all(truth(get(r, k), f"{where}: {k}") for k in require) and not any(get(r, k) is True for k in forbid)
         out[g][0] += ok; out[g][1] += 1
+        if placement and ok:   # placement error is measured on successful trials only, as in the study (E2)
+            if pext is not None:
+                t = get(r, id_field)
+                if t not in pext: raise TallyError(f"{where}: no placement in {pf}")
+                v = get(pext[t], pfield)
+            else: v = get(r, pfield)
+            if isinstance(v, bool) or not isinstance(v, (int, float)) or v != v or v < 0: raise TallyError(f"{where}: {pfield} must be a non-negative number on a successful trial, not {v!r}")
+            place[g].append(float(v))
     for b in (candidate, reference):
         if out[b][1] == 0: raise TallyError(f"no trials for {b!r} in field {group!r}; builds seen: {sorted(map(str, seen))}")
-    return {"candidate": candidate, "reference": reference, "cand_successes": out[candidate][0], "cand_trials": out[candidate][1],
+    row = {"candidate": candidate, "reference": reference, "cand_successes": out[candidate][0], "cand_trials": out[candidate][1],
             "ref_successes": out[reference][0], "ref_trials": out[reference][1]}
+    if placement: row["_placement"] = place
+    return row
+
+
+def placement_check(place, candidate, reference, tol_px=5.0, n_boot=10000):
+    """The study's placement rule (E2): degradation = mean placement error of the candidate minus the reference, on
+    successful trials, with a 97.5% unpaired percentile bootstrap (g6_analysis.boot_ci, fixed seed). yes if the upper
+    bound is below tol_px, no if the lower bound is above it, empty (undecided, so judge holds) otherwise."""
+    from g6_analysis import boot_ci, aep_decision
+    a, b = place[candidate], place[reference]
+    if len(a) < 2 or len(b) < 2: return "", f"placement: too few successful trials with a measurement ({len(a)} vs {len(b)}); left undecided"
+    d, lo, hi = boot_ci(a, b, lambda x: float(sum(x) / len(x)), n_boot, "QuantGate/tally/E2", 0.975)
+    dec = aep_decision(lo, hi, tol_px)
+    ok = {"tolerance_compatible": "yes", "materially_degraded": "no"}.get(dec, "")
+    return ok, f"placement: degradation {d:+.1f} px, 97.5% interval [{lo:+.1f}, {hi:+.1f}] vs tolerance {tol_px:g} px -> placement_ok={ok or 'undecided'}"
 
 
 def read_jsonl(paths, id_field="trial_id", session_field="session"):
@@ -97,10 +127,20 @@ def main(argv=None):
     ap.add_argument("--group", default="cell"); ap.add_argument("--success", default="success"); ap.add_argument("--id", default="trial_id")
     ap.add_argument("--and", dest="require", action="append", default=[]); ap.add_argument("--not", dest="forbid", action="append", default=[])
     ap.add_argument("--drop", action="append"); ap.add_argument("--set", action="append", default=[], metavar="COLUMN=VALUE")
+    ap.add_argument("--placement", metavar="FIELD", help="placement error per successful trial (e.g. place_px): sets placement_ok by the study's rule")
+    ap.add_argument("--placement-tol", type=float, default=5.0, metavar="PX", help="placement tolerance in the field's unit (default 5)")
+    ap.add_argument("--engine", metavar="FILE", help="the candidate's engine file: writes its sha256 to engine_sha256")
     ap.add_argument("--append", metavar="CSV"); a = ap.parse_args(argv)
     try:
         row = tally(read_jsonl(a.logs, a.id), a.candidate, a.reference, a.group, a.success, a.require, a.forbid,
-                    ("invalid", "aborted") if a.drop is None else a.drop, a.id)
+                    ("invalid", "aborted") if a.drop is None else a.drop, a.id, a.placement)
+        if a.placement:
+            if not (a.placement_tol > 0): raise TallyError("--placement-tol must be positive")
+            row["placement_ok"], note = placement_check(row.pop("_placement"), a.candidate, a.reference, a.placement_tol); print(note, file=sys.stderr)
+        if a.engine:
+            import hashlib
+            try: row["engine_sha256"] = hashlib.sha256(open(a.engine, "rb").read()).hexdigest()
+            except FileNotFoundError: raise TallyError(f"engine not found: {a.engine}")
         for s in a.set:
             k, eq, v = s.partition("=")
             if not eq: raise TallyError(f"--set needs COLUMN=VALUE, not {s!r}")

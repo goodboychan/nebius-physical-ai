@@ -112,6 +112,39 @@ def evidence_from_judge(card, judge_json):
             "evidence_source": f"{judge_json} ({x['decision']})"}
 
 
+def make_card(engine, norm, candidate, out, latency_ms=None, latency_from=None, latency_field="rtt_ms", group="cell", latency_label=None):
+    """Write a candidate card and the normalization manifest next to the engine, from the files and the trial logs, so
+    no hash or latency is typed by hand. The latency is the worst case (max) of latency_field over the candidate's
+    trials in the logs, or latency_ms as measured elsewhere. Returns the card."""
+    if not os.path.exists(engine): raise CardError(f"engine not found: {engine}")
+    if not engine.endswith(".engine"): raise CardError(f"engine file must end in .engine (the runner's convention): {engine}")
+    if not os.path.exists(norm): raise CardError(f"normalization file not found: {norm}")
+    if os.path.dirname(os.path.abspath(norm)) != os.path.dirname(os.path.abspath(engine)):
+        raise CardError("the normalization file must sit next to the engine (the runner looks for it there)")
+    if (latency_ms is None) == (latency_from is None): raise CardError("give exactly one of --latency-ms or --latency-from")
+    if latency_from is not None:
+        import quantgate_tally as qt
+        try: trials = qt.read_jsonl(latency_from)
+        except qt.TallyError as e: raise CardError(str(e))
+        vals = [qt.get(r, latency_field) for r in trials if qt.get(r, group) == candidate   # the trials tally counts
+                and not any(qt.get(r, k) is True for k in ("invalid", "aborted"))]
+        if not vals: raise CardError(f"no trials for {candidate!r} in field {group!r} of {', '.join(latency_from)}")
+        bad = [v for v in vals if isinstance(v, bool) or not isinstance(v, (int, float)) or not math.isfinite(v) or v <= 0]
+        if bad: raise CardError(f"{latency_field} must be a positive number on every trial; found {bad[0]!r}")
+        latency_ms = max(vals); latency_label = latency_label or f"max {latency_field} over {len(vals)} trials of {candidate}"
+    elif isinstance(latency_ms, bool) or not isinstance(latency_ms, (int, float)) or not math.isfinite(latency_ms) or latency_ms <= 0:
+        raise CardError(f"latency_ms must be a positive number of ms, not {latency_ms!r}")
+    d = os.path.dirname(os.path.abspath(engine)); key = os.path.basename(engine)[:-len(".engine")]
+    man_path = os.path.join(d, "norm_manifest.json")
+    man = json.load(open(man_path)) if os.path.exists(man_path) else {}
+    man[key] = {"file": os.path.basename(norm), "sha256": sha(norm)}
+    json.dump(man, open(man_path, "w"), indent=1)
+    card = {"candidate": candidate, "engine": os.path.relpath(os.path.abspath(engine), os.path.dirname(os.path.abspath(out))),
+            "engine_sha256": sha(engine), "latency_ms": round(float(latency_ms), 1), "latency_label": latency_label or "measured worst case (max)"}
+    json.dump(card, open(out, "w"), indent=1); open(out, "a").write("\n")
+    return card
+
+
 def demo(out):
     T = json.load(open(os.path.join(out, "d3_v3_verdicts.json")))
     row = lambda c, ctx: next(r for r in T["rows"] if r["candidate"] == c and ctx in r["context"])
@@ -143,18 +176,33 @@ def demo(out):
     return {"deadline_ms": DEADLINE_MS, "runner_constants": {k: CONST[k] for k in ("PREF", "BLEND", "FPS")}, "cases": res}
 
 
+def step_status(name, ok, outcome):
+    if name == "evidence": return "GO" if outcome == "OK" else ("HOLD" if outcome == "HOLD" else "BLOCK")
+    return "ok" if ok else "FAIL"
+
+
+def reason(outcome, steps, checks_only):
+    if outcome == "BLOCK":
+        name, _, detail = next(s for s in steps if not s[1]); return f"blocked at {name}: {detail}"
+    if checks_only: return "engine, normalization and timing hold; deployment is not decided here (judge decides the evidence)"
+    if outcome == "HOLD": return "the engine, normalization and timing are ready, but the evidence does not approve deployment yet"
+    return "the engine, normalization and timing are ready, and the evidence approves deployment (GO)"
+
+
 def run_card(path, out_json=None, checks_only=False, judge_json=None):
     try:
         card = load_card(path, evidence_from_card=not (checks_only or judge_json))
         if judge_json: card = evidence_from_judge(card, judge_json)
     except CardError as e: print(f"error: {e}", file=sys.stderr); return 2
     outcome, steps = preflight(card, evidence=not checks_only)
-    for name, ok, detail in steps: print(f"  {'pass' if ok else 'FAIL'}  {name:17} {detail}")
+    # the decision and its reason first; "ok" means a file or timing check held, never that deployment is approved
+    status = [step_status(name, ok, outcome) for name, ok, _ in steps]
     label = ("readiness checks" if checks_only else "preflight") + (f" (evidence: {card['evidence_source']})" if judge_json else "")
-    print(f"{label}: {outcome}" + ("" if outcome == "OK" else f" (exit {EXIT[outcome]})"))
+    print(f"{label}: {outcome}" + ("" if outcome == "OK" else f" (exit {EXIT[outcome]})") + f" | {reason(outcome, steps, checks_only)}")
+    for (name, ok, detail), st in zip(steps, status): print(f"  {st:5}  {name:17} {detail}")
     if out_json:
         json.dump({"card": path, "candidate": card.get("candidate"), "engine_sha256": card["engine_sha256"], "checks_only": checks_only,
-                   "outcome": outcome, "deadline_ms": DEADLINE_MS, "steps": [{"check": a, "pass": b, "detail": c} for a, b, c in steps]}, open(out_json, "w"), indent=1)
+                   "outcome": outcome, "deadline_ms": DEADLINE_MS, "steps": [{"check": a, "pass": b, "status": st, "detail": c} for (a, b, c), st in zip(steps, status)]}, open(out_json, "w"), indent=1)
     return EXIT[outcome]
 
 

@@ -29,3 +29,40 @@ quickstart only showed `uv` (now `python3 -m venv` + `pip` first), and there was
 - `judge --gate` exits with the decision. The workflow `quantgate-gate.yml` posts it on a pull request.
 - Building the CI example also exposed a bug: `quantgate.py judge` resolved relative paths against the repository
   instead of the caller's folder. It now uses the caller's folder.
+
+## Session 2, 2026-10-26 (fresh environment, first-time developer view)
+
+Run by a reviewer on a GX10 in a new folder and venv, at commit `a69ad28`. No robot, GPU or paid API was used, the
+source was not changed, and the reviewer's own robot project was not connected.
+
+**What worked.**
+- Install took about 10.5 s and `verify` about 27 s: 209 tests, the runner harness and 22 hashes passed.
+- `review --no-llm` took about 1.1 s.
+- A self-made CSV (18/20 vs 19/20) gave HOLD and a next test of about 150 per arm.
+- Eleven kinds of bad CSV were refused, engine and normalization tampering was blocked, and the linked
+  checks → judge → preflight path worked.
+- A dashboard difference seen earlier occurred only in a shallow clone; the full history reproduced cleanly.
+
+**Their verdict.** They would use it now to put existing experiment logs through it. Before connecting it to a real
+deployment approval, they want a data-connection example and clearer decision wording.
+
+**Asked for, and what changed** (commit after `a69ad28`):
+1. **HOLD shown next to "pass".**
+   - The preflight now prints the decision and a one-line reason first.
+   - Readiness checks show `ok` or `FAIL`. The evidence line shows `GO`, `HOLD` or `BLOCK`, never "pass".
+   - The JSON has a `status` per check.
+2. **From rollouts to the numbers.** New [`examples/rollout/`](../examples/rollout/) runs a JSONL log through
+   tally → card → checks → judge → preflight.
+   - It is synthetic and labelled so.
+   - It explains each log field, the normalization file and how latency is measured (worst case; the 200 ms
+     deadline from the runner's constants).
+   - `tally --placement` applies the study's placement rule (E2). It reproduces the FP16 reading, −0.6 px
+     [−2.6, +1.4].
+   - `tally --engine` writes the build's hash into the row.
+   - `quantgate.py card` writes the card and the normalization manifest from the files and logs.
+3. **Which rule.**
+   - `revised` is now the default, for a new project. `study` (alias `current`) reproduces this study's rule.
+   - The output says to fix the rule and tolerance before the trials, and the JSON records both on every row.
+4. **Path through the local HTML.** The review page opens with a "Decision path" table: decision → what still blocks
+   approval → evidence files → next test, with links to each candidate's plan.
+5. **Shallow clone.** TRY_IT.md says to clone the full history and why.

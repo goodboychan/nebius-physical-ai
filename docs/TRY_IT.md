@@ -19,6 +19,10 @@ python3 -m venv .venv && .venv/bin/pip install -e ".[dev]"
 
 It only depends on numpy, scipy and PyYAML (pytest for the tests).
 
+Clone the full history (no `--depth`). The dashboard's evidence links are pinned to the last commit that changed each
+linked file, which a shallow clone cannot see; rebuilding the dashboard there changes its links. Nothing else depends
+on the history.
+
 ## 2. Check the study yourself
 
 ```bash
@@ -55,8 +59,11 @@ my INT8,my FP32,18,20,19,20,,,yes,yes,,
 ```
 
 ```bash
-.venv/bin/python scripts/quantgate.py judge examples/my_results.csv --rule revised
+.venv/bin/python scripts/quantgate.py judge examples/my_results.csv
 ```
+
+How to read the output: the deployment decision comes first. `ok` in a preflight line means a file or timing check
+held, never that deployment is approved; a HOLD says what is still missing.
 
 Expected for the first row (this study's FP16):
 
@@ -67,6 +74,8 @@ Expected for the first row (this study's FP16):
 - next test: ... about 120 trials per arm ...
 ```
 
+- The rule: `revised` (the default) is for a new project. `--rule study` reproduces this study's pre-registered rule,
+  which has a ceiling clause. Choose the rule and `--tol` before the trials, never after seeing which reads better.
 - Use `mode` = `improvement` for a fine-tune compared with the policy it replaces; leave it empty for "is the cheaper
   build as good as the reference".
 - `--tol 5` makes the tolerance stricter, and the next test's trials per arm grow with it (about 400 per arm).
@@ -74,6 +83,12 @@ Expected for the first row (this study's FP16):
   the first row change `11.6` in the `gpu_ms` column to `-5`, then run judge again: it stops with the row number and
   exit 2 instead of guessing. Renaming the `mode` header to `mod` is refused too. Cells with only spaces count as
   empty, so a CSV saved from a spreadsheet works.
+
+### From your rollouts, end to end
+
+[`examples/rollout/`](../examples/rollout/) takes a JSONL trial log through `tally` (successes, placement, engine
+hash) → `card` (engine hash, normalization manifest, worst-case latency from the logs) → checks → judge → preflight.
+It also explains what each log field, the normalization file and the latency measurement must be.
 
 ### From trial logs to the CSV row
 
@@ -126,7 +141,7 @@ Linked, each takes the other's answer from a file instead of a hand copy. They a
 cd examples/gate
 Q=../../scripts/quantgate.py
 python $Q preflight --card candidate.json --checks-only --json pre.json               # engine, normalization, timing -> OK
-python $Q judge results.csv --rule revised --preflight pre.json --json judge.json     # preflight_ok filled from pre.json -> GO
+python $Q judge results.csv --preflight pre.json --json judge.json     # preflight_ok filled from pre.json -> GO
 python $Q preflight --card candidate.json --judge judge.json                          # all four checks, verdict from judge.json -> OK
 ```
 

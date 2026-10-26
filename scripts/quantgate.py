@@ -12,6 +12,7 @@
   quantgate.py judge <csv>         your own results under the same rules: decision, why, next test (examples/my_results.csv);
                                    --gate makes the exit code the decision (0 GO, 3 HOLD, 4 BLOCK) for CI
   quantgate.py tally <log.jsonl>   per-trial logs -> the judge CSV row, with an explicit success definition
+  quantgate.py card --engine ...   the candidate card and normalization manifest, from the files and the logs
   quantgate.py cost                what the review cost (Nebius list prices, real-arm hours)
   quantgate.py verify              tests, runner harness, and the sealed-log hashes against the post-lock records
   quantgate.py stages              the hardware and cloud stages that produce the evidence, with their commands
@@ -22,7 +23,7 @@ Usage: python scripts/quantgate.py <command> [...]   (quantgate.py <command> -h 
 import hashlib, json, os, subprocess, sys
 
 HERE = os.path.dirname(os.path.abspath(__file__)); ROOT = os.path.dirname(HERE); PY = sys.executable
-run = lambda *a: (print("$", " ".join(a), flush=True), subprocess.run([PY, *a], cwd=ROOT, check=True))
+run = lambda *a: (print("$", " ".join(a), file=sys.stderr, flush=True), subprocess.run([PY, *a], cwd=ROOT, check=True))   # stdout stays the result
 
 STAGES = """Evidence stages (run once per policy; each writes committed, hashed artifacts):
   1. Data        lerobot-record on the SO-101 -> LOCK-1 split        edgeqgate.splits (manifest in artifacts/manifests/)
@@ -89,8 +90,15 @@ def main(argv=None):
     f.add_argument("--json", help="with --card: also write the result as JSON")
     f.add_argument("--checks-only", action="store_true", help="with --card: engine, normalization and timing only (for judge --preflight)")
     f.add_argument("--judge", help="with --card: take the verdict from this judge --json output for the card's candidate")
+    c = sub.add_parser("card", help="write a candidate card and the normalization manifest from the files and trial logs")
+    c.add_argument("--engine", required=True, help="the build's .engine file"); c.add_argument("--norm", required=True, help="its normalization file, next to the engine")
+    c.add_argument("--candidate", required=True, help="the build's name, as in the logs and the judge CSV")
+    c.add_argument("--latency-from", nargs="+", metavar="LOG", help="trial logs (JSONL): the card takes the max of --latency-field over the candidate's trials")
+    c.add_argument("--latency-field", default="rtt_ms", help="per-trial worst round trip, observation to action, in ms (default rtt_ms)")
+    c.add_argument("--latency-ms", type=float, help="instead of --latency-from: the measured worst case in ms")
+    c.add_argument("--group", default="cell", help="the log field naming the build (default cell)"); c.add_argument("--out", required=True)
     j = sub.add_parser("judge", help="your own results under the same rules (examples/my_results.csv)")
-    j.add_argument("csv"); j.add_argument("--rule", choices=["current", "revised"], default="current"); j.add_argument("--tol", type=float, default=10.0); j.add_argument("--json")
+    j.add_argument("csv"); j.add_argument("--rule", choices=["revised", "study", "current"], default="revised", help="revised (default) for a new project; study (alias current) reproduces this study's rule. Choose before the trials"); j.add_argument("--tol", type=float, default=10.0); j.add_argument("--json")
     j.add_argument("--md", help="also write the report as Markdown"); j.add_argument("--gate", action="store_true", help="exit 0 all GO, 3 any HOLD, 4 any BLOCK (for CI)")
     j.add_argument("--preflight", help="fill preflight_ok from `preflight --card c.json --checks-only --json pre.json`")
     sub.add_parser("tally", help="per-trial JSONL logs -> one judge CSV row (quantgate.py tally -h)")
@@ -122,6 +130,12 @@ def main(argv=None):
         ab = os.path.abspath
         run("scripts/quantgate_judge.py", ab(a.csv), "--rule", a.rule, "--tol", str(a.tol), *(["--json", ab(a.json)] if a.json else []),
             *(["--md", ab(a.md)] if a.md else []), *(["--gate"] if a.gate else []), *(["--preflight", ab(a.preflight)] if a.preflight else []))
+    elif a.cmd == "card":
+        sys.path.insert(0, HERE); import deploy_preflight as dp
+        try: card = dp.make_card(a.engine, a.norm, a.candidate, a.out, a.latency_ms, a.latency_from, a.latency_field, a.group)
+        except dp.CardError as e: print(f"error: {e}", file=sys.stderr); sys.exit(2)
+        print(f"wrote {a.out}: {card['candidate']}, engine {card['engine_sha256'][:12]}, {card['latency_label']} {card['latency_ms']} ms; "
+              f"normalization manifest next to the engine")
     elif a.cmd == "cost": run("scripts/review_cost.py")
     elif a.cmd == "verify": verify()
     elif a.cmd == "stages": print(STAGES)

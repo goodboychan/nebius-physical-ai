@@ -129,3 +129,50 @@ def test_gate_config_refuses_silent_misconfig(tmp_path):
     assert run(W) == 0 and run(W, FAIL_ON="holdd") == 2 and run(W, RESULTS="examples/my_results.csv") == 2
     assert [run("--apply", f, "4", "0") for f in ("block", "hold", "none", "holdd")] == [1, 1, 0, 2]
     assert [run("--apply", f, "3", "0") for f in ("block", "hold")] == [0, 1]
+
+
+def test_rollout_walkthrough_end_to_end(tmp_path):
+    """User test 2 (2026-10-26): from a JSONL rollout log to a decision, as in examples/rollout/README.md."""
+    d = tmp_path / "rollout"; shutil.copytree(ROOT / "examples/rollout", d)
+    run = lambda *a: subprocess.run([*CLI, *a], cwd=d, capture_output=True, text=True, env={k: v for k, v in os.environ.items() if k != "NEBIUS_API_KEY"})
+    r = run("tally", "trials.jsonl", "--group", "build", "--candidate", "int8", "--reference", "fp32", "--and", "released",
+            "--placement", "place_px", "--engine", "build/int8.engine")
+    assert r.returncode == 0 and "placement_ok=yes" in r.stderr; (d / "results.csv").write_text(r.stdout)
+    assert r.stdout.splitlines()[1].startswith("int8,fp32,38,40,39,40,yes,")
+    r = run("card", "--engine", "build/int8.engine", "--norm", "build/int8.norm_stats.npz", "--candidate", "int8",
+            "--latency-from", "trials.jsonl", "--group", "build", "--out", "card.json")
+    card = json.load(open(d / "card.json")); assert r.returncode == 0 and "over 40 trials" in card["latency_label"]   # the aborted trial is left out
+    assert run("preflight", "--card", "card.json", "--checks-only", "--json", "pre.json").returncode == 0
+    j = run("judge", "results.csv", "--preflight", "pre.json", "--json", "judge.json")
+    assert j.returncode == 0 and "Deployment decision: HOLD" in j.stdout and "$ scripts" not in j.stdout
+    assert json.load(open(d / "judge.json"))[0]["rule"] == "revised"
+    p = run("preflight", "--card", "card.json", "--judge", "judge.json")
+    lines = p.stdout.splitlines()
+    assert p.returncode == 3 and lines[0].startswith("preflight") and "HOLD" in lines[0] and "not approve" in lines[0]   # decision first
+    assert any(l.split()[0] == "HOLD" and "evidence" in l for l in lines[1:]) and not any(l.split()[0] == "pass" for l in lines[1:])
+
+
+def test_card_refuses_what_it_cannot_measure(tmp_path):
+    d = tmp_path / "b"; shutil.copytree(ROOT / "examples/rollout/build", d); (tmp_path / "x.npz").write_bytes(b"n")
+    base = ["card", "--engine", str(d / "int8.engine"), "--candidate", "int8", "--out", str(tmp_path / "c.json")]
+    assert q(*base, "--norm", str(tmp_path / "x.npz"), "--latency-ms", "90").returncode == 2           # not next to the engine
+    assert q(*base, "--norm", str(d / "int8.norm_stats.npz")).returncode == 2                          # no latency given
+    assert q(*base, "--norm", str(d / "int8.norm_stats.npz"), "--latency-ms", "-3").returncode == 2
+    assert q(*base, "--norm", str(d / "int8.norm_stats.npz"), "--latency-from", str(ROOT / "examples/rollout/trials.jsonl"),
+             "--group", "build", "--candidate", "nope").returncode == 2
+
+
+def test_tally_placement_reproduces_the_study_reading():
+    log = "artifacts/trials/fp16_unsealed/stress_fp16_F0_sealed.jsonl"; rj = "artifacts/fp16/rejudge/F0_consensus.json"
+    r = q("tally", log, "--candidate", "VC-025", "--reference", "VC-000", "--success", rj + ":success_geom", "--and", "released",
+          "--not", "human_contact", "--placement", rj + ":base_dist_px")
+    assert r.returncode == 0 and r.stdout.splitlines()[1] == "VC-025,VC-000,19,20,10,10,yes"   # fp16_analysis.json E2: tolerance_compatible
+    assert "degradation -0.6 px" in r.stderr
+
+
+def test_rule_names():
+    sys.path.insert(0, str(ROOT / "scripts")); import quantgate_judge as qj
+    row = {"candidate": "A", "reference": "B", "cand_successes": "118", "cand_trials": "120", "ref_successes": "119", "ref_trials": "120"}
+    assert qj.judge_row(row, "study")["success_criterion"].startswith("undecided (ceiling")
+    assert qj.judge_row(row, "study")["success_criterion"] == qj.judge_row(row, "current")["success_criterion"]
+    assert qj.judge_row(row)["rule"] == "revised" and qj.judge_row(row)["success_criterion"] == "met"

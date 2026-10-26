@@ -73,11 +73,12 @@ is the combination, measured on a real arm:
 ## Judge your own results
 
 Bring the success counts of your own builds, and QuantGate reads them with the same rules this study used (Newcombe
-intervals, a 10 pp tolerance, the ceiling clause or the revised rule, and the sample-size plan):
+intervals, a 10 pp tolerance, the ceiling clause or the revised rule, and the sample-size plan).
+Choose the rule and tolerance before the trials: `revised` for a new project, `study` only to reproduce this study.
 
 ```bash
-.venv/bin/python scripts/quantgate.py judge examples/my_results.csv             # the study's rule, with the ceiling clause
-.venv/bin/python scripts/quantgate.py judge examples/my_results.csv --rule revised
+.venv/bin/python scripts/quantgate.py judge examples/my_results.csv              # revised rule (default): for a new project
+.venv/bin/python scripts/quantgate.py judge examples/my_results.csv --rule study # this study's pre-registered rule (ceiling clause)
 ```
 
 One row per comparison: `candidate, reference, cand_successes, cand_trials, ref_successes, ref_trials`, optionally
@@ -93,7 +94,7 @@ From per-trial JSONL logs, `quantgate.py tally` writes the row with an explicit 
 trial counted twice. `preflight --checks-only` -> `judge --preflight` -> `preflight --judge` links the two checks
 through the card's candidate name and engine hash ([`examples/gate/`](examples/gate/)). `judge --gate` makes the exit
 code the decision, and [`quantgate-gate.yml`](.github/workflows/quantgate-gate.yml) is a configurable CI example that
-runs the linked flow, with its settings checked first. Walkthrough: [docs/TRY_IT.md](docs/TRY_IT.md); what testers found: [docs/user_tests.md](docs/user_tests.md).
+runs the linked flow, with its settings checked first. From rollout logs to a decision, end to end: [examples/rollout/](examples/rollout/). Walkthrough: [docs/TRY_IT.md](docs/TRY_IT.md); what testers found: [docs/user_tests.md](docs/user_tests.md).
 
 ## Preflight your own build
 
