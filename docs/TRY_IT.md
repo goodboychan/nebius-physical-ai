@@ -19,6 +19,14 @@ python3 -m venv .venv && .venv/bin/pip install -e ".[dev]"
 
 It only depends on numpy, scipy and PyYAML (pytest for the tests).
 
+If your environment does not allow building the package (some sandboxes block the editable install), install only the
+dependencies and point Python at `src/`; every command below works the same way:
+
+```bash
+python3 -m venv .venv && .venv/bin/pip install numpy scipy PyYAML pytest
+export PYTHONPATH=src      # then run the commands below as written
+```
+
 Clone the full history (no `--depth`). The dashboard's evidence links are pinned to the last commit that changed each
 linked file, which a shallow clone cannot see; rebuilding the dashboard there changes its links. Nothing else depends
 on the history.
