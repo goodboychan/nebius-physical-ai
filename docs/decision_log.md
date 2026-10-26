@@ -1152,3 +1152,10 @@ Wording, also from the review:
     failure-gallery cards and `preflight_demo.json`.
   - The developer tools added on 10/24 are logged in their commits: judge validation, `preflight --card`,
     `--checks-only` / `--judge`, `tally`, the CI example and `TRY_IT.md`. User tests are in `docs/user_tests.md`.
+- 2026-10-26, after LOCK-4, presentation only (no study number changed). The dashboard adds a "Tried on other data"
+  panel at the end of How it works.
+  - It covers the usability tests on public logs from vplan, PhAIL and Wind Tunnel: where each stopped and what
+    changed.
+  - It lists the defects these tests exposed that could have turned HOLD into GO.
+  - It opens with its limit: AI-run and author-run tests, not independent user validation or a robot reproduction.
+  - Source: `docs/user_tests.md`.

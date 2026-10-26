@@ -248,7 +248,7 @@ a.step:hover .go, a.step:focus-visible .go, a.step.current .go{opacity:1}
 .sc-v .bad{color:var(--halt)}
 .sc-d{display:block; font-size:13px; color:var(--ink-2); margin-top:4px}
 .sc-c{font-size:13px; color:var(--ink-2)}
-.sc-c b{color:var(--ink)}
+.sc-c b{color:var(--ink); white-space:nowrap}
 .rules{display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:12px}
 .rule{border:1px solid var(--rule); border-radius:6px; padding:14px 16px; display:flex; flex-direction:column; gap:6px}
 .rule .rn{font-family:var(--mono); font-size:11px; color:var(--ink-3)}
@@ -530,6 +530,30 @@ a.gh:hover{color:var(--signal)}
 <tr><td>evidence: fine-tuned policy, improvement at +3 cm<br><span class="lbl-s" style="font-size:12px;color:var(--ink-3)">FT-FP16, improvement detected; training mark undecided</span></td><td><span class="chip seal">HOLD</span></td><td>✓ engine integrity → ✓ normalization → ✓ timing contract → <b style="color:var(--warn)">evidence: improvement detected, not approval</b><br><span style="color:var(--ink-2);font-size:12.5px">IMPROVEMENT_DETECTED is not approval: The candidate to validate next where the start position varies, not yet a replacement: settle the training mark, then confirm at more positions and objects</span></td></tr>
 <tr><td>evidence: black-frame calibration<br><span class="lbl-s" style="font-size:12px;color:var(--ink-3)">PC-B, flagged offline</span></td><td><span class="chip halt">BLOCK</span></td><td>✓ engine integrity → ✓ normalization → ✓ timing contract → <b style="color:var(--halt)">✗ evidence: flagged</b><br><span style="color:var(--ink-2);font-size:12.5px">FLAGGED: Do not deploy; fix the calibration input (a simple input check catches it); see the real-arm check of PC-B</span></td></tr>
     </tbody></table></div>
+  </section>
+
+  <section class="panel" id="otherdata">
+    <div class="plate"><h2>Tried on other data</h2><span class="ref">usability tests, 2026-10-24 to 10-26 · run by AI reviewers and with the author</span></div>
+    <p class="note"><b>Not independent user validation, and not a robot reproduction.</b> Reviewers ran the tools on a fresh install and on public logs from three other projects, then reported where they stopped. Each finding was fixed and pinned by a test. No other team has yet connected its own robot. Details: <a class="gh" href="https://github.com/goodboychan/nebius-physical-ai/blob/455683471325319e11bf5e64468660b6e1b734a8/docs/user_tests.md" target="_blank" rel="noopener">docs/user_tests.md</a>.</p>
+    <div class="sc" role="table" aria-label="Tried on other data">
+      <div class="sc-h" role="row"><span role="columnheader">Data</span><span role="columnheader">Where it stopped</span><span role="columnheader">What changed</span></div>
+      <div class="sc-r" role="row">
+        <div role="cell"><span class="sc-k">public simulation eval · 300 tasks × 2 methods</span><span class="sc-t">vplan</span></div>
+        <div role="cell"><span class="sc-d">Null outcomes; the same task under both methods refused as a duplicate; config <code>3</code> did not match the name <code>"3"</code>.</span></div>
+        <div role="cell" class="sc-c">A rule per source for nulls, <b>--pair</b> for paired tasks, names compared as text. A paired design is a <b>preview only</b>, never GO.</div>
+      </div>
+      <div class="sc-r" role="row">
+        <div role="cell"><span class="sc-k">public real-robot episodes · 113 kept</span><span class="sc-t">PhAIL</span></div>
+        <div role="cell"><span class="sc-d">A 50% planning floor labelled "observed" (26.3% was); models recorded under their own conditions; a CSV column named <code>eval.outcome</code>; text outcomes.</span></div>
+        <div role="cell" class="sc-c">Observed and planning rates reported apart. <b>collection=observational</b> is a preview. CSV input, <b>--map</b> for text outcomes, <b>--where</b>, and a per-row <b>--audit</b>.</div>
+      </div>
+      <div class="sc-r" role="row">
+        <div role="cell"><span class="sc-k">public simulation · 200 seeds, before and after</span><span class="sc-t">Wind Tunnel</span></div>
+        <div role="cell"><span class="sc-v">73/200 <span class="to">→</span> 154/200</span><span class="sc-d">The average hid 3 seeds that got worse, and a column of safety counts was refused.</span></div>
+        <div role="cell" class="sc-c">Per-pair changes and regressed trial ids next to the decision. Safety counts only where they were recorded, and <b>not provided</b> when absent. Shown, not used in the decision.</div>
+      </div>
+    </div>
+    <p class="note"><b>Defects these tests exposed, each of which could have turned HOLD into GO, all fixed:</b> a typo in <code>mode</code> or in its column name; the same trial log counted 20 times; a preview row whose finding still said GO and reached the preflight; a tolerance that never reached the sample-size plan (5 pp at 120 per arm has about 30% power, not 80%). A negative latency also passed the preflight.</p>
   </section>
 
   <div class="group" id="g-audit"><span class="g-k">Audit record</span><span class="g-s">the full review, the report, locks, setup and provenance</span></div>
