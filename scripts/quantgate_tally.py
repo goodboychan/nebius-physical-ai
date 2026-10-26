@@ -21,6 +21,8 @@ Options:
   --append CSV         append the row to a judge CSV (writes the header if the file is new)
   --placement SPEC     FIELD or FILE.json:FIELD (like --success), the placement error per successful trial: sets placement_ok by the study's placement rule (E2: mean
                        error of candidate minus reference, 97.5% bootstrap, yes if below --placement-tol, default 5)
+  --missing RULE       a null or missing outcome: error (default), fail or drop. Decide it from the source's definition
+  --pair FIELD         paired design: the field naming the same task across builds; see judge's `design` column
   --engine FILE        the candidate's engine: writes its sha256 to engine_sha256, so preflight can tie the row to it
 Any judge column can be added with --set column=value (e.g. --set placement_ok=yes --set mode=improvement).
 Usage: python scripts/quantgate_tally.py <log.jsonl> [<log.jsonl> ...] --candidate C --reference R [options]"""
@@ -44,8 +46,17 @@ def truth(v, what):
     raise TallyError(f"{what} must be true or false, not {v!r}")
 
 
+def name(v):
+    """Build names are compared as text, so a log's 3 matches the command line's "3"; booleans and empty values are refused."""
+    return None if v is None or isinstance(v, bool) or v == "" else str(v)
+
+
 def tally(trials, candidate, reference, group="cell", success="success", require=(), forbid=(), drop=("invalid", "aborted"), id_field="trial_id",
-          placement=None):
+          placement=None, missing="error", pair=None, notes=None):
+    """missing: what a trial whose outcome is null or absent means. error (default) stops; fail counts it as a failure;
+    drop leaves it out. Decide it from the source's own definition and write it down, since it changes the count.
+    pair: the field linking the same task across builds (a paired design): reported, and marked design=paired."""
+    notes = [] if notes is None else notes
     def source(spec, what):   # FIELD, or FILE.json:FIELD keyed by trial id
         if spec and ":" in spec and spec.split(":", 1)[0].endswith(".json"):
             f, fld = spec.split(":", 1)
@@ -54,19 +65,33 @@ def tally(trials, candidate, reference, group="cell", success="success", require
         return None, None, spec
     ext, f, field = source(success, "outcome")
     pext, pf, pfield = source(placement, "placement")
-    out, seen, place = {candidate: [0, 0], reference: [0, 0]}, set(), {candidate: [], reference: []}
+    candidate, reference = str(candidate), str(reference)
+    out, seen, place = {candidate: [0, 0], reference: [0, 0]}, {}, {candidate: [], reference: []}
+    n_missing, pairs = 0, {candidate: {}, reference: {}}
     for i, r in enumerate(trials, 1):
-        g = get(r, group)
-        seen.add(g)
+        raw = get(r, group); g = name(raw)
+        seen.setdefault(g, set()).add(type(raw).__name__)
+        if len(seen[g]) > 1: raise TallyError(f"build {g!r} appears in field {group!r} both as {' and '.join(sorted(seen[g]))}; make the names one type")
         if g not in out or any(get(r, d) is True for d in drop): continue
         where = f"trial {get(r, id_field) or i}"
         if ext is not None:
             t = get(r, id_field)
             if t not in ext: raise TallyError(f"{where}: no outcome in {f}")
             ok = truth(get(ext[t], field), f"{where}: {field}")
-        else: ok = truth(get(r, success), f"{where}: {success}")
+        else:
+            v = get(r, success)
+            if v is None:
+                if missing == "drop": n_missing += 1; continue
+                if missing == "fail": n_missing += 1; v = False
+                else: raise TallyError(f"{where}: {success} is null or missing. Decide what that means in this source (a failure, "
+                                       f"or not run) and say so: --missing fail or --missing drop")
+            ok = truth(v, f"{where}: {success}")
         ok = ok and all(truth(get(r, k), f"{where}: {k}") for k in require) and not any(get(r, k) is True for k in forbid)
         out[g][0] += ok; out[g][1] += 1
+        if pair:
+            pk = get(r, pair)
+            if pk in (None, ""): raise TallyError(f"{where}: no {pair!r} to pair on")
+            pairs[g][pk] = pairs[g].get(pk, 0) + 1
         if placement and ok:   # placement error is measured on successful trials only, as in the study (E2)
             if pext is not None:
                 t = get(r, id_field)
@@ -76,10 +101,18 @@ def tally(trials, candidate, reference, group="cell", success="success", require
             if isinstance(v, bool) or not isinstance(v, (int, float)) or v != v or v < 0: raise TallyError(f"{where}: {pfield} must be a non-negative number on a successful trial, not {v!r}")
             place[g].append(float(v))
     for b in (candidate, reference):
-        if out[b][1] == 0: raise TallyError(f"no trials for {b!r} in field {group!r}; builds seen: {sorted(map(str, seen))}")
+        if out[b][1] == 0:
+            kinds = ", ".join(f"{k!r} ({'/'.join(sorted(t))})" for k, t in sorted(seen.items(), key=lambda x: str(x[0])))
+            raise TallyError(f"no trials for {b!r} in field {group!r}; builds seen: {kinds}")
+    if missing != "error" and n_missing: notes.append(f"{n_missing} trial(s) with a null or missing {success} {'counted as failures' if missing == 'fail' else 'left out'} (--missing {missing})")
+    if pair:
+        both = set(pairs[candidate]) & set(pairs[reference]); once = all(v == 1 for b in pairs for v in pairs[b].values())
+        notes.append(f"paired on {pair!r}: {len(both)} pairs with both builds, {len(set(pairs[candidate]) ^ set(pairs[reference]))} unpaired"
+                     + ("" if once else "; some pair ids repeat within a build"))
     row = {"candidate": candidate, "reference": reference, "cand_successes": out[candidate][0], "cand_trials": out[candidate][1],
             "ref_successes": out[reference][0], "ref_trials": out[reference][1]}
     if placement: row["_placement"] = place
+    if pair: row["design"] = "paired"
     return row
 
 
@@ -96,7 +129,7 @@ def placement_check(place, candidate, reference, tol_px=5.0, n_boot=10000):
     return ok, f"placement: degradation {d:+.1f} px, 97.5% interval [{lo:+.1f}, {hi:+.1f}] vs tolerance {tol_px:g} px -> placement_ok={ok or 'undecided'}"
 
 
-def read_jsonl(paths, id_field="trial_id", session_field="session"):
+def read_jsonl(paths, id_field="trial_id", session_field="session", also=None):
     """Read the logs and refuse any trial counted twice: the same file given twice, or the same trial in two places
     (a copied file, overlapping exports). A trial is keyed by session + id when the log has a session field, else by id.
     A duplicate would shrink the interval without a new trial and can turn HOLD into GO (usability review 4)."""
@@ -114,9 +147,10 @@ def read_jsonl(paths, id_field="trial_id", session_field="session"):
             if not isinstance(r, dict): raise TallyError(f"{p} line {n}: expected one JSON object per trial")
             t = get(r, id_field)
             if t in (None, ""): raise TallyError(f"{p} line {n}: no {id_field!r}; every trial needs a unique id (--id FIELD)")
-            key = (get(r, session_field), t)
+            key = (get(r, session_field), t, name(get(r, also)) if also else None)   # also: with --pair, a task id is unique per build
             if key in first: raise TallyError(f"duplicate trial {t!r}" + (f" (session {key[0]!r})" if key[0] is not None else "") +
-                                              f": {p} line {n} and {first[key]}; each trial may be counted once")
+                                              f": {p} line {n} and {first[key]}; each trial may be counted once"
+                                              + ("" if also else ". If this id is a task that every build ran (a paired design), use --pair FIELD"))
             first[key] = f"{p} line {n}"; rows.append(r)
     return rows
 
@@ -130,10 +164,14 @@ def main(argv=None):
     ap.add_argument("--placement", metavar="FIELD", help="placement error per successful trial (e.g. place_px): sets placement_ok by the study's rule")
     ap.add_argument("--placement-tol", type=float, default=5.0, metavar="PX", help="placement tolerance in the field's unit (default 5)")
     ap.add_argument("--engine", metavar="FILE", help="the candidate's engine file: writes its sha256 to engine_sha256")
+    ap.add_argument("--missing", choices=["error", "fail", "drop"], default="error", help="a null or missing outcome: stop (default), count as a failure, or leave out")
+    ap.add_argument("--pair", metavar="FIELD", help="the field naming the same task across builds (paired design): ids are then unique per build, and the row is marked design=paired")
     ap.add_argument("--append", metavar="CSV"); a = ap.parse_args(argv)
     try:
-        row = tally(read_jsonl(a.logs, a.id), a.candidate, a.reference, a.group, a.success, a.require, a.forbid,
-                    ("invalid", "aborted") if a.drop is None else a.drop, a.id, a.placement)
+        notes = []
+        row = tally(read_jsonl(a.logs, a.id, also=a.group if a.pair else None), a.candidate, a.reference, a.group, a.success, a.require, a.forbid,
+                    ("invalid", "aborted") if a.drop is None else a.drop, a.id, a.placement, a.missing, a.pair, notes)
+        for m in notes: print(m, file=sys.stderr)
         if a.placement:
             if not (a.placement_tol > 0): raise TallyError("--placement-tol must be positive")
             row["placement_ok"], note = placement_check(row.pop("_placement"), a.candidate, a.reference, a.placement_tol); print(note, file=sys.stderr)

@@ -11,6 +11,9 @@ Input CSV columns (one row per comparison; the last four are optional):
   - placement_ok / preflight_ok: yes, no or empty (not checked). A GO needs both to be yes.
   - assumed_rate: the true success rate to plan the next test with (default: the pooled observed rate).
   - engine_sha256: the build the row's trials ran on; with --preflight it must match the card's engine.
+  - design: independent (default; separate trials per build) or paired (the same tasks for both builds). The intervals
+    here assume independent arms, so a paired row is counted and previewed but never GO, and says not to use it for a
+    deployment decision. tally --pair FIELD marks it.
   --preflight pre.json fills preflight_ok for the card's candidate from `preflight --card c.json --checks-only --json`.
 
 Rules (the pre-registered ones, see docs/fp16_real_arm_preregistration.md and next_test_plan.py):
@@ -44,7 +47,8 @@ RULE_HELP = ("revised (default): for a new project; study: reproduces this study
 
 def _bad_rule(rule): raise InputError(f"unknown rule {rule!r}; use revised or study")
 REQUIRED = ("candidate", "reference", "cand_successes", "cand_trials", "ref_successes", "ref_trials")
-OPTIONAL = ("gpu_ms", "energy_mj", "placement_ok", "preflight_ok", "mode", "assumed_rate", "engine_sha256")
+OPTIONAL = ("gpu_ms", "energy_mj", "placement_ok", "preflight_ok", "mode", "assumed_rate", "engine_sha256", "design")
+DESIGNS = ("independent", "paired")   # paired: counted and previewed only; the intervals here assume independent arms
 GRID = (50, 75, 100, 120, 150, 200, 300, 400, 600, 800, 1000, 1500, 2000)   # trials per arm searched for the next test
 
 
@@ -88,6 +92,7 @@ def check_row(r, where="row"):
     if not (0 <= kc <= nc and 0 <= kr <= nr and nc > 0 and nr > 0): raise InputError(f"{where}: need 0 <= successes <= trials and trials > 0")
     mode = (r.get("mode") or "").strip().lower() or "non-inferiority"
     if mode not in MODES: raise InputError(f"{where}: unknown mode {r.get('mode')!r}; use non-inferiority (or leave it empty) or improvement")
+    if r.get("design", "").lower() not in ("",) + DESIGNS: raise InputError(f"{where}: unknown design {r['design']!r}; use independent (or leave it empty) or paired")
     for k in ("placement_ok", "preflight_ok"):
         if (r.get(k) or "").strip() and yes(r[k]) is None: raise InputError(f"{where}: {k} must be yes, no or empty, not {r[k]!r}")
     h = r.get("engine_sha256", "")
@@ -141,12 +146,19 @@ def judge_row(r, rule="revised", tol=10.0, where="row"):
     for k in ("gpu_ms", "energy_mj"):
         if r.get(k) not in (None, ""): out[k] = float(r[k])
     if r.get("engine_sha256"): out["engine_sha256"] = r["engine_sha256"].lower()
+    if r.get("design", "").lower() == "paired":   # supported for counting, not for deciding
+        out["design"] = "paired"; out["preview_only"] = True
+        if out["decision"] == "GO": out["decision"] = "HOLD"
+        out.pop("next_test", None); out.pop("priority", None)
+        out["why"] = ("PREVIEW ONLY: the trials are paired (the same tasks for both builds), but this interval treats the arms as "
+                      "independent. Do not use it for a deployment decision; analyse the pairs (e.g. a paired bootstrap or McNemar). "
+                      "Unpaired reading: " + out["why"])
     return out
 
 def judge(rows, rule="revised", tol=10.0, lines=None):
     if not rows: raise InputError("no rows")
     res = [judge_row(r, rule, tol, f"row {i}" + (f" (line {lines[i - 1]})" if lines else "")) for i, r in enumerate(rows, 1)]
-    ok = [x for x in res if x["decision"] != "BLOCK" and "gpu_ms" in x]
+    ok = [x for x in res if x["decision"] != "BLOCK" and "gpu_ms" in x and not x.get("preview_only")]
     if ok:   # validation priority: the cheapest build that is not blocked (cost first, energy second)
         best = min(ok, key=lambda x: (x["gpu_ms"], x.get("energy_mj", math.inf))); best["priority"] = "validate first (cheapest build that is not blocked)"
     return res
@@ -183,7 +195,8 @@ def md(res, rule, tol):
          "", "_The rule and tolerance are part of the plan: fix them before the trials, not after seeing the results._", ""]
     for x in res:
         k, n = x["candidate_k_n"]; kr, nr = x["reference_k_n"]
-        L += [f"## {x['candidate']} vs {x['reference']} ({x['mode']})", f"- **Deployment decision: {x['decision']}** · evidence finding: {x['finding']}",
+        L += [f"## {x['candidate']} vs {x['reference']} ({x['mode']}{', paired design: PREVIEW ONLY' if x.get('preview_only') else ''})",
+              f"- **Deployment decision: {x['decision']}** · evidence finding: {x['finding']}" + (" (unpaired reading, not for deployment)" if x.get("preview_only") else ""),
               f"- observed: {k}/{n} vs {kr}/{nr}" + (f" · degradation {x['degradation_pp']} pp, 97.5% interval {x['interval97_5_pp']}" if "degradation_pp" in x else
                                                       f" · difference {x['difference_pp']} pp, 95% interval {x['interval95_pp']}"), f"- why: {x['why']}"]
         if x.get("priority"): L += [f"- priority: {x['priority']}"]

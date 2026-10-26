@@ -176,3 +176,34 @@ def test_rule_names():
     assert qj.judge_row(row, "study")["success_criterion"].startswith("undecided (ceiling")
     assert qj.judge_row(row, "study")["success_criterion"] == qj.judge_row(row, "current")["success_criterion"]
     assert qj.judge_row(row)["rule"] == "revised" and qj.judge_row(row)["success_criterion"] == "met"
+
+
+def test_external_log_conversion(tmp_path):
+    """User test 3 (2026-10-26): nulls need a written rule, a task under two builds is a pair, 3 matches "3"."""
+    d = tmp_path / "ext"; shutil.copytree(ROOT / "examples/external", d)
+    run = lambda *a, py=False: subprocess.run([sys.executable, *a] if py else [*CLI, *a], cwd=d, capture_output=True, text=True)
+    assert run("convert.py", py=True).returncode == 0
+    base = ["tally", "--group", "config", "--candidate", "3", "--reference", "1"]
+    r = run(*base[:1], "raw.jsonl", *base[1:], "--id", "attempt_id", "--success", "judge.success")
+    assert r.returncode == 2 and "--missing fail or --missing drop" in r.stderr
+    assert run(*base[:1], "raw.jsonl", *base[1:], "--id", "attempt_id", "--success", "judge.success", "--missing", "fail").stdout.splitlines()[1] == "3,1,19,40,8,40"
+    assert run(*base[:1], "raw.jsonl", *base[1:], "--id", "attempt_id", "--success", "judge.success", "--missing", "drop").returncode == 0
+    r = run(*base[:1], "trials.jsonl", *base[1:], "--id", "task_id"); assert r.returncode == 2 and "use --pair FIELD" in r.stderr
+    r = run(*base[:1], "trials.jsonl", *base[1:], "--pair", "task_id", "--set", "mode=improvement")
+    assert r.returncode == 0 and "40 pairs with both builds" in r.stderr and r.stdout.splitlines()[1].endswith(",improvement,paired")
+    (d / "results.csv").write_text(r.stdout)
+    j = run("judge", "results.csv", "--gate"); assert j.returncode == 3 and "PREVIEW ONLY" in j.stdout
+    r = run(*base[:1], "trials.jsonl", "--group", "config", "--candidate", "three", "--reference", "1", "--pair", "task_id")
+    assert r.returncode == 2 and "'3' (int)" in r.stderr
+    (d / "mix.jsonl").write_text('{"trial_id": "x1", "config": 3, "success": true}\n{"trial_id": "x2", "config": "3", "success": true}\n')
+    r = run(*base[:1], "mix.jsonl", *base[1:]); assert r.returncode == 2 and "both as int and str" in r.stderr
+
+
+def test_paired_design_is_never_go():
+    sys.path.insert(0, str(ROOT / "scripts")); import quantgate_judge as qj
+    row = {"candidate": "A", "reference": "B", "cand_successes": "118", "cand_trials": "120", "ref_successes": "117", "ref_trials": "120",
+           "placement_ok": "yes", "preflight_ok": "yes"}
+    assert qj.judge_row(row)["decision"] == "GO"
+    x = qj.judge_row({**row, "design": "paired"}); assert x["decision"] == "HOLD" and x["preview_only"] and "next_test" not in x
+    import pytest
+    with pytest.raises(qj.InputError, match="unknown design"): qj.judge_row({**row, "design": "pared"})

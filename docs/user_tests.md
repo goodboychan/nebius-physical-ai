@@ -66,3 +66,31 @@ deployment approval, they want a data-connection example and clearer decision wo
 4. **Path through the local HTML.** The review page opens with a "Decision path" table: decision → what still blocks
    approval → evidence files → next test, with links to each candidate's plan.
 5. **Shallow clone.** TRY_IT.md says to clone the full history and why.
+
+## Session 3, 2026-10-26 (an external public log, AI-run usability test)
+
+An AI reviewer ran this at `0c2cf17` on a fresh environment, with vplan's public D70 evaluation release (hash checked).
+It is not an independent user, a robot reproduction or a deployment approval.
+
+**What they did.**
+- They dropped the 200 impossible-task rows of 800 and kept both methods on the same 300 tasks, provider failures
+  included.
+- Their own count, 195/300 vs 107/300, matched the published totals and all 16 scene strata.
+- tally and judge ran, and gave HOLD / IMPROVEMENT_DETECTED. The preflight was not filled, because there was no real
+  engine, normalization or device latency.
+
+**Where they stopped, and what changed.**
+1. **The same task id under both methods was refused as a duplicate.** `tally --pair FIELD` now names the field that
+   links a task across builds. Ids are then unique per build, and the row is marked `design=paired`. The duplicate
+   error points to `--pair`.
+2. **The number 3 did not match the name "3".** Build names are compared as text. A miss lists the names seen with
+   their types, and the same name stored as both number and text is refused.
+3. **Failures were sometimes null, not false.** A null outcome now stops tally with a message to decide its meaning
+   per source: `--missing fail` or `--missing drop`. [`examples/external/convert.py`](../examples/external/convert.py)
+   shows source-specific rules written down per status, kept on each converted trial.
+4. **Accepted is not the same as statistically valid.**
+   - This data was paired, while the intervals here assume independent arms. Their output gave about 21.5–36.7 pp;
+     the source's paired bootstrap gave 23–36 pp.
+   - judge now takes a `design` column (independent or paired). A paired row is counted and previewed, but never GO
+     and without a next-test size, and it says not to use it for a deployment decision.
+   - Paired statistics are not implemented.

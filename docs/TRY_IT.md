@@ -89,6 +89,9 @@ Expected for the first row (this study's FP16):
 [`examples/rollout/`](../examples/rollout/) takes a JSONL trial log through `tally` (successes, placement, engine
 hash) → `card` (engine hash, normalization manifest, worst-case latency from the logs) → checks → judge → preflight.
 It also explains what each log field, the normalization file and the latency measurement must be.
+For a log from elsewhere, [`examples/external/`](../examples/external/) covers the usual first stops: a null outcome
+(write the rule per source), the same task under two builds (`--pair`, a paired design, shown as a preview only),
+and numeric build names.
 
 ### From trial logs to the CSV row
 
