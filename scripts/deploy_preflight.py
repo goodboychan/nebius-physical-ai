@@ -107,6 +107,10 @@ def evidence_from_judge(card, judge_json):
     x = rows[0]
     if x.get("engine_sha256") and x["engine_sha256"] != card["engine_sha256"]:
         raise CardError(f"judge row {card['candidate']!r} is for engine {x['engine_sha256'][:12]}, the card for {card['engine_sha256'][:12]}: not the same build")
+    if x.get("preview_only"):   # a preview is never evidence for deployment, whatever its reading
+        return {**card, "verdict": "INSUFFICIENT_EVIDENCE", "next_action": "the judge row is a preview only (" + ", ".join(
+            t for t in (x.get("design") == "paired" and "paired design", x.get("collection") == "observational" and "observational data") if t) + ")",
+            "evidence_source": f"{judge_json} ({x['decision']}, preview only)"}
     nt = x.get("next_test")
     return {**card, "verdict": x["finding"], "next_action": (f"next test: about {nt['trials_per_arm']} trials per arm" if nt else x.get("why", "")),
             "evidence_source": f"{judge_json} ({x['decision']})"}

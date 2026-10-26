@@ -65,3 +65,63 @@ error: duplicate trial 'task001': ... each trial may be counted once. If this id
 - So a `design=paired` row is counted and shown, but it is never GO, it has no next-test size, and it says not to use
   it for a deployment decision.
 - Paired analysis is not implemented. Until it is, analyse the pairs with your own pre-registered method.
+
+# A per-episode CSV with text outcomes, recorded per model
+
+`episodes.csv` (**synthetic**, `make_episodes.py`) has the shape some real-robot evaluations publish:
+- one row per episode;
+- outcomes as text in a column named `eval.outcome`;
+- several objects and instructions;
+- each model recorded on its own days.
+
+```bash
+$P make_episodes.py
+$P $Q tally episodes.csv --id episode_id --group model --candidate gr00t --reference openpi --success eval.outcome \
+    --map Success=true --map Stalled=false --map Safety=false --map Timeout=false --map Partial=false \
+    --where object=spoons --where "instruction=put the spoons in the box" --where start_objects=3 \
+    --set collection=observational --audit audit.jsonl > results.csv
+$P $Q judge results.csv
+```
+
+## Field names: a column called `eval.outcome` is not `eval` → `outcome`
+
+- tally reads CSV directly: empty cells are null, and `true`/`false` in any case are booleans.
+- A field name is matched exactly first, so the column `eval.outcome` works. Only after that is it read as a nested
+  path, so `eval` → `outcome` in JSON works too.
+- A wrong name is reported as a missing field, with the fields that exist and the closest match:
+  `has no field 'eval_outcome' ...; did you mean eval.outcome?`
+
+## Text outcomes: say which text is a success
+
+- Without `--map`, the first text outcome stops tally: `eval.outcome is the text 'Success'. Say which texts are a success`.
+- Map every value the source uses. An unmapped value stops tally instead of being guessed.
+- Whether `Partial` or `Safety` is a failure is the source's definition, and your plan's. Here none of them is
+  dropped from the denominator.
+- `--map NAME=missing` marks a value as not run, and then `--missing` decides what that means.
+
+## One condition, and why each row was left out
+
+- `--where` keeps only the episodes of one condition: object, instruction and starting objects.
+- `--audit audit.jsonl` writes one line per input row with the source file, line, id, build, `counted` or
+  `excluded`, and the reason, e.g. `condition not met: object is 'towels', wanted 'spoons'`.
+- tally prints the totals: `audit: 60 counted, 100 excluded (condition not met: 20; build 'act' is neither ...)`.
+- Keep the audit with the result. If two sources disagree about an episode (the object in the CSV against the
+  recording's metadata), the audit shows whether that episode was counted, and why.
+
+## Collected per model, on different days: observational
+
+The models were not run under one interleaved schedule, so a difference can come from the day, the setup or the
+operator as much as from the model. `collection=observational` keeps the counts and the reading, as a preview:
+
+```
+## gr00t vs openpi (non-inferiority, observational data: PREVIEW ONLY)
+- **Deployment decision: HOLD** · evidence finding: INSUFFICIENT_EVIDENCE (preview only, not for deployment)
+- observed: 6/30 vs 9/30 · degradation 10.0 pp, 97.5% interval [-14.9, 33.4]
+```
+
+- `design` and `collection` are separate:
+  - `design` is how the trials are analysed: independent or paired.
+  - `collection` is how they were gathered: `controlled`, meaning both builds under the same conditions on a pre-set
+    interleaved or randomized schedule, or `observational`, meaning anything else or not verified.
+- A row is a full reading only when it is independent and controlled. Anything else is a preview: never GO, no
+  next-test size, and the preflight treats it as not evidence.

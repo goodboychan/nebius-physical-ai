@@ -96,8 +96,10 @@ through the card's candidate name and engine hash ([`examples/gate/`](examples/g
 code the decision, and [`quantgate-gate.yml`](.github/workflows/quantgate-gate.yml) is a configurable CI example that
 runs the linked flow, with its settings checked first. From rollout logs to a decision, end to end: [examples/rollout/](examples/rollout/). An external evaluation log (nulls, the same task under
 two builds, numeric names): [examples/external/](examples/external/).
-**Scope:** the intervals assume independent trials per build. A paired design (both builds on the same tasks) can be
-counted (`design=paired`), but it is shown as a preview only and never yields GO. Walkthrough: [docs/TRY_IT.md](docs/TRY_IT.md); what testers found: [docs/user_tests.md](docs/user_tests.md).
+**Scope:** the intervals assume independent trials per build, collected under one controlled schedule. A paired
+design (`design=paired`) or data gathered otherwise (`collection=observational`, e.g. models recorded on different days)
+is counted and shown as a preview only: never GO, and the preflight does not take it as evidence. The CSV example with
+text outcomes, condition filters and a per-row audit is in [examples/external/](examples/external/). Walkthrough: [docs/TRY_IT.md](docs/TRY_IT.md); what testers found: [docs/user_tests.md](docs/user_tests.md).
 
 ## Preflight your own build
 

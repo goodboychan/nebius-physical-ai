@@ -9,11 +9,16 @@ Input CSV columns (one row per comparison; the last four are optional):
     and so does an unknown or duplicate column name (a misspelled `mode` column must not fall back to non-inferiority).
     Values are stripped of spaces first; a value of only spaces counts as empty.
   - placement_ok / preflight_ok: yes, no or empty (not checked). A GO needs both to be yes.
-  - assumed_rate: the true success rate to plan the next test with (default: the pooled observed rate).
+  - assumed_rate: the true success rate to plan the next test with (default: the pooled observed rate, kept within
+    50%..99.9%; below 50% the plan uses 50%, the most conservative rate, and says so next to the observed rate).
   - engine_sha256: the build the row's trials ran on; with --preflight it must match the card's engine.
   - design: independent (default; separate trials per build) or paired (the same tasks for both builds). The intervals
     here assume independent arms, so a paired row is counted and previewed but never GO, and says not to use it for a
     deployment decision. tally --pair FIELD marks it.
+  - collection: controlled (default; both builds under the same conditions on a pre-set interleaved or randomized
+    schedule) or observational (anything else, e.g. logs gathered at different times or setups, or not verified).
+    An observational row is counted and previewed, never GO. design is how the trials are analysed; collection is how
+    they were gathered.
   --preflight pre.json fills preflight_ok for the card's candidate from `preflight --card c.json --checks-only --json`.
 
 Rules (the pre-registered ones, see docs/fp16_real_arm_preregistration.md and next_test_plan.py):
@@ -47,7 +52,10 @@ RULE_HELP = ("revised (default): for a new project; study: reproduces this study
 
 def _bad_rule(rule): raise InputError(f"unknown rule {rule!r}; use revised or study")
 REQUIRED = ("candidate", "reference", "cand_successes", "cand_trials", "ref_successes", "ref_trials")
-OPTIONAL = ("gpu_ms", "energy_mj", "placement_ok", "preflight_ok", "mode", "assumed_rate", "engine_sha256", "design")
+OPTIONAL = ("gpu_ms", "energy_mj", "placement_ok", "preflight_ok", "mode", "assumed_rate", "engine_sha256", "design", "collection")
+# how the trials were collected, apart from how they are analysed (design): controlled = both builds under the same
+# conditions on a pre-set (interleaved or randomized) schedule; observational = anything else, or not verified
+COLLECTIONS = ("controlled", "observational")
 DESIGNS = ("independent", "paired")   # paired: counted and previewed only; the intervals here assume independent arms
 GRID = (50, 75, 100, 120, 150, 200, 300, 400, 600, 800, 1000, 1500, 2000)   # trials per arm searched for the next test
 
@@ -92,6 +100,7 @@ def check_row(r, where="row"):
     if not (0 <= kc <= nc and 0 <= kr <= nr and nc > 0 and nr > 0): raise InputError(f"{where}: need 0 <= successes <= trials and trials > 0")
     mode = (r.get("mode") or "").strip().lower() or "non-inferiority"
     if mode not in MODES: raise InputError(f"{where}: unknown mode {r.get('mode')!r}; use non-inferiority (or leave it empty) or improvement")
+    if r.get("collection", "").lower() not in ("",) + COLLECTIONS: raise InputError(f"{where}: unknown collection {r['collection']!r}; use controlled (or leave it empty) or observational")
     if r.get("design", "").lower() not in ("",) + DESIGNS: raise InputError(f"{where}: unknown design {r['design']!r}; use independent (or leave it empty) or paired")
     for k in ("placement_ok", "preflight_ok"):
         if (r.get(k) or "").strip() and yes(r[k]) is None: raise InputError(f"{where}: {k} must be yes, no or empty, not {r[k]!r}")
@@ -138,21 +147,38 @@ def judge_row(r, rule="revised", tol=10.0, where="row"):
         out["why"] = {"met": "the success criterion is met" + ("; still missing: " + ", ".join(missing) if missing else ""),
                       "degraded": f"the candidate is worse than the reference by more than {tol:g} pp"}.get(crit, f"success is {crit} at a {tol:g} pp tolerance")
         if out["decision"] == "HOLD" and crit != "met":
-            ar = r.get("assumed_rate"); p = float(ar) if ar not in (None, "") else max(min((kc + kr) / (nc + nr), 0.999), 0.5); n = ntp.n_for(p, p, False, grid=GRID, tol=tol)
+            # the observed rate and the planning rate are reported apart (user test 4: a floor of 50% was labelled "observed")
+            ar = r.get("assumed_rate"); po = (kc + kr) / (nc + nr)
+            if ar not in (None, ""): p, basis = float(ar), f"{float(ar):.0%}, the assumed_rate column (the pooled observed rate is {po:.1%})"
+            else:
+                p = max(min(po, 0.999), 0.5)
+                basis = (f"the pooled observed rate, {po:.1%}" if p == po else
+                         f"{p:.0%}, the planner's floor: the pooled observed rate is {po:.1%}, and a rate near 50% needs the most trials, so it is the conservative assumption"
+                         if p == 0.5 else f"{p:.1%}, the planner's cap; the pooled observed rate is {po:.1%}")
+            n = ntp.n_for(p, p, False, grid=GRID, tol=tol)
             out["next_test"] = {"compare": f"{r['candidate']} vs {r['reference']}", "rule": f"pre-register the revised rule (no ceiling clause), tolerance {tol:g} pp",
-                                "trials_per_arm": n if n else f"more than {GRID[-1]}",
-                                "assumption": f"both truly succeed at {p:.0%} ({'assumed' if ar not in (None, '') else 'pooled observed'}); 80% power on the success criterion at {tol:g} pp, not the chance of a final GO"}
+                                "trials_per_arm": n if n else f"more than {GRID[-1]}", "observed_pooled_rate": round(po, 4), "planning_rate": round(p, 4),
+                                "assumption": f"planned as if both builds truly succeed at {basis}; 80% power on the success criterion at {tol:g} pp, not the chance of a final GO"}
     if pre is False: out["why"] += "; the preflight failed"
     for k in ("gpu_ms", "energy_mj"):
         if r.get(k) not in (None, ""): out[k] = float(r[k])
     if r.get("engine_sha256"): out["engine_sha256"] = r["engine_sha256"].lower()
-    if r.get("design", "").lower() == "paired":   # supported for counting, not for deciding
-        out["design"] = "paired"; out["preview_only"] = True
+    out["design"] = r.get("design", "").lower() or "independent"; out["collection"] = r.get("collection", "").lower() or "controlled"
+    why = []   # supported for counting, not for deciding
+    if out["design"] == "paired":
+        why.append("the trials are paired (the same tasks for both builds), but this interval treats the arms as independent; "
+                   "analyse the pairs (e.g. a paired bootstrap or McNemar)")
+    if out["collection"] == "observational":
+        why.append("the trials were not collected under one controlled schedule (or that is not verified): conditions, timing or "
+                   "operators may differ between builds, so a difference may not be the build's")
+    if why:
+        out["preview_only"] = True
+        # the finding a downstream check reads must not say GO for a preview (preflight --judge takes it as evidence)
+        out["preview_finding"] = out["finding"]
+        if out["finding"] in ("GO", "IMPROVEMENT_DETECTED"): out["finding"] = "INSUFFICIENT_EVIDENCE"
         if out["decision"] == "GO": out["decision"] = "HOLD"
         out.pop("next_test", None); out.pop("priority", None)
-        out["why"] = ("PREVIEW ONLY: the trials are paired (the same tasks for both builds), but this interval treats the arms as "
-                      "independent. Do not use it for a deployment decision; analyse the pairs (e.g. a paired bootstrap or McNemar). "
-                      "Unpaired reading: " + out["why"])
+        out["why"] = "PREVIEW ONLY, not for a deployment decision: " + "; ".join(why) + ". Reading as if independent and controlled: " + out["why"]
     return out
 
 def judge(rows, rule="revised", tol=10.0, lines=None):
@@ -191,12 +217,14 @@ def gate(res):
 def md(res, rule, tol):
     rule = RULES.get(rule, rule)
     name = "study rule: the pre-registered rule of this study, with the ceiling clause" if rule == "current" else "revised rule, for a new project"
-    L = [f"# QuantGate judge ({name}, tolerance {tol:g} pp)",
+    L = [f"# QuantGate judge ({name}, tolerance {tol:g} pp)", "",
+         "_Assumes each trial is independent and both builds ran under the same conditions on a pre-set schedule; rows marked otherwise are previews only._",
          "", "_The rule and tolerance are part of the plan: fix them before the trials, not after seeing the results._", ""]
     for x in res:
         k, n = x["candidate_k_n"]; kr, nr = x["reference_k_n"]
-        L += [f"## {x['candidate']} vs {x['reference']} ({x['mode']}{', paired design: PREVIEW ONLY' if x.get('preview_only') else ''})",
-              f"- **Deployment decision: {x['decision']}** · evidence finding: {x['finding']}" + (" (unpaired reading, not for deployment)" if x.get("preview_only") else ""),
+        tags = [t for t in (x.get("design") == "paired" and "paired design", x.get("collection") == "observational" and "observational data") if t]
+        L += [f"## {x['candidate']} vs {x['reference']} ({x['mode']}{', ' + ' and '.join(tags) + ': PREVIEW ONLY' if x.get('preview_only') else ''})",
+              f"- **Deployment decision: {x['decision']}** · evidence finding: {x['finding']}" + ((f" (the preview reading would be {x['preview_finding']}; not for deployment)" if x['preview_finding'] != x['finding'] else " (preview only, not for deployment)") if x.get("preview_only") else ""),
               f"- observed: {k}/{n} vs {kr}/{nr}" + (f" · degradation {x['degradation_pp']} pp, 97.5% interval {x['interval97_5_pp']}" if "degradation_pp" in x else
                                                       f" · difference {x['difference_pp']} pp, 95% interval {x['interval95_pp']}"), f"- why: {x['why']}"]
         if x.get("priority"): L += [f"- priority: {x['priority']}"]

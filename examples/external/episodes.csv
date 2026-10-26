@@ -1,0 +1,161 @@
+episode_id,model,object,instruction,start_objects,recorded,eval.outcome
+openpi-000,openpi,towels,fold the towel,3,2026-09-10,Success
+openpi-001,openpi,spoons,put the spoons in the box,3,2026-09-10,Partial
+openpi-002,openpi,spoons,put the spoons in the box,3,2026-09-10,Safety
+openpi-003,openpi,spoons,put the spoons in the box,3,2026-09-10,Partial
+openpi-004,openpi,towels,fold the towel,3,2026-09-10,Timeout
+openpi-005,openpi,spoons,put the spoons in the box,3,2026-09-10,Stalled
+openpi-006,openpi,spoons,put the spoons in the box,3,2026-09-10,Success
+openpi-007,openpi,spoons,put the spoons in the box,3,2026-09-10,Timeout
+openpi-008,openpi,towels,fold the towel,3,2026-09-10,Safety
+openpi-009,openpi,spoons,put the spoons in the box,3,2026-09-10,Timeout
+openpi-010,openpi,spoons,put the spoons in the box,3,2026-09-10,Success
+openpi-011,openpi,spoons,put the spoons in the box,3,2026-09-10,Success
+openpi-012,openpi,towels,fold the towel,3,2026-09-10,Partial
+openpi-013,openpi,spoons,put the spoons in the box,3,2026-09-10,Safety
+openpi-014,openpi,spoons,put the spoons in the box,3,2026-09-10,Safety
+openpi-015,openpi,spoons,put the spoons in the box,3,2026-09-10,Success
+openpi-016,openpi,towels,fold the towel,3,2026-09-10,Safety
+openpi-017,openpi,spoons,put the spoons in the box,3,2026-09-10,Timeout
+openpi-018,openpi,spoons,put the spoons in the box,3,2026-09-10,Timeout
+openpi-019,openpi,spoons,put the spoons in the box,3,2026-09-10,Success
+openpi-020,openpi,towels,fold the towel,3,2026-09-11,Success
+openpi-021,openpi,spoons,put the spoons in the box,3,2026-09-11,Success
+openpi-022,openpi,spoons,put the spoons in the box,3,2026-09-11,Timeout
+openpi-023,openpi,spoons,put the spoons in the box,3,2026-09-11,Timeout
+openpi-024,openpi,towels,fold the towel,3,2026-09-11,Timeout
+openpi-025,openpi,spoons,put the spoons in the box,3,2026-09-11,Partial
+openpi-026,openpi,spoons,put the spoons in the box,3,2026-09-11,Stalled
+openpi-027,openpi,spoons,put the spoons in the box,3,2026-09-11,Success
+openpi-028,openpi,towels,fold the towel,3,2026-09-11,Success
+openpi-029,openpi,spoons,put the spoons in the box,3,2026-09-11,Success
+openpi-030,openpi,spoons,put the spoons in the box,3,2026-09-11,Stalled
+openpi-031,openpi,spoons,put the spoons in the box,3,2026-09-11,Stalled
+openpi-032,openpi,towels,fold the towel,3,2026-09-11,Success
+openpi-033,openpi,spoons,put the spoons in the box,3,2026-09-11,Timeout
+openpi-034,openpi,spoons,put the spoons in the box,3,2026-09-11,Timeout
+openpi-035,openpi,spoons,put the spoons in the box,3,2026-09-11,Success
+openpi-036,openpi,towels,fold the towel,3,2026-09-11,Success
+openpi-037,openpi,spoons,put the spoons in the box,3,2026-09-11,Stalled
+openpi-038,openpi,spoons,put the spoons in the box,3,2026-09-11,Timeout
+openpi-039,openpi,spoons,put the spoons in the box,3,2026-09-11,Stalled
+gr00t-000,gr00t,towels,fold the towel,3,2026-09-13,Partial
+gr00t-001,gr00t,spoons,put the spoons in the box,3,2026-09-13,Safety
+gr00t-002,gr00t,spoons,put the spoons in the box,3,2026-09-13,Partial
+gr00t-003,gr00t,spoons,put the spoons in the box,3,2026-09-13,Stalled
+gr00t-004,gr00t,towels,fold the towel,3,2026-09-13,Safety
+gr00t-005,gr00t,spoons,put the spoons in the box,3,2026-09-13,Success
+gr00t-006,gr00t,spoons,put the spoons in the box,3,2026-09-13,Safety
+gr00t-007,gr00t,spoons,put the spoons in the box,3,2026-09-13,Partial
+gr00t-008,gr00t,towels,fold the towel,3,2026-09-13,Success
+gr00t-009,gr00t,spoons,put the spoons in the box,3,2026-09-13,Timeout
+gr00t-010,gr00t,spoons,put the spoons in the box,3,2026-09-13,Stalled
+gr00t-011,gr00t,spoons,put the spoons in the box,3,2026-09-13,Partial
+gr00t-012,gr00t,towels,fold the towel,3,2026-09-13,Partial
+gr00t-013,gr00t,spoons,put the spoons in the box,3,2026-09-13,Partial
+gr00t-014,gr00t,spoons,put the spoons in the box,3,2026-09-13,Safety
+gr00t-015,gr00t,spoons,put the spoons in the box,3,2026-09-13,Stalled
+gr00t-016,gr00t,towels,fold the towel,3,2026-09-13,Timeout
+gr00t-017,gr00t,spoons,put the spoons in the box,3,2026-09-13,Success
+gr00t-018,gr00t,spoons,put the spoons in the box,3,2026-09-13,Timeout
+gr00t-019,gr00t,spoons,put the spoons in the box,3,2026-09-13,Partial
+gr00t-020,gr00t,towels,fold the towel,3,2026-09-14,Success
+gr00t-021,gr00t,spoons,put the spoons in the box,3,2026-09-14,Success
+gr00t-022,gr00t,spoons,put the spoons in the box,3,2026-09-14,Timeout
+gr00t-023,gr00t,spoons,put the spoons in the box,3,2026-09-14,Safety
+gr00t-024,gr00t,towels,fold the towel,3,2026-09-14,Timeout
+gr00t-025,gr00t,spoons,put the spoons in the box,3,2026-09-14,Partial
+gr00t-026,gr00t,spoons,put the spoons in the box,3,2026-09-14,Success
+gr00t-027,gr00t,spoons,put the spoons in the box,3,2026-09-14,Stalled
+gr00t-028,gr00t,towels,fold the towel,3,2026-09-14,Partial
+gr00t-029,gr00t,spoons,put the spoons in the box,3,2026-09-14,Safety
+gr00t-030,gr00t,spoons,put the spoons in the box,3,2026-09-14,Stalled
+gr00t-031,gr00t,spoons,put the spoons in the box,3,2026-09-14,Stalled
+gr00t-032,gr00t,towels,fold the towel,3,2026-09-14,Success
+gr00t-033,gr00t,spoons,put the spoons in the box,3,2026-09-14,Timeout
+gr00t-034,gr00t,spoons,put the spoons in the box,3,2026-09-14,Success
+gr00t-035,gr00t,spoons,put the spoons in the box,3,2026-09-14,Partial
+gr00t-036,gr00t,towels,fold the towel,3,2026-09-14,Success
+gr00t-037,gr00t,spoons,put the spoons in the box,3,2026-09-14,Timeout
+gr00t-038,gr00t,spoons,put the spoons in the box,3,2026-09-14,Stalled
+gr00t-039,gr00t,spoons,put the spoons in the box,3,2026-09-14,Success
+act-000,act,towels,fold the towel,3,2026-09-16,Stalled
+act-001,act,spoons,put the spoons in the box,3,2026-09-16,Stalled
+act-002,act,spoons,put the spoons in the box,3,2026-09-16,Timeout
+act-003,act,spoons,put the spoons in the box,3,2026-09-16,Timeout
+act-004,act,towels,fold the towel,3,2026-09-16,Safety
+act-005,act,spoons,put the spoons in the box,3,2026-09-16,Timeout
+act-006,act,spoons,put the spoons in the box,3,2026-09-16,Timeout
+act-007,act,spoons,put the spoons in the box,3,2026-09-16,Safety
+act-008,act,towels,fold the towel,3,2026-09-16,Timeout
+act-009,act,spoons,put the spoons in the box,3,2026-09-16,Success
+act-010,act,spoons,put the spoons in the box,3,2026-09-16,Timeout
+act-011,act,spoons,put the spoons in the box,3,2026-09-16,Timeout
+act-012,act,towels,fold the towel,3,2026-09-16,Timeout
+act-013,act,spoons,put the spoons in the box,3,2026-09-16,Stalled
+act-014,act,spoons,put the spoons in the box,3,2026-09-16,Success
+act-015,act,spoons,put the spoons in the box,3,2026-09-16,Partial
+act-016,act,towels,fold the towel,3,2026-09-16,Success
+act-017,act,spoons,put the spoons in the box,3,2026-09-16,Timeout
+act-018,act,spoons,put the spoons in the box,3,2026-09-16,Stalled
+act-019,act,spoons,put the spoons in the box,3,2026-09-16,Partial
+act-020,act,towels,fold the towel,3,2026-09-17,Success
+act-021,act,spoons,put the spoons in the box,3,2026-09-17,Stalled
+act-022,act,spoons,put the spoons in the box,3,2026-09-17,Timeout
+act-023,act,spoons,put the spoons in the box,3,2026-09-17,Success
+act-024,act,towels,fold the towel,3,2026-09-17,Stalled
+act-025,act,spoons,put the spoons in the box,3,2026-09-17,Safety
+act-026,act,spoons,put the spoons in the box,3,2026-09-17,Success
+act-027,act,spoons,put the spoons in the box,3,2026-09-17,Safety
+act-028,act,towels,fold the towel,3,2026-09-17,Safety
+act-029,act,spoons,put the spoons in the box,3,2026-09-17,Safety
+act-030,act,spoons,put the spoons in the box,3,2026-09-17,Partial
+act-031,act,spoons,put the spoons in the box,3,2026-09-17,Success
+act-032,act,towels,fold the towel,3,2026-09-17,Partial
+act-033,act,spoons,put the spoons in the box,3,2026-09-17,Partial
+act-034,act,spoons,put the spoons in the box,3,2026-09-17,Timeout
+act-035,act,spoons,put the spoons in the box,3,2026-09-17,Success
+act-036,act,towels,fold the towel,3,2026-09-17,Stalled
+act-037,act,spoons,put the spoons in the box,3,2026-09-17,Timeout
+act-038,act,spoons,put the spoons in the box,3,2026-09-17,Timeout
+act-039,act,spoons,put the spoons in the box,3,2026-09-17,Partial
+smolvla-000,smolvla,towels,fold the towel,3,2026-09-19,Timeout
+smolvla-001,smolvla,spoons,put the spoons in the box,3,2026-09-19,Partial
+smolvla-002,smolvla,spoons,put the spoons in the box,3,2026-09-19,Partial
+smolvla-003,smolvla,spoons,put the spoons in the box,3,2026-09-19,Stalled
+smolvla-004,smolvla,towels,fold the towel,3,2026-09-19,Safety
+smolvla-005,smolvla,spoons,put the spoons in the box,3,2026-09-19,Partial
+smolvla-006,smolvla,spoons,put the spoons in the box,3,2026-09-19,Partial
+smolvla-007,smolvla,spoons,put the spoons in the box,3,2026-09-19,Stalled
+smolvla-008,smolvla,towels,fold the towel,3,2026-09-19,Partial
+smolvla-009,smolvla,spoons,put the spoons in the box,3,2026-09-19,Timeout
+smolvla-010,smolvla,spoons,put the spoons in the box,3,2026-09-19,Partial
+smolvla-011,smolvla,spoons,put the spoons in the box,3,2026-09-19,Partial
+smolvla-012,smolvla,towels,fold the towel,3,2026-09-19,Stalled
+smolvla-013,smolvla,spoons,put the spoons in the box,3,2026-09-19,Stalled
+smolvla-014,smolvla,spoons,put the spoons in the box,3,2026-09-19,Stalled
+smolvla-015,smolvla,spoons,put the spoons in the box,3,2026-09-19,Partial
+smolvla-016,smolvla,towels,fold the towel,3,2026-09-19,Stalled
+smolvla-017,smolvla,spoons,put the spoons in the box,3,2026-09-19,Timeout
+smolvla-018,smolvla,spoons,put the spoons in the box,3,2026-09-19,Timeout
+smolvla-019,smolvla,spoons,put the spoons in the box,3,2026-09-19,Safety
+smolvla-020,smolvla,towels,fold the towel,3,2026-09-20,Timeout
+smolvla-021,smolvla,spoons,put the spoons in the box,3,2026-09-20,Partial
+smolvla-022,smolvla,spoons,put the spoons in the box,3,2026-09-20,Partial
+smolvla-023,smolvla,spoons,put the spoons in the box,3,2026-09-20,Stalled
+smolvla-024,smolvla,towels,fold the towel,3,2026-09-20,Stalled
+smolvla-025,smolvla,spoons,put the spoons in the box,3,2026-09-20,Safety
+smolvla-026,smolvla,spoons,put the spoons in the box,3,2026-09-20,Stalled
+smolvla-027,smolvla,spoons,put the spoons in the box,3,2026-09-20,Safety
+smolvla-028,smolvla,towels,fold the towel,3,2026-09-20,Stalled
+smolvla-029,smolvla,spoons,put the spoons in the box,3,2026-09-20,Stalled
+smolvla-030,smolvla,spoons,put the spoons in the box,3,2026-09-20,Timeout
+smolvla-031,smolvla,spoons,put the spoons in the box,3,2026-09-20,Safety
+smolvla-032,smolvla,towels,fold the towel,3,2026-09-20,Partial
+smolvla-033,smolvla,spoons,put the spoons in the box,3,2026-09-20,Success
+smolvla-034,smolvla,spoons,put the spoons in the box,3,2026-09-20,Stalled
+smolvla-035,smolvla,spoons,put the spoons in the box,3,2026-09-20,Partial
+smolvla-036,smolvla,towels,fold the towel,3,2026-09-20,Partial
+smolvla-037,smolvla,spoons,put the spoons in the box,3,2026-09-20,Partial
+smolvla-038,smolvla,spoons,put the spoons in the box,3,2026-09-20,Partial
+smolvla-039,smolvla,spoons,put the spoons in the box,3,2026-09-20,Safety

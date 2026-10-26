@@ -207,3 +207,43 @@ def test_paired_design_is_never_go():
     x = qj.judge_row({**row, "design": "paired"}); assert x["decision"] == "HOLD" and x["preview_only"] and "next_test" not in x
     import pytest
     with pytest.raises(qj.InputError, match="unknown design"): qj.judge_row({**row, "design": "pared"})
+
+
+def test_planning_rate_is_not_called_observed():
+    """User test 4 (2026-10-26): a 50% planning floor was labelled "pooled observed" when 26.3% was observed."""
+    sys.path.insert(0, str(ROOT / "scripts")); import quantgate_judge as qj
+    nt = qj.judge_row({"candidate": "GR00T", "reference": "OpenPI", "cand_successes": "6", "cand_trials": "27", "ref_successes": "9", "ref_trials": "30"})["next_test"]
+    assert nt["observed_pooled_rate"] == round(15 / 57, 4) and nt["planning_rate"] == 0.5
+    assert "26.3%" in nt["assumption"] and "floor" in nt["assumption"] and "pooled observed rate, " not in nt["assumption"]
+    nt = qj.judge_row({"candidate": "A", "reference": "B", "cand_successes": "46", "cand_trials": "50", "ref_successes": "48", "ref_trials": "50"})["next_test"]
+    assert nt["planning_rate"] == nt["observed_pooled_rate"] == 0.94 and "the pooled observed rate, 94.0%" in nt["assumption"]
+
+
+def test_preview_rows_never_approve_downstream(tmp_path):
+    """A preview row's finding must not reach preflight --judge as GO (found while adding collection=observational)."""
+    d = tmp_path / "ex"; shutil.copytree(ROOT / "examples", d); card, res = d / "gate/candidate.json", d / "gate/results.csv"
+    pre, jj = tmp_path / "pre.json", tmp_path / "judge.json"
+    for col, val in (("collection", "observational"), ("design", "paired")):
+        lines = open(ROOT / "examples/gate/results.csv").read().splitlines()
+        res.write_text(f"{lines[0]},{col}\n{lines[1]},{val}\n")
+        assert q("preflight", "--card", str(card), "--checks-only", "--json", str(pre)).returncode == 0
+        j = q("judge", str(res), "--preflight", str(pre), "--json", str(jj), "--gate"); assert j.returncode == 3, j.stdout
+        x = json.load(open(jj))[0]; assert x["preview_only"] and x["preview_finding"] == "GO" and x["finding"] == "INSUFFICIENT_EVIDENCE"
+        p = q("preflight", "--card", str(card), "--judge", str(jj)); assert p.returncode == 3 and "preview only" in p.stdout
+
+
+def test_csv_text_outcomes_conditions_and_audit(tmp_path):
+    d = tmp_path / "ext"; shutil.copytree(ROOT / "examples/external", d)
+    run = lambda *a: subprocess.run([*CLI, *a], cwd=d, capture_output=True, text=True)
+    base = ["tally", "episodes.csv", "--id", "episode_id", "--group", "model", "--candidate", "gr00t", "--reference", "openpi"]
+    r = run(*base, "--success", "eval_outcome"); assert r.returncode == 2 and "did you mean eval.outcome" in r.stderr
+    r = run(*base, "--success", "eval.outcome"); assert r.returncode == 2 and "--map Success=true" in r.stderr
+    maps = [x for v in ("Success=true", "Stalled=false", "Safety=false", "Timeout=false") for x in ("--map", v)]
+    r = run(*base, "--success", "eval.outcome", *maps); assert r.returncode == 2 and "'Partial', which --map does not cover" in r.stderr
+    r = run(*base, "--success", "eval.outcome", *maps, "--map", "Partial=false", "--where", "object=spoons", "--where", "start_objects=3",
+            "--set", "collection=observational", "--audit", "audit.jsonl")
+    assert r.returncode == 0 and r.stdout.splitlines()[1] == "gr00t,openpi,6,30,9,30,observational", (r.stdout, r.stderr)
+    A = [json.loads(l) for l in open(d / "audit.jsonl")]
+    assert len(A) == 160 and sum(a["status"] == "counted" for a in A) == 60
+    assert any(a["status"] == "excluded" and a["reason"].startswith("condition not met: object is 'towels'") for a in A)
+    assert all({"source", "line", "id", "build", "status", "reason"} <= set(a) for a in A)

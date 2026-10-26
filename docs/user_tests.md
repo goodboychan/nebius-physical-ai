@@ -94,3 +94,36 @@ It is not an independent user, a robot reproduction or a deployment approval.
    - judge now takes a `design` column (independent or paired). A paired row is counted and previewed, but never GO
      and without a next-test size, and it says not to use it for a deployment decision.
    - Paired statistics are not implemented.
+
+## Session 4, 2026-10-26 (a public real-robot episode log, AI-run usability test)
+
+An AI reviewer ran this at `8242fe1` with PhAIL's public `episodes.csv` (pinned commit). They kept 113 episodes with
+the same object, instruction and starting object count: OpenPI 9/30 as the reference, GR00T 6/27, ACT 6/28 and
+SmolVLA 0/28, all HOLD. Partial successes, safety stops and timeouts stayed in the denominator.
+- They did not read this as a fair ranking or a deployment check, because each model was recorded under its own
+  conditions and at its own time.
+- The preflight refused to run without an engine, hash or latency.
+- The environment's security review blocked the editable install's build step. That command was not retried, so the
+  README install was not verified there. The browser view was not checked.
+
+**Found, and what changed.**
+1. **"50% pooled observed" was a mislabel.** The pooled rate was 15.5–26.3%, but the plan used the planner's 50%
+   floor and called it observed.
+   - The next test now reports both rates: `observed_pooled_rate`, and `planning_rate` with its basis. For example:
+     "50%, the planner's floor: the pooled observed rate is 26.3%".
+2. **Data whose independence or homogeneity is not verified.**
+   - judge takes a separate `collection` column: controlled (default) or observational. `design` is how trials are
+     analysed; `collection` is how they were gathered.
+   - Observational rows are previews: never GO, no next-test size.
+   - Adding this exposed a real bug: a preview row's finding could still say GO, and `preflight --judge` reads the
+     finding. A preview row's finding is now never GO or IMPROVEMENT_DETECTED (the preview reading is kept in
+     `preview_finding`), and the preflight treats a preview row as not evidence. The bug applied to paired rows since
+     the previous commit.
+3. **`eval.outcome` (a CSV column) vs `eval` → `outcome` (nested JSON).**
+   - tally reads CSV directly and matches a field name exactly before reading it as a nested path.
+   - A missing field lists the fields that exist and the closest match.
+   - Text outcomes need an explicit `--map Success=true ...`; an unmapped value stops tally.
+4. **Disagreeing sources.**
+   - `--where FIELD=VALUE` filters to one condition.
+   - `--audit` writes one line per input row: source, line, id, build, counted or excluded, and why.
+   - [`examples/external/`](../examples/external/) shows it on a synthetic per-episode CSV.

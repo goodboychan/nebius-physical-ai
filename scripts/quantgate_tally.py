@@ -22,6 +22,11 @@ Options:
   --placement SPEC     FIELD or FILE.json:FIELD (like --success), the placement error per successful trial: sets placement_ok by the study's placement rule (E2: mean
                        error of candidate minus reference, 97.5% bootstrap, yes if below --placement-tol, default 5)
   --missing RULE       a null or missing outcome: error (default), fail or drop. Decide it from the source's definition
+  --map V=true|false|missing   text outcomes (e.g. Success, Stalled, Safety) to true/false/missing; unmapped values stop
+  --where FIELD=VALUE  count only trials where FIELD equals VALUE (as text), e.g. the same object and instruction
+  --audit FILE         one JSON line per input trial: source file, line, id, build, counted or excluded and the reason
+  Logs may be JSONL or CSV (one row per trial; empty cells are null). A field name is first matched exactly (a CSV
+  column `eval.outcome`), then as a nested path (`eval` -> `outcome`).
   --pair FIELD         paired design: the field naming the same task across builds; see judge's `design` column
   --engine FILE        the candidate's engine: writes its sha256 to engine_sha256, so preflight can tie the row to it
 Any judge column can be added with --set column=value (e.g. --set placement_ok=yes --set mode=improvement).
@@ -34,11 +39,26 @@ import quantgate_judge as qj
 class TallyError(ValueError): pass
 
 
-def get(r, path):
+def lookup(r, path):
+    """(found, value). A key spelled exactly like the path wins (a CSV column named `eval.outcome`); otherwise the dots
+    walk nested objects (`eval` -> `outcome`)."""
+    if isinstance(r, dict) and path in r: return True, r[path]
     for k in path.split("."):
-        if not isinstance(r, dict) or k not in r: return None
+        if not isinstance(r, dict) or k not in r: return False, None
         r = r[k]
-    return r
+    return True, r
+
+
+def get(r, path):
+    return lookup(r, path)[1]
+
+
+def no_field(r, path):
+    keys = sorted(r) if isinstance(r, dict) else []
+    import difflib
+    near = difflib.get_close_matches(path, keys, n=3, cutoff=0.6)
+    return (f"has no field {path!r} (neither a key spelled {path!r} nor nested {' -> '.join(path.split('.'))}); its fields: "
+            f"{', '.join(keys[:12])}{' ...' if len(keys) > 12 else ''}" + (f"; did you mean {', '.join(near)}?" if near else ""))
 
 
 def truth(v, what):
@@ -52,11 +72,13 @@ def name(v):
 
 
 def tally(trials, candidate, reference, group="cell", success="success", require=(), forbid=(), drop=("invalid", "aborted"), id_field="trial_id",
-          placement=None, missing="error", pair=None, notes=None):
+          placement=None, missing="error", pair=None, notes=None, valmap=None, where_eq=(), audit=None, srcs=None):
     """missing: what a trial whose outcome is null or absent means. error (default) stops; fail counts it as a failure;
     drop leaves it out. Decide it from the source's own definition and write it down, since it changes the count.
     pair: the field linking the same task across builds (a paired design): reported, and marked design=paired."""
     notes = [] if notes is None else notes
+    audit = [] if audit is None else audit
+    srcs = srcs or [None] * len(trials)
     def source(spec, what):   # FIELD, or FILE.json:FIELD keyed by trial id
         if spec and ":" in spec and spec.split(":", 1)[0].endswith(".json"):
             f, fld = spec.split(":", 1)
@@ -68,26 +90,43 @@ def tally(trials, candidate, reference, group="cell", success="success", require
     candidate, reference = str(candidate), str(reference)
     out, seen, place = {candidate: [0, 0], reference: [0, 0]}, {}, {candidate: [], reference: []}
     n_missing, pairs = 0, {candidate: {}, reference: {}}
+    def note(i, status, reason, g=None, ok=None, raw_out=None):
+        src = srcs[i - 1] or ("", i)
+        audit.append({"source": src[0], "line": src[1], "id": get(trials[i - 1], id_field), "build": g, "status": status, "reason": reason,
+                      **({"success": ok, "outcome_raw": raw_out} if status == "counted" else {})})
     for i, r in enumerate(trials, 1):
         raw = get(r, group); g = name(raw)
         seen.setdefault(g, set()).add(type(raw).__name__)
         if len(seen[g]) > 1: raise TallyError(f"build {g!r} appears in field {group!r} both as {' and '.join(sorted(seen[g]))}; make the names one type")
-        if g not in out or any(get(r, d) is True for d in drop): continue
+        if g not in out: note(i, "excluded", f"build {g!r} is neither candidate nor reference", g); continue
+        miss = [f"{k}={v}" for k, v in where_eq if name(get(r, k)) != v]
+        if miss: note(i, "excluded", "condition not met: " + ", ".join(f"{m.split('=')[0]} is {get(r, m.split('=')[0])!r}, wanted {m.split('=', 1)[1]!r}" for m in miss), g); continue
+        flagged = [d for d in drop if get(r, d) is True]
+        if flagged: note(i, "excluded", f"{flagged[0]} is true (--drop)", g); continue
         where = f"trial {get(r, id_field) or i}"
+        raw_out = get(r, success)
         if ext is not None:
             t = get(r, id_field)
             if t not in ext: raise TallyError(f"{where}: no outcome in {f}")
             ok = truth(get(ext[t], field), f"{where}: {field}")
         else:
-            v = get(r, success)
+            found, v = lookup(r, success)
+            if not found and missing == "error": raise TallyError(f"{where} {no_field(r, success)}")
+            if valmap is not None and v is not None:
+                key = str(v).strip()
+                if key not in valmap: raise TallyError(f"{where}: {success} is {v!r}, which --map does not cover; mapped: {', '.join(sorted(valmap))}")
+                v = valmap[key]
             if v is None:
-                if missing == "drop": n_missing += 1; continue
+                if missing == "drop": n_missing += 1; note(i, "excluded", f"{success} is null or missing (--missing drop)", g); continue
                 if missing == "fail": n_missing += 1; v = False
                 else: raise TallyError(f"{where}: {success} is null or missing. Decide what that means in this source (a failure, "
                                        f"or not run) and say so: --missing fail or --missing drop")
+            if isinstance(v, str): raise TallyError(f"{where}: {success} is the text {v!r}. Say which texts are a success: e.g. --map {v}=true or "
+                                                    f"--map {v}=false for each outcome the source uses (--map NAME=missing for 'not run')")
             ok = truth(v, f"{where}: {success}")
         ok = ok and all(truth(get(r, k), f"{where}: {k}") for k in require) and not any(get(r, k) is True for k in forbid)
         out[g][0] += ok; out[g][1] += 1
+        note(i, "counted", "counted" + (" (null outcome as failure, --missing fail)" if raw_out is None and missing == "fail" else ""), g, ok, raw_out)
         if pair:
             pk = get(r, pair)
             if pk in (None, ""): raise TallyError(f"{where}: no {pair!r} to pair on")
@@ -98,6 +137,9 @@ def tally(trials, candidate, reference, group="cell", success="success", require
                 if t not in pext: raise TallyError(f"{where}: no placement in {pf}")
                 v = get(pext[t], pfield)
             else: v = get(r, pfield)
+            if isinstance(v, str):
+                try: v = float(v)
+                except ValueError: pass
             if isinstance(v, bool) or not isinstance(v, (int, float)) or v != v or v < 0: raise TallyError(f"{where}: {pfield} must be a non-negative number on a successful trial, not {v!r}")
             place[g].append(float(v))
     for b in (candidate, reference):
@@ -129,7 +171,7 @@ def placement_check(place, candidate, reference, tol_px=5.0, n_boot=10000):
     return ok, f"placement: degradation {d:+.1f} px, 97.5% interval [{lo:+.1f}, {hi:+.1f}] vs tolerance {tol_px:g} px -> placement_ok={ok or 'undecided'}"
 
 
-def read_jsonl(paths, id_field="trial_id", session_field="session", also=None):
+def read_jsonl(paths, id_field="trial_id", session_field="session", also=None, srcs=None):
     """Read the logs and refuse any trial counted twice: the same file given twice, or the same trial in two places
     (a copied file, overlapping exports). A trial is keyed by session + id when the log has a session field, else by id.
     A duplicate would shrink the interval without a new trial and can turn HOLD into GO (usability review 4)."""
@@ -138,12 +180,20 @@ def read_jsonl(paths, id_field="trial_id", session_field="session", also=None):
         rp = os.path.realpath(p)
         if rp in files: raise TallyError(f"log given twice: {p} (same file as {files[rp]})")
         files[rp] = p
-        try: f = open(p)
+        try: f = open(p, encoding="utf-8-sig", newline="")
         except FileNotFoundError: raise TallyError(f"log not found: {p}")
-        for n, line in enumerate(f, 1):
-            if not line.strip(): continue
-            try: r = json.loads(line)
-            except json.JSONDecodeError as e: raise TallyError(f"{p} line {n}: not JSON ({e.msg})")
+        if p.lower().endswith(".csv"):   # one row per trial; empty cells are null, true/false (any case) are booleans
+            rd = csv.DictReader(f)
+            it = ((n, {k.strip(): ({"true": True, "false": False}.get(v.strip().lower(), v.strip()) if v.strip() else None) for k, v in row.items() if k})
+                  for n, row in enumerate(rd, 2))
+        else:
+            def it_jsonl():
+                for n, line in enumerate(f, 1):
+                    if not line.strip(): continue
+                    try: yield n, json.loads(line)
+                    except json.JSONDecodeError as e: raise TallyError(f"{p} line {n}: not JSON ({e.msg})")
+            it = it_jsonl()
+        for n, r in it:
             if not isinstance(r, dict): raise TallyError(f"{p} line {n}: expected one JSON object per trial")
             t = get(r, id_field)
             if t in (None, ""): raise TallyError(f"{p} line {n}: no {id_field!r}; every trial needs a unique id (--id FIELD)")
@@ -152,6 +202,7 @@ def read_jsonl(paths, id_field="trial_id", session_field="session", also=None):
                                               f": {p} line {n} and {first[key]}; each trial may be counted once"
                                               + ("" if also else ". If this id is a task that every build ran (a paired design), use --pair FIELD"))
             first[key] = f"{p} line {n}"; rows.append(r)
+            if srcs is not None: srcs.append((p, n))
     return rows
 
 
@@ -165,12 +216,34 @@ def main(argv=None):
     ap.add_argument("--placement-tol", type=float, default=5.0, metavar="PX", help="placement tolerance in the field's unit (default 5)")
     ap.add_argument("--engine", metavar="FILE", help="the candidate's engine file: writes its sha256 to engine_sha256")
     ap.add_argument("--missing", choices=["error", "fail", "drop"], default="error", help="a null or missing outcome: stop (default), count as a failure, or leave out")
+    ap.add_argument("--map", action="append", default=[], metavar="VALUE=true|false|missing", help="turn a text outcome into one, e.g. --map Success=true --map Stalled=false; any unmapped value stops")
+    ap.add_argument("--where", action="append", default=[], metavar="FIELD=VALUE", help="count only trials where FIELD equals VALUE (as text); the rest are excluded with the reason")
+    ap.add_argument("--audit", metavar="JSONL", help="write one line per input trial: source, line, id, counted or excluded, and why")
     ap.add_argument("--pair", metavar="FIELD", help="the field naming the same task across builds (paired design): ids are then unique per build, and the row is marked design=paired")
     ap.add_argument("--append", metavar="CSV"); a = ap.parse_args(argv)
     try:
-        notes = []
-        row = tally(read_jsonl(a.logs, a.id, also=a.group if a.pair else None), a.candidate, a.reference, a.group, a.success, a.require, a.forbid,
-                    ("invalid", "aborted") if a.drop is None else a.drop, a.id, a.placement, a.missing, a.pair, notes)
+        notes, audit, srcs = [], [], []
+        valmap = None
+        if a.map:
+            valmap = {}
+            for m in a.map:
+                k, eq, v = m.rpartition("=")
+                if not eq or v.strip().lower() not in ("true", "false", "missing"): raise TallyError(f"--map needs VALUE=true|false|missing, not {m!r}")
+                valmap[k.strip()] = {"true": True, "false": False, "missing": None}[v.strip().lower()]
+        where_eq = []
+        for w in a.where:
+            k, eq, v = w.partition("=")
+            if not eq or not k.strip(): raise TallyError(f"--where needs FIELD=VALUE, not {w!r}")
+            where_eq.append((k.strip(), v.strip()))
+        row = tally(read_jsonl(a.logs, a.id, also=a.group if a.pair else None, srcs=srcs), a.candidate, a.reference, a.group, a.success, a.require, a.forbid,
+                    ("invalid", "aborted") if a.drop is None else a.drop, a.id, a.placement, a.missing, a.pair, notes, valmap, where_eq, audit, srcs)
+        if a.audit:
+            with open(a.audit, "w") as fa: fa.write("".join(json.dumps(x, default=str) + "\n" for x in audit))
+            ex = {}
+            for x in audit:
+                if x["status"] == "excluded": ex[x["reason"].split(":")[0]] = ex.get(x["reason"].split(":")[0], 0) + 1
+            notes.append(f"audit: {sum(x['status'] == 'counted' for x in audit)} counted, {sum(x['status'] == 'excluded' for x in audit)} excluded"
+                         + (f" ({'; '.join(f'{k}: {v}' for k, v in ex.items())})" if ex else "") + f" -> {a.audit}")
         for m in notes: print(m, file=sys.stderr)
         if a.placement:
             if not (a.placement_tol > 0): raise TallyError("--placement-tol must be positive")
