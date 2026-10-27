@@ -245,6 +245,10 @@ Stress tests were unsealed on 2026-10-13. The stress protocol is
 
 ## How QuantGate uses NVIDIA models and Nebius
 
+![QuantGate architecture: the bench (SO-101 arms, cameras, a Jetson Orin Nano Super running the TensorRT engine, trial runner and preflight), Nebius AI Cloud (training on L40S, the CPU audit, Cosmos-Reason2 as the judge, Nemotron 3 Super for words only, MLflow), the workstation that quantizes, and the repository where code decides](docs/assets/architecture.png)
+
+<sub>What runs where ([SVG](docs/assets/architecture.svg), drawn by [`scripts/make_architecture.py`](scripts/make_architecture.py)). Orange: real arm or device; purple: an AI model; teal: plain code.</sub>
+
 | Component | What runs | Where |
 |---|---|---|
 | Deployment target | LeRobot ACT policy (51.6M) as **TensorRT** FP32 / FP16 / INT8 engines | **Jetson Orin Nano Super** (TensorRT 10.3) next to a real SO-101 arm |

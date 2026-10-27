@@ -1159,3 +1159,9 @@ Wording, also from the review:
   - It lists the defects these tests exposed that could have turned HOLD into GO.
   - It opens with its limit: AI-run and author-run tests, not independent user validation or a robot reproduction.
   - Source: `docs/user_tests.md`.
+- 2026-10-27, after LOCK-4, presentation only (no number changed). An architecture diagram (what runs where) is added
+  to the dashboard (How it works, before the workflow) and to the README, drawn by `scripts/make_architecture.py`.
+  While drawing it, one inconsistency surfaced: the audit fan-out is "25 cells, one CPU job each" in the setup table
+  and the README pipeline table, but "48 CPU jobs" in the workflow panel, the README cost table and the Devpost text.
+  `artifacts/cost/jobs.json` shows 27 G4 audit jobs (25 cells; two re-runs) and 50 CPU jobs in all, counting the G0
+  fan-out. The diagram uses "25 cells". The "48" figure is left unchanged until the user decides how to correct it.
