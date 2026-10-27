@@ -82,7 +82,7 @@ def plans(T):
             "open": [tt(k) + ", NOT_DETECTED" for k in ("TYP2", "T6P2") if not r6[k]["test"].get("improvement_detected")]
                     + ([tt("T0G") + ", DROP FLAGGED"] if r6["T0G"]["test"].get("drop_flagged") else [])
                     + ["non-inferiority at the training mark against the old policy (the guard detects only a large drop)",
-                       "FT did better in this session than before (7/12 and 2/12 against 0/12): the earlier gap was partly the scene (a knocked wrist camera)"],
+                       "FT did better in this session than before (7/12 and 2/12 against 0/12); that fits the scene (a knocked wrist camera) causing part of the earlier gap, but sessions were not compared under control"],
             "evidence": ["artifacts/reports/ft6_analysis.json", "artifacts/freeze/ft6_post.json", "artifacts/finetune/GEN3_modes.json",
                          "artifacts/finetune/rejudge/TYP2_consensus.json", "docs/finetune_position_preregistration.md#22"],
             "next_test": {"compare": "FT2-FP16 vs VC-025 (old FP16 policy) at the training mark, and FT2 at more objects and positions",

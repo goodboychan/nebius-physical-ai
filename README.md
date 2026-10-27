@@ -27,6 +27,13 @@ Setting it down properly on the coaster turned out to be the hard part.
 **Evidence before deployment.** QuantGate helps robot developers decide which precision of a policy to ship on an
 edge device. It shows the engine's measured cost, its real-arm behavior and how strong the evidence is.
 
+**In short.**
+- In this study FP16 was the cheapest build (11.6 ms, 82 mJ per inference on the Jetson) and the next one to
+  validate.
+- The INT8 offline ranking did not turn into a real-arm advantage: top-ranked and randomly picked INT8 builds both
+  succeeded 73/75.
+- No build is approved for deployment yet.
+
 > QuantGate screens INT8 robot policies offline on Nebius and gates which ones reach a Jetson-powered SO-101 arm.
 > Cosmos-Reason2 watched the real runs (215 live, 245 retrospectively) and Nemotron writes the deployment report. The whole real-arm study was
 > pre-registered, operator-blinded and hash-sealed in the main study; follow-ups were sealed and interleaved, with
@@ -215,12 +222,14 @@ Numbers come from committed artifacts. The figure's script lists its sources.
        can at +5 and +7 cm), with the wrist mount fixed. Against FT, sealed and interleaved, 12 each: **yellow can at
        +3 cm 12/12 vs 7/12**, +42 pp [+9, +68]; **+6 cm 12/12 vs 2/12**, +83 pp [+46, +95]; both improvements detected,
        at conditions never in training. A guard at the training mark found no drop (12/12 vs 12/12).
-     - FT itself did better in this session than before (7/12 and 2/12 against 0/12), so part of the earlier gap was the
-       scene. FT2 is the next candidate for these conditions, not an approval.
+     - FT itself did better in this session than before (7/12 and 2/12 against 0/12). That fits the scene (a knocked
+       wrist camera) having caused part of the earlier gap, but a comparison across sessions cannot settle it. FT2 is
+       the next candidate for these conditions, not an approval.
    - Off the training position, the old policy's commanded gripper also chatters about 4× more (exploratory,
      pre-specified metric).
    - Caveat: the operator could see that the two policies moved differently, so operator blinding was partial.
-     Outcomes come from the automatic judge and the video re-judge, which agree block by block.
+     Outcomes come from the automatic judge and a blind re-judge of the saved video by code (the same circle
+     detector, rerun), which agree block by block.
    - Sources: [`finetune_position_preregistration.md`](docs/finetune_position_preregistration.md) §14,
      [`ft_analysis.json`](artifacts/reports/ft_analysis.json).
 

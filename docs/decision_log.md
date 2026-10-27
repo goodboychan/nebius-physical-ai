@@ -1173,3 +1173,20 @@ Wording, also from the review:
   - Corrected wording: the dashboard workflow step 5, `devpost_about.md` and `submission_v2_paste.md` now give "one
     CPU job per cell (25 cells; 27 submitted, two re-run)". The README cost row keeps 48 and says what it counts.
   - The Devpost page needs the corrected "Offline audit" line pasted again.
+- 2026-10-27, wording after LOCK-4 (presentation only; no number changed), from a review of the submission text:
+  - The Devpost story and the README open with an "In short" summary before any interval or formula. FP16 was the
+    cheapest build and the next to validate; the INT8 offline ranking did not turn into a real-arm advantage (73/75
+    and 73/75); no build is approved.
+  - The re-judge is now described as what it is: a blind re-judge of the saved video **by code**, rerunning the same
+    circle detector (`stress_rejudge*.py`). It involves no person and no AI model. The reviewer suggested "a separate
+    blinded AI video review", which would also be wrong.
+  - Causal wording is softened in four places: the Devpost story, the README, `next_test_plan.py` (and so the plans,
+    the review page and the dashboard) and the dashboard reach note.
+    - "The risk was in the deployment conditions, not the precision" now reads: no precision effect was shown in this
+      study; problems tied to deployment conditions were.
+    - "Part of the earlier gap was the knocked camera" now reads: the result fits that explanation, but a comparison
+      across sessions cannot settle it.
+  - Built With in the paste document adds "Isaac Sim (exploratory twin)". The misspelled tag `issac-sim` is on the
+    Devpost form and is fixed there by the user.
+  - Left as is: the uploaded video's narration says it "traced" the drop "to a knocked wrist camera". Changing it means
+    re-rendering and re-uploading.

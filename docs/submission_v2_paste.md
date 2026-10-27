@@ -25,6 +25,17 @@ Physical AI
 
 ## 4. About the project (paste as Markdown)
 
+## In short
+
+- **In this study, FP16 was the cheapest build and the next one to validate.** On the Jetson it was the fastest and
+  used the least energy (11.6 ms, 82 mJ per inference), ahead of every INT8 build.
+- **The INT8 offline ranking did not turn into a real-arm advantage.** The top-ranked INT8 builds and randomly picked
+  ones both succeeded 73/75.
+- **No build is approved for deployment yet.** The evidence is not strong enough for any candidate, and the review
+  names the next test that could change that.
+
+The statistics behind each line follow below.
+
 ## Inspiration
 
 It started as a small gesture: a robot arm that brings a drink to someone working hard. Setting the can down
@@ -128,7 +139,7 @@ compiler or device change makes a new artifact, and each artifact needs its own 
   real trial.
 - **Real arm**: **745 trials** in 18 sessions, all under sealed, interleaved schedules.
   - The operator saw trial numbers only. In the fine-tune blocks the two policies moved visibly differently, so
-    operator blinding there was partial; outcomes come from an automatic judge and a blind video re-judge.
+    operator blinding there was partial; outcomes come from an automatic judge and a blind re-judge of the saved video by code (the same circle detector, rerun; no person or AI model).
   - Logs are hashed before they are unsealed, so no rule can change after the results are seen.
   - The primary analyses were pre-registered. Rules set after aggregate results and post-hoc observations are
     labelled as such in the decision log.
@@ -151,7 +162,7 @@ are linked in the README's "Data and lineage" table, so the path from a demonstr
 - **The offline audit did not predict the arm.**
   - Its top-ranked INT8 cells went 73/75, and randomly picked cells also went 73/75.
   - The offline rank did not track placement error either (Spearman 0.02–0.08).
-- **The risk was in the deployment conditions, not the precision.**
+- **No precision effect was shown in this study; problems tied to deployment conditions were.**
   - Removing the gripper's anti-slip pads dropped success to 8/24.
   - Moving the start 3 cm gave 0/3.
 - **We fixed the weakness with data and re-tested it under a rule fixed in advance.**
@@ -178,7 +189,7 @@ are linked in the README's "Data and lineage" table, so the path from a demonstr
 - **Small samples.** Honest intervals at 12–25 trials are wide. We had to design the review to say "not yet" instead
   of overclaiming.
 - **Blinding a visible fix.** The fine-tuned policy moves visibly differently, so operator blinding was partial.
-  Outcomes come from an automatic judge and a blind video re-judge, which agree.
+  Outcomes come from an automatic judge and a blind re-judge of the saved video by code (the same circle detector, rerun), which agree.
 - **Hardware is the unglamorous failure mode**: empty episodes, voltage errors and gripper friction. Each became a
   recorded deployment condition.
 
@@ -192,7 +203,7 @@ We keep these in the write-up on purpose; each one changed what the review says.
   were discarded unopened.
 - **The fix has a reach, and the scene mattered.** The first fine-tune worked from −6 to +3 cm with the cola can, but
   not at +6 cm or with a smaller yellow can. A second fine-tune fixed both (12/12). In that session the first
-  fine-tune also did better than before (7/12 and 2/12 against 0/12), so part of the earlier gap was the knocked camera.
+  fine-tune also did better than before (7/12 and 2/12 against 0/12), which fits the knocked camera having caused part of the earlier gap; a comparison across sessions cannot settle it.
 - **The first AI judge setup missed 20 of 21 failures.** After validation it still misses some: cans left standing at
   the start look like successes to it.
 - **An offline warning that the arm did not confirm.** A deliberately broken calibration scored badly offline but went
@@ -220,7 +231,7 @@ We keep these in the write-up on purpose; each one changed what the review says.
 
 ## 5. Built with
 
-NVIDIA Cosmos-Reason2-2B, NVIDIA Nemotron 3 Super, NVIDIA TensorRT, TensorRT Model Optimizer, Jetson Orin Nano Super, Nebius AI Cloud (Jobs, AI Endpoints, Object Storage, Managed MLflow), Nebius Token Factory, Tavily, LeRobot, SO-101, vLLM, PyTorch, Hailo-8 (portability probe)
+NVIDIA Cosmos-Reason2-2B, NVIDIA Nemotron 3 Super, NVIDIA TensorRT, TensorRT Model Optimizer, Jetson Orin Nano Super, Nebius AI Cloud (Jobs, AI Endpoints, Object Storage, Managed MLflow), Nebius Token Factory, Tavily, LeRobot, SO-101, vLLM, PyTorch, Isaac Sim (exploratory twin), Hailo-8 (portability probe)
 
 ## 6. "Try it out" links
 

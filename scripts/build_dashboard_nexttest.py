@@ -49,7 +49,7 @@ CARD = {
 assert set(CARD) == set(P), (set(CARD), set(P))
 def evname(x):   # a readable name first, the path second
     for key, name in (("_analysis.json", "Analysis"), ("_post.json", "Committed evidence record (post-lock hash)"), ("_unsealed/", "Trial log"),
-                      ("modes.json", "Failure-mode labels (blind)"), ("rejudge", "Blind video re-judge"), ("lock3.json", "Order lock record (LOCK-3)"),
+                      ("modes.json", "Failure-mode labels (blind)"), ("rejudge", "Blind re-judge of the saved video, by code"), ("lock3.json", "Order lock record (LOCK-3)"),
                       ("SUMMARY.md", "Jetson cost benchmark"), ("prereg", "Pre-registration"), ("simple_checks", "Simple-checks comparison"),
                       ("ft_chatter", "Gripper chatter measurement"), ("T0R_modes", "Failure-mode labels (blind)")):
         if key in x: return name
