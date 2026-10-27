@@ -14,7 +14,7 @@ SHOTS, OUT = sys.argv[1:3]
 W, H, FPS = 1920, 1080, 30
 BG, INK, INK2, ACC = (16, 20, 19), (230, 234, 233), (174, 184, 183), (18, 160, 168)
 F = lambda s, b=False: ImageFont.truetype("/usr/share/fonts/truetype/dejavu/DejaVuSans%s.ttf" % ("-Bold" if b else ""), s)
-if os.environ.get("NARR", "v5") in ("v6", "v7", "v8", "v9"):   # v9: Noto Sans, the same family as the deck and closer to the dashboard
+if os.environ.get("NARR", "v5") in ("v6", "v7", "v8", "v9", "v10"):   # v9: Noto Sans, the same family as the deck and closer to the dashboard
     F = lambda s, b=False: ImageFont.truetype("/usr/share/fonts/opentype/noto/NotoSansCJK-%s.ttc" % ("Bold" if b else "Regular"), s, index=1)
 FONT_SUB, FONT_CHIP, FONT_CARD, FONT_BIG = F(34), F(28), F(46, True), F(80, True)
 R = "artifacts/reports/figures"; C = "dashboard/clips"; E = "video/edit"
@@ -30,6 +30,7 @@ def srt(path):
     return out
 
 NARR = os.environ.get("NARR", "v5")   # v5 (2026-10-16): external review 7 (story first, >= 65 s of robot footage); v4: notes 1-9
+LAYOUT = "v9" if NARR == "v10" else NARR   # v10 (2026-10-28): the v9 picture with scene 6 re-voiced; files still come from NARR
 SUBS = srt(f"docs/narration/narration_{NARR}.srt")
 
 # Segments are (scene, start, end) in seconds relative to the scene start (docs/narration/narration_v3_timing.json),
@@ -65,7 +66,7 @@ REL = [   # v8 (external review 7): found -> fixed -> still not approved, in the
     ("6", 15.6, 23.4, "image", (f"{SHOTS}/review_compare.png",), "Not yet: the review lists the trials and rule changes still missing"),
     ("7", 0.0, 4.2, "endkick", ("Earn the next test, not the approval.",), None),
 ]
-if NARR in ("v6", "v7"):   # v9 (2026-10-21): audience line, 673 blinded trials, the fine-tune's reach, the hidden scene change
+if LAYOUT in ("v6", "v7"):   # v9 (2026-10-21): audience line, 673 blinded trials, the fine-tune's reach, the hidden scene change
     A = os.path.expanduser("~/edgeqgate_data/seminar_assets")
     slot = lambda k: ST[str(int(k) + 1)] - ST[k]
     REL = [r for r in REL if r[0] not in ("1", "4", "5", "6")] + [
@@ -75,7 +76,7 @@ if NARR in ("v6", "v7"):   # v9 (2026-10-21): audience line, 673 blinded trials,
         ("4", 4.8, 8.0, "clip", (f"{E}/yellow_can_2.mp4", 4.0, 1, 0), "Unseen yellow can · block result 48/48 (side view of a demonstration)"),
         ("4", 8.0, 12.3, "clip", (f"{C}/v1_nopad_drop.mp4", 4.0, 4, 0), "Gripper pads removed: the block finished 8/24 (overhead, 4×)"),
         *([("4", 12.3, 18.1, "image", (f"{R}/fig_ft_reach.png",), "First fine-tune: reach, blinded, 12 vs 12 per condition"),
-           ("4", 18.1, slot("4"), "image", (f"{R}/fig_ft2_reach.png",), "Fine-tune v2: 50 more demos (yellow can, +5/+7 cm) · 12/12 at both held-out conditions")] if NARR == "v7" else
+           ("4", 18.1, slot("4"), "image", (f"{R}/fig_ft2_reach.png",), "Fine-tune v2: 50 more demos (yellow can, +5/+7 cm) · 12/12 at both held-out conditions")] if LAYOUT == "v7" else
           [("4", 12.3, 14.8, "image", (f"{SHOTS}/pos_strip.png",), "50 new demos at −4…+4 cm · fine-tuned 20k steps on Nebius Jobs"),
            ("4", 14.8, slot("4"), "image", (f"{R}/fig_ft_reach.png",), "Reach, blinded, 12 vs 12 per condition · re-tested after a scene fix: same readings")]),
         ("5", 0.0, 8.6, "clip", (f"{A}/wrist_before_after.mp4", 3.0, 1, 0), None),
@@ -84,7 +85,7 @@ if NARR in ("v6", "v7"):   # v9 (2026-10-21): audience line, 673 blinded trials,
     ]
     REL = [(k, a, (slot(k) if k == "2" and b == 37.525 else b), kind, args, chip) for k, a, b, kind, args, chip in REL]
     REL.sort(key=lambda r: (int(r[0]), r[1]))
-if NARR == "v8":   # v10 (2026-10-22, storytelling review): question first, each result ends in a decision, the product segment last
+if LAYOUT == "v8":   # v10 (2026-10-22, storytelling review): question first, each result ends in a decision, the product segment last
     A = os.path.expanduser("~/edgeqgate_data/seminar_assets")
     slot = lambda k: ST[str(int(k) + 1)] - ST[k] if str(int(k) + 1) in ST else 11.5
     def ss(k, i):   # start of the i-th sentence of scene k, relative to the scene start
@@ -120,7 +121,7 @@ if NARR == "v8":   # v10 (2026-10-22, storytelling review): question first, each
     REL += [("8", a_, b_, "clip", (P8, a_, 1, 0), l_) for a_, b_, l_ in zip(cuts, cuts[1:], labs)]
     REL += [("9", 0.0, ss("9", 3) - 0.3, "endcard", ((("Priority", "FP16 (VC-025): validate first"), ("Status", "deployment HOLD · not enough evidence yet"), ("Next", "FP16 vs FP32 under a pre-registered rule")), [ss("9", i) for i in (0, 1, 2)]), None),
             ("9", ss("9", 3) - 0.3, slot("9"), "endkick", ("Earn the next test, not the approval.",), None)]
-if NARR == "v9":   # v11 (2026-10-22, second review): >= 60 s of the real arm (robot left, card right), the first output in 30 s, FP16 19/20 vs 10/10
+if LAYOUT == "v9":   # v11 (2026-10-22, second review): >= 60 s of the real arm (robot left, card right), the first output in 30 s, FP16 19/20 vs 10/10
     A = os.path.expanduser("~/edgeqgate_data/seminar_assets")
     slot = lambda k: ST[str(int(k) + 1)] - ST[k] if str(int(k) + 1) in ST else 9.2
     def ss(k, i):
@@ -166,7 +167,7 @@ if NARR == "v9":   # v11 (2026-10-22, second review): >= 60 s of the real arm (r
 SEG = [(ST[k] + a, ST[k] + b, kind, args, chip) for k, a, b, kind, args, chip in REL]
 # v11 model badges (user request): which model, service or code is doing the work in each segment; top right, beside the chip
 BADGE = [None] * len(SEG)
-if NARR == "v9":
+if LAYOUT == "v9":
     MOD, CODE = (107, 76, 154), (0, 128, 140)
     def badge_for(k, kind, args):
         if k in ("0",): return ("ACT policy · TensorRT engine on Jetson Orin Nano Super", MOD)
@@ -406,13 +407,18 @@ vs.width, vs.height, vs.pix_fmt = W * SCALE, H * SCALE, "yuv420p"
 vs.options = {"crf": os.environ.get("CRF", "21"), "preset": os.environ.get("PRESET", "medium"), "profile": "high", "tune": "film"}
 a_in = av.open(f"docs/narration/narration_{NARR}_am_michael.m4a"); as_ = o.add_stream_from_template(a_in.streams.audio[0], opaque=True)
 k = 0
+ONLY = os.environ.get("ONLY_SCENE")   # render one scene's frames only (to splice into an earlier master); others are skipped by count
+SCN = [r[0] for r in REL]
 for si, seg in enumerate(SEG):
+    if ONLY and SCN[si] != ONLY:
+        k += int(round((seg[1] - seg[0]) * FPS)); continue
+    if ONLY: print(f"scene {ONLY} segment {si}: frames from {k}", flush=True)
     for im in frames_of(seg):
         t = k / FPS; d = ImageDraw.Draw(im)
         if seg[4]: chip(d, seg[4])
         if seg[2] not in ("endkick", "logo"): badge(d, BADGE[si])
-        if NARR in ("v6", "v7", "v8", "v9") and 0.3 <= t < 3.3:   # v9: one number in the first seconds
-            a_ = min(1.0, (t - 0.3) / 0.4, (3.3 - t) / 0.4); hl = "745 real-arm trials · evidence before deployment" if NARR in ("v8", "v9") else ("745" if NARR == "v7" else "673") + " blinded real-arm trials · evidence before deployment"; fh = F(52, True)
+        if LAYOUT in ("v6", "v7", "v8", "v9") and 0.3 <= t < 3.3:   # v9: one number in the first seconds
+            a_ = min(1.0, (t - 0.3) / 0.4, (3.3 - t) / 0.4); hl = "745 real-arm trials · evidence before deployment" if LAYOUT in ("v8", "v9") else ("745" if LAYOUT == "v7" else "673") + " blinded real-arm trials · evidence before deployment"; fh = F(52, True)
             w = d.textlength(hl, font=fh); x = (W - w) / 2; d.rounded_rectangle((x - 36, 120, x + w + 36, 220), 18, fill=(16, 20, 19))
             d.text((x, 136), hl, font=fh, fill=tuple(int(16 + (c - 16) * a_) for c in (240, 244, 244)))
         if seg[2] not in ("cardfade", "endkick", "bigq", "questions", "endcard"): subtitle(d, t)   # the card and the kick show the spoken line already
@@ -421,7 +427,7 @@ for si, seg in enumerate(SEG):
         k += 1
     print(f"{seg[0]:6.1f}-{seg[1]:6.1f} {seg[2]:5} frames to {k}", flush=True)
 for p in vs.encode(): o.mux(p)
-for p in a_in.demux(a_in.streams.audio[0]):
+for p in ([] if ONLY else a_in.demux(a_in.streams.audio[0])):
     if p.dts is None: continue
     p.stream = as_; o.mux(p)
 o.close(); print("written", OUT, k / FPS, "s")
