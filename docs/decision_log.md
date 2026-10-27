@@ -1190,3 +1190,16 @@ Wording, also from the review:
     Devpost form and is fixed there by the user.
   - Left as is: the uploaded video's narration says it "traced" the drop "to a knocked wrist camera". Changing it means
     re-rendering and re-uploading.
+- 2026-10-28, video v13 (presentation only; no number changed). Scene 6 (1:52–2:01) is re-voiced.
+  - The old line "we kept every result sealed, and traced it to a knocked wrist camera" read as a confirmed cause. The
+    new line is "When success dropped, we kept results sealed. Likely cause: a knocked wrist camera."
+  - The reviewer suggested "and those results were not excluded". That is not true: six trials run in the bad scene
+    were discarded unopened. So it was not used.
+  - Narration v10 changes scene 6 only, and its slot is pinned to the v9 length, so every later sentence starts at the
+    same time (`narration_v10_timing.json` = v9).
+  - Only frames 3361–3631 (scene 6, new subtitles) were re-rendered (`make_video.py` with `ONLY_SCENE=6`) and spliced
+    into the v12 masters (`splice_video.py`).
+    - Outside the subtitle band, the new frames differ from v12 only by compression noise (mean 0.6 of 255).
+    - Loudness is −16.4 LUFS / −1.4 dBTP, as v12.
+  - The outputs are `video/final/quantgate_v13{,_share,_4k}.mp4`, 177.3 s.
+  - The YouTube link changes when the user uploads it.
