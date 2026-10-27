@@ -97,7 +97,7 @@ compiler or device change makes a new artifact, and each artifact needs its own 
   - 120 teleoperated demonstrations, recorded with LeRobot.
   - ACT (51.6M parameters, 100-step chunks) trained on **Nebius Jobs** with an L40S GPU.
   - 26 TensorRT engines built on the Jetson with a frozen timing cache, so the same file always behaves the same.
-- **Offline audit**: 2,000 held-out states scored on 48 CPU jobs on Nebius Jobs. The ranking was frozen before any
+- **Offline audit**: 2,000 held-out states scored on Nebius Jobs, one CPU job per cell (25 cells; 27 jobs submitted, two re-run). The ranking was frozen before any
   real trial.
 - **Real arm**: **745 trials** in 18 sessions, all under sealed, interleaved schedules.
   - The operator saw trial numbers only. In the fine-tune blocks the two policies moved visibly differently, so

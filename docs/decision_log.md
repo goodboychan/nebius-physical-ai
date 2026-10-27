@@ -1165,3 +1165,11 @@ Wording, also from the review:
   and the README pipeline table, but "48 CPU jobs" in the workflow panel, the README cost table and the Devpost text.
   `artifacts/cost/jobs.json` shows 27 G4 audit jobs (25 cells; two re-runs) and 50 CPU jobs in all, counting the G0
   fan-out. The diagram uses "25 cells". The "48" figure is left unchanged until the user decides how to correct it.
+- 2026-10-27, error correction after LOCK-4 (the user approved it; no study number changed).
+  - The claim "2,000 held-out states scored on 48 CPU jobs" mixed two counts. The 2,000-state audit (G4) is 25 cells,
+    one completed CPU job each; 27 jobs were submitted, because vc-013 and vc-014 never started and were re-run.
+  - "48" is the number of billed CPU jobs in `review_cost.py`: the G0 dry run (20 fan-out and 1 probe), the 25 G4
+    jobs, and the FP16 and INT8 audits (2).
+  - Corrected wording: the dashboard workflow step 5, `devpost_about.md` and `submission_v2_paste.md` now give "one
+    CPU job per cell (25 cells; 27 submitted, two re-run)". The README cost row keeps 48 and says what it counts.
+  - The Devpost page needs the corrected "Offline audit" line pasted again.

@@ -231,7 +231,7 @@ Stress tests were unsealed on 2026-10-13. The stress protocol is
 
 | | Use | USD |
 |---|---|---|
-| Nebius Jobs | ACT training and fine-tune on L40S (2.5 h); 48 CPU audit jobs | 4.5 |
+| Nebius Jobs | ACT training and fine-tune on L40S (2.5 h); 48 billed CPU jobs (G0 dry run 21, the 25-cell audit 25, two later audits) | 4.5 |
 | Nebius AI Endpoint | Cosmos-Reason2 on L40S, 11 sessions, 16.5 h up | 25.6 |
 | Nebius Token Factory | Nemotron 3 Super, 68+ calls, 150k in / 86k out tokens (lower bound) | 0.1 |
 | Nebius Managed MLflow | 1.5 h | 0.7 |
