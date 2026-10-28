@@ -244,7 +244,7 @@ NVIDIA Cosmos-Reason2-2B, NVIDIA Nemotron 3 Super, NVIDIA TensorRT, TensorRT Mod
 
 ## 7. Video demo link
 
-https://www.youtube.com/watch?v=z80w9vig-qA (upload `video/final/quantgate_v12_4k.mp4`; 2:57, about 101 s of the real arm)
+https://www.youtube.com/watch?v=fC_mkn_U36Q (v13, uploaded 2026-10-28 from `video/final/quantgate_v13_4k.mp4`; 2:57, about 101 s of the real arm)
 
 ## 8. Image gallery (15 images, 1800×1200, in this order)
 
@@ -275,7 +275,7 @@ the two older galleries are left out for size; they are in the repository.
 
 **Repository URL**: https://github.com/goodboychan/nebius-physical-ai. Apache 2.0. Setup and reproduction are in the README (`quantgate.py verify | review | plan`; no GPU or API key needed to rebuild the review).
 
-**Demo URL**: the dashboard, https://claude.ai/artifact/2tUAoJHBeT8uLU96BmgPNK (no robot needed). Video: https://www.youtube.com/watch?v=z80w9vig-qA.
+**Demo URL**: the dashboard, https://claude.ai/artifact/2tUAoJHBeT8uLU96BmgPNK (no robot needed). Video: https://www.youtube.com/watch?v=fC_mkn_U36Q.
 
 **Which model(s) did you use, and why that size/variant?**
 - `nvidia/nemotron-3-super-120b-a12b` for the deployment-report agent (D3). The report has to read a large evidence

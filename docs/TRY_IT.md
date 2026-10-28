@@ -5,7 +5,7 @@ gives the same result on every machine.
 
 ## 0. Just look (no install)
 
-- **Video (3 min):** https://www.youtube.com/watch?v=z80w9vig-qA
+- **Video (3 min):** https://www.youtube.com/watch?v=fC_mkn_U36Q
 - **Dashboard:** https://claude.ai/artifact/2tUAoJHBeT8uLU96BmgPNK. Start at the Review panel: pick a build, read its
   deployment decision and why, then open "Evidence and provenance". Each record links to the file on GitHub.
 

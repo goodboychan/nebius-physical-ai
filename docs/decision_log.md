@@ -1203,3 +1203,6 @@ Wording, also from the review:
     - Loudness is −16.4 LUFS / −1.4 dBTP, as v12.
   - The outputs are `video/final/quantgate_v13{,_share,_4k}.mp4`, 177.3 s.
   - The YouTube link changes when the user uploads it.
+- 2026-10-28: video v13 uploaded by the user at https://youtu.be/fC_mkn_U36Q (reachable, checked through YouTube's
+  oEmbed). It replaces the v12 link (https://youtu.be/z80w9vig-qA) in the README (badge, thumbnail, links), the
+  dashboard menu, `TRY_IT.md` and the submission documents; this log keeps the old links as history.

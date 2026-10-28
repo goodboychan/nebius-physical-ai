@@ -3,7 +3,7 @@
   <a href="https://github.com/goodboychan/nebius-physical-ai/actions/workflows/ci.yml"><img alt="CI" src="https://github.com/goodboychan/nebius-physical-ai/actions/workflows/ci.yml/badge.svg"></a>
   <a href="LICENSE"><img alt="License: Apache 2.0" src="https://img.shields.io/badge/license-Apache%202.0-blue"></a>
   <img alt="Python 3.12" src="https://img.shields.io/badge/python-3.12-3776AB?logo=python&logoColor=white">
-  <a href="https://www.youtube.com/watch?v=z80w9vig-qA"><img alt="Video: 3 min" src="https://img.shields.io/badge/video-3%20min-FF0000?logo=youtube&logoColor=white"></a>
+  <a href="https://www.youtube.com/watch?v=fC_mkn_U36Q"><img alt="Video: 3 min" src="https://img.shields.io/badge/video-3%20min-FF0000?logo=youtube&logoColor=white"></a>
   <a href="https://claude.ai/artifact/2tUAoJHBeT8uLU96BmgPNK"><img alt="Dashboard" src="https://img.shields.io/badge/dashboard-try%20it-00909B"></a>
   <a href="https://huggingface.co/datasets/chans/quantgate-so101-coaster"><img alt="Datasets on Hugging Face" src="https://img.shields.io/badge/%F0%9F%A4%97%20datasets-3%20public-FFD21E"></a>
   <br>
@@ -14,7 +14,7 @@
 </p>
 
 <p align="center">
-  <a href="https://www.youtube.com/watch?v=z80w9vig-qA"><img src="docs/assets/video_thumbnail.jpg" alt="QuantGate video (3 min): validate FP16 first, deployment HOLD, the next test planned" width="720"></a>
+  <a href="https://www.youtube.com/watch?v=fC_mkn_U36Q"><img src="docs/assets/video_thumbnail.jpg" alt="QuantGate video (3 min): validate FP16 first, deployment HOLD, the next test planned" width="720"></a>
 </p>
 <p align="center"><img src="docs/assets/quantgate_preview.gif" alt="Same robot, same task: one run succeeds, one fails; move the can 3 cm and it misses" width="720"><br>
 <sub>Same robot, same task: one run succeeds, one fails. Move the can 3 cm and it misses (overhead camera, 4×).</sub></p>
@@ -42,7 +42,7 @@ edge device. It shows the engine's measured cost, its real-arm behavior and how 
 **License: [Apache 2.0](LICENSE)** · Nebius × NVIDIA Global AI Hackathon, Physical AI track · internal code name
 `edgeqgate`
 
-**Video (3 min):** https://www.youtube.com/watch?v=z80w9vig-qA · **Dashboard:** https://claude.ai/artifact/2tUAoJHBeT8uLU96BmgPNK
+**Video (3 min):** https://www.youtube.com/watch?v=fC_mkn_U36Q · **Dashboard:** https://claude.ai/artifact/2tUAoJHBeT8uLU96BmgPNK
 
 **Try it in 5 minutes** (no robot, no GPU, no key): [docs/TRY_IT.md](docs/TRY_IT.md): check the study, judge your own
 results, preflight a build, then tell us how it went.
